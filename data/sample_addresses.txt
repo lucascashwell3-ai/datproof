@@ -1,0 +1,11 @@
+# Sample public wallet addresses for testing
+# These are well-known public addresses with rich transaction history
+
+# ETH — Ethereum Foundation donation address (very active, great for testing)
+0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe
+
+# BTC — Binance cold wallet (high volume, good for stress testing)
+34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo
+
+# ETH — Vitalik Buterin's public address
+0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045

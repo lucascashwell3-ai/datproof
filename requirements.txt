@@ -1,0 +1,25 @@
+# Core
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-dotenv==1.0.1
+pydantic==2.7.1
+
+# Blockchain APIs
+requests==2.31.0
+httpx==0.27.0
+
+# AI
+anthropic==0.25.1
+
+# Frontend
+streamlit==1.35.0
+
+# PDF Report Generation
+reportlab==4.2.0
+
+# Data handling
+pandas==2.2.2
+
+# Testing
+pytest==8.2.0
+pytest-asyncio==0.23.7
