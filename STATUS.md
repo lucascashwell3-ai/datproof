@@ -8,19 +8,21 @@ Python + FastAPI + Streamlit + Claude (Haiku) + Etherscan/Blockstream + ReportLa
 Folder: `~/Desktop/Projects/blockchain-risk-analyzer/` (promoted 2026-06-25 out of the old nested
 `claude code/` folder). GitHub: `lucascashwell3-ai/blockchain-risk-analyzer` (PRIVATE).
 
-**State:** 🟡 Built + pushed to GitHub 2026-06-02; dormant since. Streamlit Cloud deploy was the
-declared next step, never done.
+**State:** 🟡 Built + on GitHub (PRIVATE). Streamlit Cloud deploy is the declared next step, never done.
+
+**✅ Security cleanup DONE (2026-06-27):** Etherscan key rotated by Lucas; git history reset to a
+single clean commit so the old key is gone from all history (pre-purge copy preserved at
+`_backups/archive/blockchain-risk-analyzer-PREPURGE-20260627`). `.env` is gitignored; only
+`.env.example` (placeholders) is tracked.
 
 **Next actions:**
-1. ⚠️ **SECURITY FIRST — rotate the Etherscan API key.** It's committed in plaintext in
-   `SESSION_STATUS.md` (and therefore in GitHub history). Rotate it before the repo goes public.
-2. Deploy to Streamlit Cloud (share.streamlit.io → repo → `frontend/app.py` → add ANTHROPIC +
+1. Deploy to Streamlit Cloud (share.streamlit.io → repo → `frontend/app.py` → add ANTHROPIC +
    ETHERSCAN secrets in Advanced settings).
-3. Flip the GitHub repo public; add to LinkedIn + showcase on the portfolio site.
-4. Feature backlog: OFAC sanctions screening, exchange/mixer identification (Binance / Coinbase /
+2. Flip the GitHub repo public; add to LinkedIn + showcase on the portfolio site.
+3. Feature backlog: OFAC sanctions screening, exchange/mixer identification (Binance / Coinbase /
    Tornado Cash), Streamlit UI polish.
 
-**Blockers:** none technical — a security cleanup + a ~5-min deploy.
+**Blockers:** none technical — just the ~5-min deploy.
 
 **Why it matters:** strongest fit for Lucas's "IT auditor → crypto/fintech risk & compliance"
 positioning — a real, deployable, audit-grade deliverable. Portfolio hero candidate alongside
