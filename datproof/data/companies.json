@@ -1,0 +1,201 @@
+{
+  "_meta": {
+    "description": "Registry of Digital Asset Treasury (DAT) companies and their disclosed BTC holdings.",
+    "methodology": "Holdings are company-disclosed figures (8-K filings, press releases, treasury dashboards) as of the as_of date. Nothing here is independently verified unless known_addresses is non-empty and on-chain balances have been reconciled. Market caps are intentionally null unless supplied at analysis time — DATproof does not report numbers it cannot source.",
+    "snapshot_date": "2026-07-03",
+    "btc_spot_snapshot_usd": 61600,
+    "btc_spot_snapshot_as_of": "2026-07-03"
+  },
+  "companies": [
+    {
+      "id": "strategy",
+      "name": "Strategy Inc",
+      "ticker": "MSTR",
+      "exchange": "NASDAQ",
+      "btc_holdings": 847363,
+      "avg_cost_usd": 75651,
+      "cost_basis_usd": 64100000000,
+      "as_of": "2026-06-30",
+      "source": "Company 8-K filings / strategy.com dashboard",
+      "disclosure_method": "8-K + public dashboard",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": true,
+        "notes": "Multiple series of perpetual preferred (STRK/STRF/STRD-style) plus convertible notes; 2026 capital framework authorizes conditional BTC sales."
+      }
+    },
+    {
+      "id": "twenty-one",
+      "name": "Twenty One Capital",
+      "ticker": "XXI",
+      "exchange": "NASDAQ",
+      "btc_holdings": 43514,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "Company disclosures / press",
+      "disclosure_method": "press release",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": false,
+        "notes": "Tether/SoftBank/Cantor-backed vehicle."
+      }
+    },
+    {
+      "id": "metaplanet",
+      "name": "Metaplanet Inc",
+      "ticker": "3350.T",
+      "exchange": "TSE",
+      "btc_holdings": 43000,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-07-02",
+      "source": "Company disclosures (TSE filings), 2,823 BTC added in Q2 2026",
+      "disclosure_method": "exchange filing + press release",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": false,
+        "notes": "Moving-strike warrant programs used for accumulation."
+      }
+    },
+    {
+      "id": "mara",
+      "name": "MARA Holdings",
+      "ticker": "MARA",
+      "exchange": "NASDAQ",
+      "btc_holdings": 36303,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "Company disclosures / monthly production updates",
+      "disclosure_method": "monthly update",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": false,
+        "notes": "Miner — holdings partly self-mined; operational BTC flows distinct from treasury strategy."
+      }
+    },
+    {
+      "id": "bstc",
+      "name": "Bitcoin Standard Treasury Company",
+      "ticker": "BSTR",
+      "exchange": "NASDAQ",
+      "btc_holdings": 30021,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "Company disclosures / press",
+      "disclosure_method": "press release",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": false,
+        "preferred_stock": false,
+        "notes": "Cantor SPAC lineage; BTC-in-kind PIPE contributions."
+      }
+    },
+    {
+      "id": "bullish",
+      "name": "Bullish",
+      "ticker": "BLSH",
+      "exchange": "NYSE",
+      "btc_holdings": 24300,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "Company disclosures",
+      "disclosure_method": "filing",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": false,
+        "preferred_stock": false,
+        "notes": "Exchange operator — treasury BTC is also operating capital; different risk profile than pure DATs."
+      }
+    },
+    {
+      "id": "strive",
+      "name": "Strive Inc",
+      "ticker": "ASST",
+      "exchange": "NASDAQ",
+      "btc_holdings": 19864,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-28",
+      "source": "Company 8-K / press (post-Semler Scientific merger, Jan 2026)",
+      "disclosure_method": "8-K + press release",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": false,
+        "preferred_stock": true,
+        "notes": "Zero debt after retiring Semler's converts; SATA variable-rate perpetual preferred used for accumulation. First DAT-acquires-DAT transaction (Semler, Jan 2026)."
+      }
+    },
+    {
+      "id": "spacex",
+      "name": "SpaceX",
+      "ticker": null,
+      "exchange": null,
+      "btc_holdings": 18712,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "Third-party attribution (private company — no public filing obligation)",
+      "disclosure_method": "third-party attribution",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": false,
+        "preferred_stock": false,
+        "notes": "Private. Included for completeness of the corporate-holder landscape; weakest evidence tier in this registry."
+      }
+    },
+    {
+      "id": "coinbase",
+      "name": "Coinbase Global",
+      "ticker": "COIN",
+      "exchange": "NASDAQ",
+      "btc_holdings": 16492,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "10-Q investment portfolio disclosures",
+      "disclosure_method": "10-Q",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": false,
+        "notes": "Exchange/custodian — corporate investment portfolio BTC, distinct from customer custodial assets."
+      }
+    },
+    {
+      "id": "riot",
+      "name": "Riot Platforms",
+      "ticker": "RIOT",
+      "exchange": "NASDAQ",
+      "btc_holdings": 15680,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-06-30",
+      "source": "Monthly production and operations updates",
+      "disclosure_method": "monthly update",
+      "known_addresses": [],
+      "market_cap_usd": null,
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": false,
+        "notes": "Miner — periodically sells production; holdings fluctuate month to month."
+      }
+    }
+  ]
+}

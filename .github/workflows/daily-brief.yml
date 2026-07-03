@@ -1,0 +1,35 @@
+name: DATproof daily brief
+
+on:
+  schedule:
+    - cron: "30 12 * * *" # 12:30 UTC daily (~8:30am ET)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install httpx anthropic
+
+      - name: Generate brief + LinkedIn draft
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m datproof brief --out briefs
+
+      - name: Commit outputs
+        run: |
+          git config user.name "datproof-bot"
+          git config user.email "actions@github.com"
+          git add briefs/ datproof/data/onchain_cache.json
+          git diff --cached --quiet || git commit -m "DATproof daily brief $(date -u +%F)"
+          git push
