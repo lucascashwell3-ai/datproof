@@ -1,29 +1,32 @@
-# Blockchain Risk Analyzer — STATUS
-_Last updated: 2026-06-25_
+# Blockchain Risk Analyzer / DATproof — STATUS
+_Last updated: 2026-07-03_
 
-**What it is:** Claude-powered blockchain transaction risk analyzer → audit-ready PDF reports
-mapped to compliance frameworks (FATF / BSA / OFAC / COSO). Input an ETH/BTC wallet or a CSV;
-it fetches on-chain data, runs Claude risk analysis, and outputs a professional audit PDF.
-Python + FastAPI + Streamlit + Claude (Haiku) + Etherscan/Blockstream + ReportLab.
-Folder: `~/Desktop/Projects/blockchain-risk-analyzer/` (promoted 2026-06-25 out of the old nested
-`claude code/` folder). GitHub: `lucascashwell3-ai/blockchain-risk-analyzer` (PRIVATE).
+**What it is:** Now the **flagship portfolio project — DATproof**: on-chain verification & risk
+intelligence for Digital Asset Treasury companies (Strategy, Strive, Metaplanet, MARA, Coinbase…).
+Tracks disclosed BTC holdings with sourced as-of dates, quantifies how much is independently
+verifiable on-chain (headline: **0%**), scores risk in audit-assertion language (existence /
+valuation / completeness → COSO, FASB ASU 2023-08, SOX ICFR), computes mNAV from supplied market
+caps, and auto-publishes a daily brief + LinkedIn draft via GitHub Actions. The original
+wallet-level transaction analyzer (FATF/BSA/OFAC → PDF) remains in `api/` + `frontend/app.py` as
+the drill-down layer. Full positioning: `docs/FLAGSHIP.md`.
 
-**State:** 🟡 Built + on GitHub (PRIVATE). Streamlit Cloud deploy is the declared next step, never done.
+**State:** 🟢 DATproof v1 built on branch `claude/portfolio-flagship-project-0kbw4f`
+(2026-07-03). 11/11 tests pass; CLI (`python -m datproof landscape|brief|verify`) and Streamlit
+dashboard (`frontend/datproof_app.py`) smoke-tested offline. Daily-brief GitHub Action committed
+(needs `ANTHROPIC_API_KEY` repo secret for AI commentary; runs without it too).
 
-**✅ Security cleanup DONE (2026-06-27):** Etherscan key rotated by Lucas; git history reset to a
-single clean commit so the old key is gone from all history (pre-purge copy preserved at
-`_backups/archive/blockchain-risk-analyzer-PREPURGE-20260627`). `.env` is gitignored; only
-`.env.example` (placeholders) is tracked.
+**✅ Security cleanup DONE (2026-06-27):** Etherscan key rotated; history purged; `.env` gitignored.
 
 **Next actions:**
-1. Deploy to Streamlit Cloud (share.streamlit.io → repo → `frontend/app.py` → add ANTHROPIC +
-   ETHERSCAN secrets in Advanced settings).
-2. Flip the GitHub repo public; add to LinkedIn + showcase on the portfolio site.
-3. Feature backlog: OFAC sanctions screening, exchange/mixer identification (Binance / Coinbase /
-   Tornado Cash), Streamlit UI polish.
+1. Merge the flagship branch to main; add `ANTHROPIC_API_KEY` as a repo Actions secret.
+2. Deploy `frontend/datproof_app.py` to Streamlit Cloud; flip repo public.
+3. Publish the headline finding ("0% of 1.1M corporate BTC is verifiable on-chain") as the first
+   LinkedIn post; add DATproof as the hero card on portfolio-v2.
+4. Roadmap (ranked in `docs/FLAGSHIP.md`): mNAV time series → proof-of-reserves attestation PDF →
+   ETH DATs → finding-diff alerting.
 
-**Blockers:** none technical — just the ~5-min deploy.
+**Blockers:** none technical.
 
-**Why it matters:** strongest fit for Lucas's "IT auditor → crypto/fintech risk & compliance"
-positioning — a real, deployable, audit-grade deliverable. Portfolio hero candidate alongside
-Prompt Emporium.
+**Why it matters:** direct hit on the career targets (Coinbase, Strategy, Strive, Fidelity — see
+`claude-universe/career/CAREER_TARGETS.md`): analyzes the target employers' own asset class with
+the exact skillset they hire for, and generates daily publishable content as a side effect.
