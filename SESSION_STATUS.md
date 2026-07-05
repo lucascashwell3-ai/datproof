@@ -12,7 +12,7 @@
 - `requirements.txt`, `.env` (local only), `.gitignore`, `README.md`
 
 ## GitHub Repo
-- URL: https://github.com/lucascashwell3-ai/blockchain-risk-analyzer
+- URL: https://github.com/lucascashwell3-ai/datproof
 - Branch: main
 - Visibility: PRIVATE — flip to public after Streamlit deploy
 
@@ -20,7 +20,7 @@
 
 ### 1. Deploy to Streamlit Cloud (~5 min)
 - Go to share.streamlit.io, sign in with GitHub (lucascashwell3-ai)
-- New app → repo: `lucascashwell3-ai/blockchain-risk-analyzer` → branch: `main` → main file: `frontend/app.py`
+- New app → repo: `lucascashwell3-ai/datproof` → branch: `main` → main file: `frontend/app.py`
 - Advanced settings → add secrets:
   - ANTHROPIC_API_KEY = (your current key from .env)
   - ETHERSCAN_API_KEY = (your NEW key — rotate the old one on etherscan.io first, it was exposed here in plaintext)

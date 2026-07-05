@@ -1,4 +1,4 @@
-# CLAUDE.md — blockchain-risk-analyzer (DATproof)
+# CLAUDE.md — datproof (DATproof)
 
 **This is the flagship portfolio project.** Positioning + ranked roadmap: `docs/FLAGSHIP.md`.
 Overall goal/strategy it serves: `claude-universe/NORTH_STAR.md` (career pivot to crypto-native
