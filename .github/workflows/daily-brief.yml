@@ -23,7 +23,7 @@ jobs:
 
       - name: Generate brief + LinkedIn draft
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.DATPROOF_API_KEY }}
         run: python -m datproof brief --out briefs
 
       - name: Commit outputs
