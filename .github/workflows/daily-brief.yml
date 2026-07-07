@@ -26,10 +26,19 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.DATPROOF_API_KEY }}
         run: python -m datproof brief --out briefs
 
+      - name: Build public dashboard
+        run: python scripts/build_site.py
+
       - name: Commit outputs
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add briefs/ datproof/data/onchain_cache.json
+          git add briefs/ site/ datproof/data/onchain_cache.json
           git diff --cached --quiet || git commit -m "DATproof daily brief $(date -u +%F)"
           git push
+
+      - name: Deploy dashboard to Vercel
+        if: ${{ secrets.VERCEL_TOKEN != '' }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel deploy site --prod --yes --token "$VERCEL_TOKEN"

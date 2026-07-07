@@ -1,5 +1,5 @@
 # DATproof — STATUS
-_Last updated: 2026-07-05 (repo renamed `datproof`; was blockchain-risk-analyzer)_
+_Last updated: 2026-07-07_
 
 **What it is:** Now the **flagship portfolio project — DATproof**: on-chain verification & risk
 intelligence for Digital Asset Treasury companies (Strategy, Strive, Metaplanet, MARA, Coinbase…).
@@ -17,13 +17,22 @@ stale branch deleted (2026-07-05) — repo is clean to go public.
 
 **✅ Security cleanup DONE (2026-06-27):** Etherscan key rotated; history purged; `.env` gitignored.
 
+**🟢 NEW (2026-07-07): public web dashboard built** — `scripts/build_site.py` renders
+`site/index.html`, a self-contained static research tearsheet (audit-report design per
+`PRODUCT.md`/`DESIGN.md`: white paper, ink, seal-red, Newsreader + IBM Plex) from the same
+pipeline as the daily brief. Every figure carries as-of + source; mNAV explicitly absent
+(no sourced market caps). Tests 17/17. `daily-brief.yml` now rebuilds `site/` nightly and
+deploys to Vercel when `VERCEL_TOKEN` secret exists. This supersedes the Streamlit deploy plan
+(Streamlit apps in `frontend/` remain as internal drill-down tools).
+
 **Next actions:**
-1. Lucas: deploy `frontend/datproof_app.py` on share.streamlit.io (needs his GitHub login there).
+1. Lucas: add `VERCEL_TOKEN` secret to the repo so the nightly deploy runs (until then the
+   site still rebuilds + commits nightly; deploy step skips).
 2. Flip repo public (history is clean now) — but first see the Protiviti IP note in NORTH_STAR /
    dashboard: while employed at Protiviti, keep DATproof a free public research/portfolio project
    (no paid services) to stay clear of §4 outside-services and §8 IP-assignment gray zones.
 3. Publish the headline finding ("0% of 1.1M corporate BTC is verifiable on-chain") as the first
-   LinkedIn post; add DATproof as the hero card on portfolio-v2.
+   LinkedIn post; add DATproof as the hero card on portfolio-v2 (link to the live dashboard).
 4. Roadmap (ranked in `docs/FLAGSHIP.md`): mNAV time series → proof-of-reserves attestation PDF →
    ETH DATs → finding-diff alerting.
 
