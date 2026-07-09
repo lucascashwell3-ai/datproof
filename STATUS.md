@@ -22,12 +22,14 @@ stale branch deleted (2026-07-05) — repo is clean to go public.
 `PRODUCT.md`/`DESIGN.md`: white paper, ink, seal-red, Newsreader + IBM Plex) from the same
 pipeline as the daily brief. Every figure carries as-of + source; mNAV explicitly absent
 (no sourced market caps). Tests 17/17. `daily-brief.yml` now rebuilds `site/` nightly and
-deploys to Vercel when `VERCEL_TOKEN` secret exists. This supersedes the Streamlit deploy plan
+deploys to **GitHub Pages** (via `actions/deploy-pages`). This supersedes the Streamlit deploy plan
 (Streamlit apps in `frontend/` remain as internal drill-down tools).
 
 **Next actions:**
-1. Lucas: add `VERCEL_TOKEN` secret to the repo so the nightly deploy runs (until then the
-   site still rebuilds + commits nightly; deploy step skips).
+1. Lucas: enable GitHub Pages — repo Settings → Pages → Source: **GitHub Actions** (one-time
+   toggle). Then run the workflow (Actions tab → "DATproof daily brief" → Run workflow) or wait
+   for the nightly run; the dashboard publishes to `https://lucascashwell3-ai.github.io/datproof/`.
+   Note: Pages deploy only fires from the default branch, so this branch must be merged to main first.
 2. Flip repo public (history is clean now) — but first see the Protiviti IP note in NORTH_STAR /
    dashboard: while employed at Protiviti, keep DATproof a free public research/portfolio project
    (no paid services) to stay clear of §4 outside-services and §8 IP-assignment gray zones.
