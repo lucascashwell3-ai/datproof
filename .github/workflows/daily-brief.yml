@@ -7,10 +7,15 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   brief:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,10 +31,22 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.DATPROOF_API_KEY }}
         run: python -m datproof brief --out briefs
 
+      - name: Build public dashboard
+        run: python scripts/build_site.py
+
       - name: Commit outputs
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add briefs/ datproof/data/onchain_cache.json
+          git add briefs/ site/ datproof/data/onchain_cache.json
           git diff --cached --quiet || git commit -m "DATproof daily brief $(date -u +%F)"
           git push
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
