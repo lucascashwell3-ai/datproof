@@ -253,7 +253,7 @@ a {{ color: inherit; }}
 @media (max-width: 680px) {{ .nav a.item {{ display: none; }} }}
 
 /* hero */
-.hero {{ padding: clamp(7rem, 14vh, 10rem) 0 clamp(3rem, 6vh, 5rem); }}
+.hero {{ padding-block: clamp(7rem, 14vh, 10rem) clamp(3rem, 6vh, 5rem); }}
 .kicker {{
   font-size: 0.78rem; letter-spacing: 0.22em; color: var(--gold);
   text-transform: uppercase; margin-bottom: 1.4rem;
