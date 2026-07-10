@@ -29,3 +29,36 @@ def weekly_closes(daily: list[PricePoint]) -> list[PricePoint]:
         return date.fromisoformat(p.date).isocalendar()[:2]
 
     return [list(group)[-1] for _, group in groupby(ordered, key=iso_week)]
+
+
+@dataclass
+class CycleContext:
+    as_of: str
+    source: str                 # "coinbase-live" | "cached-snapshot"
+    spot_usd: float
+    wma_200w_usd: float
+    price_to_200wma: float
+    ath_usd: float
+    ath_date: str
+    drawdown_from_ath_pct: float    # signed; 0 at ATH
+    weeks_of_history: int
+
+
+def compute_cycle_context(daily: list[PricePoint], spot_usd: float,
+                          as_of: str, source: str) -> CycleContext:
+    weeks = weekly_closes(daily)
+    if len(weeks) < 200:
+        raise ValueError(f"insufficient history: need 200 weekly closes, got {len(weeks)}")
+    wma = sum(p.close_usd for p in weeks[-200:]) / 200
+    ath = max(daily, key=lambda p: p.close_usd)
+    return CycleContext(
+        as_of=as_of,
+        source=source,
+        spot_usd=spot_usd,
+        wma_200w_usd=wma,
+        price_to_200wma=spot_usd / wma,
+        ath_usd=ath.close_usd,
+        ath_date=ath.date,
+        drawdown_from_ath_pct=(spot_usd - ath.close_usd) / ath.close_usd * 100,
+        weeks_of_history=len(weeks),
+    )
