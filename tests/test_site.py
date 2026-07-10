@@ -50,3 +50,21 @@ def test_no_unsourced_mnav(built):
 
 def test_spot_source_is_stated(built):
     assert "source: override" in built  # the override build states its source too
+
+
+def test_cycle_section_renders_with_source_label(built):
+    assert "200-week moving average" in built
+    assert "history source:" in built  # evidence label for the price history itself
+
+
+def test_cycle_figures_match_pipeline(built):
+    from datproof.cycles import compute_cycle_context, load_price_history
+    daily, source, as_of = load_price_history(allow_network=False)
+    ctx = compute_cycle_context(daily, 60000.0, as_of, source)
+    assert f"${ctx.wma_200w_usd:,.0f}" in built
+
+
+def test_adoption_share_rendered(built):
+    from datproof.cycles import adoption_share_of_max_supply_pct
+    pct = adoption_share_of_max_supply_pct(load_registry())
+    assert f"{pct:.2f}%" in built

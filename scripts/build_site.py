@@ -19,6 +19,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from datproof.cycles import (
+    CostBasisContext,
+    CycleContext,
+    adoption_share_of_max_supply_pct,
+    compute_cycle_context,
+    cost_basis_vs_200wma,
+    load_price_history,
+)
 from datproof.metrics import LandscapeMetrics, compute_metrics
 from datproof.onchain import SpotPrice, get_spot_price
 from datproof.registry import Registry, load_registry
@@ -153,10 +161,79 @@ def render_sources(registry: Registry) -> str:
     return "\n".join(rows)
 
 
+def render_cycle_section(ctx: CycleContext | None,
+                         cost_rows: list[CostBasisContext],
+                         adoption_pct: float) -> str:
+    if ctx is None:
+        return """  <section aria-labelledby="cycle-h">
+    <h2 id="cycle-h">Cycle context</h2>
+    <p class="table-note">Cycle context unavailable — insufficient sourced price history.
+    DATproof does not estimate missing history.</p>
+  </section>"""
+
+    trend_rows = "\n".join(
+        f"""        <tr>
+          <td>{escape(r.name)}</td>
+          <td class="num mono">{fmt_usd(r.avg_cost_usd)}</td>
+          <td class="num mono">{r.cost_to_200wma:.2f}&times;</td>
+          <td>{"Above trend" if r.bought_above_trend else "Below trend"}</td>
+        </tr>"""
+        for r in cost_rows)
+
+    return f"""  <section aria-labelledby="cycle-h">
+    <h2 id="cycle-h">Cycle context</h2>
+    <p class="section-lede">Long-horizon positioning against the 200-week moving average of
+    weekly closes — the slowest widely-watched trend line in bitcoin. Context for cycle
+    navigation, not price opinion.</p>
+
+    <section class="figures" aria-label="Cycle figures">
+      <div class="figure">
+        <span class="fig-num mono">{fmt_usd(ctx.wma_200w_usd)}</span>
+        <span class="fig-label">200-week moving average</span>
+      </div>
+      <div class="figure">
+        <span class="fig-num mono">{ctx.price_to_200wma:.2f}&times;</span>
+        <span class="fig-label">spot / 200WMA</span>
+      </div>
+      <div class="figure">
+        <span class="fig-num mono">{fmt_signed_pct(ctx.drawdown_from_ath_pct)}</span>
+        <span class="fig-label">vs all-time-high close ({escape(ctx.ath_date)})</span>
+      </div>
+      <div class="figure">
+        <span class="fig-num mono">{adoption_pct:.2f}%</span>
+        <span class="fig-label">of the 21M max supply held by tracked treasuries</span>
+      </div>
+    </section>
+
+    <div class="table-scroll">
+    <table>
+      <caption class="sr-only">Disclosed average cost per company relative to the 200-week moving average</caption>
+      <thead>
+        <tr>
+          <th scope="col">Company</th><th scope="col" class="num">Avg cost</th>
+          <th scope="col" class="num">&times; 200WMA</th><th scope="col">Position</th>
+        </tr>
+      </thead>
+      <tbody>
+{trend_rows}
+      </tbody>
+    </table>
+    </div>
+    <p class="table-note">"&times; 200WMA" = disclosed average cost relative to the current
+    200-week moving average; shown only where a company discloses an average cost. A cost
+    basis above the long-term trend line means the position was accumulated at cyclically
+    elevated prices.</p>
+    <p class="dataline mono">history source: {escape(ctx.source)} &middot; Coinbase Exchange daily candles (BTC-USD)
+    &middot; {ctx.weeks_of_history} weekly closes &middot; as of {escape(ctx.as_of)}</p>
+  </section>"""
+
+
 # ── page ──────────────────────────────────────────────────────────────────────
 
 def build_page(registry: Registry, metrics: LandscapeMetrics,
-               findings: list[Finding], spot: SpotPrice) -> str:
+               findings: list[Finding], spot: SpotPrice,
+               cycle_ctx: CycleContext | None = None,
+               cost_rows: list[CostBasisContext] | None = None) -> str:
     n = len(metrics.companies)
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     title = (f"DATproof — {fmt_pct(metrics.verifiable_pct)} of "
@@ -259,6 +336,8 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
     Severity reflects magnitude and evidence quality, not price opinion.</p>
 {render_findings(findings, registry)}
   </section>
+
+{render_cycle_section(cycle_ctx, cost_rows or [], adoption_share_of_max_supply_pct(registry))}
 
   <section aria-labelledby="method-h" class="method">
     <h2 id="method-h">Methodology &amp; sources</h2>
@@ -501,7 +580,17 @@ def build(price_override: float | None = None, out: Path | None = None) -> Path:
     metrics = compute_metrics(registry, spot.usd)
     findings = evaluate(metrics)
 
-    html = build_page(registry, metrics, findings, spot)
+    # Cycle context: offline (cache-only) when the build is deterministic, else live top-up.
+    # Insufficient/missing history renders as explicitly unavailable — never estimated.
+    try:
+        daily, hist_source, hist_as_of = load_price_history(
+            allow_network=price_override is None)
+        cycle_ctx = compute_cycle_context(daily, spot.usd, hist_as_of, hist_source)
+        cost_rows = cost_basis_vs_200wma(registry, cycle_ctx)
+    except ValueError:
+        cycle_ctx, cost_rows = None, []
+
+    html = build_page(registry, metrics, findings, spot, cycle_ctx, cost_rows)
     out = out or SITE_DIR / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
