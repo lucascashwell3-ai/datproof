@@ -591,7 +591,7 @@ def build(price_override: float | None = None, out: Path | None = None) -> Path:
         cycle_ctx, cost_rows = None, []
 
     html = build_page(registry, metrics, findings, spot, cycle_ctx, cost_rows)
-    out = out or SITE_DIR / "index.html"
+    out = out or SITE_DIR / "tearsheet" / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
     return out
