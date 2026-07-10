@@ -12,6 +12,7 @@ content in Lucas's voice (see claude-universe/automation/TONE_OF_VOICE.md).
 import os
 from datetime import datetime
 
+from .cycles import CycleContext
 from .metrics import LandscapeMetrics
 from .onchain import SpotPrice
 from .risk import Finding
@@ -28,7 +29,8 @@ def _fmt_usd(v: float) -> str:
 
 
 def render_brief(metrics: LandscapeMetrics, findings: list[Finding],
-                 spot: SpotPrice, commentary: str | None = None) -> str:
+                 spot: SpotPrice, commentary: str | None = None,
+                 cycle_ctx: CycleContext | None = None) -> str:
     now = datetime.utcnow().strftime("%Y-%m-%d")
     lines = [
         f"# DATproof Daily Brief — {now}",
@@ -39,6 +41,19 @@ def render_brief(metrics: LandscapeMetrics, findings: list[Finding],
         f"**Largest-holder concentration:** {metrics.concentration_top1_pct:.1f}%",
         "",
     ]
+
+    if cycle_ctx is not None:
+        lines += [
+            "## Cycle context",
+            "",
+            f"**200-week moving average:** ${cycle_ctx.wma_200w_usd:,.0f} "
+            f"(spot is {cycle_ctx.price_to_200wma:.2f}× the long-term trend)",
+            f"**vs all-time-high close:** {cycle_ctx.drawdown_from_ath_pct:+.1f}% "
+            f"(ATH ${cycle_ctx.ath_usd:,.0f} on {cycle_ctx.ath_date})",
+            f"_History: {cycle_ctx.source}, Coinbase Exchange daily candles, "
+            f"{cycle_ctx.weeks_of_history} weekly closes, as of {cycle_ctx.as_of}_",
+            "",
+        ]
 
     if commentary:
         lines += ["## Executive commentary", "", commentary.strip(), ""]

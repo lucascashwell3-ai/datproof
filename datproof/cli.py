@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from . import brief as brief_mod
+from .cycles import compute_cycle_context, load_price_history
 from .metrics import compute_metrics
 from .onchain import get_address_balance, get_spot_price
 from .registry import load_registry
@@ -35,8 +36,17 @@ def cmd_brief(args) -> None:
     metrics = compute_metrics(registry, spot.usd)
     findings = evaluate(metrics)
 
+    # Cycle context is optional: missing/insufficient history degrades to a brief without it.
+    try:
+        daily, hist_source, hist_as_of = load_price_history(
+            allow_network=args.btc_price is None)
+        cycle_ctx = compute_cycle_context(daily, spot.usd, hist_as_of, hist_source)
+    except ValueError:
+        cycle_ctx = None
+
     commentary = None if args.no_ai else brief_mod.generate_commentary(metrics, findings, spot)
-    brief_md = brief_mod.render_brief(metrics, findings, spot, commentary=commentary)
+    brief_md = brief_mod.render_brief(metrics, findings, spot, commentary=commentary,
+                                      cycle_ctx=cycle_ctx)
     post_md = brief_mod.render_linkedin_draft(metrics, findings, spot)
 
     if args.out:
