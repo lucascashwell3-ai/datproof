@@ -306,19 +306,26 @@ h1 .stat {{ font-style: normal; color: var(--gold); }}
   width: 250%; height: 250%; transform: scale(0.4); transform-origin: 0 0;
   border: 0; pointer-events: none;
 }}
+.paper::after {{
+  content: ""; position: absolute; inset: auto 0 0 0; height: 80px;
+  background: linear-gradient(oklch(1 0 0 / 0), white);
+}}
 .paper-label {{
   text-align: center; margin-top: 1.6rem; font-size: 0.8rem;
   color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase;
 }}
 .paper-label .mono {{ color: var(--gold); }}
 
-/* figure bands */
-.figures {{
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1px; background: var(--line); border-block: 1px solid var(--line);
+/* figure bands — full-bleed hairlines top/bottom, open columns (no cell boxes) */
+.figures-band {{
+  border-block: 1px solid var(--line);
   margin: clamp(3.5rem, 9vh, 6rem) 0;
 }}
-.figure {{ background: var(--bg); padding: 1.6rem 1.4rem; }}
+.figures {{
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.5rem 2.5rem;
+}}
+.figure {{ padding: 1.7rem 0; }}
 .fig-num {{ display: block; font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--text); }}
 .fig-label {{ display: block; margin-top: 0.35rem; font-size: 0.84rem; color: var(--muted); }}
 .figure.hot .fig-num {{ color: var(--gold); }}
@@ -410,12 +417,14 @@ footer a {{ color: var(--text); }}
     </div>
   </header>
 
-  <div class="wrap">
-    <div class="figures" role="list" aria-label="Key figures">
-      <div class="figure" role="listitem"><span class="fig-num mono">{fmt_btc(metrics.total_btc)}</span><span class="fig-label">BTC disclosed by {n} companies</span></div>
-      <div class="figure" role="listitem"><span class="fig-num mono">{fmt_usd_compact(metrics.total_value_usd)}</span><span class="fig-label">value at spot (BTC ${spot.usd:,.0f}, {escape(spot.source)})</span></div>
-      <div class="figure" role="listitem"><span class="fig-num mono">{adoption:.2f}%</span><span class="fig-label">of the 21M max supply</span></div>
-      <div class="figure hot" role="listitem"><span class="fig-num mono">{verif}</span><span class="fig-label">verifiable on-chain by anyone</span></div>
+  <div class="figures-band">
+    <div class="wrap">
+      <div class="figures" role="list" aria-label="Key figures">
+        <div class="figure" role="listitem"><span class="fig-num mono">{fmt_btc(metrics.total_btc)}</span><span class="fig-label">BTC disclosed by {n} companies</span></div>
+        <div class="figure" role="listitem"><span class="fig-num mono">{fmt_usd_compact(metrics.total_value_usd)}</span><span class="fig-label">value at spot (BTC ${spot.usd:,.0f}, {escape(spot.source)})</span></div>
+        <div class="figure" role="listitem"><span class="fig-num mono">{adoption:.2f}%</span><span class="fig-label">of the 21M max supply</span></div>
+        <div class="figure hot" role="listitem"><span class="fig-num mono">{verif}</span><span class="fig-label">verifiable on-chain by anyone</span></div>
+      </div>
     </div>
   </div>
 
