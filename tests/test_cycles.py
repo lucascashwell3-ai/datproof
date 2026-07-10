@@ -52,3 +52,36 @@ def test_insufficient_history_raises():
     pts = synthetic_history(n_weeks=150)
     with pytest.raises(ValueError, match="200 weekly closes"):
         compute_cycle_context(pts, spot_usd=60_000.0, as_of="2026-07-10", source="test")
+
+
+def company(cid, btc, avg_cost):
+    from datproof.registry import Company
+    return Company(id=cid, name=cid.upper(), ticker=cid.upper(), exchange="NASDAQ",
+                   btc_holdings=btc, avg_cost_usd=avg_cost, cost_basis_usd=None,
+                   as_of="2026-07-01", source="test", disclosure_method="press release")
+
+
+def registry_of(*companies):
+    from datproof.registry import Registry
+    return Registry(companies=list(companies), snapshot_date="2026-07-01",
+                    btc_spot_snapshot_usd=60_000.0, btc_spot_snapshot_as_of="2026-07-01")
+
+
+def test_cost_basis_vs_trend_flags_above_trend_buyers():
+    from datproof.cycles import cost_basis_vs_200wma
+    pts = synthetic_history(n_weeks=200, close=50_000.0)
+    pts[-10] = PricePoint(date=pts[-10].date, close_usd=50_000.0)  # flat: WMA = 50k
+    ctx = compute_cycle_context(pts, spot_usd=60_000.0, as_of="2026-07-10", source="test")
+    reg = registry_of(company("hot", 100.0, 75_000.0),
+                      company("humble", 50.0, 25_000.0),
+                      company("undisclosed", 10.0, None))
+    rows = cost_basis_vs_200wma(reg, ctx)
+    assert [r.company_id for r in rows] == ["hot", "humble"]  # None skipped, desc by ratio
+    assert rows[0].cost_to_200wma == pytest.approx(1.5) and rows[0].bought_above_trend
+    assert rows[1].cost_to_200wma == pytest.approx(0.5) and not rows[1].bought_above_trend
+
+
+def test_adoption_share_of_max_supply():
+    from datproof.cycles import adoption_share_of_max_supply_pct
+    reg = registry_of(company("a", 1_050_000.0, None))
+    assert adoption_share_of_max_supply_pct(reg) == pytest.approx(5.0)

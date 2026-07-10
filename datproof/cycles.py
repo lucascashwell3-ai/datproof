@@ -14,6 +14,10 @@ from dataclasses import dataclass
 from datetime import date
 from itertools import groupby
 
+from .registry import Registry
+
+BTC_MAX_SUPPLY = 21_000_000  # protocol constant — the one figure needing no source
+
 
 @dataclass
 class PricePoint:
@@ -62,3 +66,33 @@ def compute_cycle_context(daily: list[PricePoint], spot_usd: float,
         drawdown_from_ath_pct=(spot_usd - ath.close_usd) / ath.close_usd * 100,
         weeks_of_history=len(weeks),
     )
+
+
+@dataclass
+class CostBasisContext:
+    company_id: str
+    name: str
+    avg_cost_usd: float
+    cost_to_200wma: float
+    bought_above_trend: bool
+
+
+def cost_basis_vs_200wma(registry: Registry, ctx: CycleContext) -> list[CostBasisContext]:
+    """Disclosed average cost vs the 200WMA — who bought above the long-term trend."""
+    rows = [
+        CostBasisContext(
+            company_id=c.id,
+            name=c.name,
+            avg_cost_usd=c.avg_cost_usd,
+            cost_to_200wma=c.avg_cost_usd / ctx.wma_200w_usd,
+            bought_above_trend=c.avg_cost_usd > ctx.wma_200w_usd,
+        )
+        for c in registry.companies
+        if c.avg_cost_usd is not None and c.avg_cost_usd > 0
+    ]
+    rows.sort(key=lambda r: r.cost_to_200wma, reverse=True)
+    return rows
+
+
+def adoption_share_of_max_supply_pct(registry: Registry) -> float:
+    return registry.total_btc / BTC_MAX_SUPPLY * 100
