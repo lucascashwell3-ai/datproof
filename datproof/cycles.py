@@ -10,13 +10,21 @@ Conventions: weekly close = last daily close per ISO week (Mon-Sun);
 week); ATH is close-based.
 """
 
+import json
+import time
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from itertools import groupby
+from pathlib import Path
+
+import httpx
 
 from .registry import Registry
 
 BTC_MAX_SUPPLY = 21_000_000  # protocol constant — the one figure needing no source
+PRICE_CACHE_FILE = Path(__file__).parent / "data" / "price_history.json"
+COINBASE_CANDLES_URL = "https://api.exchange.coinbase.com/products/BTC-USD/candles"
+HISTORY_START = date(2022, 1, 1)   # ≥200 ISO weeks before mid-2026, with buffer
 
 
 @dataclass
@@ -96,3 +104,54 @@ def cost_basis_vs_200wma(registry: Registry, ctx: CycleContext) -> list[CostBasi
 
 def adoption_share_of_max_supply_pct(registry: Registry) -> float:
     return registry.total_btc / BTC_MAX_SUPPLY * 100
+
+
+def fetch_daily_closes(start: date, end: date) -> list[PricePoint]:
+    """Daily UTC closes from Coinbase Exchange, paginated (max 300 candles/call)."""
+    points: dict[str, float] = {}
+    window_start = start
+    while window_start <= end:
+        window_end = min(window_start + timedelta(days=299), end)
+        resp = httpx.get(COINBASE_CANDLES_URL, params={
+            "granularity": 86400,
+            "start": window_start.isoformat(),
+            "end": window_end.isoformat(),
+        }, timeout=20)
+        resp.raise_for_status()
+        for ts, _low, _high, _open, close, _vol in resp.json():
+            points[time.strftime("%Y-%m-%d", time.gmtime(ts))] = float(close)
+        window_start = window_end + timedelta(days=1)
+    return [PricePoint(date=d, close_usd=c) for d, c in sorted(points.items())]
+
+
+def load_price_history(cache_file: Path = PRICE_CACHE_FILE,
+                       allow_network: bool = True) -> tuple[list[PricePoint], str, str]:
+    """Cache-first daily close history. Returns (daily_closes, source, as_of)."""
+    cached: dict[str, float] = {}
+    cached_as_of = None
+    if cache_file.exists():
+        raw = json.loads(cache_file.read_text())
+        cached = {e["date"]: e["close_usd"] for e in raw["daily_closes"]}
+        cached_as_of = raw["as_of"]
+
+    if allow_network:
+        try:
+            start = date.fromisoformat(max(cached)) if cached else HISTORY_START
+            fresh = fetch_daily_closes(start, date.fromtimestamp(time.time()))
+            cached.update({p.date: p.close_usd for p in fresh})
+            as_of = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(json.dumps({
+                "as_of": as_of,
+                "source_note": "Coinbase Exchange daily candles (BTC-USD), UTC daily closes",
+                "daily_closes": [{"date": d, "close_usd": c} for d, c in sorted(cached.items())],
+            }, indent=1))
+            return ([PricePoint(date=d, close_usd=c) for d, c in sorted(cached.items())],
+                    "coinbase-live", as_of)
+        except Exception:
+            pass
+
+    if not cached:
+        raise ValueError("no cached price history and network unavailable/disallowed")
+    return ([PricePoint(date=d, close_usd=c) for d, c in sorted(cached.items())],
+            "cached-snapshot", cached_as_of)
