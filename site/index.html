@@ -131,19 +131,26 @@ h1 .stat { font-style: normal; color: var(--gold); }
   width: 250%; height: 250%; transform: scale(0.4); transform-origin: 0 0;
   border: 0; pointer-events: none;
 }
+.paper::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 80px;
+  background: linear-gradient(oklch(1 0 0 / 0), white);
+}
 .paper-label {
   text-align: center; margin-top: 1.6rem; font-size: 0.8rem;
   color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase;
 }
 .paper-label .mono { color: var(--gold); }
 
-/* figure bands */
-.figures {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1px; background: var(--line); border-block: 1px solid var(--line);
+/* figure bands — full-bleed hairlines top/bottom, open columns (no cell boxes) */
+.figures-band {
+  border-block: 1px solid var(--line);
   margin: clamp(3.5rem, 9vh, 6rem) 0;
 }
-.figure { background: var(--bg); padding: 1.6rem 1.4rem; }
+.figures {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.5rem 2.5rem;
+}
+.figure { padding: 1.7rem 0; }
 .fig-num { display: block; font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--text); }
 .fig-label { display: block; margin-top: 0.35rem; font-size: 0.84rem; color: var(--muted); }
 .figure.hot .fig-num { color: var(--gold); }
@@ -235,12 +242,14 @@ footer a { color: var(--text); }
     </div>
   </header>
 
-  <div class="wrap">
-    <div class="figures" role="list" aria-label="Key figures">
-      <div class="figure" role="listitem"><span class="fig-num mono">1,095,249</span><span class="fig-label">BTC disclosed by 10 companies</span></div>
-      <div class="figure" role="listitem"><span class="fig-num mono">$70.3B</span><span class="fig-label">value at spot (BTC $64,146, coinbase-live)</span></div>
-      <div class="figure" role="listitem"><span class="fig-num mono">5.22%</span><span class="fig-label">of the 21M max supply</span></div>
-      <div class="figure hot" role="listitem"><span class="fig-num mono">0%</span><span class="fig-label">verifiable on-chain by anyone</span></div>
+  <div class="figures-band">
+    <div class="wrap">
+      <div class="figures" role="list" aria-label="Key figures">
+        <div class="figure" role="listitem"><span class="fig-num mono">1,095,249</span><span class="fig-label">BTC disclosed by 10 companies</span></div>
+        <div class="figure" role="listitem"><span class="fig-num mono">$70.3B</span><span class="fig-label">value at spot (BTC $64,142, coinbase-live)</span></div>
+        <div class="figure" role="listitem"><span class="fig-num mono">5.22%</span><span class="fig-label">of the 21M max supply</span></div>
+        <div class="figure hot" role="listitem"><span class="fig-num mono">0%</span><span class="fig-label">verifiable on-chain by anyone</span></div>
+      </div>
     </div>
   </div>
 
@@ -320,7 +329,7 @@ footer a { color: var(--text); }
       </div>
     </div>
     <p class="strip-note">The largest premium to trend: Strategy Inc&rsquo;s average cost is <span class="mono">1.20&times;</span> the 200-week moving average &mdash; accumulated above the long-term trend line.</p>
-    <p class="asof mono">history: coinbase-live &middot; Coinbase Exchange daily candles &middot; as of 2026-07-10T23:27:06Z</p>
+    <p class="asof mono">history: coinbase-live &middot; Coinbase Exchange daily candles &middot; as of 2026-07-10T23:41:55Z</p>
     </div>
   </section>
 
@@ -339,7 +348,7 @@ footer a { color: var(--text); }
         <h3>Rebuilt nightly, no hands</h3>
         <p>An automated pipeline re-reads the registry, re-checks prices and on-chain data, and
         regenerates this page and the tearsheet every night. What you&rsquo;re reading is
-        reproducible &mdash; generated 2026-07-10 23:27 UTC.</p>
+        reproducible &mdash; generated 2026-07-10 23:41 UTC.</p>
       </div>
       <div class="reveal">
         <h3>Open methodology</h3>
