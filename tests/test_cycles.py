@@ -85,3 +85,53 @@ def test_adoption_share_of_max_supply():
     from datproof.cycles import adoption_share_of_max_supply_pct
     reg = registry_of(company("a", 1_050_000.0, None))
     assert adoption_share_of_max_supply_pct(reg) == pytest.approx(5.0)
+
+
+def write_cache(path, closes, as_of="2026-07-08T00:00:00Z"):
+    import json
+    path.write_text(json.dumps({
+        "as_of": as_of,
+        "source_note": "test",
+        "daily_closes": [{"date": p.date, "close_usd": p.close_usd} for p in closes],
+    }))
+
+
+def test_load_price_history_offline_uses_cache(tmp_path):
+    from datproof import cycles
+    cache = tmp_path / "price_history.json"
+    write_cache(cache, [PricePoint("2026-07-07", 60_000.0)])
+    daily_pts, source, as_of = cycles.load_price_history(cache_file=cache, allow_network=False)
+    assert [p.close_usd for p in daily_pts] == [60_000.0]
+    assert source == "cached-snapshot" and as_of == "2026-07-08T00:00:00Z"
+
+
+def test_load_price_history_tops_up_and_merges(tmp_path, monkeypatch):
+    from datproof import cycles
+    cache = tmp_path / "price_history.json"
+    write_cache(cache, [PricePoint("2026-07-07", 60_000.0)])
+    monkeypatch.setattr(cycles, "fetch_daily_closes",
+                        lambda start, end: [PricePoint("2026-07-07", 60_000.0),
+                                            PricePoint("2026-07-09", 61_000.0)])
+    daily_pts, source, _ = cycles.load_price_history(cache_file=cache)
+    assert [p.date for p in daily_pts] == ["2026-07-07", "2026-07-09"]  # merged, deduped
+    assert source == "coinbase-live"
+    assert "2026-07-09" in cache.read_text()  # cache updated
+
+
+def test_load_price_history_network_failure_falls_back(tmp_path, monkeypatch):
+    from datproof import cycles
+    cache = tmp_path / "price_history.json"
+    write_cache(cache, [PricePoint("2026-07-07", 60_000.0)])
+
+    def boom(start, end):
+        raise RuntimeError("offline")
+
+    monkeypatch.setattr(cycles, "fetch_daily_closes", boom)
+    daily_pts, source, _ = cycles.load_price_history(cache_file=cache)
+    assert source == "cached-snapshot" and len(daily_pts) == 1
+
+
+def test_load_price_history_missing_cache_and_no_network_raises(tmp_path):
+    from datproof import cycles
+    with pytest.raises(ValueError, match="no cached price history"):
+        cycles.load_price_history(cache_file=tmp_path / "nope.json", allow_network=False)
