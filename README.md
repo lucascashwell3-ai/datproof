@@ -1,18 +1,18 @@
 # DATproof — Digital Asset Treasury Risk Intelligence
 
-**Trust, but verify.** Public companies claim over 1,000,000 BTC on their balance sheets. DATproof measures how much of that is independently verifiable on-chain — and scores the risk of what isn't, the way an auditor would.
+**Don't trust, verify.** Public companies claim over 1,000,000 BTC on their balance sheets. DATproof measures how much of that is independently verifiable on-chain — and scores the risk of what isn't, with verification-grade rigor.
 
-> Current headline finding: of ~1.1M BTC disclosed by the top ten corporate holders, **0% is backed by published wallet addresses**. Existence rests entirely on management representation.
+> Current headline: of ~1.1M BTC disclosed by the top ten corporate holders, **0% is backed by published wallet addresses**. The rest, you take on each company's word.
 
 ## What it does
 
 - **Tracks the DAT landscape** — the top corporate BTC holders (Strategy, Twenty One, Metaplanet, MARA, Strive, Coinbase, …) with disclosed holdings, average cost, sources, and as-of dates. Every figure is sourced; nothing is guessed.
 - **Verifies on-chain** — reconciles published wallet addresses against live Blockstream balances (keyless), and quantifies the share of disclosed BTC that is independently verifiable.
-- **Scores risk in audit language** — a rule-based findings engine that names the assertion at risk (existence / valuation / completeness), assigns severity, and maps to COSO, FASB ASU 2023-08, and SOX ICFR. Cost-basis drawdowns, leverage structures, concentration, and stale disclosures are all flagged automatically.
+- **Scores the risk of what can't be verified** — a rule-based engine flags what matters for an investor (verifiability, valuation, concentration, leverage, stale disclosures) and ranks each point by magnitude and evidence quality. Cost-basis drawdowns, leverage structures, concentration, and stale disclosures are all caught automatically.
 - **Publishes a daily brief** — a GitHub Action generates a markdown intelligence brief every morning (optional Claude-written executive commentary) plus a LinkedIn post draft grounded in that day's data.
 - **Computes mNAV honestly** — market cap ÷ BTC NAV, only when you supply the market cap. Unsourced numbers are reported as `n/a`, not fabricated.
 
-A wallet-level transaction analyzer (FATF/BSA/OFAC screening with PDF audit reports) lives in `api/` and `frontend/app.py` — the drill-down layer once addresses are known.
+A wallet-level transaction analyzer (FATF/BSA/OFAC screening with PDF compliance reports) lives in `api/` and `frontend/app.py` — the drill-down layer once addresses are known.
 
 ## Quickstart
 
@@ -41,13 +41,13 @@ datproof/
 ├── registry.py      # Evidence ledger: disclosed holdings + sources + evidence tiers
 ├── onchain.py       # Blockstream balance verification, Coinbase spot, offline cache
 ├── metrics.py       # Value, concentration, drawdown, verifiability, mNAV
-├── risk.py          # Audit-style findings engine (assertions + frameworks + severity)
+├── risk.py          # Rule-based risk engine (categorized, ranked flags)
 ├── brief.py         # Daily brief + LinkedIn draft; optional Claude commentary
 └── cli.py           # brief | verify | landscape
 
 frontend/datproof_app.py           # Streamlit dashboard
 .github/workflows/daily-brief.yml  # Automated daily intelligence brief
-tests/                             # Unit tests for metrics + findings engine
+tests/                             # Unit tests for metrics + risk engine
 ```
 
 ## Tests
@@ -58,7 +58,7 @@ pytest tests/ -q
 
 ## Why this exists
 
-Built by **Lucas Cashwell** — IT auditor (financial services, SOX) moving into crypto-native risk and compliance. DATproof applies next-generation audit practices to the newest thing on corporate balance sheets: existence, valuation, and completeness assertions for digital asset treasuries.
+Built by **Lucas Cashwell** — a risk-and-controls background in financial services, moving into crypto-native risk and compliance. DATproof brings verification-grade rigor to the newest thing on corporate balance sheets: what's provable, what's at risk, and why it matters for digital-asset treasuries.
 
 Positioning and roadmap: [`docs/FLAGSHIP.md`](docs/FLAGSHIP.md).
 
