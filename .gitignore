@@ -28,3 +28,14 @@ reports/output/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ── Internal working docs — kept LOCALLY, never published to this PUBLIC repo ──
+# (career strategy / employer-sensitive planning must not live in a public repo)
+PRODUCT.md
+STATUS.md
+CLAUDE.md
+DESIGN.md
+SESSION_STATUS.md
+/docs/
+/.claude/
+briefs/linkedin-post-*.md
