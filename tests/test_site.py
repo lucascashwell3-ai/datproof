@@ -66,6 +66,13 @@ def test_cycle_section_renders_with_source_label(built):
     assert "history source:" in built  # evidence label for the price history itself
 
 
+def test_signals_section_renders_or_states_unavailable(built):
+    # Sentiment vs. on-chain reality: shows sourced signals, or an explicit
+    # unavailable state — never a fabricated number.
+    assert "Sentiment vs. On-Chain Reality" in built
+    assert ('class="fig-read"' in built) or ("valuation signals unavailable" in built)
+
+
 def test_cycle_figures_match_pipeline(built):
     from datproof.cycles import compute_cycle_context, load_price_history
     daily, source, as_of = load_price_history(allow_network=False)
