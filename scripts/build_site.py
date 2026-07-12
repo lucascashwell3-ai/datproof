@@ -34,11 +34,22 @@ from datproof.risk import Finding, evaluate
 
 SITE_DIR = Path(__file__).parent.parent / "site"
 
-SEVERITY_LABEL = {
-    "critical": "Critical",
-    "high": "High",
-    "medium": "Medium",
-    "low": "Low",
+# Public/educational register: risk magnitude in plain words, not audit-report
+# "severity". The underlying severity model (risk.py) is unchanged — only the label is.
+ATTENTION_LABEL = {
+    "critical": "Major",
+    "high": "Elevated",
+    "medium": "Moderate",
+    "low": "Minor",
+}
+
+# Plain-English category, translated from the internal audit assertion. Keeps the
+# rigor (the engine still reasons in assertions) without putting the jargon on the page.
+RISK_CATEGORY = {
+    "existence": "Verifiability",
+    "valuation": "Valuation",
+    "completeness": "Disclosure freshness",
+    "presentation": "Structure & concentration",
 }
 
 TIER_LABEL = {
@@ -137,16 +148,14 @@ def render_findings(findings: list[Finding], registry: Registry) -> str:
     items = []
     for i, f in enumerate(findings, 1):
         scope = "Portfolio-wide" if f.company_id == "landscape" else names.get(f.company_id, f.company_id)
-        fw = [x for x in f.frameworks
-              if x.strip().lower() != f"audit assertion: {f.assertion}".lower()]
-        frameworks = " · ".join(escape(x) for x in fw)
+        category = RISK_CATEGORY.get(f.assertion, "Risk")
         items.append(f"""      <article class="finding" id="f-{i}">
         <div class="finding-head">
-          <span class="fno mono">F-{i:02d}</span>
-          <span class="sev sev-{f.severity}">{SEVERITY_LABEL[f.severity]}</span>
+          <span class="fno mono">{i:02d}</span>
+          <span class="sev sev-{f.severity}">{ATTENTION_LABEL[f.severity]}</span>
           <h3>{escape(f.title)}</h3>
         </div>
-        <p class="finding-meta mono">{escape(scope)} · assertion: {escape(f.assertion)} · {frameworks}</p>
+        <p class="finding-meta mono">{escape(scope)} · {escape(category)}</p>
         <p class="finding-detail">{escape(f.detail)}</p>
       </article>""")
     return "\n".join(items)
@@ -241,7 +250,7 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
     description = (f"{n} corporate treasuries disclose {fmt_btc(metrics.total_btc)} BTC "
                    f"({fmt_usd_compact(metrics.total_value_usd)}). "
                    f"{fmt_pct(metrics.verifiable_pct)} is independently verifiable on-chain. "
-                   "Audit-assertion risk findings, updated daily.")
+                   "What's provable, what's at risk, and why it matters — rebuilt daily.")
 
     return f"""<!doctype html>
 <html lang="en">
@@ -277,10 +286,10 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
 
   <section class="verdict" aria-labelledby="verdict-h">
     <h1 id="verdict-h">Of the <em class="mono-fig">{fmt_btc(metrics.total_btc)}&nbsp;BTC</em> disclosed by {n} corporate treasuries, <em class="stat">{fmt_pct(metrics.verifiable_pct)}</em> is independently verifiable on&#8209;chain.</h1>
-    <p class="verdict-sub">Existence rests entirely on management representation: the digital-asset
-    equivalent of holding securities with no custodian confirmation. Figures are company
-    disclosures as of their stated dates; verification requires published wallet addresses
-    reconciled on-chain.</p>
+    <p class="verdict-sub">The rest, you take on the company's word — the digital-asset equivalent
+    of holding securities with no custodian confirmation. Figures are company disclosures as of
+    their stated dates; independent verification means published wallet addresses that reconcile
+    on-chain.</p>
   </section>
 
   <section class="figures" aria-label="Key figures">
@@ -331,9 +340,10 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
   </section>
 
   <section aria-labelledby="findings-h">
-    <h2 id="findings-h">Findings <span class="count mono">({len(findings)})</span></h2>
-    <p class="section-lede">Rule-based findings in audit-assertion language, severity-ranked.
-    Severity reflects magnitude and evidence quality, not price opinion.</p>
+    <h2 id="findings-h">What to watch <span class="count mono">({len(findings)})</span></h2>
+    <p class="section-lede">What the disclosed numbers flag for an investor — each point generated
+    by rule from the data, ranked by how much it matters. This is risk magnitude and evidence
+    quality, not a price opinion.</p>
 {render_findings(findings, registry)}
   </section>
 
@@ -356,10 +366,10 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
   </section>
 
   <footer>
-    <p>Built by Lucas Cashwell — IT auditor applying audit-grade rigor to digital-asset
+    <p>Built by Lucas Cashwell — applying verification-grade rigor to digital-asset
     treasuries. Open methodology: <a href="https://github.com/lucascashwell3-ai/datproof">github.com/lucascashwell3-ai/datproof</a>.</p>
     <p class="dim">Holdings figures are company disclosures as of their stated dates. This page
-    reports verification status and risk in audit language; it is not investment advice.</p>
+    reports what's independently verifiable and where the risks sit; it is not investment advice.</p>
   </footer>
 
 </main>

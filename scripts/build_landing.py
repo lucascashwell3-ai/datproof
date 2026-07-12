@@ -197,6 +197,12 @@ def build_page(registry, metrics, spot, cycle_ctx, cost_rows) -> str:
   --gold: oklch(0.8 0.115 88);
   --gold-deep: oklch(0.66 0.12 80);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --wrap-pad: clamp(1.25rem, 4vw, 2.5rem);
+  --wrap-max: 1120px;
+  /* content-width of a fading hairline — brightest across the column, dissolves into the dark at the margins */
+  --rule-w: calc(min(var(--wrap-max), 100%) - 2 * var(--wrap-pad));
+  --rule-framed: linear-gradient(90deg, transparent, var(--line) 14%, var(--line) 86%, transparent);
+  --rule-bleed: linear-gradient(90deg, transparent, var(--line) 8%, var(--line) 92%, transparent);
 }}
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 html {{ scroll-behavior: smooth; }}
@@ -209,7 +215,7 @@ body {{
 ::selection {{ background: var(--gold); color: var(--bg); }}
 a {{ color: inherit; }}
 .mono {{ font-family: "IBM Plex Mono", monospace; }}
-.wrap {{ max-width: 1120px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }}
+.wrap {{ max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }}
 
 /* atmosphere: gold aurora + grain, fixed behind everything */
 .atmo {{ position: fixed; inset: 0; z-index: -1; pointer-events: none; }}
@@ -316,16 +322,23 @@ h1 .stat {{ font-style: normal; color: var(--gold); }}
 }}
 .paper-label .mono {{ color: var(--gold); }}
 
-/* figure bands — full-bleed hairlines top/bottom, open columns (no cell boxes) */
+/* figure band — content-width fading rules frame the numbers on the obsidian */
 .figures-band {{
-  border-block: 1px solid var(--line);
-  margin: clamp(3.5rem, 9vh, 6rem) 0;
+  position: relative;
+  margin: clamp(3rem, 8vh, 5.5rem) 0;
+  padding-block: clamp(2.6rem, 6vh, 3.8rem);
 }}
+.figures-band::before, .figures-band::after {{
+  content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+  width: var(--rule-w); height: 1px; background: var(--rule-framed);
+}}
+.figures-band::before {{ top: 0; }}
+.figures-band::after {{ bottom: 0; }}
 .figures {{
   display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 1.5rem 2.5rem;
+  gap: 1.6rem 2.5rem;
 }}
-.figure {{ padding: 1.7rem 0; }}
+.figure {{ padding: 0; }}
 .fig-num {{ display: block; font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--text); }}
 .fig-label {{ display: block; margin-top: 0.35rem; font-size: 0.84rem; color: var(--muted); }}
 .figure.hot .fig-num {{ color: var(--gold); }}
@@ -359,9 +372,17 @@ blockquote cite {{ display: block; margin-top: 0.7rem; font-style: normal; font-
 blockquote cite a {{ color: var(--gold); text-decoration: none; }}
 blockquote cite a:hover {{ text-decoration: underline; }}
 
-/* cycle strip */
-.cycle {{ border-block: 1px solid var(--line); background: var(--bg-raise); }}
-.strip-figures {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2rem; margin-top: 2.2rem; }}
+/* cycle — a raised plane: soft full-bleed edges, real clearance from the acts above */
+.cycle {{
+  position: relative; background: var(--bg-raise);
+  margin-block: clamp(3rem, 8vh, 5.5rem);
+}}
+.cycle::before, .cycle::after {{
+  content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--rule-bleed);
+}}
+.cycle::before {{ top: 0; }}
+.cycle::after {{ bottom: 0; }}
+.strip-figures {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2rem; margin-top: 2.4rem; }}
 .strip-note {{ margin-top: 1.8rem; max-width: 60ch; color: var(--muted); }}
 .strip-note .mono {{ color: var(--gold); }}
 .asof {{ margin-top: 1.6rem; font-size: 0.76rem; color: var(--muted); }}
@@ -373,8 +394,12 @@ blockquote cite a:hover {{ text-decoration: underline; }}
 .gh-link {{ color: var(--gold); text-decoration: none; font-weight: 500; }}
 .gh-link:hover {{ text-decoration: underline; }}
 
-/* footer */
-footer {{ border-top: 1px solid var(--line); padding: 2.5rem 0 3rem; margin-top: 2rem; }}
+/* footer — framed fading rule, matched to the figure band */
+footer {{ position: relative; padding: 2.6rem 0 3rem; margin-top: 2rem; }}
+footer::before {{
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: var(--rule-w); height: 1px; background: var(--rule-framed);
+}}
 footer p {{ font-size: 0.88rem; color: var(--muted); max-width: 72ch; }}
 footer p + p {{ margin-top: 0.6rem; font-size: 0.8rem; }}
 footer a {{ color: var(--text); }}

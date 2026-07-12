@@ -42,8 +42,8 @@ def evaluate(metrics: LandscapeMetrics, today: date | None = None) -> list[Findi
             detail=(
                 f"Only {metrics.verifiable_pct:.1f}% of the {metrics.total_btc:,.0f} BTC "
                 f"disclosed by tracked companies is backed by published wallet addresses. "
-                f"Investors rely on management representations and (where applicable) auditor "
-                f"procedures rather than independent on-chain confirmation — the digital-asset "
+                f"Investors are trusting each company's own disclosures — and, where they exist, "
+                f"its auditors — rather than independent on-chain confirmation, the digital-asset "
                 f"equivalent of holding securities with no custodian confirmation."
             ),
             frameworks=["Audit assertion: existence", "COSO: Control Environment / Information & Communication"],
@@ -88,9 +88,10 @@ def _evaluate_company(m: CompanyMetrics, today: date) -> list[Finding]:
             assertion="valuation",
             detail=(
                 f"Spot ${m.holdings_value_usd / c.btc_holdings:,.0f} vs disclosed average cost "
-                f"${c.avg_cost_usd:,.0f}. Under FASB ASU 2023-08, crypto assets are marked to "
-                f"fair value through net income — this unrealized loss flows directly to the "
-                f"income statement and, where leverage exists, pressures coverage ratios."
+                f"${c.avg_cost_usd:,.0f}. Under current U.S. accounting rules, companies now mark "
+                f"bitcoin to market each period, so an unrealized loss like this flows straight "
+                f"through to reported earnings — and where the position is levered, it pressures "
+                f"debt-coverage ratios."
             ),
             frameworks=["FASB ASU 2023-08 (fair value)", "Audit assertion: valuation"],
         ))

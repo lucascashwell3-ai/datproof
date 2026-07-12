@@ -40,7 +40,16 @@ def test_every_company_and_asof_present(built):
 def test_all_findings_rendered(built):
     registry = load_registry()
     findings = evaluate(compute_metrics(registry, 60000.0))
-    assert f"F-{len(findings):02d}" in built
+    assert built.count('class="finding"') == len(findings)
+
+
+def test_no_consultant_vocabulary_on_tearsheet(built):
+    # Public repositioning (spec 2026-07-10): the tearsheet is a public surface, so the same
+    # audit-framework/consultant vocabulary banned on the landing page is banned here.
+    # The rigor still lives in the engine (risk.py assertions/frameworks) — it just isn't rendered.
+    for banned in ("COSO", "SOX", "ASU 2023-08", "FASB", "audit assertion", "audit-assertion",
+                   "ICFR", "IT auditor", "audit-grade", "audit language", "severity-ranked"):
+        assert banned not in built, f"banned framing on tearsheet: {banned}"
 
 
 def test_no_unsourced_mnav(built):
