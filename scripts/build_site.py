@@ -29,6 +29,7 @@ from datproof.cycles import (
 )
 from datproof.metrics import LandscapeMetrics, compute_metrics
 from datproof.onchain import SpotPrice, get_spot_price
+from datproof.onchain_signals import SignalsContext, load_signals
 from datproof.registry import Registry, load_registry
 from datproof.risk import Finding, evaluate
 
@@ -170,6 +171,44 @@ def render_sources(registry: Registry) -> str:
     return "\n".join(rows)
 
 
+def _fmt_signal(unit: str, value: float) -> str:
+    if unit == "%":
+        return f"{value:.1f}%"
+    if unit == "x":
+        return f"{value:.2f}&times;"
+    return f"{value:.2f}"
+
+
+def render_signals_section(ctx: SignalsContext | None) -> str:
+    """Sentiment (price) vs. on-chain reality — the current on-chain valuation read."""
+    if ctx is None or not ctx.signals:
+        return """  <section aria-labelledby="signals-h">
+    <h2 id="signals-h">Sentiment vs. On-Chain Reality</h2>
+    <p class="table-note">On-chain valuation signals unavailable right now — the source returned
+    no data and DATproof does not estimate. They refresh on the next successful build.</p>
+  </section>"""
+
+    figures = "\n".join(
+        f"""      <div class="figure">
+        <span class="fig-num mono">{_fmt_signal(s.unit, s.value)}</span>
+        <span class="fig-label">{escape(s.label)}</span>
+        <span class="fig-read">{escape(s.reading)}</span>
+      </div>"""
+        for s in ctx.signals)
+
+    return f"""  <section aria-labelledby="signals-h">
+    <h2 id="signals-h">Sentiment vs. On-Chain Reality</h2>
+    <p class="section-lede">Price is what the market <em>feels</em> bitcoin is worth today. These
+    are what the chain <em>records</em> about where holders actually bought &mdash; the reality
+    underneath the sentiment. When they diverge, the gap is the story. No predictions; just the
+    current on-chain state.</p>
+    <section class="figures figures-read" aria-label="On-chain valuation signals">
+{figures}
+    </section>
+    <p class="dataline mono">source: {escape(ctx.source)} &middot; latest on-chain valuation metrics &middot; as of {escape(ctx.as_of)}</p>
+  </section>"""
+
+
 def render_cycle_section(ctx: CycleContext | None,
                          cost_rows: list[CostBasisContext],
                          adoption_pct: float) -> str:
@@ -242,7 +281,8 @@ def render_cycle_section(ctx: CycleContext | None,
 def build_page(registry: Registry, metrics: LandscapeMetrics,
                findings: list[Finding], spot: SpotPrice,
                cycle_ctx: CycleContext | None = None,
-               cost_rows: list[CostBasisContext] | None = None) -> str:
+               cost_rows: list[CostBasisContext] | None = None,
+               signals_ctx: SignalsContext | None = None) -> str:
     n = len(metrics.companies)
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     title = (f"DATproof — {fmt_pct(metrics.verifiable_pct)} of "
@@ -347,6 +387,8 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
 {render_findings(findings, registry)}
   </section>
 
+{render_signals_section(signals_ctx)}
+
 {render_cycle_section(cycle_ctx, cost_rows or [], adoption_share_of_max_supply_pct(registry))}
 
   <section aria-labelledby="method-h" class="method">
@@ -448,6 +490,9 @@ a:hover{text-decoration-thickness:2px}
 .figure:first-child{border-left:none;padding-left:0}
 .fig-num{font-size:1.65rem;font-weight:600;letter-spacing:-0.01em}
 .fig-label{font-size:.85rem;color:var(--muted)}
+.fig-read{font-size:.8rem;color:var(--muted);line-height:1.4;margin-top:.4rem;text-wrap:pretty}
+.figures-read{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.figures-read .figure{padding-bottom:1.35rem}
 @media (max-width:720px){
   .figure{border-left:none;padding-left:0;border-top:1px solid var(--rule)}
   .figure:first-child{border-top:none}
@@ -600,7 +645,10 @@ def build(price_override: float | None = None, out: Path | None = None) -> Path:
     except ValueError:
         cycle_ctx, cost_rows = None, []
 
-    html = build_page(registry, metrics, findings, spot, cycle_ctx, cost_rows)
+    # On-chain valuation signals — offline (cache-only) for deterministic builds.
+    signals_ctx = load_signals(allow_network=price_override is None)
+
+    html = build_page(registry, metrics, findings, spot, cycle_ctx, cost_rows, signals_ctx)
     out = out or SITE_DIR / "tearsheet" / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
