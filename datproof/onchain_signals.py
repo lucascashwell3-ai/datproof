@@ -28,18 +28,21 @@ SOURCE_NAME = "bitcoin-data.com (BGeometrics)"
 
 @dataclass(frozen=True)
 class MetricSpec:
-    key: str            # internal id
-    slug: str           # API slug: GET {API_BASE}/{slug}/last
-    label: str          # display label
-    unit: str           # "%", "x", or ""
-    lower_is_fear: bool # True: a low value = fear/underwater (MVRV, SOPR); False: high = fear (supply-in-loss)
+    key: str                              # internal id
+    slug: str                             # single-endpoint slug (value used as-is); "" if computed
+    label: str                            # display label
+    unit: str                             # "%", "x", or ""
+    lower_is_fear: bool                   # True: low value = fear (MVRV, SOPR); False: high = fear
+    ratio_of: tuple[str, str] | None = None  # (numerator, denominator) slugs -> value = num/den*100
 
 
-# MVRV and SOPR slugs are confirmed live; supply-in-loss slug is best-effort and
-# degrades to "unavailable" if the endpoint 404s (parser tolerates the exact
-# field name either way). Order here is display order.
+# All slugs verified against the bitcoin-data.com OpenAPI spec (2026-07-11).
+# supply-in-loss has no direct percent endpoint, so it's computed supply-weighted
+# (supply-loss / supply-current * 100) — the standard "% of supply in loss" definition.
+# Order here is display order.
 METRICS: tuple[MetricSpec, ...] = (
-    MetricSpec("supply_in_loss", "supply-in-loss", "Supply held at a loss", "%", lower_is_fear=False),
+    MetricSpec("supply_in_loss", "", "Supply held at a loss", "%", lower_is_fear=False,
+               ratio_of=("supply-loss", "supply-current")),
     MetricSpec("mvrv", "mvrv", "MVRV ratio", "x", lower_is_fear=True),
     MetricSpec("sopr", "sopr", "SOPR", "", lower_is_fear=True),
 )
@@ -101,14 +104,32 @@ def interpret(spec: MetricSpec, value: float) -> str:
     return ""
 
 
+def _fetch_last(slug: str, timeout: float) -> tuple[float, str] | None:
+    resp = httpx.get(f"{API_BASE}/{slug}/last", timeout=timeout)
+    if resp.status_code != 200:
+        return None
+    return _extract(resp.json())
+
+
 def fetch_signal(spec: MetricSpec, *, timeout: float = 15.0) -> Signal | None:
-    """Fetch one metric's latest point. Returns None on any failure (rate limit,
-    404, network) — the caller renders it unavailable rather than fabricating."""
+    """Fetch one metric's latest point (or compute a supply-weighted ratio). Returns
+    None on any failure — rate limit, 404, network, or an out-of-range ratio — so the
+    caller renders it unavailable rather than fabricating."""
     try:
-        resp = httpx.get(f"{API_BASE}/{spec.slug}/last", timeout=timeout)
-        if resp.status_code != 200:
-            return None
-        value, as_of = _extract(resp.json())
+        if spec.ratio_of:
+            num_slug, den_slug = spec.ratio_of
+            num = _fetch_last(num_slug, timeout)
+            den = _fetch_last(den_slug, timeout)
+            if not num or not den or den[0] == 0:
+                return None
+            value, as_of = num[0] / den[0] * 100, num[1]
+            if not 0 <= value <= 100:  # units sanity check — never render a nonsense %
+                return None
+        else:
+            point = _fetch_last(spec.slug, timeout)
+            if not point:
+                return None
+            value, as_of = point
     except (httpx.HTTPError, ValueError, KeyError):
         return None
     return Signal(spec.key, spec.label, spec.unit, value, as_of, interpret(spec, value))
