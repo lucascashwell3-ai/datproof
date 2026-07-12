@@ -1,10 +1,9 @@
-"""Public-surface docs stay jargon-light.
+"""Public docs keep a plain, reader-friendly register.
 
-Per the 2026-07-10 repositioning spec, public-facing surfaces use an educational
-register — no audit-framework / consultant branding (COSO, SOX, FASB ASU 2023-08,
-"audit assertion", ICFR, "IT auditor"). The rigor still lives in the engine
-(risk.py assertions + frameworks); it just isn't advertised on public copy.
-This mirrors the vocabulary bans enforced on the landing page and tearsheet.
+Public-facing copy (README, landing, tearsheet) avoids dense finance/accounting
+acronyms and jargon so it reads clearly to a general audience. The analytical
+rigor still lives in the engine (risk.py assertions + frameworks); this test just
+guards the public copy's vocabulary, same as the landing page and tearsheet.
 """
 
 from pathlib import Path
