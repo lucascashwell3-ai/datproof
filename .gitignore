@@ -37,5 +37,8 @@ CLAUDE.md
 DESIGN.md
 SESSION_STATUS.md
 /docs/
-/.claude/
+/.claude/*
+!/.claude/skills/
+/.claude/skills/*
+!/.claude/skills/impeccable/
 briefs/linkedin-post-*.md
