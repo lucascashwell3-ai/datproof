@@ -1,46 +1,58 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="top">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DATproof — the daily intelligence page for bitcoin treasury companies</title>
-<meta name="description" content="10 public companies disclose 1,095,249 BTC ($71.3B). Verifiable on-chain by anyone: 0%. What they hold, what&#x27;s provable, and where we are in the cycle — rebuilt daily.">
-<meta property="og:title" content="DATproof — the daily intelligence page for bitcoin treasury companies">
-<meta property="og:description" content="10 public companies disclose 1,095,249 BTC ($71.3B). Verifiable on-chain by anyone: 0%. What they hold, what&#x27;s provable, and where we are in the cycle — rebuilt daily.">
+<title>DATproof — the rating agency for bitcoin-treasury proof</title>
+<meta name="description" content="Every major corporate bitcoin holder graded A–F on the quality of evidence behind its disclosed coins. 10 companies · 1,095,249 BTC ($71.3B) · 0% provable on-chain today. Public methodology, rebuilt nightly.">
+<meta property="og:title" content="DATproof — the rating agency for bitcoin-treasury proof">
+<meta property="og:description" content="Every major corporate bitcoin holder graded A–F on the quality of evidence behind its disclosed coins. 10 companies · 1,095,249 BTC ($71.3B) · 0% provable on-chain today. Public methodology, rebuilt nightly.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230c0d12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23e3b74f' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0d12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23e3b74f' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+
 :root {
   --bg: oklch(0.13 0.012 260);
   --bg-raise: oklch(0.165 0.014 260);
+  --bg-panel: oklch(0.15 0.013 260);
   --text: oklch(0.93 0.008 90);
-  --muted: oklch(0.66 0.014 260);
+  --muted: oklch(0.71 0.014 260);
+  --faint: oklch(0.55 0.014 260);
   --line: oklch(0.27 0.018 260);
+  --line-soft: oklch(0.22 0.016 260);
   --gold: oklch(0.8 0.115 88);
   --gold-deep: oklch(0.66 0.12 80);
+  --g-a: oklch(0.8 0.115 88);
+  --g-b: oklch(0.74 0.1 145);
+  --g-c: oklch(0.76 0.02 260);
+  --g-d: oklch(0.72 0.11 55);
+  --g-f: oklch(0.64 0.15 25);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: linear(0, 0.0767, 0.248, 0.4478, 0.6355, 0.7903, 0.9053, 0.9821, 1.0272, 1.0483, 1.0533, 1.0486, 1.0392, 1.0286, 1.0187, 1.0106, 1.0046, 1.0007, 0.9984, 0.9974, 0.9972, 0.9976, 0.9985, 0.9993, 1);
   --wrap-pad: clamp(1.25rem, 4vw, 2.5rem);
   --wrap-max: 1120px;
-  /* content-width of a fading hairline — brightest across the column, dissolves into the dark at the margins */
   --rule-w: calc(min(var(--wrap-max), 100%) - 2 * var(--wrap-pad));
   --rule-framed: linear-gradient(90deg, transparent, var(--line) 14%, var(--line) 86%, transparent);
-  --rule-bleed: linear-gradient(90deg, transparent, var(--line) 8%, var(--line) 92%, transparent);
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Inter", system-ui, sans-serif;
+  --monof: "IBM Plex Mono", ui-monospace, monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   background: var(--bg); color: var(--text);
-  font: 400 1.0625rem/1.65 "IBM Plex Sans", system-ui, sans-serif;
+  font: 400 1.0625rem/1.68 var(--sans);
   -webkit-font-smoothing: antialiased; overflow-x: hidden;
 }
 ::selection { background: var(--gold); color: var(--bg); }
 a { color: inherit; }
-.mono { font-family: "IBM Plex Mono", monospace; }
+.mono { font-family: var(--monof); font-variant-numeric: tabular-nums; }
 .wrap { max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }
+:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold); border-radius: 4px; }
 
 /* atmosphere: gold aurora + grain, fixed behind everything */
 .atmo { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
@@ -66,7 +78,7 @@ a { color: inherit; }
   box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
   white-space: nowrap;
 }
-.nav .wordmark { font: 600 1.02rem/1 "Newsreader", serif; letter-spacing: 0.01em; margin-right: 0.65rem; }
+.nav .wordmark { font: 600 1.02rem/1 var(--serif); letter-spacing: 0.01em; margin-right: 0.65rem; text-decoration: none; }
 .nav .wordmark .seal { color: var(--gold); }
 .nav a.item {
   font-size: 0.84rem; color: var(--muted); text-decoration: none;
@@ -83,143 +95,13 @@ a { color: inherit; }
 .nav a.cta:active { transform: scale(0.96); }
 @media (max-width: 680px) { .nav a.item { display: none; } }
 
-/* hero */
-.hero { padding-block: clamp(7rem, 14vh, 10rem) clamp(3rem, 6vh, 5rem); }
-.kicker {
-  font-size: 0.78rem; letter-spacing: 0.22em; color: var(--gold);
-  text-transform: uppercase; margin-bottom: 1.4rem;
-}
-h1 {
-  font: 380 clamp(2.5rem, 6.2vw, 4.6rem)/1.08 "Newsreader", serif;
-  letter-spacing: -0.015em; text-wrap: balance; max-width: 17ch;
-}
-h1 em { font-style: italic; color: var(--gold); }
-h1 .stat { font-style: normal; color: var(--gold); }
-.hero-sub {
-  margin-top: 1.5rem; max-width: 52ch; color: var(--muted); font-size: 1.08rem;
-}
-.hero-sub .mono { color: var(--text); font-size: 0.98em; }
-.hero-ctas { display: flex; align-items: center; gap: 0.8rem; margin-top: 2.2rem; }
-.btn-pill {
-  display: inline-block; text-decoration: none; font-weight: 600; font-size: 0.95rem;
-  color: var(--bg); background: linear-gradient(180deg, oklch(0.85 0.11 90), var(--gold-deep));
-  padding: 0.85rem 1.6rem; border-radius: 999px;
-  box-shadow: 0 1px 0 oklch(1 0 0 / 0.25) inset, 0 10px 30px oklch(0.66 0.12 80 / 0.25);
-  transition: transform 130ms var(--ease-out);
-}
-.btn-pill:active { transform: scale(0.97); }
-.btn-round {
-  display: grid; place-items: center; width: 3rem; height: 3rem;
-  border: 1px solid var(--line); border-radius: 999px; text-decoration: none;
-  color: var(--text); font-size: 1.05rem; background: var(--bg-raise);
-  transition: transform 130ms var(--ease-out), border-color 140ms ease;
-}
-.btn-round:active { transform: scale(0.94); }
-@media (hover: hover) and (pointer: fine) {
-  .btn-pill:hover { transform: translateY(-1px); }
-  .btn-round:hover { border-color: var(--gold); }
-}
-
-/* the research artifact — tearsheet inset as a physical object */
-.artifact { margin: clamp(3rem, 8vh, 5.5rem) 0 0; display: block; position: relative; }
-.artifact a { display: block; text-decoration: none; }
-.paper {
-  position: relative; border-radius: 10px; overflow: hidden;
-  width: min(880px, 100%); margin: 0 auto;
-  aspect-ratio: 16 / 9.5; background: white;
-  transform: rotate(-1.2deg);
-  box-shadow:
-    0 2px 4px oklch(0 0 0 / 0.4),
-    0 24px 70px oklch(0 0 0 / 0.55),
-    0 0 120px oklch(0.66 0.12 80 / 0.12);
-}
-.paper iframe {
-  width: 250%; height: 250%; transform: scale(0.4); transform-origin: 0 0;
-  border: 0; pointer-events: none;
-}
-.paper::after {
-  content: ""; position: absolute; inset: auto 0 0 0; height: 80px;
-  background: linear-gradient(oklch(1 0 0 / 0), white);
-}
-.paper-label {
-  text-align: center; margin-top: 1.6rem; font-size: 0.8rem;
-  color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase;
-}
-.paper-label .mono { color: var(--gold); }
-
-/* figure band — content-width fading rules frame the numbers on the obsidian */
-.figures-band {
-  position: relative;
-  margin: clamp(3rem, 8vh, 5.5rem) 0;
-  padding-block: clamp(2.6rem, 6vh, 3.8rem);
-}
-.figures-band::before, .figures-band::after {
-  content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-  width: var(--rule-w); height: 1px; background: var(--rule-framed);
-}
-.figures-band::before { top: 0; }
-.figures-band::after { bottom: 0; }
-.figures {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 1.6rem 2.5rem;
-}
-.figure { padding: 0; }
-.fig-num { display: block; font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--text); }
-.fig-label { display: block; margin-top: 0.35rem; font-size: 0.84rem; color: var(--muted); }
-.figure.hot .fig-num { color: var(--gold); }
-
-/* sections */
-section { padding: clamp(2.5rem, 7vh, 4.5rem) 0; }
-.sec-kicker { font-size: 0.75rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; }
 h2 {
-  font: 400 clamp(1.7rem, 3.4vw, 2.5rem)/1.15 "Newsreader", serif;
-  letter-spacing: -0.01em; margin-top: 0.7rem; max-width: 24ch; text-wrap: balance;
+  font: 480 clamp(1.7rem, 3.4vw, 2.4rem)/1.15 var(--serif);
+  letter-spacing: -0.01em; max-width: 26ch; text-wrap: balance;
 }
 .sec-lede { margin-top: 1rem; max-width: 58ch; color: var(--muted); }
+section { padding: clamp(2.6rem, 7vh, 4.6rem) 0; }
 
-/* acts */
-.acts { margin-top: 3rem; display: grid; gap: clamp(2.5rem, 6vh, 4rem); }
-.act { max-width: 720px; }
-.act:nth-child(even) { margin-left: auto; }
-.act-head { display: flex; align-items: baseline; gap: 1rem; }
-.act-num { color: var(--gold); font-size: 0.9rem; }
-.act h3 { font: 500 1.5rem/1.2 "Newsreader", serif; }
-.act-body { margin-top: 0.9rem; color: var(--muted); }
-.act-body a { color: var(--gold); text-decoration: none; }
-.act-body a:hover { text-decoration: underline; }
-blockquote {
-  margin-top: 1.4rem; padding: 1.2rem 1.5rem;
-  border-left: 2px solid var(--gold); background: var(--bg-raise);
-  border-radius: 0 10px 10px 0;
-}
-blockquote p { font: italic 400 1.12rem/1.5 "Newsreader", serif; }
-blockquote cite { display: block; margin-top: 0.7rem; font-style: normal; font-size: 0.84rem; color: var(--muted); }
-blockquote cite a { color: var(--gold); text-decoration: none; }
-blockquote cite a:hover { text-decoration: underline; }
-
-/* cycle — a raised plane: soft full-bleed edges, real clearance from the acts above */
-.cycle {
-  position: relative; background: var(--bg-raise);
-  margin-block: clamp(3rem, 8vh, 5.5rem);
-}
-.cycle::before, .cycle::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--rule-bleed);
-}
-.cycle::before { top: 0; }
-.cycle::after { bottom: 0; }
-.strip-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2rem; margin-top: 2.4rem; }
-.strip-note { margin-top: 1.8rem; max-width: 60ch; color: var(--muted); }
-.strip-note .mono { color: var(--gold); }
-.asof { margin-top: 1.6rem; font-size: 0.76rem; color: var(--muted); }
-
-/* method */
-.method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2.2rem; margin-top: 2.4rem; }
-.method-grid h3 { font: 500 1.15rem/1.3 "Newsreader", serif; margin-bottom: 0.5rem; }
-.method-grid p { font-size: 0.95rem; color: var(--muted); }
-.gh-link { color: var(--gold); text-decoration: none; font-weight: 500; }
-.gh-link:hover { text-decoration: underline; }
-
-/* footer — framed fading rule, matched to the figure band */
 footer { position: relative; padding: 2.6rem 0 3rem; margin-top: 2rem; }
 footer::before {
   content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
@@ -229,116 +111,418 @@ footer p { font-size: 0.88rem; color: var(--muted); max-width: 72ch; }
 footer p + p { margin-top: 0.6rem; font-size: 0.8rem; }
 footer a { color: var(--text); }
 
-/* reveal-on-scroll (transform/opacity only; removed under reduced motion) */
+/* reveal-on-scroll (transform/opacity only; inert without JS or under reduced motion) */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal { opacity: 0; transform: translateY(14px); transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out); }
-  .reveal.on { opacity: 1; transform: none; }
+  .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out); }
+  .js .reveal.on { opacity: 1; transform: none; }
 }
+
+/* hero */
+.hero { padding-block: clamp(6.5rem, 13vh, 9rem) clamp(1.6rem, 3vh, 2.4rem); }
+.kicker {
+  font-family: var(--monof); font-size: 0.78rem; letter-spacing: 0.22em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 1.4rem;
+}
+.kicker .type { display: inline-block; vertical-align: bottom; white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .kicker .type {
+    /* 20 chars; ch units ignore the 0.22em tracking, so add it back per char */
+    overflow: hidden; width: calc(20ch + 20 * 0.22em);
+    border-right: 2px solid var(--gold);
+    animation: typing 1.3s steps(20) 250ms backwards, caret-off 1ms linear 3.4s forwards;
+  }
+  @keyframes typing { from { width: 0; } }
+  @keyframes caret-off { to { border-color: transparent; } }
+}
+h1 {
+  font: 400 clamp(2.4rem, 5.8vw, 4.2rem)/1.1 var(--serif);
+  letter-spacing: -0.015em; text-wrap: balance; max-width: 20ch;
+}
+h1 em { font-style: italic; color: var(--gold); }
+.hero-sub { margin-top: 1.4rem; max-width: 56ch; color: var(--muted); font-size: 1.08rem; }
+.hero-sub strong { color: var(--text); font-weight: 500; }
+
+/* the proof panel — scoreboard IS the hero */
+.proof-panel {
+  margin-top: clamp(2rem, 4.5vh, 3.2rem);
+  background: oklch(0.15 0.013 260 / 0.82); backdrop-filter: blur(6px);
+  border: 1px solid var(--line); border-radius: 18px;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  box-shadow: 0 30px 80px oklch(0 0 0 / 0.45);
+}
+.panel-top { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; justify-content: space-between; }
+
+/* segmented controls — spring-glide pill (pure CSS easing, JS moves it) */
+.seg { position: relative; display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: oklch(0.12 0.012 260 / 0.7); }
+.seg .thumb {
+  position: absolute; top: 3px; bottom: 3px; left: 0; width: 10px;
+  border-radius: 999px; background: oklch(0.24 0.02 260);
+  border: 1px solid oklch(0.32 0.02 260);
+  transition: transform 500ms var(--spring), width 500ms var(--spring);
+  will-change: transform;
+}
+.seg button {
+  position: relative; z-index: 1; appearance: none; background: none; border: 0;
+  font: 500 0.84rem/1 var(--sans); color: var(--muted); cursor: pointer;
+  padding: 0.55rem 0.95rem; border-radius: 999px; transition: color 180ms ease;
+}
+.seg button[aria-pressed="true"] { color: var(--text); }
+.seg.bop { border-color: oklch(0.4 0.09 85 / 0.55); }
+.seg.bop .thumb { background: oklch(0.3 0.06 82); border-color: oklch(0.45 0.09 85); }
+.seg.bop button[aria-pressed="true"] { color: var(--gold); }
+@media (prefers-reduced-motion: reduce) { .seg .thumb { transition: none; } }
+
+/* the burden-of-proof figure */
+.bop-figure { margin: clamp(1.4rem, 3.5vh, 2.2rem) 0 0; }
+.bop-num {
+  display: block; font-family: var(--monof); font-weight: 500;
+  font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1.05; letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums; transition: color 400ms ease;
+}
+.proofmode .bop-num { color: var(--gold); }
+.bop-cap { display: block; margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; }
+.bop-cap .mono { color: var(--text); font-size: 0.92em; }
+
+/* scoreboard table */
+.board-scroll { overflow-x: auto; margin-top: clamp(1.3rem, 3vh, 2rem); -webkit-overflow-scrolling: touch; }
+table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; }
+.board thead th {
+  font-family: var(--monof); font-weight: 500; font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--faint); text-align: left;
+  padding: 0.45rem 0.9rem 0.55rem 0; border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.board thead th.num { text-align: right; }
+.board thead th button {
+  appearance: none; background: none; border: 0; color: inherit; font: inherit;
+  letter-spacing: inherit; text-transform: inherit; cursor: pointer; padding: 0;
+}
+.board thead th button::after { content: "↕"; opacity: 0.4; margin-left: 0.35em; }
+.board thead th[aria-sort="descending"] button::after { content: "↓"; opacity: 1; color: var(--gold); }
+.board thead th[aria-sort="ascending"] button::after { content: "↑"; opacity: 1; color: var(--gold); }
+.board tbody th, .board tbody td {
+  padding: 0.72rem 0.9rem 0.72rem 0; border-bottom: 1px solid var(--line-soft);
+  vertical-align: baseline; text-align: left;
+}
+.board tbody th { font-weight: 500; }
+.board td.num, .board th.num { text-align: right; font-family: var(--monof); font-variant-numeric: tabular-nums; }
+.board td.dim { color: var(--muted); }
+.board .tick { color: var(--faint); font-family: var(--monof); font-size: 0.8rem; margin-left: 0.5em; }
+.board .tier { font-family: var(--monof); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.board .asof { font-family: var(--monof); font-size: 0.78rem; color: var(--faint); white-space: nowrap; }
+.board tbody tr { transition: opacity 450ms ease; }
+
+/* grade chips — stamped like a rubber stamp */
+.chip {
+  display: inline-grid; place-items: center; width: 2.15rem; height: 2.15rem;
+  border-radius: 8px; font: 600 1.05rem/1 var(--serif);
+  border: 1px solid; cursor: help;
+}
+.chip.gA { color: var(--g-a); border-color: oklch(0.8 0.115 88 / 0.6); background: oklch(0.8 0.115 88 / 0.12); }
+.chip.gB { color: var(--g-b); border-color: oklch(0.74 0.1 145 / 0.55); background: oklch(0.74 0.1 145 / 0.1); }
+.chip.gC { color: var(--g-c); border-color: oklch(0.76 0.02 260 / 0.5); background: oklch(0.76 0.02 260 / 0.08); }
+.chip.gD { color: var(--g-d); border-color: oklch(0.72 0.11 55 / 0.55); background: oklch(0.72 0.11 55 / 0.1); }
+.chip.gF { color: var(--g-f); border-color: oklch(0.64 0.15 25 / 0.55); background: oklch(0.64 0.15 25 / 0.1); }
+@media (prefers-reduced-motion: no-preference) {
+  .stamp-run .chip {
+    animation: stamp 520ms var(--spring) backwards;
+    animation-delay: calc(var(--i) * 45ms);
+  }
+  @keyframes stamp { from { transform: scale(1.45); opacity: 0; } }
+}
+
+/* proof mode: unproven rows recede, the grade stays stamped */
+.proofmode .board tr.unproven { opacity: 0.5; }
+.proofmode .board tr.unproven td.flip { color: var(--gold); }
+.board-note { margin-top: 1.1rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
+.board-note .mono { color: var(--gold); }
+
+/* figure band */
+.figures-band { position: relative; margin: clamp(2.6rem, 7vh, 4.6rem) 0 0; padding-block: clamp(2.4rem, 5.5vh, 3.4rem); }
+.figures-band::before, .figures-band::after {
+  content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+  width: var(--rule-w); height: 1px; background: var(--rule-framed);
+}
+.figures-band::before { top: 0; }
+.figures-band::after { bottom: 0; }
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.6rem 2.5rem; }
+.fig-num { display: block; font-family: var(--monof); font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--text); font-variant-numeric: tabular-nums; }
+.fig-label { display: block; margin-top: 0.35rem; font-size: 0.84rem; color: var(--muted); }
+.figure.hot .fig-num { color: var(--gold); }
+
+/* method — a ruled ledger, not cards */
+.rubric { margin-top: 2.2rem; border-top: 1px solid var(--line); }
+.rubric-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 2rem;
+  padding: 1.05rem 0; border-bottom: 1px solid var(--line-soft); align-items: baseline;
+}
+.rubric-row h3 { font: 500 1.08rem/1.3 var(--serif); }
+.rubric-row p { grid-column: 1; font-size: 0.92rem; color: var(--muted); max-width: 62ch; text-wrap: pretty; }
+.rubric-pts { font-family: var(--monof); color: var(--gold); font-size: 0.95rem; white-space: nowrap; }
+.gradekey { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-top: 1.8rem; align-items: center; }
+.gradekey .chip { cursor: default; }
+.gradekey .k { display: flex; align-items: center; gap: 0.55rem; font-size: 0.85rem; color: var(--muted); }
+.method-cta { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
+.btn-pill {
+  display: inline-block; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+  color: var(--bg); background: linear-gradient(180deg, oklch(0.85 0.11 90), var(--gold-deep));
+  padding: 0.8rem 1.5rem; border-radius: 999px;
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.25) inset, 0 10px 30px oklch(0.66 0.12 80 / 0.25);
+  transition: transform 130ms var(--ease-out);
+}
+.btn-pill:active { transform: scale(0.97); }
+.btn-quiet {
+  display: inline-block; text-decoration: none; font-weight: 500; font-size: 0.92rem;
+  color: var(--text); border: 1px solid var(--line); background: var(--bg-raise);
+  padding: 0.76rem 1.4rem; border-radius: 999px;
+  transition: border-color 140ms ease, transform 130ms var(--ease-out);
+}
+.btn-quiet:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-pill:hover { transform: translateY(-1px); }
+  .btn-quiet:hover { border-color: var(--gold); }
+}
+
+/* case teaser + cycle */
+.case-teaser p { margin-top: 1rem; max-width: 58ch; color: var(--muted); }
+.cycle { position: relative; background: var(--bg-raise); margin-block: clamp(2.6rem, 7vh, 4.6rem); }
+.cycle::before, .cycle::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line) 8%, var(--line) 92%, transparent);
+}
+.cycle::before { top: 0; }
+.cycle::after { bottom: 0; }
+.strip-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2rem; margin-top: 2.4rem; }
+.strip-note { margin-top: 1.8rem; max-width: 60ch; color: var(--muted); }
+.strip-note .mono { color: var(--gold); }
+.asof-line { margin-top: 1.6rem; font-size: 0.76rem; color: var(--faint); font-family: var(--monof); }
+
 </style>
 </head>
 <body>
 <div class="atmo" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Main">
-  <span class="wordmark">DATproof<span class="seal">.</span></span>
-  <a class="item" href="#why">Why it matters</a>
-  <a class="item" href="#cycle">Cycle</a>
+  <a class="wordmark" href="#top">DATproof<span class="seal">.</span></a>
+  <a class="item" href="#scoreboard">Scoreboard</a>
   <a class="item" href="#method">Method</a>
+  <a class="item" href="the-case/">The case</a>
   <a class="cta" href="tearsheet/">Tearsheet</a>
 </nav>
 
 <main>
   <header class="hero wrap">
-    <p class="kicker mono">Don&rsquo;t trust &middot; verify</p>
-    <h1>The most provable asset ever created. Proven on&#8209;chain: <span class="stat mono">0%</span></h1>
-    <p class="hero-sub">10 public companies disclose <span class="mono">1,095,249 BTC</span>
-    ($71.3B) &mdash; 5.2% of all the bitcoin there will ever be.
-    The share backed by addresses anyone can check: <span class="mono">0%</span>. DATproof tracks that gap, daily.</p>
-    <div class="hero-ctas">
-      <a class="btn-pill" href="tearsheet/">Read today&rsquo;s tearsheet</a>
-      <a class="btn-round" href="https://github.com/lucascashwell3-ai/datproof" aria-label="View the open methodology on GitHub">&#8599;</a>
-    </div>
+    <p class="kicker"><span class="type">Don&rsquo;t trust &middot; verify</span></p>
+    <h1>The rating agency for <em>bitcoin&#8209;treasury proof</em>.</h1>
+    <p class="hero-sub">Provable, well&#8209;managed bitcoin on the balance sheet is a serious,
+    long&#8209;term way to finance a business. DATproof grades every major corporate holder
+    <strong>A&ndash;F on the quality of evidence</strong> behind its disclosed coins &mdash; scored
+    like an auditor would, from a public rubric, rebuilt nightly. <strong>The A is still
+    unclaimed.</strong></p>
 
-    <div class="artifact reveal">
-      <a href="tearsheet/" aria-label="Open today's full tearsheet">
-        <div class="paper"><iframe src="tearsheet/" title="Today's DATproof tearsheet (preview)" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></div>
-      </a>
-      <p class="paper-label">Today&rsquo;s research tearsheet &middot; <span class="mono">rebuilt nightly</span> &middot; every figure sourced &amp; dated</p>
-    </div>
+    <section class="proof-panel" id="scoreboard" aria-label="The scoreboard">
+      <div class="panel-top">
+        <div class="seg bop" id="bopSeg" role="group" aria-label="Burden of proof">
+          <span class="thumb" aria-hidden="true"></span>
+          <button type="button" data-v="word" aria-pressed="true">Take their word</button>
+          <button type="button" data-v="proof" aria-pressed="false">Require proof</button>
+        </div>
+        <div class="seg" id="viewSeg" role="group" aria-label="Scoreboard view">
+          <span class="thumb" aria-hidden="true"></span>
+          <button type="button" data-v="holdings" aria-pressed="true">Holdings</button>
+          <button type="button" data-v="proof" aria-pressed="false">Proof quality</button>
+          <button type="button" data-v="fresh" aria-pressed="false">Freshness</button>
+        </div>
+      </div>
+
+      <div class="bop-figure" aria-live="polite">
+        <span class="bop-num" id="bopNum" data-kind="usdc"
+              data-word-val="71334186186" data-word-txt="$71.3B"
+              data-proof-val="0" data-proof-txt="$0">$71.3B</span>
+        <span class="bop-cap" id="bopCap"
+              data-word="in bitcoin disclosed by 10 companies &mdash; on their word"
+              data-proof="provable on-chain by anyone, right now">in bitcoin disclosed by 10 companies &mdash; on their word</span>
+      </div>
+
+      <div class="board-scroll">
+        <table class="board" id="board">
+          <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Evidence-quality grades, holdings and disclosure evidence per company</caption>
+          <thead>
+            <tr>
+              <th scope="col" data-key="score" aria-sort="none"><button type="button">Grade</button></th>
+              <th scope="col" data-key="name"><button type="button">Company</button></th>
+              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button">BTC</button></th>
+              <th scope="col" class="num"><span>Value</span></th>
+              <th scope="col"><span>Evidence</span></th>
+              <th scope="col" data-key="age"><button type="button">As of</button></th>
+            </tr>
+          </thead>
+          <tbody>
+      <tr data-name="Strategy Inc" data-btc="847363" data-score="40" data-age="24" data-verifiable="0">
+        <td><span class="chip gD" style="--i:0" title="D · 40/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade D, 40 of 100">D</span></td>
+        <th scope="row">Strategy Inc<span class="tick">MSTR</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="847363" data-proof-val="0" data-word-txt="847,363" data-proof-txt="0">847,363</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="55189230950" data-proof-val="0" data-word-txt="$55.2B" data-proof-txt="$0">$55.2B</span></td>
+        <td><span class="tier">T1 · regulatory filing</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Twenty One Capital" data-btc="43514" data-score="31" data-age="24" data-verifiable="0">
+        <td><span class="chip gF" style="--i:1" title="F · 31/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade F, 31 of 100">F</span></td>
+        <th scope="row">Twenty One Capital<span class="tick">XXI</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="43514" data-proof-val="0" data-word-txt="43,514" data-proof-txt="0">43,514</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="2834091405" data-proof-val="0" data-word-txt="$2.8B" data-proof-txt="$0">$2.8B</span></td>
+        <td><span class="tier">T2 · company statement</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Metaplanet Inc" data-btc="43000" data-score="55" data-age="22" data-verifiable="0">
+        <td><span class="chip gC" style="--i:2" title="C · 55/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Reduce fixed obligations against the position (+5)" tabindex="0" role="img" aria-label="Grade C, 55 of 100">C</span></td>
+        <th scope="row">Metaplanet Inc<span class="tick">3350.T</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="43000" data-proof-val="0" data-word-txt="43,000" data-proof-txt="0">43,000</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="2800614295" data-proof-val="0" data-word-txt="$2.8B" data-proof-txt="$0">$2.8B</span></td>
+        <td><span class="tier">T1 · regulatory filing</span></td>
+        <td><span class="asof">2026-07-02</span></td>
+      </tr>
+      <tr data-name="MARA Holdings" data-btc="36303" data-score="31" data-age="24" data-verifiable="0">
+        <td><span class="chip gF" style="--i:3" title="F · 31/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade F, 31 of 100">F</span></td>
+        <th scope="row">MARA Holdings<span class="tick">MARA</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="36303" data-proof-val="0" data-word-txt="36,303" data-proof-txt="0">36,303</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="2364434901" data-proof-val="0" data-word-txt="$2.4B" data-proof-txt="$0">$2.4B</span></td>
+        <td><span class="tier">T2 · company statement</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Bitcoin Standard Treasury Company" data-btc="30021" data-score="36" data-age="24" data-verifiable="0">
+        <td><span class="chip gD" style="--i:4" title="D · 36/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade D, 36 of 100">D</span></td>
+        <th scope="row">Bitcoin Standard Treasury Company<span class="tick">BSTR</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="30021" data-proof-val="0" data-word-txt="30,021" data-proof-txt="0">30,021</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1955284692" data-proof-val="0" data-word-txt="$2.0B" data-proof-txt="$0">$2.0B</span></td>
+        <td><span class="tier">T2 · company statement</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Bullish" data-btc="24300" data-score="50" data-age="24" data-verifiable="0">
+        <td><span class="chip gC" style="--i:5" title="C · 50/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade C, 50 of 100">C</span></td>
+        <th scope="row">Bullish<span class="tick">BLSH</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="24300" data-proof-val="0" data-word-txt="24,300" data-proof-txt="0">24,300</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1582672730" data-proof-val="0" data-word-txt="$1.6B" data-proof-txt="$0">$1.6B</span></td>
+        <td><span class="tier">T1 · regulatory filing</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Strive Inc" data-btc="19864" data-score="45" data-age="26" data-verifiable="0">
+        <td><span class="chip gD" style="--i:6" title="D · 45/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade D, 45 of 100">D</span></td>
+        <th scope="row">Strive Inc<span class="tick">ASST</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="19864" data-proof-val="0" data-word-txt="19,864" data-proof-txt="0">19,864</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1293753543" data-proof-val="0" data-word-txt="$1.3B" data-proof-txt="$0">$1.3B</span></td>
+        <td><span class="tier">T1 · regulatory filing</span></td>
+        <td><span class="asof">2026-06-28</span></td>
+      </tr>
+      <tr data-name="SpaceX" data-btc="18712" data-score="20" data-age="24" data-verifiable="0">
+        <td><span class="chip gF" style="--i:7" title="F · 20/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+30)" tabindex="0" role="img" aria-label="Grade F, 20 of 100">F</span></td>
+        <th scope="row">SpaceX<span class="tick">private</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="18712" data-proof-val="0" data-word-txt="18,712" data-proof-txt="0">18,712</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1218723132" data-proof-val="0" data-word-txt="$1.2B" data-proof-txt="$0">$1.2B</span></td>
+        <td><span class="tier">T3 · third-party attribution</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Coinbase Global" data-btc="16492" data-score="45" data-age="24" data-verifiable="0">
+        <td><span class="chip gD" style="--i:8" title="D · 45/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade D, 45 of 100">D</span></td>
+        <th scope="row">Coinbase Global<span class="tick">COIN</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="16492" data-proof-val="0" data-word-txt="16,492" data-proof-txt="0">16,492</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1074133278" data-proof-val="0" data-word-txt="$1.1B" data-proof-txt="$0">$1.1B</span></td>
+        <td><span class="tier">T1 · regulatory filing</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Riot Platforms" data-btc="15680" data-score="31" data-age="24" data-verifiable="0">
+        <td><span class="chip gF" style="--i:9" title="F · 31/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade F, 31 of 100">F</span></td>
+        <th scope="row">Riot Platforms<span class="tick">RIOT</span></th>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="15680" data-proof-val="0" data-word-txt="15,680" data-proof-txt="0">15,680</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1021247259" data-proof-val="0" data-word-txt="$1.0B" data-proof-txt="$0">$1.0B</span></td>
+        <td><span class="tier">T2 · company statement</span></td>
+        <td><span class="asof">2026-06-30</span></td>
+      </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="board-note">Require proof and <span class="mono">$0</span> of $71.3B
+      survives &mdash; <span class="mono">0%</span> of every disclosed coin is backed by addresses
+      anyone can check. Hover a grade for what would raise it. Grades are evidence-quality opinions
+      from the <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md" style="color:inherit">public rubric</a>, not audits and not
+      investment advice.</p>
+    </section>
   </header>
 
   <div class="figures-band">
     <div class="wrap">
       <div class="figures" role="list" aria-label="Key figures">
-        <div class="figure" role="listitem"><span class="fig-num mono">1,095,249</span><span class="fig-label">BTC disclosed by 10 companies</span></div>
-        <div class="figure" role="listitem"><span class="fig-num mono">$71.3B</span><span class="fig-label">value at spot (BTC $65,131, coinbase-live)</span></div>
-        <div class="figure" role="listitem"><span class="fig-num mono">5.22%</span><span class="fig-label">of the 21M max supply</span></div>
-        <div class="figure hot" role="listitem"><span class="fig-num mono">0%</span><span class="fig-label">verifiable on-chain by anyone</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="int" data-value="10">10</span><span class="fig-label">companies rated</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="btc" data-value="1095249">1,095,249</span><span class="fig-label">BTC disclosed &mdash; 5.2% of the 21M cap</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="usdc" data-value="71334186186">$71.3B</span><span class="fig-label">at spot (BTC $65,131, cached-snapshot)</span></div>
+        <div class="figure hot" role="listitem"><span class="fig-num">0%</span><span class="fig-label">provable on-chain by anyone</span></div>
+        <div class="figure hot" role="listitem"><span class="fig-num">0</span><span class="fig-label">A grades awarded &mdash; the standard is open</span></div>
       </div>
     </div>
   </div>
 
-  <section id="why" class="wrap">
-    <p class="sec-kicker mono">The gap, explained</p>
-    <h2>These companies chose the one asset designed to need no trust &mdash; then asked for trust anyway.</h2>
-    <p class="sec-lede">Bitcoin is the first treasury asset whose ownership can be proven by anyone with an
-    internet connection. The companies know where their coins are. The question is why shareholders
-    can&rsquo;t check &mdash; and what can hide in that gap. Four things the evidence shows:</p>
-    <div class="acts">
-      <article class="act reveal">
-        <div class="act-head">
-          <span class="act-num mono">I</span>
-          <h3>Why they don&#x27;t publish</h3>
-        </div>
-        <p class="act-body">The reasons are real, and worth stating fairly. Strategy — the largest holder — spreads its bitcoin across multiple regulated custodians it declines to name. When the SEC asked for the list in April 2023, the company invoked a confidentiality rule to keep it private. Michael Saylor has called publishing proof-of-reserves a security risk — and targeted theft is a genuine concern. And no rule requires any of this: there is no disclosure standard that says a public company must prove its bitcoin exists on-chain.</p>
-        <blockquote>
-          <p>&ldquo;When the SEC requested custodian names in April 2023, Strategy invoked ‘SEC Rule 83’ to maintain confidentiality, instead disclosing only that it uses ‘U.S.-based, institutional-grade custodians.’&rdquo;</p>
-          <cite>&mdash; <a href="https://decrypt.co/330556/coinbase-custody-strategy-bitcoin-who-does" rel="noopener">Decrypt, on Strategy’s custody disclosures</a></cite>
-        </blockquote>
-      </article>
-      <article class="act reveal">
-        <div class="act-head">
-          <span class="act-num mono">II</span>
-          <h3>What a balance can&#x27;t tell you</h3>
-        </div>
-        <p class="act-body">Here is why this matters even if every disclosed coin exists. A number in a filing can't show you whether the coins are pledged, borrowed, or pooled. In 2022, Strategy’s own subsidiary borrowed $205 million against its bitcoin — the same disclosed coins, encumbered as loan collateral, per <a href="https://www.sec.gov/Archives/edgar/data/1050446/000119312522087494/d312252dex991.htm" rel="noopener">its own SEC filing</a>. Blockchain sleuths at Arkham later traced what appears to be ~107,000 of Strategy’s BTC to a pooled custodial arrangement, commingled with other clients’ coins (their analysis, not an official disclosure — treat it as informed inference). The balance was never false. It just wasn’t the whole story.</p>
-        <blockquote>
-          <p>&ldquo;Assets subjected to PoR might have been borrowed, for the purpose of the PoR or for other reasons, or might not even be (solely) controlled by the custodian or exchange.&rdquo;</p>
-          <cite>&mdash; <a href="https://www.pwc.ch/en/insights/digital/does-proof-of-reserves-provide-meaningful-trust-and-transparency.html" rel="noopener">PwC, on what reserve snapshots can hide</a></cite>
-        </blockquote>
-      </article>
-      <article class="act reveal">
-        <div class="act-head">
-          <span class="act-num mono">III</span>
-          <h3>What the referees say</h3>
-        </div>
-        <p class="act-body">This isn’t a crypto-anarchist critique — it’s the regulators’ own position. The PCAOB, the body that oversees auditors of U.S. public companies, warned investors directly about third-party “proof of reserve” reports. The SEC added that such reports show assets without liabilities — existence without encumbrance. And PwC notes no professional standards for proof-of-reserves exist at all, so every provider defines its own rules. The tools investors are told to rely on carry warning labels from the referees themselves.</p>
-        <blockquote>
-          <p>&ldquo;PoR engagements are not audits and, consequently, the related reports do not provide any meaningful assurance to investors or the public.&rdquo;</p>
-          <cite>&mdash; <a href="https://pcaobus.org/news-events/news-releases/news-release-detail/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports" rel="noopener">PCAOB Investor Advisory, 2023</a></cite>
-        </blockquote>
-      </article>
-      <article class="act reveal">
-        <div class="act-head">
-          <span class="act-num mono">IV</span>
-          <h3>It&#x27;s already solvable</h3>
-        </div>
-        <p class="act-body">None of this is hypothetical or impossible. Block publishes a public dashboard backing every customer bitcoin 1:1 — and honestly labels it a point-in-time snapshot, not an audit. Crypto.com runs Merkle-tree proofs that let each customer cryptographically verify their own balance is in the reserves. Among the ten largest corporate holders, Metaplanet goes furthest — a third-party attestation service checks its custodian balances — yet even it publishes no addresses the public can check directly. The tools exist. Using them is a choice. Today, zero of the ten largest holders publish addresses anyone can verify.</p>
-        <blockquote>
-          <p>&ldquo;For every bitcoin in a customer&#x27;s Cash App balance, Block holds an equal amount of bitcoin in custody.&rdquo;</p>
-          <cite>&mdash; <a href="https://block.xyz/proof-of-reserves" rel="noopener">Block, proof-of-reserves dashboard</a></cite>
-        </blockquote>
-      </article>
+  <section id="method" class="wrap">
+    <h2>The grade measures proof, not promises.</h2>
+    <p class="sec-lede">Five pillars, 100 points, scored only from disclosed, dated, sourced
+    facts &mdash; the rubric operationalizes what regulators already said about reserve reports
+    and evidence. Current field: C D F. Anyone can re-run every grade from the
+    public registry.</p>
+    <div class="rubric">
+      <div class="rubric-row reveal">
+        <h3>On-chain proof</h3>
+        <span class="rubric-pts">40 pts</span>
+        <p>Published wallet addresses that reconcile against the live chain. All-or-nothing: existence is either independently checkable or it isn&#x27;t. An A is impossible without it.</p>
+      </div>
+      <div class="rubric-row reveal">
+        <h3>Disclosure quality</h3>
+        <span class="rubric-pts">30 pts</span>
+        <p>Regulatory filings carry liability for misstatement; press releases don&#x27;t. Scored from the registry&#x27;s evidence tiers — filings earn full marks, statements partial, third-party attribution none.</p>
+      </div>
+      <div class="rubric-row reveal">
+        <h3>Independent attestation</h3>
+        <span class="rubric-pts">10 pts</span>
+        <p>A disclosed third-party check on custodian balances narrows the trust gap — credited, and capped, because the referees themselves warn it is not assurance.</p>
+      </div>
+      <div class="rubric-row reveal">
+        <h3>Disclosure freshness</h3>
+        <span class="rubric-pts">10 pts</span>
+        <p>A balance is a point-in-time claim that decays daily. Full marks inside 45 days, partial to 120, none beyond.</p>
+      </div>
+      <div class="rubric-row reveal">
+        <h3>Balance-sheet resilience</h3>
+        <span class="rubric-pts">10 pts</span>
+        <p>Fixed obligations serviced against a volatile asset thin the evidence&#x27;s margin for error. Clean structure earns full marks.</p>
+      </div>
+    </div>
+    <div class="gradekey" aria-label="Grade scale">
+      <span class="k"><span class="chip gA" aria-hidden="true">A</span> proven on-chain</span>
+      <span class="k"><span class="chip gB" aria-hidden="true">B</span> proven, with caveats</span>
+      <span class="k"><span class="chip gC" aria-hidden="true">C</span> well-documented trust</span>
+      <span class="k"><span class="chip gD" aria-hidden="true">D</span> thin evidence</span>
+      <span class="k"><span class="chip gF" aria-hidden="true">F</span> take their word</span>
+    </div>
+    <div class="method-cta">
+      <a class="btn-pill" href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">Read the methodology</a>
+      <a class="btn-quiet" href="tearsheet/">Today&rsquo;s tearsheet</a>
+    </div>
+  </section>
+
+  <section class="wrap case-teaser reveal">
+    <h2>Why grade proof at all?</h2>
+    <p>These companies chose the one asset designed to need no trust &mdash; then asked for
+    trust anyway. The full case &mdash; custody confidentiality, encumbered coins, the regulators&rsquo;
+    own warnings, and who&rsquo;s already solving it &mdash; is four short acts, every quote verbatim
+    and cited.</p>
+    <div class="method-cta">
+      <a class="btn-quiet" href="the-case/">Read the case &rarr;</a>
     </div>
   </section>
 
   <section id="cycle" class="cycle">
     <div class="wrap">
-      <p class="sec-kicker mono">Long-horizon context</p>
       <h2>Cycle position, above the sentiment noise.</h2>
-      <p class="sec-lede">The 200-week moving average is the slowest widely-watched trend line in bitcoin
-      &mdash; the humble investor&rsquo;s reference point. DATproof reads every treasury&rsquo;s disclosed cost
-      basis against it.</p>
+      <p class="sec-lede">The 200-week moving average is the slowest widely-watched trend line in
+      bitcoin &mdash; the humble investor&rsquo;s reference point. DATproof reads every treasury&rsquo;s
+      disclosed cost basis against it.</p>
     <div class="strip-figures">
       <div class="figure">
         <span class="fig-num mono">$63,326</span>
@@ -354,57 +538,182 @@ footer a { color: var(--text); }
       </div>
     </div>
     <p class="strip-note">The largest premium to trend: Strategy Inc&rsquo;s average cost is <span class="mono">1.19&times;</span> the 200-week moving average &mdash; accumulated above the long-term trend line.</p>
-    <p class="asof mono">history: coinbase-live &middot; Coinbase Exchange daily candles &middot; as of 2026-07-23T14:38:31Z</p>
-    </div>
-  </section>
-
-  <section id="method" class="wrap">
-    <p class="sec-kicker mono">Method</p>
-    <h2>Evidence or absence. Nothing in between.</h2>
-    <div class="method-grid">
-      <div class="reveal">
-        <h3>Every figure carries its source</h3>
-        <p>Holdings are company disclosures with their as-of dates. Each is graded by evidence
-        strength &mdash; from published addresses reconciled on-chain (the gold standard, held by
-        no one today) down to third-party attribution. A number we can&rsquo;t source renders as
-        explicitly absent, never estimated.</p>
-      </div>
-      <div class="reveal">
-        <h3>Rebuilt nightly, no hands</h3>
-        <p>An automated pipeline re-reads the registry, re-checks prices and on-chain data, and
-        regenerates this page and the tearsheet every night. What you&rsquo;re reading is
-        reproducible &mdash; generated 2026-07-23 14:38 UTC.</p>
-      </div>
-      <div class="reveal">
-        <h3>Open methodology</h3>
-        <p>The registry, the verification code, and the full pipeline are public.
-        Check the work: <a class="gh-link" href="https://github.com/lucascashwell3-ai/datproof">github.com/lucascashwell3-ai/datproof</a></p>
-      </div>
+    <p class="asof-line">history: cached-snapshot &middot; Coinbase Exchange daily candles &middot; as of 2026-07-23T14:38:31Z</p>
     </div>
   </section>
 
   <footer>
     <div class="wrap">
       <p>Built by <a href="https://github.com/lucascashwell3-ai">Lucas Cashwell</a> &mdash; applying
-      verification-grade rigor to digital-asset treasuries. Quotes are verbatim and linked to their
-      sources; live figures regenerate nightly from disclosed data.</p>
+      verification-grade rigor to digital-asset treasuries. Registry, rubric and pipeline are open:
+      <a href="https://github.com/lucascashwell3-ai/datproof">github.com/lucascashwell3-ai/datproof</a>. Regenerated 2026-07-24 05:07 UTC.</p>
       <p>Holdings figures are company disclosures as of their stated dates. Companies know where their
-      bitcoin is; this page measures what <em>investors</em> can independently verify. Nothing here is
-      investment advice.</p>
+      bitcoin is; this page measures what <em>investors</em> can independently verify. Grades are
+      independent evidence-quality opinions, not audits. Nothing here is investment advice.</p>
     </div>
   </footer>
 </main>
 
 <script>
+
 (function () {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+  'use strict';
+  document.documentElement.classList.add('js');
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* reveal on scroll */
+  if (!reduced && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('on'); });
+  }
+
+  /* number formatting (mirrors the Python builders) */
+  function fmt(kind, v) {
+    if (kind === 'usdc') {
+      if (v >= 1e9) return '$' + (v / 1e9).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'B';
+      if (v >= 1e6) return '$' + (v / 1e6).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M';
+      return '$' + Math.round(v).toLocaleString('en-US');
+    }
+    if (kind === 'btc') return Math.round(v).toLocaleString('en-US');
+    if (kind === 'pct') return v.toFixed(1) + '%';
+    return Math.round(v).toLocaleString('en-US');
+  }
+  function easeOutQuint(t) { return 1 - Math.pow(1 - t, 5); }
+
+  var tweens = new WeakMap();
+  function tweenTo(el, target, finalText, dur) {
+    var kind = el.dataset.kind || 'int';
+    var from = tweens.has(el) ? tweens.get(el) : parseFloat(el.dataset.now || '0');
+    if (reduced || from === target) {
+      tweens.set(el, target); el.textContent = finalText; return;
+    }
+    var t0 = performance.now();
+    var prev = el.dataset.raf;
+    if (prev) cancelAnimationFrame(+prev);
+    function frame(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      var v = from + (target - from) * easeOutQuint(p);
+      tweens.set(el, v);
+      el.textContent = p < 1 ? fmt(kind, v) : finalText;
+      if (p < 1) el.dataset.raf = requestAnimationFrame(frame);
+    }
+    el.dataset.raf = requestAnimationFrame(frame);
+    tweens.set(el, target);
+  }
+
+  /* count-ups: markup carries the final value; animate 0→value on first view */
+  var ups = document.querySelectorAll('.countup');
+  if (!reduced && 'IntersectionObserver' in window && ups.length) {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        seen.unobserve(e.target);
+        var el = e.target, target = parseFloat(el.dataset.value), text = el.textContent;
+        el.dataset.now = '0';
+        tweenTo(el, target, text, 950);
+      });
+    }, { threshold: 0.4 });
+    ups.forEach(function (el) { seen.observe(el); });
+  }
+
+  /* grade-chip stamp entrance, once, when the board enters view */
+  var board = document.getElementById('board');
+  if (board && !reduced && 'IntersectionObserver' in window) {
+    var so = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { board.classList.add('stamp-run'); so.disconnect(); }
+      });
+    }, { threshold: 0.15 });
+    so.observe(board);
+  }
+
+  /* segmented controls: spring-glide thumb */
+  function segInit(seg, onPick) {
+    var thumb = seg.querySelector('.thumb');
+    var btns = Array.prototype.slice.call(seg.querySelectorAll('button'));
+    function place(btn) {
+      thumb.style.width = btn.offsetWidth + 'px';
+      thumb.style.transform = 'translateX(' + (btn.offsetLeft - 3) + 'px)';
+    }
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btns.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+        place(btn); onPick(btn.dataset.v);
+      });
     });
-  }, { rootMargin: '0px 0px -8% 0px' });
-  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    function replace_() { place(seg.querySelector('button[aria-pressed="true"]') || btns[0]); }
+    replace_();
+    addEventListener('resize', replace_);
+    addEventListener('load', replace_);          /* re-measure once web fonts land */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(replace_);
+  }
+
+  /* scoreboard sorting */
+  var tbody = board ? board.querySelector('tbody') : null;
+  function sortBoard(key, dir) {
+    var rows = Array.prototype.slice.call(tbody.rows);
+    rows.sort(function (a, b) {
+      var x, y;
+      if (key === 'name') { x = a.dataset.name; y = b.dataset.name; return dir * x.localeCompare(y); }
+      x = parseFloat(a.dataset[key]); y = parseFloat(b.dataset[key]);
+      return dir * (x - y) || (parseFloat(b.dataset.btc) - parseFloat(a.dataset.btc));
+    });
+    rows.forEach(function (r) { tbody.appendChild(r); });
+  }
+  if (board) {
+    var ths = board.querySelectorAll('thead th[data-key]');
+    ths.forEach(function (th) {
+      th.querySelector('button').addEventListener('click', function () {
+        var was = th.getAttribute('aria-sort');
+        ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
+        var dir = was === 'descending' ? 1 : -1;
+        th.setAttribute('aria-sort', dir === -1 ? 'descending' : 'ascending');
+        sortBoard(th.dataset.key, dir);
+      });
+    });
+    var viewSeg = document.getElementById('viewSeg');
+    if (viewSeg) segInit(viewSeg, function (v) {
+      ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
+      if (v === 'holdings') { mark('btc'); sortBoard('btc', -1); }
+      else if (v === 'proof') { mark('score'); sortBoard('score', -1); }
+      else { mark('age'); sortBoard('age', 1); }
+      function mark(k) {
+        var th = board.querySelector('th[data-key="' + k + '"]');
+        if (th) th.setAttribute('aria-sort', v === 'fresh' ? 'ascending' : 'descending');
+      }
+    });
+  }
+
+  /* THE signature: burden of proof */
+  var bopSeg = document.getElementById('bopSeg');
+  var bopNum = document.getElementById('bopNum');
+  var bopCap = document.getElementById('bopCap');
+  if (bopSeg && bopNum) {
+    bopNum.dataset.now = bopNum.dataset.wordVal;
+    segInit(bopSeg, function (v) {
+      var proof = v === 'proof';
+      document.body.classList.toggle('proofmode', proof);
+      tweenTo(bopNum, parseFloat(proof ? bopNum.dataset.proofVal : bopNum.dataset.wordVal),
+              proof ? bopNum.dataset.proofTxt : bopNum.dataset.wordTxt, 850);
+      if (bopCap) bopCap.textContent = proof ? bopCap.dataset.proof : bopCap.dataset.word;
+      if (tbody) Array.prototype.forEach.call(tbody.rows, function (row) {
+        if (row.dataset.verifiable !== '1') row.classList.toggle('unproven', proof);
+        row.querySelectorAll('.flipnum').forEach(function (el) {
+          if (!el.dataset.now) el.dataset.now = el.dataset.wordVal;
+          tweenTo(el, parseFloat(proof ? el.dataset.proofVal : el.dataset.wordVal),
+                  proof ? el.dataset.proofTxt : el.dataset.wordTxt, 750);
+        });
+      });
+    });
+  }
 })();
+
 </script>
 </body>
 </html>

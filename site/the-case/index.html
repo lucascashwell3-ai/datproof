@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The case for proof — DATproof</title>
+<meta name="description" content="Why DATproof grades bitcoin-treasury evidence: custody confidentiality, encumbered coins, the regulators&#x27; own warnings about reserve reports — and the companies already proving it can be done right. Every quote verbatim and cited.">
+<meta property="og:title" content="The case for proof — DATproof">
+<meta property="og:description" content="Why DATproof grades bitcoin-treasury evidence: custody confidentiality, encumbered coins, the regulators&#x27; own warnings about reserve reports — and the companies already proving it can be done right. Every quote verbatim and cited.">
+<meta property="og:type" content="article">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0d12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23e3b74f' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg: oklch(0.13 0.012 260);
+  --bg-raise: oklch(0.165 0.014 260);
+  --bg-panel: oklch(0.15 0.013 260);
+  --text: oklch(0.93 0.008 90);
+  --muted: oklch(0.71 0.014 260);
+  --faint: oklch(0.55 0.014 260);
+  --line: oklch(0.27 0.018 260);
+  --line-soft: oklch(0.22 0.016 260);
+  --gold: oklch(0.8 0.115 88);
+  --gold-deep: oklch(0.66 0.12 80);
+  --g-a: oklch(0.8 0.115 88);
+  --g-b: oklch(0.74 0.1 145);
+  --g-c: oklch(0.76 0.02 260);
+  --g-d: oklch(0.72 0.11 55);
+  --g-f: oklch(0.64 0.15 25);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: linear(0, 0.0767, 0.248, 0.4478, 0.6355, 0.7903, 0.9053, 0.9821, 1.0272, 1.0483, 1.0533, 1.0486, 1.0392, 1.0286, 1.0187, 1.0106, 1.0046, 1.0007, 0.9984, 0.9974, 0.9972, 0.9976, 0.9985, 0.9993, 1);
+  --wrap-pad: clamp(1.25rem, 4vw, 2.5rem);
+  --wrap-max: 1120px;
+  --rule-w: calc(min(var(--wrap-max), 100%) - 2 * var(--wrap-pad));
+  --rule-framed: linear-gradient(90deg, transparent, var(--line) 14%, var(--line) 86%, transparent);
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Inter", system-ui, sans-serif;
+  --monof: "IBM Plex Mono", ui-monospace, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--text);
+  font: 400 1.0625rem/1.68 var(--sans);
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+::selection { background: var(--gold); color: var(--bg); }
+a { color: inherit; }
+.mono { font-family: var(--monof); font-variant-numeric: tabular-nums; }
+.wrap { max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }
+:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold); border-radius: 4px; }
+
+/* atmosphere: gold aurora + grain, fixed behind everything */
+.atmo { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.atmo::before {
+  content: ""; position: absolute; inset: -20%;
+  background:
+    radial-gradient(42% 34% at 72% 6%, oklch(0.45 0.1 80 / 0.34), transparent 70%),
+    radial-gradient(55% 42% at 12% 30%, oklch(0.3 0.05 265 / 0.5), transparent 72%),
+    radial-gradient(40% 34% at 85% 78%, oklch(0.34 0.07 75 / 0.14), transparent 70%);
+}
+.atmo::after {
+  content: ""; position: absolute; inset: 0; opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* capsule nav */
+.nav {
+  position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%);
+  z-index: 10; display: flex; align-items: center; gap: 0.35rem;
+  background: oklch(0.16 0.014 260 / 0.78); backdrop-filter: blur(14px);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.4rem 0.5rem 0.4rem 1.1rem;
+  box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
+  white-space: nowrap;
+}
+.nav .wordmark { font: 600 1.02rem/1 var(--serif); letter-spacing: 0.01em; margin-right: 0.65rem; text-decoration: none; }
+.nav .wordmark .seal { color: var(--gold); }
+.nav a.item {
+  font-size: 0.84rem; color: var(--muted); text-decoration: none;
+  padding: 0.42rem 0.7rem; border-radius: 999px;
+  transition: color 140ms ease;
+}
+@media (hover: hover) and (pointer: fine) { .nav a.item:hover { color: var(--text); } }
+.nav a.cta {
+  font-size: 0.84rem; font-weight: 600; text-decoration: none;
+  color: var(--bg); background: var(--gold);
+  padding: 0.46rem 0.95rem; border-radius: 999px; margin-left: 0.35rem;
+  transition: transform 120ms var(--ease-out);
+}
+.nav a.cta:active { transform: scale(0.96); }
+@media (max-width: 680px) { .nav a.item { display: none; } }
+
+h2 {
+  font: 480 clamp(1.7rem, 3.4vw, 2.4rem)/1.15 var(--serif);
+  letter-spacing: -0.01em; max-width: 26ch; text-wrap: balance;
+}
+.sec-lede { margin-top: 1rem; max-width: 58ch; color: var(--muted); }
+section { padding: clamp(2.6rem, 7vh, 4.6rem) 0; }
+
+footer { position: relative; padding: 2.6rem 0 3rem; margin-top: 2rem; }
+footer::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: var(--rule-w); height: 1px; background: var(--rule-framed);
+}
+footer p { font-size: 0.88rem; color: var(--muted); max-width: 72ch; }
+footer p + p { margin-top: 0.6rem; font-size: 0.8rem; }
+footer a { color: var(--text); }
+
+/* reveal-on-scroll (transform/opacity only; inert without JS or under reduced motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out); }
+  .js .reveal.on { opacity: 1; transform: none; }
+}
+
+.case-hero { padding-block: clamp(7rem, 14vh, 10rem) clamp(2rem, 5vh, 3.5rem); }
+.case-hero h1 {
+  font: 400 clamp(2.1rem, 4.8vw, 3.4rem)/1.14 var(--serif);
+  letter-spacing: -0.015em; text-wrap: balance; max-width: 24ch;
+}
+.case-hero h1 em { font-style: italic; color: var(--gold); }
+.acts { margin-top: 1rem; display: grid; gap: clamp(2.5rem, 6vh, 4rem); }
+.act { max-width: 720px; }
+.act:nth-child(even) { margin-left: auto; }
+.act-head { display: flex; align-items: baseline; gap: 1rem; }
+.act-num { font-family: var(--monof); color: var(--gold); font-size: 0.9rem; }
+.act h3 { font: 500 1.5rem/1.2 var(--serif); }
+.act-body { margin-top: 0.9rem; color: var(--muted); }
+.act-body a { color: var(--gold); text-decoration: none; }
+.act-body a:hover { text-decoration: underline; }
+blockquote {
+  position: relative; margin-top: 1.4rem; padding: 1.3rem 1.5rem 1.3rem 3.1rem;
+  background: var(--bg-raise); border: 1px solid var(--line-soft); border-radius: 12px;
+}
+blockquote::before {
+  content: "\201C"; position: absolute; left: 0.9rem; top: 0.4rem;
+  font: 600 2.6rem/1 var(--serif); color: var(--gold);
+}
+blockquote p { font: italic 400 1.12rem/1.5 var(--serif); }
+blockquote cite { display: block; margin-top: 0.7rem; font-style: normal; font-size: 0.84rem; color: var(--muted); }
+blockquote cite a { color: var(--gold); text-decoration: none; }
+blockquote cite a:hover { text-decoration: underline; }
+.back-row { margin-top: clamp(2.5rem, 6vh, 4rem); }
+
+</style>
+</head>
+<body>
+<div class="atmo" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Main">
+  <a class="wordmark" href="../">DATproof<span class="seal">.</span></a>
+  <a class="item" href="../#scoreboard">Scoreboard</a>
+  <a class="item" href="../#method">Method</a>
+  <a class="item" href="../the-case/">The case</a>
+  <a class="cta" href="../tearsheet/">Tearsheet</a>
+</nav>
+
+<main class="wrap">
+  <header class="case-hero">
+    <h1>These companies chose the one asset designed to need no trust &mdash; <em>then asked for trust anyway.</em></h1>
+    <p class="sec-lede">Bitcoin is the first treasury asset whose ownership can be proven by anyone
+    with an internet connection. Today, <span class="mono">0%</span> of disclosed corporate BTC
+    is backed by addresses the public can check. The companies know where their coins are. The
+    question is why shareholders can&rsquo;t check &mdash; and what can hide in that gap. Four things
+    the evidence shows:</p>
+  </header>
+
+  <div class="acts">
+      <article class="act reveal">
+        <div class="act-head">
+          <span class="act-num">I</span>
+          <h3>Why they don&#x27;t publish</h3>
+        </div>
+        <p class="act-body">The reasons are real, and worth stating fairly. Strategy — the largest holder — spreads its bitcoin across multiple regulated custodians it declines to name. When the SEC asked for the list in April 2023, the company invoked a confidentiality rule to keep it private. Michael Saylor has called publishing proof-of-reserves a security risk — and targeted theft is a genuine concern. And no rule requires any of this: there is no disclosure standard that says a public company must prove its bitcoin exists on-chain.</p>
+        <blockquote>
+          <p>When the SEC requested custodian names in April 2023, Strategy invoked ‘SEC Rule 83’ to maintain confidentiality, instead disclosing only that it uses ‘U.S.-based, institutional-grade custodians.’</p>
+          <cite>&mdash; <a href="https://decrypt.co/330556/coinbase-custody-strategy-bitcoin-who-does" rel="noopener">Decrypt, on Strategy’s custody disclosures</a></cite>
+        </blockquote>
+      </article>
+      <article class="act reveal">
+        <div class="act-head">
+          <span class="act-num">II</span>
+          <h3>What a balance can&#x27;t tell you</h3>
+        </div>
+        <p class="act-body">Here is why this matters even if every disclosed coin exists. A number in a filing can't show you whether the coins are pledged, borrowed, or pooled. In 2022, Strategy’s own subsidiary borrowed $205 million against its bitcoin — the same disclosed coins, encumbered as loan collateral, per <a href="https://www.sec.gov/Archives/edgar/data/1050446/000119312522087494/d312252dex991.htm" rel="noopener">its own SEC filing</a>. Blockchain sleuths at Arkham later traced what appears to be ~107,000 of Strategy’s BTC to a pooled custodial arrangement, commingled with other clients’ coins (their analysis, not an official disclosure — treat it as informed inference). The balance was never false. It just wasn’t the whole story.</p>
+        <blockquote>
+          <p>Assets subjected to PoR might have been borrowed, for the purpose of the PoR or for other reasons, or might not even be (solely) controlled by the custodian or exchange.</p>
+          <cite>&mdash; <a href="https://www.pwc.ch/en/insights/digital/does-proof-of-reserves-provide-meaningful-trust-and-transparency.html" rel="noopener">PwC, on what reserve snapshots can hide</a></cite>
+        </blockquote>
+      </article>
+      <article class="act reveal">
+        <div class="act-head">
+          <span class="act-num">III</span>
+          <h3>What the referees say</h3>
+        </div>
+        <p class="act-body">This isn’t a crypto-anarchist critique — it’s the regulators’ own position. The PCAOB, the body that oversees auditors of U.S. public companies, warned investors directly about third-party “proof of reserve” reports. The SEC added that such reports show assets without liabilities — existence without encumbrance. And PwC notes no professional standards for proof-of-reserves exist at all, so every provider defines its own rules. The tools investors are told to rely on carry warning labels from the referees themselves.</p>
+        <blockquote>
+          <p>PoR engagements are not audits and, consequently, the related reports do not provide any meaningful assurance to investors or the public.</p>
+          <cite>&mdash; <a href="https://pcaobus.org/news-events/news-releases/news-release-detail/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports" rel="noopener">PCAOB Investor Advisory, 2023</a></cite>
+        </blockquote>
+      </article>
+      <article class="act reveal">
+        <div class="act-head">
+          <span class="act-num">IV</span>
+          <h3>It&#x27;s already solvable</h3>
+        </div>
+        <p class="act-body">None of this is hypothetical or impossible. Block publishes a public dashboard backing every customer bitcoin 1:1 — and honestly labels it a point-in-time snapshot, not an audit. Crypto.com runs Merkle-tree proofs that let each customer cryptographically verify their own balance is in the reserves. Among the ten largest corporate holders, Metaplanet goes furthest — a third-party attestation service checks its custodian balances — yet even it publishes no addresses the public can check directly. The tools exist. Using them is a choice. Today, zero of the ten largest holders publish addresses anyone can verify.</p>
+        <blockquote>
+          <p>For every bitcoin in a customer&#x27;s Cash App balance, Block holds an equal amount of bitcoin in custody.</p>
+          <cite>&mdash; <a href="https://block.xyz/proof-of-reserves" rel="noopener">Block, proof-of-reserves dashboard</a></cite>
+        </blockquote>
+      </article>
+  </div>
+
+  <div class="back-row">
+    <a class="btn-pill" href="../">Back to the scoreboard</a>
+  </div>
+
+  <footer>
+    <p>Every quote above is verbatim and linked to its source. The scoreboard turns this case into
+    a standard: <a href="../">A&ndash;F grades on the evidence</a>, methodology
+    <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">public</a>.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
