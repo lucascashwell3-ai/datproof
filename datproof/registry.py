@@ -49,6 +49,9 @@ class Company:
     known_addresses: list[str] = field(default_factory=list)
     market_cap_usd: Optional[float] = None
     capital_structure: CapitalStructure = field(default_factory=CapitalStructure)
+    # Independent third-party attestation of custodian balances, if any.
+    # Empty string = none disclosed. Kept as sourced free text, never inferred.
+    attestation: str = ""
 
     @property
     def is_public(self) -> bool:
@@ -57,6 +60,10 @@ class Company:
     @property
     def addresses_published(self) -> bool:
         return len(self.known_addresses) > 0
+
+    @property
+    def has_attestation(self) -> bool:
+        return bool(self.attestation)
 
     @property
     def evidence_tier(self) -> int:

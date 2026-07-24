@@ -27,6 +27,7 @@ from datproof.cycles import (
     cost_basis_vs_200wma,
     load_price_history,
 )
+from datproof.grades import MAX_SCORE, CompanyGrade, grade_all
 from datproof.metrics import LandscapeMetrics, compute_metrics
 from datproof.onchain import SpotPrice, get_spot_price
 from datproof.onchain_signals import SignalsContext, load_signals
@@ -98,10 +99,15 @@ def spot_asof_display(spot: SpotPrice) -> str:
 
 # ── page fragments ────────────────────────────────────────────────────────────
 
-def render_holdings_rows(metrics: LandscapeMetrics) -> str:
+def render_holdings_rows(metrics: LandscapeMetrics,
+                         grades: dict[str, CompanyGrade]) -> str:
     rows = []
     for m in metrics.companies:
         c = m.company
+        g = grades[c.id]
+        hints = "; ".join(g.path_to_a[:2]) if g.path_to_a else "Holds every point on the rubric"
+        grade_cell = (f"<span class=\"chip g{g.letter}\" title=\"Evidence grade {g.letter} "
+                      f"({g.score}/{MAX_SCORE}) — to raise it: {escape(hints)}\">{g.letter}</span>")
         pnl = fmt_signed_pct(m.unrealized_pnl_pct) if m.unrealized_pnl_pct is not None else "—"
         pnl_class = " class=\"neg\"" if (m.unrealized_pnl_pct or 0) < 0 else ""
         lev_marks = []
@@ -116,6 +122,7 @@ def render_holdings_rows(metrics: LandscapeMetrics) -> str:
             else "<span class=\"verif no\" title=\"No published wallet addresses — existence rests on management representation\">✗</span>"
         )
         rows.append(f"""      <tr>
+        <td class="center">{grade_cell}</td>
         <th scope="row">{escape(c.name)}{lev}</th>
         <td class="mono dim">{escape(c.ticker or "private")}</td>
         <td class="mono num">{fmt_btc(c.btc_holdings)}</td>
@@ -282,15 +289,18 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
                findings: list[Finding], spot: SpotPrice,
                cycle_ctx: CycleContext | None = None,
                cost_rows: list[CostBasisContext] | None = None,
-               signals_ctx: SignalsContext | None = None) -> str:
+               signals_ctx: SignalsContext | None = None,
+               grades: dict[str, CompanyGrade] | None = None) -> str:
     n = len(metrics.companies)
+    grades = grades or grade_all(registry)
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    title = (f"DATproof — {fmt_pct(metrics.verifiable_pct)} of "
+    title = (f"DATproof tearsheet — {fmt_pct(metrics.verifiable_pct)} of "
              f"{fmt_btc(metrics.total_btc)} disclosed corporate BTC is verifiable on-chain")
-    description = (f"{n} corporate treasuries disclose {fmt_btc(metrics.total_btc)} BTC "
+    description = (f"The daily research tearsheet behind the DATproof grades: {n} corporate "
+                   f"treasuries disclose {fmt_btc(metrics.total_btc)} BTC "
                    f"({fmt_usd_compact(metrics.total_value_usd)}). "
                    f"{fmt_pct(metrics.verifiable_pct)} is independently verifiable on-chain. "
-                   "What's provable, what's at risk, and why it matters — rebuilt daily.")
+                   "Evidence grades, holdings, and what to watch — rebuilt daily.")
 
     return f"""<!doctype html>
 <html lang="en">
@@ -302,10 +312,10 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
 <meta property="og:title" content="{escape(title)}">
 <meta property="og:description" content="{escape(description)}">
 <meta property="og:type" content="article">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23921f5d'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0d12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23e3b74f' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 {CSS}
 </style>
@@ -315,8 +325,8 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
 <header class="masthead">
   <div class="wrap">
     <div class="mast-row">
-      <p class="wordmark">DATproof<span class="seal">.</span></p>
-      <p class="mast-sub">Digital-asset treasury verification &middot; daily research</p>
+      <p class="wordmark"><a href="../" style="color:inherit;text-decoration:none">DATproof<span class="seal">.</span></a></p>
+      <p class="mast-sub">The rating agency for bitcoin-treasury proof &middot; daily tearsheet</p>
     </div>
     <p class="dataline mono">BTC spot {fmt_usd(spot.usd)} &middot; source: {escape(spot.source)} &middot; as of {escape(spot_asof_display(spot))}</p>
   </div>
@@ -359,9 +369,10 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
 
     <div class="table-scroll">
     <table>
-      <caption class="sr-only">Disclosed holdings, value at spot, evidence tier and disclosure date per company</caption>
+      <caption class="sr-only">Evidence grade, disclosed holdings, value at spot, evidence tier and disclosure date per company</caption>
       <thead>
         <tr>
+          <th scope="col" class="center">Grade</th>
           <th scope="col">Company</th><th scope="col">Ticker</th>
           <th scope="col" class="num">BTC</th><th scope="col" class="num">Value</th>
           <th scope="col" class="num">Share</th><th scope="col" class="num">vs&nbsp;cost</th>
@@ -369,11 +380,13 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
         </tr>
       </thead>
       <tbody>
-{render_holdings_rows(metrics)}
+{render_holdings_rows(metrics, grades)}
       </tbody>
     </table>
     </div>
-    <p class="table-note">mNAV is not shown: DATproof does not source market capitalizations
+    <p class="table-note">Grade = evidence-quality grade from the
+    <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">public rubric</a>
+    (hover a chip for what would raise it). mNAV is not shown: DATproof does not source market capitalizations
     automatically, and refuses to compute a ratio from an unsourced input. <span class="mono dim">c</span> = convertible
     debt in the capital structure &middot; <span class="mono dim">p</span> = perpetual preferred &middot;
     "vs cost" = spot vs disclosed average cost, computable only where a company discloses one.</p>
@@ -399,6 +412,12 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
     <p><strong>Evidence tiers:</strong> T0 published wallet addresses reconciled on-chain &middot;
     T1 regulatory filing (10-Q, 8-K) &middot; T2 company statement or monthly update &middot;
     T3 third-party attribution. A disclosure is <em>verifiable</em> only at T0.</p>
+    <p><strong>Evidence grades:</strong> each company is scored 0&ndash;100 across five pillars
+    (on-chain proof, disclosure quality, independent attestation, freshness, balance-sheet
+    resilience) and mapped to A&ndash;F. An A is impossible without on-chain proof by construction.
+    The full rubric is public:
+    <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">METHODOLOGY.md</a>.
+    Grades are independent evidence-quality opinions, not audits.</p>
     <p><strong>Integrity rule:</strong> every figure carries an as-of date and a source.
     Market caps are never guessed; a metric without a sourced input renders as absent.</p>
     <ul class="sources">
@@ -429,21 +448,28 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
 
 CSS = """
 :root{
+  /* One brand with the landing page: white newspaper, gold seal (magenta retired 2026-07). */
   --bg:oklch(1 0 0);
-  --surface:oklch(0.965 0.004 353);
-  --ink:oklch(0.20 0.015 353);
-  --muted:oklch(0.45 0.015 353);
-  --rule:oklch(0.85 0.008 353);
-  --rule-strong:oklch(0.30 0.015 353);
-  --primary:oklch(0.45 0.16 353);
-  --accent:oklch(0.42 0.10 255);
-  --accent-ink:oklch(0.30 0.09 255);
-  --sev-critical:oklch(0.34 0.15 353);
+  --surface:oklch(0.966 0.005 85);
+  --ink:oklch(0.21 0.012 80);
+  --muted:oklch(0.45 0.012 80);
+  --rule:oklch(0.86 0.01 85);
+  --rule-strong:oklch(0.32 0.015 80);
+  --primary:oklch(0.52 0.11 80);
+  --gold-bright:oklch(0.78 0.12 88);
+  --accent:oklch(0.62 0.1 82);
+  --accent-ink:oklch(0.47 0.11 80);
+  --sev-critical:oklch(0.35 0.14 25);
   --sev-high:oklch(0.50 0.15 15);
   --sev-medium:oklch(0.55 0.11 75);
   --sev-low:oklch(0.45 0.02 255);
-  --serif:"Newsreader",Georgia,serif;
-  --sans:"IBM Plex Sans",system-ui,sans-serif;
+  --g-a:oklch(0.50 0.11 82);
+  --g-b:oklch(0.47 0.10 145);
+  --g-c:oklch(0.42 0.02 260);
+  --g-d:oklch(0.50 0.11 55);
+  --g-f:oklch(0.47 0.15 25);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Inter",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -462,7 +488,7 @@ a:hover{text-decoration-thickness:2px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* masthead */
-.masthead{border-top:6px solid var(--primary);border-bottom:1px solid var(--rule-strong);
+.masthead{border-top:6px solid var(--gold-bright);border-bottom:1px solid var(--rule-strong);
   padding:1.4rem 0 1.1rem}
 .mast-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1.5rem;justify-content:space-between}
 .wordmark{font-family:var(--serif);font-size:1.9rem;font-weight:600;letter-spacing:-0.015em}
@@ -546,6 +572,16 @@ td.neg{color:var(--sev-high)}
 .verif.no{color:var(--sev-high)}
 .verif.yes{color:oklch(0.50 0.12 150)}
 .tier{font-family:var(--mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
+
+/* evidence-grade chips (rubric: METHODOLOGY.md) */
+.chip{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:7px;
+  font-family:var(--serif);font-weight:600;font-size:1rem;border:1px solid;cursor:help;
+  print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.chip.gA{color:var(--g-a);border-color:oklch(0.50 0.11 82 / .55);background:oklch(0.50 0.11 82 / .09)}
+.chip.gB{color:var(--g-b);border-color:oklch(0.47 0.10 145 / .5);background:oklch(0.47 0.10 145 / .08)}
+.chip.gC{color:var(--g-c);border-color:oklch(0.42 0.02 260 / .45);background:oklch(0.42 0.02 260 / .06)}
+.chip.gD{color:var(--g-d);border-color:oklch(0.50 0.11 55 / .5);background:oklch(0.50 0.11 55 / .08)}
+.chip.gF{color:var(--g-f);border-color:oklch(0.47 0.15 25 / .5);background:oklch(0.47 0.15 25 / .07)}
 .table-note{font-size:.85rem;color:var(--muted);margin-top:1rem;max-width:75ch;text-wrap:pretty}
 
 /* findings */
@@ -648,7 +684,9 @@ def build(price_override: float | None = None, out: Path | None = None) -> Path:
     # On-chain valuation signals — offline (cache-only) for deterministic builds.
     signals_ctx = load_signals(allow_network=price_override is None)
 
-    html = build_page(registry, metrics, findings, spot, cycle_ctx, cost_rows, signals_ctx)
+    grades = grade_all(registry)
+    html = build_page(registry, metrics, findings, spot, cycle_ctx, cost_rows, signals_ctx,
+                      grades=grades)
     out = out or SITE_DIR / "tearsheet" / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
