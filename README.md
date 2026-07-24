@@ -1,11 +1,12 @@
-# DATproof — Digital Asset Treasury Risk Intelligence
+# DATproof — the rating agency for bitcoin-treasury proof
 
-**Don't trust, verify.** Public companies claim over 1,000,000 BTC on their balance sheets. DATproof measures how much of that is independently verifiable on-chain — and scores the risk of what isn't, with verification-grade rigor.
+**Don't trust, verify.** Public companies claim over 1,000,000 BTC on their balance sheets. DATproof grades every major corporate holder **A–F on the quality of evidence** behind its disclosed coins — scored like an auditor would, from a public rubric ([`METHODOLOGY.md`](METHODOLOGY.md)), rebuilt nightly. Provable, well-managed bitcoin on the balance sheet is a serious long-term way to finance a business; the grade shows who's doing it right.
 
-> Current headline: of ~1.1M BTC disclosed by the top ten corporate holders, **0% is backed by published wallet addresses**. The rest, you take on each company's word.
+> Current headline: of ~1.1M BTC disclosed by the top ten corporate holders, **0% is backed by published wallet addresses** — and **no company holds an A yet**. The standard is open.
 
 ## What it does
 
+- **Grades evidence quality A–F** — five pillars (on-chain proof, disclosure quality, independent attestation, freshness, balance-sheet resilience), 100 points, mapped to a letter. An A is impossible without on-chain proof by construction. Engine: `datproof/grades.py`; rubric: [`METHODOLOGY.md`](METHODOLOGY.md).
 - **Tracks the DAT landscape** — the top corporate BTC holders (Strategy, Twenty One, Metaplanet, MARA, Strive, Coinbase, …) with disclosed holdings, average cost, sources, and as-of dates. Every figure is sourced; nothing is guessed.
 - **Verifies on-chain** — reconciles published wallet addresses against live Blockstream balances (keyless), and quantifies the share of disclosed BTC that is independently verifiable.
 - **Scores the risk of what can't be verified** — a rule-based engine flags what matters for an investor (verifiability, valuation, concentration, leverage, stale disclosures) and ranks each point by magnitude and evidence quality. Cost-basis drawdowns, leverage structures, concentration, and stale disclosures are all caught automatically.
@@ -60,6 +61,6 @@ pytest tests/ -q
 
 Built by **Lucas Cashwell** — a risk-and-controls background in financial services, moving into crypto-native risk and compliance. DATproof brings verification-grade rigor to the newest thing on corporate balance sheets: what's provable, what's at risk, and why it matters for digital-asset treasuries.
 
-Positioning and roadmap: [`docs/FLAGSHIP.md`](docs/FLAGSHIP.md).
+Grading methodology (public rubric): [`METHODOLOGY.md`](METHODOLOGY.md).
 
 _Not investment advice. Holdings figures are company disclosures as of their stated dates._
