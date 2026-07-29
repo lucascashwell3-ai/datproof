@@ -1,5 +1,5 @@
 {
- "as_of": "2026-07-28T14:56:07Z",
+ "as_of": "2026-07-29T14:37:11Z",
  "source_note": "Coinbase Exchange daily candles (BTC-USD), UTC daily closes",
  "daily_closes": [
   {
@@ -6680,7 +6680,11 @@
   },
   {
    "date": "2026-07-28",
-   "close_usd": 63399.66
+   "close_usd": 63847.12
+  },
+  {
+   "date": "2026-07-29",
+   "close_usd": 64132.8
   }
  ]
 }
