@@ -615,6 +615,12 @@ LANDING_JS = """
     segInit(bopSeg, function (v) {
       var proof = v === 'proof';
       document.body.classList.toggle('proofmode', proof);
+      /* headers must say what the column now means — "0 BTC" under a plain
+         "BTC" header reads as a holdings claim, not an evidence statement */
+      if (board) Array.prototype.forEach.call(
+        board.querySelectorAll('thead [data-word]'), function (el) {
+          el.textContent = proof ? el.dataset.proof : el.dataset.word;
+        });
       tweenTo(bopNum, parseFloat(proof ? bopNum.dataset.proofVal : bopNum.dataset.wordVal),
               proof ? bopNum.dataset.proofTxt : bopNum.dataset.wordTxt, 850);
       if (bopCap) bopCap.textContent = proof ? bopCap.dataset.proof : bopCap.dataset.word;
@@ -668,6 +674,10 @@ def render_board_rows(metrics, grades, today: date) -> str:
         g = grades[c.id]
         proof_btc = c.btc_holdings if m.verifiable else 0.0
         proof_val = m.holdings_value_usd if m.verifiable else 0.0
+        # Unproven is "nothing provable", not "holds zero" — render an em dash,
+        # never a number that reads as a factual claim about a named company.
+        proof_btc_txt = fmt_btc(proof_btc) if m.verifiable else "&mdash;"
+        proof_val_txt = fmt_usd_compact(proof_val) if m.verifiable else "&mdash;"
         age_days = (today - date.fromisoformat(c.as_of)).days
         hints = "; ".join(g.path_to_a[:2]) if g.path_to_a else "Holds every point on the rubric"
         tip = f"{g.letter} · {g.score}/{MAX_SCORE} — to raise it: {hints}" if g.path_to_a else f"{g.letter} · {g.score}/{MAX_SCORE}"
@@ -675,8 +685,8 @@ def render_board_rows(metrics, grades, today: date) -> str:
         rows.append(f"""      <tr data-name="{escape(c.name)}" data-btc="{c.btc_holdings:.0f}" data-score="{g.score}" data-age="{age_days}" data-verifiable="{1 if m.verifiable else 0}">
         <td><span class="chip g{g.letter}" style="--i:{i}" title="{escape(tip)}" tabindex="0" role="img" aria-label="Grade {g.letter}, {g.score} of {MAX_SCORE}">{g.letter}</span></td>
         <th scope="row">{escape(c.name)}<span class="tick">{ticker}</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="{c.btc_holdings:.0f}" data-proof-val="{proof_btc:.0f}" data-word-txt="{fmt_btc(c.btc_holdings)}" data-proof-txt="{fmt_btc(proof_btc)}">{fmt_btc(c.btc_holdings)}</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="{m.holdings_value_usd:.0f}" data-proof-val="{proof_val:.0f}" data-word-txt="{fmt_usd_compact(m.holdings_value_usd)}" data-proof-txt="{fmt_usd_compact(proof_val)}">{fmt_usd_compact(m.holdings_value_usd)}</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="{c.btc_holdings:.0f}" data-proof-val="{proof_btc:.0f}" data-word-txt="{fmt_btc(c.btc_holdings)}" data-proof-txt="{proof_btc_txt}">{fmt_btc(c.btc_holdings)}</span></td>
+        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="{m.holdings_value_usd:.0f}" data-proof-val="{proof_val:.0f}" data-word-txt="{fmt_usd_compact(m.holdings_value_usd)}" data-proof-txt="{proof_val_txt}">{fmt_usd_compact(m.holdings_value_usd)}</span></td>
         <td><span class="tier">{escape(TIER_LABEL.get(m.evidence_tier, 'T3'))}</span></td>
         <td><span class="asof">{escape(c.as_of)}</span></td>
       </tr>""")
@@ -814,8 +824,8 @@ def build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows,
             <tr>
               <th scope="col" data-key="score" aria-sort="none"><button type="button">Grade</button></th>
               <th scope="col" data-key="name"><button type="button">Company</button></th>
-              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button">BTC</button></th>
-              <th scope="col" class="num"><span>Value</span></th>
+              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button" data-word="BTC" data-proof="Provable BTC">BTC</button></th>
+              <th scope="col" class="num"><span data-word="Value" data-proof="Provable value">Value</span></th>
               <th scope="col"><span>Evidence</span></th>
               <th scope="col" data-key="age"><button type="button">As of</button></th>
             </tr>

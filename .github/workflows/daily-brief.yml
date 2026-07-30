@@ -2,8 +2,13 @@ name: DATproof daily brief
 
 on:
   schedule:
-    - cron: "30 12 * * *" # 12:30 UTC daily (~8:30am ET)
-  workflow_dispatch: {}
+    - cron: "30 12 * * *" # 12:30 UTC daily (~8:30am ET) — site rebuild only, no brief
+  workflow_dispatch:
+    inputs:
+      brief:
+        description: "Also generate the AI daily brief + LinkedIn draft (unreviewed prose naming public companies — a human must read it before it is used anywhere)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -26,7 +31,11 @@ jobs:
       - name: Install dependencies
         run: pip install httpx anthropic
 
-      - name: Generate brief + LinkedIn draft
+      # Gated 2026-07-30: the brief is unreviewed AI commentary about named public
+      # companies. It no longer publishes on a schedule — only when a human ticks
+      # the box on a manual run, and that human reads it before it goes anywhere.
+      - name: Generate brief + LinkedIn draft (manual opt-in only)
+        if: github.event_name == 'workflow_dispatch' && inputs.brief
         env:
           ANTHROPIC_API_KEY: ${{ secrets.DATPROOF_API_KEY }}
         run: python -m datproof brief --out briefs
