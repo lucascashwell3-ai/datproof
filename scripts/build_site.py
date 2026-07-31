@@ -112,14 +112,16 @@ def render_holdings_rows(metrics: LandscapeMetrics,
         pnl_class = " class=\"neg\"" if (m.unrealized_pnl_pct or 0) < 0 else ""
         lev_marks = []
         if c.capital_structure.convertible_debt:
-            lev_marks.append("<abbr title=\"BTC position financed in part via convertible debt\">c</abbr>")
+            lev_marks.append("<abbr title=\"Has borrowed money that can convert into stock\">c</abbr>")
         if c.capital_structure.preferred_stock:
-            lev_marks.append("<abbr title=\"Perpetual preferred stock in the capital structure\">p</abbr>")
+            lev_marks.append("<abbr title=\"Pays a permanent dividend it cannot stop\">p</abbr>")
         lev = f" <sup class=\"lev\">{''.join(lev_marks)}</sup>" if lev_marks else ""
+        # An em dash, not a red cross: this column records an absence of published
+        # addresses, and a red ✗ reads as a company having failed a test.
         verif = (
             "<span class=\"verif yes\" title=\"Published wallet addresses, reconciled on-chain\">✓</span>"
             if m.verifiable
-            else "<span class=\"verif no\" title=\"No published wallet addresses — existence rests on management representation\">✗</span>"
+            else "<span class=\"verif none\" title=\"No addresses published — not a finding of wrongdoing\">—</span>"
         )
         rows.append(f"""      <tr>
         <td class="center">{grade_cell}</td>
@@ -356,8 +358,9 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
       <span class="fig-label">largest-holder concentration</span>
     </div>
     <div class="figure">
-      <span class="fig-num mono">{metrics.companies_underwater} of {n}</span>
-      <span class="fig-label">underwater vs disclosed cost</span>
+      <span class="fig-num mono">{metrics.companies_underwater} of {metrics.companies_with_cost_basis}</span>
+      <span class="fig-label">underwater vs disclosed cost &mdash; of the
+      {metrics.companies_with_cost_basis} that disclose one ({n - metrics.companies_with_cost_basis} don&rsquo;t)</span>
     </div>
   </section>
 
@@ -384,12 +387,16 @@ def build_page(registry: Registry, metrics: LandscapeMetrics,
       </tbody>
     </table>
     </div>
-    <p class="table-note">Grade = evidence-quality grade from the
-    <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">public rubric</a>
-    (hover a chip for what would raise it). mNAV is not shown: DATproof does not source market capitalizations
-    automatically, and refuses to compute a ratio from an unsourced input. <span class="mono dim">c</span> = convertible
-    debt in the capital structure &middot; <span class="mono dim">p</span> = perpetual preferred &middot;
-    "vs cost" = spot vs disclosed average cost, computable only where a company discloses one.</p>
+    <p class="table-note">Grade = the DATproof grade from the
+    <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">public rubric</a>;
+    each chip carries what would raise it. <span class="mono dim">&mdash;</span> under
+    &ldquo;on-chain&rdquo; means no wallet addresses published &mdash; an absence of evidence, not a
+    finding of wrongdoing. <span class="mono dim">c</span> = the company has borrowed money that can
+    convert into stock &middot; <span class="mono dim">p</span> = it pays a permanent dividend it
+    cannot stop. &ldquo;vs cost&rdquo; = today&rsquo;s bitcoin price against the average price the
+    company said it paid, shown only where a company discloses one. We don&rsquo;t show mNAV (a
+    company&rsquo;s market value against the value of its bitcoin) because we can&rsquo;t source
+    share prices reliably enough to compute it.</p>
   </section>
 
   <section aria-labelledby="findings-h">
@@ -569,7 +576,7 @@ td.neg{color:var(--sev-high)}
 .lev{color:var(--primary);font-family:var(--mono);font-size:.72em;letter-spacing:.08em}
 .lev abbr{text-decoration:none;cursor:help}
 .verif{font-weight:600}
-.verif.no{color:var(--sev-high)}
+.verif.none{color:var(--muted);font-weight:400}
 .verif.yes{color:oklch(0.50 0.12 150)}
 .tier{font-family:var(--mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
 

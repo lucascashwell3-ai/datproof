@@ -26,6 +26,10 @@ class LandscapeMetrics:
     verifiable_btc: float               # BTC backed by published addresses
     verifiable_pct: float               # share of registry BTC that is on-chain verifiable
     companies_underwater: int           # spot < disclosed avg cost
+    # Denominator for `companies_underwater`. Only companies that disclose an
+    # average cost can be measured at all; counting the rest as "not underwater"
+    # would turn DATproof's own research gap into a claim about the companies.
+    companies_with_cost_basis: int
     companies: list[CompanyMetrics]
 
 
@@ -40,7 +44,7 @@ def compute_metrics(registry: Registry, btc_price: float) -> LandscapeMetrics:
             share_of_registry_pct=(c.btc_holdings / total_btc * 100) if total_btc else 0.0,
             unrealized_pnl_pct=c.unrealized_pnl_pct(btc_price),
             mnav=c.mnav(btc_price),
-            verifiable=c.addresses_published,
+            verifiable=c.proof_published,
             evidence_tier=c.evidence_tier,
         ))
 
@@ -57,6 +61,9 @@ def compute_metrics(registry: Registry, btc_price: float) -> LandscapeMetrics:
         companies_underwater=sum(
             1 for m in per_company
             if m.unrealized_pnl_pct is not None and m.unrealized_pnl_pct < 0
+        ),
+        companies_with_cost_basis=sum(
+            1 for m in per_company if m.unrealized_pnl_pct is not None
         ),
         companies=per_company,
     )

@@ -96,8 +96,8 @@ def _evaluate_company(m: CompanyMetrics, today: date) -> list[Finding]:
             frameworks=["FASB ASU 2023-08 (fair value)", "Audit assertion: valuation"],
         ))
 
-    # Existence: no published addresses
-    if not c.addresses_published:
+    # Existence: no published on-chain proof
+    if not c.proof_published:
         severity = "high" if c.evidence_tier >= 3 else "medium"
         out.append(Finding(
             company_id=c.id,
@@ -106,8 +106,9 @@ def _evaluate_company(m: CompanyMetrics, today: date) -> list[Finding]:
             assertion="existence",
             detail=(
                 f"Disclosure method: {c.disclosure_method} (evidence tier {c.evidence_tier}). "
-                f"No wallet addresses are published, so existence cannot be confirmed on-chain. "
-                f"A proof-of-reserves-style attestation would close this gap."
+                f"Nothing is published that a reader could check on-chain — no wallet addresses, "
+                f"and no signed proof of the outputs the company controls — so existence rests on "
+                f"the disclosure itself. Publishing either would close the gap."
             ),
             frameworks=["Audit assertion: existence", "SOX ICFR: safeguarding of assets"],
         ))

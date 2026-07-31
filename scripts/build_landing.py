@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the DATproof landing page — the rating agency's front door.
 
-site/index.html        — grade scoreboard as hero + the burden-of-proof toggle
+site/index.html        — the grade scoreboard as hero
 site/the-case/index.html — the four-act essay, demoted from the old front door
                            (verbatim, cited quotes — adversarially verified
                            research run wf_5ef26609-d55, 2026-07-10)
@@ -39,6 +39,23 @@ SITE_DIR = Path(__file__).parent.parent / "site"
 
 METHODOLOGY_URL = "https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md"
 REPO_URL = "https://github.com/lucascashwell3-ai/datproof"
+CORRECTIONS_URL = "https://github.com/lucascashwell3-ai/datproof/issues/new"
+
+# Standing conflicts disclosure. Every research publisher carries one; its absence
+# is the cheapest possible attack on a site that grades named issuers.
+# LUCAS: fill AUTHOR_POSITIONS with one sentence stating what you do or don't hold
+# (bitcoin, and any rated issuer). Left empty the sentence is omitted rather than
+# guessed — an invented disclosure would be worse than a missing one.
+AUTHOR_POSITIONS = ""
+AUTHOR_INTEREST = (
+    "The author has a risk-and-controls background in financial services and is moving "
+    "into crypto-native risk and compliance — a professional interest that the visibility "
+    "of this project serves, stated here rather than left to be discovered."
+)
+AUTHOR_COMMERCIAL = (
+    "DATproof takes no advertising, no sponsorship and no payment from any rated company "
+    "or proof-of-reserves vendor, and none has ever been offered or accepted."
+)
 
 TIER_LABEL = {
     0: "T0 · on-chain verified",
@@ -58,6 +75,14 @@ def fmt_usd_compact(v: float) -> str:
     if v >= 1e6:
         return f"${v / 1e6:,.1f}M"
     return f"${v:,.0f}"
+
+
+def fmt_share_pct(v: float) -> str:
+    """A small non-zero share must not round to 0% — that would erase the one
+    company that publishes proof, which is the whole point of the figure."""
+    if 0 < v < 10:
+        return f"{v:.1f}%"
+    return f"{v:.0f}%"
 
 
 # ── The narrative: verbatim quotes, every one sourced ─────────────────────────
@@ -87,13 +112,12 @@ ACTS = [
         "body": (
             "Here is why this matters even if every disclosed coin exists. A number in a filing "
             "can't show you whether the coins are pledged, borrowed, or pooled. In 2022, "
-            "Strategy’s own subsidiary borrowed $205 million against its bitcoin — the same "
-            "disclosed coins, encumbered as loan collateral, per "
-            '<a href="https://www.sec.gov/Archives/edgar/data/1050446/000119312522087494/d312252dex991.htm" rel="noopener">its own SEC filing</a>. Blockchain '
-            "sleuths at Arkham later traced what appears to be ~107,000 of Strategy’s BTC to a "
-            "pooled custodial arrangement, commingled with other clients’ coins (their analysis, "
-            "not an official disclosure — treat it as informed inference). The balance was never "
-            "false. It just wasn’t the whole story."
+            "Strategy’s own subsidiary borrowed $205 million secured by "
+            "<em>&ldquo;certain bitcoin held in MacroStrategy’s collateral account,&rdquo;</em> per "
+            '<a href="https://www.sec.gov/Archives/edgar/data/1050446/000119312522087494/d312252dex991.htm" rel="noopener">the filed exhibit</a> '
+            "— the filing establishes that bitcoin was pledged, and does not say which coins. "
+            "That is the point: from the outside, you cannot tell. The balance was never false. "
+            "It just wasn’t the whole story."
         ),
         "quote": "Assets subjected to PoR might have been borrowed, for the purpose of the PoR or for other reasons, or might not even be (solely) controlled by the custodian or exchange.",
         "cite": "PwC, on what reserve snapshots can hide",
@@ -119,14 +143,15 @@ ACTS = [
         "num": "IV",
         "title": "It's already solvable",
         "body": (
-            "None of this is hypothetical or impossible. Block publishes a public dashboard "
-            "backing every customer bitcoin 1:1 — and honestly labels it a point-in-time "
-            "snapshot, not an audit. Crypto.com runs Merkle-tree proofs that let each customer "
-            "cryptographically verify their own balance is in the reserves. Among the ten "
-            "largest corporate holders, Metaplanet goes furthest — a third-party attestation "
-            "service checks its custodian balances — yet even it publishes no addresses the "
-            "public can check directly. The tools exist. Using them is a choice. Today, zero "
-            "of the ten largest holders publish addresses anyone can verify."
+            "None of this is hypothetical, and one company on the board already does it. Block "
+            "publishes the on-chain outputs it controls together with signatures proving that "
+            "control — anyone can check those outputs on a block explorer and verify the "
+            "signatures in their own browser. It labels the result honestly: a point-in-time "
+            "snapshot, not an audit. Metaplanet goes partway, with a named third-party verifier "
+            "(Hoseki) publishing a dated dashboard of its custodian balances, though no addresses "
+            "and no named custodian. Crypto.com runs Merkle-tree proofs that let each customer "
+            "verify their own balance is in the reserves. The tools exist and they work. Using "
+            "them is a choice, and almost none of the largest corporate holders has made it."
         ),
         "quote": "For every bitcoin in a customer's Cash App balance, Block holds an equal amount of bitcoin in custody.",
         "cite": "Block, proof-of-reserves dashboard",
@@ -159,7 +184,9 @@ BASE_CSS = """
   --bg-panel: oklch(0.15 0.013 260);
   --text: oklch(0.93 0.008 90);
   --muted: oklch(0.71 0.014 260);
-  --faint: oklch(0.55 0.014 260);
+  /* 0.62, not 0.55: this token carries the sort headers, tickers and disclosure
+     dates — the provenance — and 0.55 computed 4.06:1 against the page. */
+  --faint: oklch(0.62 0.014 260);
   --line: oklch(0.27 0.018 260);
   --line-soft: oklch(0.22 0.016 260);
   --gold: oklch(0.8 0.115 88);
@@ -190,6 +217,7 @@ body {
 ::selection { background: var(--gold); color: var(--bg); }
 a { color: inherit; }
 .mono { font-family: var(--monof); font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .wrap { max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }
 :focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold); border-radius: 4px; }
 
@@ -211,8 +239,9 @@ a { color: inherit; }
 .nav {
   position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%);
   z-index: 10; display: flex; align-items: center; gap: 0.35rem;
-  background: oklch(0.16 0.014 260 / 0.78); backdrop-filter: blur(14px);
-  border: 1px solid var(--line); border-radius: 999px;
+  /* Opaque: translucent chrome let the scoreboard's own figures show through
+     the bar as it scrolled, which reads as a rendering fault, not a style. */
+  background: oklch(0.16 0.014 260); border: 1px solid var(--line); border-radius: 999px;
   padding: 0.4rem 0.5rem 0.4rem 1.1rem;
   box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
   white-space: nowrap;
@@ -232,7 +261,15 @@ a { color: inherit; }
   transition: transform 120ms var(--ease-out);
 }
 .nav a.cta:active { transform: scale(0.96); }
-@media (max-width: 680px) { .nav a.item { display: none; } }
+/* Narrow screens drop the in-page jumps but keep "The case" — it is the page
+   that separates "hasn't published" from "is hiding something", and hiding it
+   on phones left the letter grades as the only thing a phone reader could see. */
+@media (max-width: 680px) {
+  .nav { top: 0.6rem; padding-left: 0.85rem; gap: 0.15rem; }
+  .nav a.item.jump { display: none; }
+  .nav .wordmark { margin-right: 0.35rem; }
+  .nav a.item, .nav a.cta { font-size: 0.8rem; padding-inline: 0.6rem; }
+}
 
 h2 {
   font: 480 clamp(1.7rem, 3.4vw, 2.4rem)/1.15 var(--serif);
@@ -308,21 +345,22 @@ h1 em { font-style: italic; color: var(--gold); }
   padding: 0.55rem 0.95rem; border-radius: 999px; transition: color 180ms ease;
 }
 .seg button[aria-pressed="true"] { color: var(--text); }
-.seg.bop { border-color: oklch(0.4 0.09 85 / 0.55); }
-.seg.bop .thumb { background: oklch(0.3 0.06 82); border-color: oklch(0.45 0.09 85); }
-.seg.bop button[aria-pressed="true"] { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) { .seg .thumb { transition: none; } }
 
-/* the burden-of-proof figure */
+/* the headline figure — both numbers stated at once, no state to discover */
 .bop-figure { margin: clamp(1.4rem, 3.5vh, 2.2rem) 0 0; }
 .bop-num {
   display: block; font-family: var(--monof); font-weight: 500;
   font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1.05; letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums; transition: color 400ms ease;
+  font-variant-numeric: tabular-nums;
 }
-.proofmode .bop-num { color: var(--gold); }
-.bop-cap { display: block; margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; }
-.bop-cap .mono { color: var(--text); font-size: 0.92em; }
+.bop-cap { display: block; margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; max-width: 56ch; }
+.bop-cap .mono { color: var(--gold); font-size: 0.92em; }
+.bop-defuse {
+  display: block; margin-top: 0.9rem; padding-top: 0.9rem;
+  border-top: 1px solid var(--line-soft); max-width: 62ch;
+  color: var(--text); font-size: 0.98rem;
+}
 
 /* scoreboard table */
 .board-scroll { overflow-x: auto; margin-top: clamp(1.3rem, 3vh, 2rem); -webkit-overflow-scrolling: touch; }
@@ -371,11 +409,22 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
   @keyframes stamp { from { transform: scale(1.45); opacity: 0; } }
 }
 
-/* proof mode: unproven rows recede, the grade stays stamped */
-.proofmode .board tr.unproven { opacity: 0.5; }
-.proofmode .board tr.unproven td.flip { color: var(--gold); }
 .board-note { margin-top: 1.1rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
 .board-note .mono { color: var(--gold); }
+.board-snap { margin-top: 0.6rem; font-family: var(--monof); font-size: 0.76rem; color: var(--faint); }
+
+/* attributed but ungraded — reported for completeness, never given a letter */
+.attributed { margin-top: 1.6rem; padding-top: 1.1rem; border-top: 1px solid var(--line-soft); }
+.attributed h3 { font: 500 0.95rem/1.3 var(--sans); color: var(--text); }
+.attributed p { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
+.attributed .mono { color: var(--text); }
+
+/* accountability: who made this, how to dispute it, what the author holds */
+.account { display: grid; gap: 1.6rem 2.5rem; margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.account h3 { font: 500 1.05rem/1.3 var(--serif); }
+.account p { margin-top: 0.5rem; font-size: 0.92rem; color: var(--muted); text-wrap: pretty; }
+.account a { color: var(--gold); }
 
 /* figure band */
 .figures-band { position: relative; margin: clamp(2.6rem, 7vh, 4.6rem) 0 0; padding-block: clamp(2.4rem, 5.5vh, 3.4rem); }
@@ -572,6 +621,7 @@ LANDING_JS = """
 
   /* scoreboard sorting */
   var tbody = board ? board.querySelector('tbody') : null;
+  var sortStatus = document.getElementById('sortStatus');
   function sortBoard(key, dir) {
     var rows = Array.prototype.slice.call(tbody.rows);
     rows.sort(function (a, b) {
@@ -582,56 +632,47 @@ LANDING_JS = """
     });
     rows.forEach(function (r) { tbody.appendChild(r); });
   }
+  /* Reordering ten rows is silent to a screen reader: aria-sort is read when a
+     header is visited, not when it changes. Announce the result instead. */
+  function announce(th, shown) {
+    if (!sortStatus || !th) return;
+    var label = (th.textContent || '').trim();
+    sortStatus.textContent = 'Sorted by ' + label + ', ' + shown + '. ' +
+      (tbody ? tbody.rows.length : 0) + ' rows.';
+  }
+  /* aria-sort describes what the reader SEES, so it is derived from the
+     displayed values, not from the sign of the sort key: "as of" sorts on age
+     ascending, which puts the newest date on top — that is descending to a
+     reader. Text columns start A-Z; numeric columns start highest-first. */
+  function applySort(th, dir) {
+    var key = th.dataset.key;
+    var displayDesc = key === 'age' ? dir > 0 : dir < 0;
+    th.setAttribute('aria-sort', displayDesc ? 'descending' : 'ascending');
+    sortBoard(key, dir);
+    announce(th, displayDesc
+      ? (key === 'name' ? 'Z to A' : 'highest first')
+      : (key === 'name' ? 'A to Z' : 'lowest first'));
+  }
   if (board) {
     var ths = board.querySelectorAll('thead th[data-key]');
     ths.forEach(function (th) {
       th.querySelector('button').addEventListener('click', function () {
         var was = th.getAttribute('aria-sort');
+        var firstClick = !was;
         ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
-        var dir = was === 'descending' ? 1 : -1;
-        th.setAttribute('aria-sort', dir === -1 ? 'descending' : 'ascending');
-        sortBoard(th.dataset.key, dir);
+        var dir;
+        if (firstClick) dir = th.dataset.key === 'name' ? 1 : (th.dataset.key === 'age' ? 1 : -1);
+        else dir = was === 'descending' ? 1 : -1;
+        if (!firstClick && th.dataset.key === 'age') dir = was === 'descending' ? -1 : 1;
+        applySort(th, dir);
       });
     });
     var viewSeg = document.getElementById('viewSeg');
     if (viewSeg) segInit(viewSeg, function (v) {
       ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
-      if (v === 'holdings') { mark('btc'); sortBoard('btc', -1); }
-      else if (v === 'proof') { mark('score'); sortBoard('score', -1); }
-      else { mark('age'); sortBoard('age', 1); }
-      function mark(k) {
-        var th = board.querySelector('th[data-key="' + k + '"]');
-        if (th) th.setAttribute('aria-sort', v === 'fresh' ? 'ascending' : 'descending');
-      }
-    });
-  }
-
-  /* THE signature: burden of proof */
-  var bopSeg = document.getElementById('bopSeg');
-  var bopNum = document.getElementById('bopNum');
-  var bopCap = document.getElementById('bopCap');
-  if (bopSeg && bopNum) {
-    bopNum.dataset.now = bopNum.dataset.wordVal;
-    segInit(bopSeg, function (v) {
-      var proof = v === 'proof';
-      document.body.classList.toggle('proofmode', proof);
-      /* headers must say what the column now means — "0 BTC" under a plain
-         "BTC" header reads as a holdings claim, not an evidence statement */
-      if (board) Array.prototype.forEach.call(
-        board.querySelectorAll('thead [data-word]'), function (el) {
-          el.textContent = proof ? el.dataset.proof : el.dataset.word;
-        });
-      tweenTo(bopNum, parseFloat(proof ? bopNum.dataset.proofVal : bopNum.dataset.wordVal),
-              proof ? bopNum.dataset.proofTxt : bopNum.dataset.wordTxt, 850);
-      if (bopCap) bopCap.textContent = proof ? bopCap.dataset.proof : bopCap.dataset.word;
-      if (tbody) Array.prototype.forEach.call(tbody.rows, function (row) {
-        if (row.dataset.verifiable !== '1') row.classList.toggle('unproven', proof);
-        row.querySelectorAll('.flipnum').forEach(function (el) {
-          if (!el.dataset.now) el.dataset.now = el.dataset.wordVal;
-          tweenTo(el, parseFloat(proof ? el.dataset.proofVal : el.dataset.wordVal),
-                  proof ? el.dataset.proofTxt : el.dataset.wordTxt, 750);
-        });
-      });
+      var key = v === 'holdings' ? 'btc' : (v === 'proof' ? 'score' : 'age');
+      var th = board.querySelector('th[data-key="' + key + '"]');
+      if (th) applySort(th, key === 'age' ? 1 : -1);
     });
   }
 })();
@@ -667,35 +708,49 @@ def render_cycle_strip(ctx, cost_rows) -> str:
     <p class="asof-line">history: {escape(ctx.source)} &middot; Coinbase Exchange daily candles &middot; as of {escape(ctx.as_of)}</p>"""
 
 
-def render_board_rows(metrics, grades, today: date) -> str:
+def render_board_rows(metrics, grades, snapshot: date) -> str:
     rows = []
     for i, m in enumerate(metrics.companies):
         c = m.company
         g = grades[c.id]
-        proof_btc = c.btc_holdings if m.verifiable else 0.0
-        proof_val = m.holdings_value_usd if m.verifiable else 0.0
-        # Unproven is "nothing provable", not "holds zero" — render an em dash,
-        # never a number that reads as a factual claim about a named company.
-        proof_btc_txt = fmt_btc(proof_btc) if m.verifiable else "&mdash;"
-        proof_val_txt = fmt_usd_compact(proof_val) if m.verifiable else "&mdash;"
-        age_days = (today - date.fromisoformat(c.as_of)).days
+        age_days = (snapshot - date.fromisoformat(c.as_of)).days
         hints = "; ".join(g.path_to_a[:2]) if g.path_to_a else "Holds every point on the rubric"
-        tip = f"{g.letter} · {g.score}/{MAX_SCORE} — to raise it: {hints}" if g.path_to_a else f"{g.letter} · {g.score}/{MAX_SCORE}"
+        tip = (f"{g.letter} · {g.score}/{MAX_SCORE} — to raise it: {hints}"
+               if g.path_to_a else f"{g.letter} · {g.score}/{MAX_SCORE}")
         ticker = escape(c.ticker) if c.ticker else "private"
-        rows.append(f"""      <tr data-name="{escape(c.name)}" data-btc="{c.btc_holdings:.0f}" data-score="{g.score}" data-age="{age_days}" data-verifiable="{1 if m.verifiable else 0}">
-        <td><span class="chip g{g.letter}" style="--i:{i}" title="{escape(tip)}" tabindex="0" role="img" aria-label="Grade {g.letter}, {g.score} of {MAX_SCORE}">{g.letter}</span></td>
+        rows.append(f"""      <tr data-name="{escape(c.name)}" data-btc="{c.btc_holdings:.0f}" data-score="{g.score}" data-age="{age_days}">
+        <td><span class="chip g{g.letter}" style="--i:{i}" title="{escape(tip)}" aria-hidden="true">{g.letter}</span><span class="sr-only">{escape(tip)}</span></td>
         <th scope="row">{escape(c.name)}<span class="tick">{ticker}</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="{c.btc_holdings:.0f}" data-proof-val="{proof_btc:.0f}" data-word-txt="{fmt_btc(c.btc_holdings)}" data-proof-txt="{proof_btc_txt}">{fmt_btc(c.btc_holdings)}</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="{m.holdings_value_usd:.0f}" data-proof-val="{proof_val:.0f}" data-word-txt="{fmt_usd_compact(m.holdings_value_usd)}" data-proof-txt="{proof_val_txt}">{fmt_usd_compact(m.holdings_value_usd)}</span></td>
-        <td><span class="tier">{escape(TIER_LABEL.get(m.evidence_tier, 'T3'))}</span></td>
+        <td class="num">{fmt_btc(c.btc_holdings)}</td>
+        <td class="num">{fmt_usd_compact(m.holdings_value_usd)}</td>
+        <td><span class="tier">{escape(TIER_LABEL[m.evidence_tier])}</span></td>
         <td><span class="asof">{escape(c.as_of)}</span></td>
       </tr>""")
     return "\n".join(rows)
 
 
+def render_attributed(registry) -> str:
+    """Holdings with no disclosure behind them: reported, never given a letter."""
+    if not registry.attributed:
+        return ""
+    rows = "\n".join(
+        f"""        <p><span class="mono">{escape(c.name)} &middot; {fmt_btc(c.btc_holdings)} BTC</span>
+        &mdash; {escape(c.ungraded_reason)}</p>"""
+        for c in registry.attributed)
+    total = sum(c.btc_holdings for c in registry.attributed)
+    return f"""      <div class="attributed">
+        <h3>Reported, not graded</h3>
+{rows}
+        <p>These {fmt_btc(total)} BTC are excluded from every figure above, which counts only
+        what companies disclosed for themselves. Including them would inflate the disclosed
+        total by coins nobody claimed.</p>
+      </div>"""
+
+
 RUBRIC_ROWS = [
     ("On-chain proof", 40,
-     "Published wallet addresses that reconcile against the live chain. All-or-nothing: "
+     "Something a reader can check on the chain themselves: published wallet addresses, or the "
+     "outputs the company controls with signatures proving that control. All-or-nothing — "
      "existence is either independently checkable or it isn't. An A is impossible without it."),
     ("Disclosure quality", 30,
      "Regulatory filings carry liability for misstatement; press releases don't. Scored from "
@@ -706,7 +761,8 @@ RUBRIC_ROWS = [
      "and capped, because the referees themselves warn it is not assurance."),
     ("Disclosure freshness", 10,
      "A balance is a point-in-time claim that decays daily. Full marks inside 45 days, "
-     "partial to 120, none beyond."),
+     "partial to 120, none beyond — measured against the registry snapshot, so no grade "
+     "ever falls just because time passed on DATproof's side."),
     ("Balance-sheet resilience", 10,
      "Fixed obligations serviced against a volatile asset thin the evidence's margin for "
      "error. Clean structure earns full marks."),
@@ -742,31 +798,42 @@ def _nav(depth: int = 0) -> str:
     p = "../" * depth
     return f"""<nav class="nav" aria-label="Main">
   <a class="wordmark" href="{p if depth else '#top'}">DATproof<span class="seal">.</span></a>
-  <a class="item" href="{p}#scoreboard">Scoreboard</a>
-  <a class="item" href="{p}#method">Method</a>
+  <a class="item jump" href="{p}#scoreboard">Scoreboard</a>
+  <a class="item jump" href="{p}#method">Method</a>
   <a class="item" href="{p}the-case/">The case</a>
-  <a class="cta" href="{p}tearsheet/">Tearsheet</a>
+  <a class="cta" href="{p}tearsheet/">Today&rsquo;s numbers</a>
 </nav>"""
 
 
 # ── pages ────────────────────────────────────────────────────────────────────
 
 def build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows,
-               today: date) -> str:
+               snapshot: date) -> str:
     n = len(metrics.companies)
     adoption = adoption_share_of_max_supply_pct(registry)
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    verif = f"{metrics.verifiable_pct:.0f}%"
+    verif = fmt_share_pct(metrics.verifiable_pct)
     a_count = sum(1 for g in grades.values() if g.letter == "A")
     graded_letters = " ".join(sorted({g.letter for g in grades.values()}))
     disclosed_txt = fmt_usd_compact(metrics.total_value_usd)
-    proven_txt = fmt_usd_compact(metrics.verifiable_btc * metrics.btc_price)
+    author_positions = f" {escape(AUTHOR_POSITIONS)}" if AUTHOR_POSITIONS else ""
+
+    provers = [m.company.name for m in metrics.companies if m.verifiable]
+    if provers:
+        named = " and ".join(escape(p) for p in provers)
+        proof_line = (f"The bar is clearable and {named} clears it &mdash; which is why the rest "
+                      "of the field sitting at C, D and F is a finding about evidence, not an "
+                      "impossible standard.")
+    else:
+        proof_line = ("No company here publishes proof anyone can check, which is why no A "
+                      "exists and the whole field sits at C, D and F.")
 
     title = "DATproof — the rating agency for bitcoin-treasury proof"
-    description = (f"Every major corporate bitcoin holder graded A–F on the quality of evidence "
-                   f"behind its disclosed coins. {n} companies · {fmt_btc(metrics.total_btc)} BTC "
-                   f"({disclosed_txt}) · {verif} provable on-chain today. "
-                   "Public methodology, rebuilt nightly.")
+    description = (f"Every major corporate bitcoin holder graded A–F on how much of its "
+                   f"disclosed position an investor can independently check. {n} companies · "
+                   f"{fmt_btc(metrics.total_btc)} BTC ({disclosed_txt}) · {verif} of it backed by "
+                   f"public wallet addresses. Public rubric, registry snapshot "
+                   f"{registry.snapshot_date}.")
 
     css = (BASE_CSS + LANDING_CSS).replace("SPRING_EASING", SPRING)
 
@@ -789,17 +856,12 @@ def build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows,
     <h1>The rating agency for <em>bitcoin&#8209;treasury proof</em>.</h1>
     <p class="hero-sub">Provable, well&#8209;managed bitcoin on the balance sheet is a serious,
     long&#8209;term way to finance a business. DATproof grades every major corporate holder
-    <strong>A&ndash;F on the quality of evidence</strong> behind its disclosed coins &mdash; scored
-    like an auditor would, from a public rubric, rebuilt nightly. <strong>The A is still
-    unclaimed.</strong></p>
+    <strong>A&ndash;F on how much of the position an investor can check</strong> &mdash; and how
+    much room for error the balance sheet leaves behind it. One public rubric, applied the same
+    way to everyone. <strong>The A is still unclaimed.</strong></p>
 
     <section class="proof-panel" id="scoreboard" aria-label="The scoreboard">
       <div class="panel-top">
-        <div class="seg bop" id="bopSeg" role="group" aria-label="Burden of proof">
-          <span class="thumb" aria-hidden="true"></span>
-          <button type="button" data-v="word" aria-pressed="true">Take their word</button>
-          <button type="button" data-v="proof" aria-pressed="false">Require proof</button>
-        </div>
         <div class="seg" id="viewSeg" role="group" aria-label="Scoreboard view">
           <span class="thumb" aria-hidden="true"></span>
           <button type="button" data-v="holdings" aria-pressed="true">Holdings</button>
@@ -808,83 +870,119 @@ def build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows,
         </div>
       </div>
 
-      <div class="bop-figure" aria-live="polite">
-        <span class="bop-num" id="bopNum" data-kind="usdc"
-              data-word-val="{metrics.total_value_usd:.0f}" data-word-txt="{disclosed_txt}"
-              data-proof-val="{metrics.verifiable_btc * metrics.btc_price:.0f}" data-proof-txt="{proven_txt}">{disclosed_txt}</span>
-        <span class="bop-cap" id="bopCap"
-              data-word="in bitcoin disclosed by {n} companies &mdash; on their word"
-              data-proof="provable on-chain by anyone, right now">in bitcoin disclosed by {n} companies &mdash; on their word</span>
+      <div class="bop-figure">
+        <span class="bop-num">{disclosed_txt}</span>
+        <span class="bop-cap">in bitcoin disclosed by {n} companies. <span class="mono">{verif}</span>
+        of it comes with proof the public can check on-chain.</span>
+        <span class="bop-defuse">No company here is accused of anything. They know where their
+        bitcoin is; this page measures what an outside investor can check independently, and a low
+        grade means missing evidence, not wrongdoing. {proof_line}</span>
       </div>
 
       <div class="board-scroll">
         <table class="board" id="board">
-          <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Evidence-quality grades, holdings and disclosure evidence per company</caption>
+          <caption class="sr-only">Grades, holdings and disclosure evidence per company</caption>
           <thead>
             <tr>
               <th scope="col" data-key="score" aria-sort="none"><button type="button">Grade</button></th>
               <th scope="col" data-key="name"><button type="button">Company</button></th>
-              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button" data-word="BTC" data-proof="Provable BTC">BTC</button></th>
-              <th scope="col" class="num"><span data-word="Value" data-proof="Provable value">Value</span></th>
+              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button">BTC</button></th>
+              <th scope="col" class="num"><span>Value</span></th>
               <th scope="col"><span>Evidence</span></th>
               <th scope="col" data-key="age"><button type="button">As of</button></th>
             </tr>
           </thead>
           <tbody>
-{render_board_rows(metrics, grades, today)}
+{render_board_rows(metrics, grades, snapshot)}
           </tbody>
         </table>
       </div>
-      <p class="board-note">Require proof and <span class="mono">{proven_txt}</span> of {disclosed_txt}
-      survives &mdash; <span class="mono">{verif}</span> of every disclosed coin is backed by addresses
-      anyone can check. Hover a grade for what would raise it. Grades are evidence-quality opinions
-      from the <a href="{METHODOLOGY_URL}" style="color:inherit">public rubric</a>, not audits and not
-      investment advice.</p>
+      <p class="sr-only" id="sortStatus" role="status" aria-live="polite"></p>
+      <p class="board-note">Grades come from the <a href="{METHODOLOGY_URL}" style="color:inherit">public
+      rubric</a> &mdash; independent opinions about disclosure evidence, not audits and not investment
+      advice. Every company on this board can raise its grade, and each grade carries what would
+      raise it.</p>
+      <p class="board-snap">Graded from the registry snapshot {escape(registry.snapshot_date)}
+      &middot; &ldquo;as of&rdquo; is each company&rsquo;s own disclosure date &middot; prices rebuild
+      nightly; the registry is updated by hand, not by the nightly job</p>
+{render_attributed(registry)}
     </section>
   </header>
 
   <div class="figures-band">
     <div class="wrap">
       <div class="figures" role="list" aria-label="Key figures">
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="int" data-value="{n}">{n}</span><span class="fig-label">companies rated</span></div>
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="btc" data-value="{metrics.total_btc:.0f}">{fmt_btc(metrics.total_btc)}</span><span class="fig-label">BTC disclosed &mdash; {adoption:.1f}% of the 21M cap</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="int" data-value="{n}">{n}</span><span class="fig-label">companies graded</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="btc" data-value="{metrics.total_btc:.0f}">{fmt_btc(metrics.total_btc)}</span><span class="fig-label">BTC they disclosed &mdash; {adoption:.1f}% of the 21M cap</span></div>
         <div class="figure" role="listitem"><span class="fig-num countup" data-kind="usdc" data-value="{metrics.total_value_usd:.0f}">{disclosed_txt}</span><span class="fig-label">at spot (BTC ${spot.usd:,.0f}, {escape(spot.source)})</span></div>
-        <div class="figure hot" role="listitem"><span class="fig-num">{verif}</span><span class="fig-label">provable on-chain by anyone</span></div>
+        <div class="figure hot" role="listitem"><span class="fig-num">{verif}</span><span class="fig-label">of their disclosed coins come with proof anyone can check</span></div>
         <div class="figure hot" role="listitem"><span class="fig-num">{a_count}</span><span class="fig-label">A grades awarded &mdash; the standard is open</span></div>
       </div>
     </div>
   </div>
 
   <section id="method" class="wrap">
-    <h2>The grade measures proof, not promises.</h2>
-    <p class="sec-lede">Five pillars, 100 points, scored only from disclosed, dated, sourced
-    facts &mdash; the rubric operationalizes what regulators already said about reserve reports
-    and evidence. Current field: {escape(graded_letters)}. Anyone can re-run every grade from the
-    public registry.</p>
+    <h2>Five pillars. 100 points. Every one a sourced fact.</h2>
+    <p class="sec-lede">Four pillars score the evidence behind the coins; the fifth scores the
+    balance sheet carrying them, because fixed obligations against a volatile asset thin the
+    margin that evidence sits on. Nothing is estimated, and where DATproof hasn&rsquo;t sourced
+    something it says so instead of scoring it. Current field: {escape(graded_letters)}. Anyone
+    can re-run every grade from the public registry.</p>
     <div class="rubric">
 {render_rubric()}
     </div>
     <div class="gradekey" aria-label="Grade scale">
       <span class="k"><span class="chip gA" aria-hidden="true">A</span> proven on-chain</span>
       <span class="k"><span class="chip gB" aria-hidden="true">B</span> proven, with caveats</span>
-      <span class="k"><span class="chip gC" aria-hidden="true">C</span> well-documented trust</span>
+      <span class="k"><span class="chip gC" aria-hidden="true">C</span> well-documented, still unproven</span>
       <span class="k"><span class="chip gD" aria-hidden="true">D</span> thin evidence</span>
-      <span class="k"><span class="chip gF" aria-hidden="true">F</span> take their word</span>
+      <span class="k"><span class="chip gF" aria-hidden="true">F</span> little an investor can check</span>
     </div>
     <div class="method-cta">
-      <a class="btn-pill" href="{METHODOLOGY_URL}">Read the methodology</a>
-      <a class="btn-quiet" href="tearsheet/">Today&rsquo;s tearsheet</a>
+      <a class="btn-pill" href="{METHODOLOGY_URL}">Read the full rubric (on GitHub)</a>
+      <a class="btn-quiet" href="tearsheet/">Today&rsquo;s numbers</a>
     </div>
   </section>
 
   <section class="wrap case-teaser reveal">
     <h2>Why grade proof at all?</h2>
-    <p>These companies chose the one asset designed to need no trust &mdash; then asked for
-    trust anyway. The full case &mdash; custody confidentiality, encumbered coins, the regulators&rsquo;
-    own warnings, and who&rsquo;s already solving it &mdash; is four short acts, every quote verbatim
-    and cited.</p>
+    <p>Bitcoin is the first treasury asset whose ownership anyone can verify &mdash; and almost
+    no company uses that. <em>&ldquo;The reasons are real, and worth stating fairly&rdquo;</em>:
+    custody confidentiality, security concerns, and no rule requiring it. The full case &mdash;
+    including what a balance alone can&rsquo;t tell you and who is already solving it &mdash; is
+    four short acts, every quote verbatim and cited.</p>
     <div class="method-cta">
       <a class="btn-quiet" href="the-case/">Read the case &rarr;</a>
+    </div>
+  </section>
+
+  <section id="accountability" class="wrap reveal">
+    <h2>Who made this, and how to correct it.</h2>
+    <p class="sec-lede">A page that grades named companies owes them a way to answer back, and
+    owes its readers a statement of its own interests. Both are here rather than left to be
+    discovered.</p>
+    <div class="account">
+      <div>
+        <h3>Who</h3>
+        <p>One person, not an institution: <a href="{REPO_URL}">Lucas Cashwell</a>, a
+        risk-and-controls background in financial services. &ldquo;Rating agency&rdquo; describes
+        what the site does, not its size. The method is public precisely so nobody has to take
+        the author&rsquo;s word either &mdash; the rubric, the registry and the engine are all in
+        one open repository.</p>
+      </div>
+      <div>
+        <h3>Corrections and right of reply</h3>
+        <p>A graded company that believes a figure, date, tier or letter is wrong can
+        <a href="{CORRECTIONS_URL}">open a correction request</a>. Requests are public and
+        timestamped, answered within five business days, and a correction that changes a grade is
+        noted on the page with its date. Evidence submitted &mdash; a filing reference, an
+        attestation report, published addresses &mdash; is applied to the registry the same way
+        as anything else.</p>
+      </div>
+      <div>
+        <h3>Interests</h3>
+        <p>{escape(AUTHOR_COMMERCIAL)} {escape(AUTHOR_INTEREST)}{author_positions}</p>
+      </div>
     </div>
   </section>
 
@@ -905,7 +1003,8 @@ def build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows,
       <a href="{REPO_URL}">github.com/lucascashwell3-ai/datproof</a>. Regenerated {generated}.</p>
       <p>Holdings figures are company disclosures as of their stated dates. Companies know where their
       bitcoin is; this page measures what <em>investors</em> can independently verify. Grades are
-      independent evidence-quality opinions, not audits. Nothing here is investment advice.</p>
+      independent evidence-quality opinions, not audits. Nothing here is investment advice.
+      Think something here is wrong? <a href="#accountability">Ask for a correction</a>.</p>
     </div>
   </footer>
 </main>
@@ -935,7 +1034,7 @@ def render_acts() -> str:
 
 
 def build_case_page(metrics) -> str:
-    verif = f"{metrics.verifiable_pct:.0f}%"
+    verif = fmt_share_pct(metrics.verifiable_pct)
     title = "The case for proof — DATproof"
     description = ("Why DATproof grades bitcoin-treasury evidence: custody confidentiality, "
                    "encumbered coins, the regulators' own warnings about reserve reports — and "
@@ -956,12 +1055,12 @@ def build_case_page(metrics) -> str:
 
 <main class="wrap">
   <header class="case-hero">
-    <h1>These companies chose the one asset designed to need no trust &mdash; <em>then asked for trust anyway.</em></h1>
+    <h1>Bitcoin was designed so nobody has to be trusted. <em>On corporate balance sheets, we still do.</em></h1>
     <p class="sec-lede">Bitcoin is the first treasury asset whose ownership can be proven by anyone
-    with an internet connection. Today, <span class="mono">{verif}</span> of disclosed corporate BTC
-    is backed by addresses the public can check. The companies know where their coins are. The
-    question is why shareholders can&rsquo;t check &mdash; and what can hide in that gap. Four things
-    the evidence shows:</p>
+    with an internet connection. Today, <span class="mono">{verif}</span> of the disclosed corporate
+    BTC on DATproof&rsquo;s board is backed by addresses the public can check. The companies know
+    where their coins are; shareholders have to take that on trust, and this page is about what
+    that trust costs. Four things the evidence shows:</p>
   </header>
 
   <div class="acts">
@@ -1005,8 +1104,8 @@ def build(price_override: float | None = None, out: Path | None = None) -> Path:
         fallback_as_of=registry.btc_spot_snapshot_as_of,
     )
     metrics = compute_metrics(registry, spot.usd)
-    today = datetime.now(timezone.utc).date()
-    grades = grade_all(registry, today=today)
+    snapshot = date.fromisoformat(registry.snapshot_date)
+    grades = grade_all(registry)
     try:
         daily, hist_source, hist_as_of = load_price_history(
             allow_network=price_override is None)
@@ -1017,7 +1116,7 @@ def build(price_override: float | None = None, out: Path | None = None) -> Path:
 
     out = out or SITE_DIR / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows, today),
+    out.write_text(build_page(registry, metrics, grades, spot, cycle_ctx, cost_rows, snapshot),
                    encoding="utf-8")
 
     case_out = out.parent / "the-case" / "index.html"

@@ -18,7 +18,7 @@ def make_registry():
             known_addresses=["bc1qexample"],
         ),
     ]
-    return Registry(companies=companies, snapshot_date="2026-07-03",
+    return Registry(companies=companies, attributed=[], snapshot_date="2026-07-03",
                     btc_spot_snapshot_usd=60_000, btc_spot_snapshot_as_of="2026-07-03")
 
 

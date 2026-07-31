@@ -63,7 +63,7 @@ def company(cid, btc, avg_cost):
 
 def registry_of(*companies):
     from datproof.registry import Registry
-    return Registry(companies=list(companies), snapshot_date="2026-07-01",
+    return Registry(companies=list(companies), attributed=[], snapshot_date="2026-07-01",
                     btc_spot_snapshot_usd=60_000.0, btc_spot_snapshot_as_of="2026-07-01")
 
 
