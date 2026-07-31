@@ -53,8 +53,24 @@ def test_no_consultant_vocabulary_on_tearsheet(built):
 
 
 def test_no_unsourced_mnav(built):
-    # mNAV must not appear as a figure anywhere: no sourced market caps exist.
-    assert "mNAV is not shown" in built
+    # mNAV must not appear as a figure anywhere: no sourced market caps exist, and
+    # the reason is written for a reader who has never met the term.
+    assert "don&rsquo;t show mNAV" in built
+    assert "market value against the value of its bitcoin" in built
+
+
+def test_absent_proof_renders_neutral_not_as_a_failure(built):
+    # Ten red crosses down the on-chain column read as "everyone failed a test".
+    # This column records an absence of published evidence, not wrongdoing.
+    assert "not a finding of wrongdoing" in built
+    assert 'class="verif no"' not in built
+
+
+def test_underwater_stat_states_its_real_denominator(built):
+    registry = load_registry()
+    metrics = compute_metrics(registry, 60000.0)
+    assert f"{metrics.companies_underwater} of {metrics.companies_with_cost_basis}" in built
+    assert metrics.companies_with_cost_basis < len(metrics.companies)  # the gap is the point
 
 
 def test_spot_source_is_stated(built):

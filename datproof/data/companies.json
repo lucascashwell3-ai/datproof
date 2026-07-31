@@ -1,7 +1,8 @@
 {
   "_meta": {
     "description": "Registry of Digital Asset Treasury (DAT) companies and their disclosed BTC holdings.",
-    "methodology": "Holdings are company-disclosed figures (8-K filings, press releases, treasury dashboards) as of the as_of date. Nothing here is independently verified unless known_addresses is non-empty and on-chain balances have been reconciled. Market caps are intentionally null unless supplied at analysis time — DATproof does not report numbers it cannot source.",
+    "methodology": "Holdings are company-disclosed figures (10-K/10-Q/8-K filings, exchange filings, press releases, treasury dashboards) as of the as_of date. Nothing here is independently verified unless known_addresses is non-empty and on-chain balances have been reconciled. Market caps are intentionally null unless supplied at analysis time \u2014 DATproof does not report numbers it cannot source.",
+    "inclusion_rule": "Companies whose own disclosed bitcoin holdings rank among the largest corporate treasuries at the snapshot date, plus any public company that publishes verifiable proof of its corporate bitcoin. Entities that made no disclosure of their own are recorded as attributed and are never assigned a letter grade. Additions and removals are recorded in the repository's commit history.",
     "snapshot_date": "2026-07-03",
     "btc_spot_snapshot_usd": 61600,
     "btc_spot_snapshot_as_of": "2026-07-03"
@@ -19,11 +20,15 @@
       "source": "Company 8-K filings / strategy.com dashboard",
       "disclosure_method": "8-K + public dashboard",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company dashboard and filings reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": true,
         "preferred_stock": true,
-        "notes": "Multiple series of perpetual preferred (STRK/STRF/STRD-style) plus convertible notes; 2026 capital framework authorizes conditional BTC sales."
+        "as_of": "2026-05-25",
+        "source_url": "https://www.businesswire.com/news/home/20260526522276",
+        "notes": "$6.7B aggregate principal of convertible notes plus $15.5B notional of perpetual preferred across four series (STRK/STRF/STRD/STRC), per the company's May 2026 capital structure update."
       }
     },
     {
@@ -38,11 +43,15 @@
       "source": "Company disclosures / press",
       "disclosure_method": "press release",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": true,
         "preferred_stock": false,
-        "notes": "Tether/SoftBank/Cantor-backed vehicle."
+        "as_of": "2026-03-31",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/0002070457/000121390026055938/ea0287897-10q_twentyone.htm",
+        "notes": "$484.4M convertible senior notes due 2030, secured by 16,116 BTC; preferred authorized but none issued or outstanding (10-Q, Q1 2026)."
       }
     },
     {
@@ -56,13 +65,22 @@
       "as_of": "2026-07-02",
       "source": "Company disclosures (TSE filings), 2,823 BTC added in Q2 2026",
       "disclosure_method": "exchange filing + press release",
-      "attestation": "Third-party attestation service checks custodian balances (company-disclosed program)",
+      "attestation": {
+        "attestor": "Hoseki (Hoseki Verified)",
+        "as_of": "2026-07-02",
+        "source_url": "https://www.hoseki.app/proof-of-reserves/metaplanet",
+        "note": "Public dashboard verifying custodian balances; 43,000.00 BTC verified against 43,000.00 BTC reported. Custodian itself is not named (shown as 'Private Custodian'), and no address list is published."
+      },
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
-        "convertible_debt": true,
-        "preferred_stock": false,
-        "notes": "Moving-strike warrant programs used for accumulation."
+        "convertible_debt": false,
+        "preferred_stock": true,
+        "as_of": "2026-06-08",
+        "source_url": "https://www.coindesk.com/markets/2025/11/20/metaplanet-announce-usd150m-raise-through-perpetual-preferred-equity-with-4-9-yield",
+        "notes": "Parent-level debt is ordinary zero-coupon bonds, not convertibles; equity-linked funding is moving-strike warrants. MERCURY Class B perpetual preferred (23.61M shares, 4.9% fixed dividend) is outstanding \u2014 dividends approved for June/September/December 2026 record dates."
       }
     },
     {
@@ -74,21 +92,26 @@
       "avg_cost_usd": null,
       "cost_basis_usd": null,
       "as_of": "2026-06-30",
-      "source": "Company disclosures / monthly production updates",
+      "source": "Monthly production updates for the current figure; MARA also reports bitcoin holdings in its periodic SEC filings as tagged XBRL (10-Q filed 2026-05-11 reported 35,303 BTC at 2026-03-31)",
       "disclosure_method": "monthly update",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": true,
         "preferred_stock": false,
-        "notes": "Miner — holdings partly self-mined; operational BTC flows distinct from treasury strategy."
-      }
+        "as_of": "2026-03-31",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/0001507605/000150760526000016/mara-20260331.htm",
+        "notes": "0.00% convertible senior notes due 2030/2031/2032 outstanding after the March 2026 repurchases; preferred authorized but none issued or outstanding (10-Q, Q1 2026)."
+      },
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1507605/000150760526000016/mara-20260331.htm"
     },
     {
       "id": "bstc",
       "name": "Bitcoin Standard Treasury Company",
-      "ticker": "BSTR",
-      "exchange": "NASDAQ",
+      "ticker": null,
+      "exchange": null,
       "btc_holdings": 30021,
       "avg_cost_usd": null,
       "cost_basis_usd": null,
@@ -96,12 +119,18 @@
       "source": "Company disclosures / press",
       "disclosure_method": "press release",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": false,
         "preferred_stock": false,
-        "notes": "Cantor SPAC lineage; BTC-in-kind PIPE contributions."
-      }
+        "as_of": "2026-07-08",
+        "source_url": "https://www.businesswire.com/news/home/20260708171203/en/Cantor-Equity-Partners-I-Inc.-and-Bitcoin-Standard-Treasury-Company-Provide-Update-on-Proposed-Business-Combination",
+        "notes": "The convertible notes and 7.00% perpetual convertible preferred were proposed deal components, never outstanding \u2014 the financing commitments were released when the original terms were abandoned on 2026-07-08."
+      },
+      "graded": false,
+      "ungraded_reason": "Not yet a listed issuer \u2014 the Cantor Equity Partners I business combination had not closed and its original terms were abandoned on 2026-07-08. No public company exists to grade, so no letter is assigned."
     },
     {
       "id": "bullish",
@@ -115,11 +144,15 @@
       "source": "Company disclosures",
       "disclosure_method": "filing",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": false,
         "preferred_stock": false,
-        "notes": "Exchange operator — treasury BTC is also operating capital; different risk profile than pure DATs."
+        "as_of": "2025-12-31",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1872195/000143774926007417/blsh20251231_20f.htm",
+        "notes": "Debt is a related-party term loan ($514.4M at 7%), not convertible. Pre-IPO convertible preference shares were converted to ordinary shares in the July 2025 reorganization. Foreign private issuer \u2014 most recent audited balance sheet is the FY2025 20-F."
       }
     },
     {
@@ -134,11 +167,15 @@
       "source": "Company 8-K / press (post-Semler Scientific merger, Jan 2026)",
       "disclosure_method": "8-K + press release",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": false,
         "preferred_stock": true,
-        "notes": "Zero debt after retiring Semler's converts; SATA variable-rate perpetual preferred used for accumulation. First DAT-acquires-DAT transaction (Semler, Jan 2026)."
+        "as_of": "2026-01-28",
+        "source_url": "https://www.globenewswire.com/news-release/2026/01/28/3227628/0/en/strive-announces-closing-of-upsized-oversubscribed-follow-on-offering-of-sata-stock-and-concurrent-exchange-of-semler-notes",
+        "notes": "All Semler 4.25% convertible notes retired and the indenture discharged; funding is SATA variable-rate perpetual preferred (12.25%, no maturity, no conversion feature)."
       }
     },
     {
@@ -150,15 +187,17 @@
       "avg_cost_usd": null,
       "cost_basis_usd": null,
       "as_of": "2026-06-30",
-      "source": "Third-party attribution (private company — no public filing obligation)",
+      "source": "Third-party attribution (private company \u2014 no public filing obligation)",
       "disclosure_method": "third-party attribution",
       "known_addresses": [],
       "market_cap_usd": null,
+      "graded": false,
       "capital_structure": {
         "convertible_debt": false,
         "preferred_stock": false,
-        "notes": "Private. Included for completeness of the corporate-holder landscape; weakest evidence tier in this registry."
-      }
+        "notes": "Private company with no public filing obligation. Reported for completeness of the corporate-holder landscape; never graded, because it made no disclosure to grade."
+      },
+      "ungraded_reason": "Private company with no public filing obligation. The holding is attributed by third parties, not disclosed by the company, so there is no disclosure to grade."
     },
     {
       "id": "coinbase",
@@ -172,11 +211,15 @@
       "source": "10-Q investment portfolio disclosures",
       "disclosure_method": "10-Q",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": true,
         "preferred_stock": false,
-        "notes": "Exchange/custodian — corporate investment portfolio BTC, distinct from customer custodial assets."
+        "as_of": "2026-03-31",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/0001679788/000167978826000054/coin-20260331.htm",
+        "notes": "Four series of convertible notes outstanding (2026/2029/2030/2032), carried at $6.5B fair value; preferred authorized with zero shares issued and outstanding (10-Q, Q1 2026)."
       }
     },
     {
@@ -191,11 +234,44 @@
       "source": "Monthly production and operations updates",
       "disclosure_method": "monthly update",
       "known_addresses": [],
+      "addresses_checked_on": "2026-07-03",
+      "addresses_checked_source": "company disclosures reviewed; no addresses published",
       "market_cap_usd": null,
       "capital_structure": {
         "convertible_debt": true,
         "preferred_stock": false,
-        "notes": "Miner — periodically sells production; holdings fluctuate month to month."
+        "as_of": "2026-03-31",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/0001167419/000110465926053120/riot-20260331x10q.htm",
+        "notes": "$594.4M principal of 0.75% convertible senior notes due 2030; Series A and Series B preferred both show no shares issued and outstanding (10-Q, Q1 2026)."
+      }
+    },
+    {
+      "id": "block",
+      "name": "Block, Inc.",
+      "ticker": "XYZ",
+      "exchange": "NYSE",
+      "btc_holdings": 9032,
+      "avg_cost_usd": null,
+      "cost_basis_usd": null,
+      "as_of": "2026-03-31",
+      "source": "10-Q corporate investment disclosures (9,032 BTC, fair value $617.3M at 2026-03-31); corporate treasury reported separately from customer holdings",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001512673&type=10-Q",
+      "disclosure_method": "10-Q",
+      "known_addresses": [],
+      "proof_mechanism": "utxo-signatures",
+      "proof_url": "https://block.xyz/proof-of-reserves",
+      "addresses_checked_on": "2026-07-30",
+      "addresses_checked_source": "Q1 2026 proof file parsed: publishes the on-chain outputs it controls (txid:vout) plus signatures proving control, verifiable on any block explorer; it does not publish an address list",
+      "market_cap_usd": null,
+      "attestation": {
+        "note": "Proof-of-reserves dashboard cites 'independent third-party auditors' but does not name them, and the Q3/Q4 2026 audit reports are listed as forthcoming"
+      },
+      "capital_structure": {
+        "convertible_debt": true,
+        "preferred_stock": false,
+        "as_of": "2026-03-31",
+        "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001512673&type=10-Q",
+        "notes": "2026 and 2027 convertible senior notes outstanding, none converted as of 2026-03-31; preferred stock authorized with none issued and outstanding (10-Q, Q1 2026)."
       }
     }
   ]

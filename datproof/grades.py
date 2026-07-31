@@ -6,13 +6,19 @@ its executable form. Anyone can re-run the grades from the public registry —
 trust the method, not the author.
 
 Design rules (mirroring the registry's own discipline):
-- Grades measure EVIDENCE QUALITY, not company quality and not price opinion.
-- Every point is traceable to a disclosed fact; nothing is inferred.
+- A grade answers two questions: how much of the position an outside investor
+  could check, and how much margin for error the balance sheet leaves behind
+  it. It is not a view on the stock or the price.
+- Every point is traceable to a disclosed, dated, sourced fact; nothing is
+  inferred, and an input DATproof has not sourced is never scored as though the
+  company failed to disclose it.
 - A grade is stated as an independent evidence-quality opinion, not an audit.
+- Freshness is measured against the registry snapshot, never the build clock:
+  a grade must not fall because DATproof has not updated its own data.
 """
 
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date
 
 from .registry import Company, Registry
 
@@ -30,10 +36,11 @@ DISCLOSURE_POINTS = {0: 30, 1: 30, 2: 16, 3: 0}
 
 # Pillar 3 — Independent attestation (0 or 10).
 # A third-party attestation of custodian balances narrows the trust gap even
-# though (per the PCAOB's own caution) it is not assurance.
+# though (per the PCAOB's own caution) it is not assurance. Scored only when the
+# attestor, report date and link are all on file.
 ATTESTATION_POINTS = 10
 
-# Pillar 4 — Disclosure freshness (0-10).
+# Pillar 4 — Disclosure freshness (0-10), measured against the registry snapshot.
 FRESH_FULL_DAYS = 45     # aligned with the risk engine's staleness threshold
 FRESH_PARTIAL_DAYS = 120
 FRESHNESS_FULL = 10
@@ -89,8 +96,8 @@ def letter_for(score: int) -> str:
     return "F"
 
 
-def _freshness_points(c: Company, today: date) -> tuple[int, int]:
-    age_days = (today - date.fromisoformat(c.as_of)).days
+def _freshness_points(c: Company, as_of: date) -> tuple[int, int]:
+    age_days = (as_of - date.fromisoformat(c.as_of)).days
     if age_days <= FRESH_FULL_DAYS:
         return FRESHNESS_FULL, age_days
     if age_days <= FRESH_PARTIAL_DAYS:
@@ -111,20 +118,34 @@ def _structure_points(c: Company) -> tuple[int, list[str]]:
     return STRUCTURE_BOTH, instruments
 
 
-def grade_company(c: Company, today: date | None = None) -> CompanyGrade:
-    today = today or datetime.utcnow().date()
+def _proof_note(c: Company) -> str:
+    if c.proof_published:
+        return c.proof_description
+    if c.addresses_checked_on:
+        return (f"No published on-chain proof found as of {c.addresses_checked_on} "
+                f"({c.addresses_checked_source})")
+    return "No published on-chain proof on file"
+
+
+def _attestation_note(c: Company) -> str:
+    described = c.attestation.describe()
+    if described:
+        return described
+    return "No independent attestation disclosed"
+
+
+def grade_company(c: Company, as_of: date) -> CompanyGrade:
+    """Grade one company as of a reference date — the registry snapshot, not today."""
     components: list[GradeComponent] = []
 
     # 1 — on-chain proof
-    proof = PROOF_POINTS if c.addresses_published else 0
+    proof = PROOF_POINTS if c.proof_published else 0
     components.append(GradeComponent(
-        "proof", "On-chain proof", proof, PROOF_POINTS,
-        ("Published wallet addresses reconcile on-chain" if proof
-         else "No published wallet addresses — existence rests on the company's word"),
+        "proof", "On-chain proof", proof, PROOF_POINTS, _proof_note(c),
     ))
 
     # 2 — disclosure quality
-    disclosure = DISCLOSURE_POINTS.get(c.evidence_tier, 0)
+    disclosure = DISCLOSURE_POINTS[c.evidence_tier]
     components.append(GradeComponent(
         "disclosure", "Disclosure quality", disclosure, max(DISCLOSURE_POINTS.values()),
         f"{c.disclosure_method} (evidence tier {c.evidence_tier})",
@@ -134,14 +155,14 @@ def grade_company(c: Company, today: date | None = None) -> CompanyGrade:
     attestation = ATTESTATION_POINTS if c.has_attestation else 0
     components.append(GradeComponent(
         "attestation", "Independent attestation", attestation, ATTESTATION_POINTS,
-        c.attestation if c.has_attestation else "No independent attestation disclosed",
+        _attestation_note(c),
     ))
 
     # 4 — freshness
-    freshness, age_days = _freshness_points(c, today)
+    freshness, age_days = _freshness_points(c, as_of)
     components.append(GradeComponent(
         "freshness", "Disclosure freshness", freshness, FRESHNESS_FULL,
-        f"Latest disclosure {age_days} days old (as of {c.as_of})",
+        f"Latest disclosure {age_days} days old at the snapshot (as of {c.as_of})",
     ))
 
     # 5 — balance-sheet resilience
@@ -158,13 +179,19 @@ def grade_company(c: Company, today: date | None = None) -> CompanyGrade:
     path: list[tuple[int, str]] = []
     if proof < PROOF_POINTS:
         path.append((PROOF_POINTS - proof,
-                     f"Publish wallet addresses that reconcile on-chain (+{PROOF_POINTS - proof})"))
+                     f"Publish wallet addresses, or the outputs it controls with signatures "
+                     f"proving control (+{PROOF_POINTS - proof})"))
     gap = max(DISCLOSURE_POINTS.values()) - disclosure
     if gap:
-        path.append((gap, f"Move disclosure into regulatory filings (+{gap})"))
+        # Phrased about the figure, not the company: several of these companies do
+        # report bitcoin in their periodic filings — it is this holdings figure
+        # that comes from a press update rather than a filing.
+        path.append((gap, f"Source the current holdings figure to a regulatory filing (+{gap})"))
     if attestation < ATTESTATION_POINTS:
-        path.append((ATTESTATION_POINTS - attestation,
-                     f"Obtain independent attestation of custodian balances (+{ATTESTATION_POINTS - attestation})"))
+        hint = ("Publish the attestor, report date and report link (+10)"
+                if c.attestation.is_disclosed
+                else f"Obtain independent attestation of custodian balances (+{ATTESTATION_POINTS})")
+        path.append((ATTESTATION_POINTS - attestation, hint))
     if freshness < FRESHNESS_FULL:
         path.append((FRESHNESS_FULL - freshness,
                      f"Refresh the holdings disclosure (+{FRESHNESS_FULL - freshness})"))
@@ -183,7 +210,12 @@ def grade_company(c: Company, today: date | None = None) -> CompanyGrade:
     )
 
 
-def grade_all(registry: Registry, today: date | None = None) -> dict[str, CompanyGrade]:
-    """Grade every company in the registry. Keyed by company id."""
-    today = today or datetime.utcnow().date()
-    return {c.id: grade_company(c, today) for c in registry.companies}
+def grade_all(registry: Registry, as_of: date | None = None) -> dict[str, CompanyGrade]:
+    """Grade every graded company. Keyed by company id.
+
+    The reference date defaults to the registry snapshot, so a grade only moves
+    when the evidence moves. Measuring freshness against the build clock instead
+    would publish downgrades that encode no new fact about any company.
+    """
+    as_of = as_of or date.fromisoformat(registry.snapshot_date)
+    return {c.id: grade_company(c, as_of) for c in registry.companies}

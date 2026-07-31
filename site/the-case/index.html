@@ -20,7 +20,9 @@
   --bg-panel: oklch(0.15 0.013 260);
   --text: oklch(0.93 0.008 90);
   --muted: oklch(0.71 0.014 260);
-  --faint: oklch(0.55 0.014 260);
+  /* 0.62, not 0.55: this token carries the sort headers, tickers and disclosure
+     dates — the provenance — and 0.55 computed 4.06:1 against the page. */
+  --faint: oklch(0.62 0.014 260);
   --line: oklch(0.27 0.018 260);
   --line-soft: oklch(0.22 0.016 260);
   --gold: oklch(0.8 0.115 88);
@@ -51,6 +53,7 @@ body {
 ::selection { background: var(--gold); color: var(--bg); }
 a { color: inherit; }
 .mono { font-family: var(--monof); font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .wrap { max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }
 :focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold); border-radius: 4px; }
 
@@ -72,8 +75,9 @@ a { color: inherit; }
 .nav {
   position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%);
   z-index: 10; display: flex; align-items: center; gap: 0.35rem;
-  background: oklch(0.16 0.014 260 / 0.78); backdrop-filter: blur(14px);
-  border: 1px solid var(--line); border-radius: 999px;
+  /* Opaque: translucent chrome let the scoreboard's own figures show through
+     the bar as it scrolled, which reads as a rendering fault, not a style. */
+  background: oklch(0.16 0.014 260); border: 1px solid var(--line); border-radius: 999px;
   padding: 0.4rem 0.5rem 0.4rem 1.1rem;
   box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
   white-space: nowrap;
@@ -93,7 +97,15 @@ a { color: inherit; }
   transition: transform 120ms var(--ease-out);
 }
 .nav a.cta:active { transform: scale(0.96); }
-@media (max-width: 680px) { .nav a.item { display: none; } }
+/* Narrow screens drop the in-page jumps but keep "The case" — it is the page
+   that separates "hasn't published" from "is hiding something", and hiding it
+   on phones left the letter grades as the only thing a phone reader could see. */
+@media (max-width: 680px) {
+  .nav { top: 0.6rem; padding-left: 0.85rem; gap: 0.15rem; }
+  .nav a.item.jump { display: none; }
+  .nav .wordmark { margin-right: 0.35rem; }
+  .nav a.item, .nav a.cta { font-size: 0.8rem; padding-inline: 0.6rem; }
+}
 
 h2 {
   font: 480 clamp(1.7rem, 3.4vw, 2.4rem)/1.15 var(--serif);
@@ -153,20 +165,20 @@ blockquote cite a:hover { text-decoration: underline; }
 
 <nav class="nav" aria-label="Main">
   <a class="wordmark" href="../">DATproof<span class="seal">.</span></a>
-  <a class="item" href="../#scoreboard">Scoreboard</a>
-  <a class="item" href="../#method">Method</a>
+  <a class="item jump" href="../#scoreboard">Scoreboard</a>
+  <a class="item jump" href="../#method">Method</a>
   <a class="item" href="../the-case/">The case</a>
-  <a class="cta" href="../tearsheet/">Tearsheet</a>
+  <a class="cta" href="../tearsheet/">Today&rsquo;s numbers</a>
 </nav>
 
 <main class="wrap">
   <header class="case-hero">
-    <h1>These companies chose the one asset designed to need no trust &mdash; <em>then asked for trust anyway.</em></h1>
+    <h1>Bitcoin was designed so nobody has to be trusted. <em>On corporate balance sheets, we still do.</em></h1>
     <p class="sec-lede">Bitcoin is the first treasury asset whose ownership can be proven by anyone
-    with an internet connection. Today, <span class="mono">0%</span> of disclosed corporate BTC
-    is backed by addresses the public can check. The companies know where their coins are. The
-    question is why shareholders can&rsquo;t check &mdash; and what can hide in that gap. Four things
-    the evidence shows:</p>
+    with an internet connection. Today, <span class="mono">0.9%</span> of the disclosed corporate
+    BTC on DATproof&rsquo;s board is backed by addresses the public can check. The companies know
+    where their coins are; shareholders have to take that on trust, and this page is about what
+    that trust costs. Four things the evidence shows:</p>
   </header>
 
   <div class="acts">
@@ -186,7 +198,7 @@ blockquote cite a:hover { text-decoration: underline; }
           <span class="act-num">II</span>
           <h3>What a balance can&#x27;t tell you</h3>
         </div>
-        <p class="act-body">Here is why this matters even if every disclosed coin exists. A number in a filing can't show you whether the coins are pledged, borrowed, or pooled. In 2022, Strategy’s own subsidiary borrowed $205 million against its bitcoin — the same disclosed coins, encumbered as loan collateral, per <a href="https://www.sec.gov/Archives/edgar/data/1050446/000119312522087494/d312252dex991.htm" rel="noopener">its own SEC filing</a>. Blockchain sleuths at Arkham later traced what appears to be ~107,000 of Strategy’s BTC to a pooled custodial arrangement, commingled with other clients’ coins (their analysis, not an official disclosure — treat it as informed inference). The balance was never false. It just wasn’t the whole story.</p>
+        <p class="act-body">Here is why this matters even if every disclosed coin exists. A number in a filing can't show you whether the coins are pledged, borrowed, or pooled. In 2022, Strategy’s own subsidiary borrowed $205 million secured by <em>&ldquo;certain bitcoin held in MacroStrategy’s collateral account,&rdquo;</em> per <a href="https://www.sec.gov/Archives/edgar/data/1050446/000119312522087494/d312252dex991.htm" rel="noopener">the filed exhibit</a> — the filing establishes that bitcoin was pledged, and does not say which coins. That is the point: from the outside, you cannot tell. The balance was never false. It just wasn’t the whole story.</p>
         <blockquote>
           <p>Assets subjected to PoR might have been borrowed, for the purpose of the PoR or for other reasons, or might not even be (solely) controlled by the custodian or exchange.</p>
           <cite>&mdash; <a href="https://www.pwc.ch/en/insights/digital/does-proof-of-reserves-provide-meaningful-trust-and-transparency.html" rel="noopener">PwC, on what reserve snapshots can hide</a></cite>
@@ -208,7 +220,7 @@ blockquote cite a:hover { text-decoration: underline; }
           <span class="act-num">IV</span>
           <h3>It&#x27;s already solvable</h3>
         </div>
-        <p class="act-body">None of this is hypothetical or impossible. Block publishes a public dashboard backing every customer bitcoin 1:1 — and honestly labels it a point-in-time snapshot, not an audit. Crypto.com runs Merkle-tree proofs that let each customer cryptographically verify their own balance is in the reserves. Among the ten largest corporate holders, Metaplanet goes furthest — a third-party attestation service checks its custodian balances — yet even it publishes no addresses the public can check directly. The tools exist. Using them is a choice. Today, zero of the ten largest holders publish addresses anyone can verify.</p>
+        <p class="act-body">None of this is hypothetical, and one company on the board already does it. Block publishes the on-chain outputs it controls together with signatures proving that control — anyone can check those outputs on a block explorer and verify the signatures in their own browser. It labels the result honestly: a point-in-time snapshot, not an audit. Metaplanet goes partway, with a named third-party verifier (Hoseki) publishing a dated dashboard of its custodian balances, though no addresses and no named custodian. Crypto.com runs Merkle-tree proofs that let each customer verify their own balance is in the reserves. The tools exist and they work. Using them is a choice, and almost none of the largest corporate holders has made it.</p>
         <blockquote>
           <p>For every bitcoin in a customer&#x27;s Cash App balance, Block holds an equal amount of bitcoin in custody.</p>
           <cite>&mdash; <a href="https://block.xyz/proof-of-reserves" rel="noopener">Block, proof-of-reserves dashboard</a></cite>

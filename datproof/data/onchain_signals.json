@@ -1,18 +1,18 @@
 {
- "as_of": "2026-07-12T02:33:03Z",
+ "as_of": "2026-07-31T03:31:02Z",
  "source_note": "bitcoin-data.com (BGeometrics) \u2014 latest on-chain valuation metrics",
  "signals": {
   "supply_in_loss": {
-   "value": 45.78488093594574,
-   "as_of": "2026-07-11"
+   "value": 43.27889558398453,
+   "as_of": "2026-07-30"
   },
   "mvrv": {
-   "value": 1.214,
-   "as_of": "2026-07-11"
+   "value": 1.2348,
+   "as_of": "2026-07-30"
   },
   "sopr": {
-   "value": 1.0007,
-   "as_of": "2026-07-11"
+   "value": 0.9991,
+   "as_of": "2026-07-30"
   }
  }
 }
