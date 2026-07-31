@@ -15,7 +15,7 @@ def registry_with(**overrides):
         capital_structure=CapitalStructure(),
     )
     defaults.update(overrides)
-    return Registry(companies=[Company(**defaults)], snapshot_date="2026-07-03",
+    return Registry(companies=[Company(**defaults)], attributed=[], snapshot_date="2026-07-03",
                     btc_spot_snapshot_usd=60_000, btc_spot_snapshot_as_of="2026-07-03")
 
 

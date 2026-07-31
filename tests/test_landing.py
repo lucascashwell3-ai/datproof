@@ -9,7 +9,7 @@ import pytest
 from datproof.grades import grade_all
 from datproof.metrics import compute_metrics
 from datproof.registry import load_registry
-from scripts.build_landing import build, fmt_btc, fmt_usd_compact
+from scripts.build_landing import build, fmt_btc, fmt_share_pct, fmt_usd_compact
 
 
 @pytest.fixture(scope="module")
@@ -45,7 +45,14 @@ def test_live_figures_match_pipeline(built):
     metrics = compute_metrics(registry, 60000.0)
     assert fmt_btc(metrics.total_btc) in built
     assert fmt_usd_compact(metrics.total_value_usd) in built
-    assert f"{metrics.verifiable_pct:.0f}%" in built
+    assert fmt_share_pct(metrics.verifiable_pct) in built
+
+
+def test_a_small_verifiable_share_never_renders_as_zero():
+    # 0.86% rounding to "0%" would erase the one company that publishes proof —
+    # the same class of error as reporting a research gap as a company's silence.
+    assert fmt_share_pct(0.86) == "0.9%"
+    assert fmt_share_pct(0.0) == "0%"
 
 
 def test_every_company_graded_on_scoreboard(built):
@@ -57,11 +64,40 @@ def test_every_company_graded_on_scoreboard(built):
         assert f'class="chip g{g.letter}"' in built
 
 
-def test_burden_of_proof_toggle_present(built):
-    # THE signature interaction: disclosed total vs provable-on-chain total.
-    assert 'id="bopSeg"' in built
-    assert "Take their word" in built and "Require proof" in built
-    assert 'data-proof-val="0"' in built  # today, nothing survives requiring proof
+def test_no_take_their_word_toggle(built):
+    # Retired 2026-07-30. The control zeroed out real holdings on a click, and its
+    # two states characterized the companies rather than labelling a view. Both
+    # numbers are now stated at once, with no state for a reader to discover.
+    assert 'id="bopSeg"' not in built
+    assert "Take their word" not in built
+    assert "Require proof" not in built
+    assert "proofmode" not in built
+
+
+def test_hero_states_both_numbers_without_interaction(built):
+    registry = load_registry()
+    metrics = compute_metrics(registry, 60000.0)
+    assert fmt_usd_compact(metrics.total_value_usd) in built
+    assert fmt_share_pct(metrics.verifiable_pct) in built
+    assert "No company here is accused of anything" in built
+
+
+def test_page_never_instructs_an_action_a_phone_cannot_do(built):
+    # "Hover a grade for what would raise it" was live copy on a page whose
+    # likeliest readers are on phones, which cannot hover.
+    assert "Hover a grade" not in built
+
+
+def test_snapshot_date_sits_with_the_grades(built):
+    # "Rebuilt nightly" over a hand-updated registry read as an evidence refresh.
+    registry = load_registry()
+    assert registry.snapshot_date in built
+    assert "updated by hand" in built
+
+
+def test_accountability_block_is_present(built):
+    for needle in ("correction", "no advertising, no sponsorship", "not an institution"):
+        assert needle in built, f"missing accountability content: {needle}"
 
 
 def test_no_consultant_vocabulary_on_landing(built):

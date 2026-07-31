@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DATproof — the rating agency for bitcoin-treasury proof</title>
-<meta name="description" content="Every major corporate bitcoin holder graded A–F on the quality of evidence behind its disclosed coins. 10 companies · 1,095,249 BTC ($70.9B) · 0% provable on-chain today. Public methodology, rebuilt nightly.">
+<meta name="description" content="Every major corporate bitcoin holder graded A–F on how much of its disclosed position an investor can independently check. 9 companies · 1,055,548 BTC ($63.3B) · 0.9% of it backed by public wallet addresses. Public rubric, registry snapshot 2026-07-03.">
 <meta property="og:title" content="DATproof — the rating agency for bitcoin-treasury proof">
-<meta property="og:description" content="Every major corporate bitcoin holder graded A–F on the quality of evidence behind its disclosed coins. 10 companies · 1,095,249 BTC ($70.9B) · 0% provable on-chain today. Public methodology, rebuilt nightly.">
+<meta property="og:description" content="Every major corporate bitcoin holder graded A–F on how much of its disclosed position an investor can independently check. 9 companies · 1,055,548 BTC ($63.3B) · 0.9% of it backed by public wallet addresses. Public rubric, registry snapshot 2026-07-03.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0d12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23e3b74f' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,9 @@
   --bg-panel: oklch(0.15 0.013 260);
   --text: oklch(0.93 0.008 90);
   --muted: oklch(0.71 0.014 260);
-  --faint: oklch(0.55 0.014 260);
+  /* 0.62, not 0.55: this token carries the sort headers, tickers and disclosure
+     dates — the provenance — and 0.55 computed 4.06:1 against the page. */
+  --faint: oklch(0.62 0.014 260);
   --line: oklch(0.27 0.018 260);
   --line-soft: oklch(0.22 0.016 260);
   --gold: oklch(0.8 0.115 88);
@@ -51,6 +53,7 @@ body {
 ::selection { background: var(--gold); color: var(--bg); }
 a { color: inherit; }
 .mono { font-family: var(--monof); font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .wrap { max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }
 :focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold); border-radius: 4px; }
 
@@ -72,8 +75,9 @@ a { color: inherit; }
 .nav {
   position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%);
   z-index: 10; display: flex; align-items: center; gap: 0.35rem;
-  background: oklch(0.16 0.014 260 / 0.78); backdrop-filter: blur(14px);
-  border: 1px solid var(--line); border-radius: 999px;
+  /* Opaque: translucent chrome let the scoreboard's own figures show through
+     the bar as it scrolled, which reads as a rendering fault, not a style. */
+  background: oklch(0.16 0.014 260); border: 1px solid var(--line); border-radius: 999px;
   padding: 0.4rem 0.5rem 0.4rem 1.1rem;
   box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
   white-space: nowrap;
@@ -93,7 +97,15 @@ a { color: inherit; }
   transition: transform 120ms var(--ease-out);
 }
 .nav a.cta:active { transform: scale(0.96); }
-@media (max-width: 680px) { .nav a.item { display: none; } }
+/* Narrow screens drop the in-page jumps but keep "The case" — it is the page
+   that separates "hasn't published" from "is hiding something", and hiding it
+   on phones left the letter grades as the only thing a phone reader could see. */
+@media (max-width: 680px) {
+  .nav { top: 0.6rem; padding-left: 0.85rem; gap: 0.15rem; }
+  .nav a.item.jump { display: none; }
+  .nav .wordmark { margin-right: 0.35rem; }
+  .nav a.item, .nav a.cta { font-size: 0.8rem; padding-inline: 0.6rem; }
+}
 
 h2 {
   font: 480 clamp(1.7rem, 3.4vw, 2.4rem)/1.15 var(--serif);
@@ -167,21 +179,22 @@ h1 em { font-style: italic; color: var(--gold); }
   padding: 0.55rem 0.95rem; border-radius: 999px; transition: color 180ms ease;
 }
 .seg button[aria-pressed="true"] { color: var(--text); }
-.seg.bop { border-color: oklch(0.4 0.09 85 / 0.55); }
-.seg.bop .thumb { background: oklch(0.3 0.06 82); border-color: oklch(0.45 0.09 85); }
-.seg.bop button[aria-pressed="true"] { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) { .seg .thumb { transition: none; } }
 
-/* the burden-of-proof figure */
+/* the headline figure — both numbers stated at once, no state to discover */
 .bop-figure { margin: clamp(1.4rem, 3.5vh, 2.2rem) 0 0; }
 .bop-num {
   display: block; font-family: var(--monof); font-weight: 500;
   font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1.05; letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums; transition: color 400ms ease;
+  font-variant-numeric: tabular-nums;
 }
-.proofmode .bop-num { color: var(--gold); }
-.bop-cap { display: block; margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; }
-.bop-cap .mono { color: var(--text); font-size: 0.92em; }
+.bop-cap { display: block; margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; max-width: 56ch; }
+.bop-cap .mono { color: var(--gold); font-size: 0.92em; }
+.bop-defuse {
+  display: block; margin-top: 0.9rem; padding-top: 0.9rem;
+  border-top: 1px solid var(--line-soft); max-width: 62ch;
+  color: var(--text); font-size: 0.98rem;
+}
 
 /* scoreboard table */
 .board-scroll { overflow-x: auto; margin-top: clamp(1.3rem, 3vh, 2rem); -webkit-overflow-scrolling: touch; }
@@ -230,11 +243,22 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
   @keyframes stamp { from { transform: scale(1.45); opacity: 0; } }
 }
 
-/* proof mode: unproven rows recede, the grade stays stamped */
-.proofmode .board tr.unproven { opacity: 0.5; }
-.proofmode .board tr.unproven td.flip { color: var(--gold); }
 .board-note { margin-top: 1.1rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
 .board-note .mono { color: var(--gold); }
+.board-snap { margin-top: 0.6rem; font-family: var(--monof); font-size: 0.76rem; color: var(--faint); }
+
+/* attributed but ungraded — reported for completeness, never given a letter */
+.attributed { margin-top: 1.6rem; padding-top: 1.1rem; border-top: 1px solid var(--line-soft); }
+.attributed h3 { font: 500 0.95rem/1.3 var(--sans); color: var(--text); }
+.attributed p { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
+.attributed .mono { color: var(--text); }
+
+/* accountability: who made this, how to dispute it, what the author holds */
+.account { display: grid; gap: 1.6rem 2.5rem; margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.account h3 { font: 500 1.05rem/1.3 var(--serif); }
+.account p { margin-top: 0.5rem; font-size: 0.92rem; color: var(--muted); text-wrap: pretty; }
+.account a { color: var(--gold); }
 
 /* figure band */
 .figures-band { position: relative; margin: clamp(2.6rem, 7vh, 4.6rem) 0 0; padding-block: clamp(2.4rem, 5.5vh, 3.4rem); }
@@ -303,10 +327,10 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
 
 <nav class="nav" aria-label="Main">
   <a class="wordmark" href="#top">DATproof<span class="seal">.</span></a>
-  <a class="item" href="#scoreboard">Scoreboard</a>
-  <a class="item" href="#method">Method</a>
+  <a class="item jump" href="#scoreboard">Scoreboard</a>
+  <a class="item jump" href="#method">Method</a>
   <a class="item" href="the-case/">The case</a>
-  <a class="cta" href="tearsheet/">Tearsheet</a>
+  <a class="cta" href="tearsheet/">Today&rsquo;s numbers</a>
 </nav>
 
 <main>
@@ -315,17 +339,12 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
     <h1>The rating agency for <em>bitcoin&#8209;treasury proof</em>.</h1>
     <p class="hero-sub">Provable, well&#8209;managed bitcoin on the balance sheet is a serious,
     long&#8209;term way to finance a business. DATproof grades every major corporate holder
-    <strong>A&ndash;F on the quality of evidence</strong> behind its disclosed coins &mdash; scored
-    like an auditor would, from a public rubric, rebuilt nightly. <strong>The A is still
-    unclaimed.</strong></p>
+    <strong>A&ndash;F on how much of the position an investor can check</strong> &mdash; and how
+    much room for error the balance sheet leaves behind it. One public rubric, applied the same
+    way to everyone. <strong>The A is still unclaimed.</strong></p>
 
     <section class="proof-panel" id="scoreboard" aria-label="The scoreboard">
       <div class="panel-top">
-        <div class="seg bop" id="bopSeg" role="group" aria-label="Burden of proof">
-          <span class="thumb" aria-hidden="true"></span>
-          <button type="button" data-v="word" aria-pressed="true">Take their word</button>
-          <button type="button" data-v="proof" aria-pressed="false">Require proof</button>
-        </div>
         <div class="seg" id="viewSeg" role="group" aria-label="Scoreboard view">
           <span class="thumb" aria-hidden="true"></span>
           <button type="button" data-v="holdings" aria-pressed="true">Holdings</button>
@@ -334,143 +353,149 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
         </div>
       </div>
 
-      <div class="bop-figure" aria-live="polite">
-        <span class="bop-num" id="bopNum" data-kind="usdc"
-              data-word-val="70853744259" data-word-txt="$70.9B"
-              data-proof-val="0" data-proof-txt="$0">$70.9B</span>
-        <span class="bop-cap" id="bopCap"
-              data-word="in bitcoin disclosed by 10 companies &mdash; on their word"
-              data-proof="provable on-chain by anyone, right now">in bitcoin disclosed by 10 companies &mdash; on their word</span>
+      <div class="bop-figure">
+        <span class="bop-num">$63.3B</span>
+        <span class="bop-cap">in bitcoin disclosed by 9 companies. <span class="mono">0.9%</span>
+        of it comes with proof the public can check on-chain.</span>
+        <span class="bop-defuse">No company here is accused of anything. They know where their
+        bitcoin is; this page measures what an outside investor can check independently, and a low
+        grade means missing evidence, not wrongdoing. The bar is clearable and Block, Inc. clears it &mdash; which is why the rest of the field sitting at C, D and F is a finding about evidence, not an impossible standard.</span>
       </div>
 
       <div class="board-scroll">
         <table class="board" id="board">
-          <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Evidence-quality grades, holdings and disclosure evidence per company</caption>
+          <caption class="sr-only">Grades, holdings and disclosure evidence per company</caption>
           <thead>
             <tr>
               <th scope="col" data-key="score" aria-sort="none"><button type="button">Grade</button></th>
               <th scope="col" data-key="name"><button type="button">Company</button></th>
-              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button" data-word="BTC" data-proof="Provable BTC">BTC</button></th>
-              <th scope="col" class="num"><span data-word="Value" data-proof="Provable value">Value</span></th>
+              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button">BTC</button></th>
+              <th scope="col" class="num"><span>Value</span></th>
               <th scope="col"><span>Evidence</span></th>
               <th scope="col" data-key="age"><button type="button">As of</button></th>
             </tr>
           </thead>
           <tbody>
-      <tr data-name="Strategy Inc" data-btc="847363" data-score="40" data-age="30" data-verifiable="0">
-        <td><span class="chip gD" style="--i:0" title="D · 40/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade D, 40 of 100">D</span></td>
+      <tr data-name="Strategy Inc" data-btc="847363" data-score="40" data-age="3">
+        <td><span class="chip gD" style="--i:0" title="D · 40/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">D</span><span class="sr-only">D · 40/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
         <th scope="row">Strategy Inc<span class="tick">MSTR</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="847363" data-proof-val="0" data-word-txt="847,363" data-proof-txt="&mdash;">847,363</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="54817526697" data-proof-val="0" data-word-txt="$54.8B" data-proof-txt="&mdash;">$54.8B</span></td>
+        <td class="num">847,363</td>
+        <td class="num">$50.8B</td>
         <td><span class="tier">T1 · regulatory filing</span></td>
         <td><span class="asof">2026-06-30</span></td>
       </tr>
-      <tr data-name="Twenty One Capital" data-btc="43514" data-score="31" data-age="30" data-verifiable="0">
-        <td><span class="chip gF" style="--i:1" title="F · 31/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade F, 31 of 100">F</span></td>
+      <tr data-name="Twenty One Capital" data-btc="43514" data-score="31" data-age="3">
+        <td><span class="chip gF" style="--i:1" title="F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)" aria-hidden="true">F</span><span class="sr-only">F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)</span></td>
         <th scope="row">Twenty One Capital<span class="tick">XXI</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="43514" data-proof-val="0" data-word-txt="43,514" data-proof-txt="&mdash;">43,514</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="2815003554" data-proof-val="0" data-word-txt="$2.8B" data-proof-txt="&mdash;">$2.8B</span></td>
+        <td class="num">43,514</td>
+        <td class="num">$2.6B</td>
         <td><span class="tier">T2 · company statement</span></td>
         <td><span class="asof">2026-06-30</span></td>
       </tr>
-      <tr data-name="Metaplanet Inc" data-btc="43000" data-score="55" data-age="28" data-verifiable="0">
-        <td><span class="chip gC" style="--i:2" title="C · 55/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Reduce fixed obligations against the position (+5)" tabindex="0" role="img" aria-label="Grade C, 55 of 100">C</span></td>
+      <tr data-name="Metaplanet Inc" data-btc="43000" data-score="55" data-age="1">
+        <td><span class="chip gC" style="--i:2" title="C · 55/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Reduce fixed obligations against the position (+5)" aria-hidden="true">C</span><span class="sr-only">C · 55/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Reduce fixed obligations against the position (+5)</span></td>
         <th scope="row">Metaplanet Inc<span class="tick">3350.T</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="43000" data-proof-val="0" data-word-txt="43,000" data-proof-txt="&mdash;">43,000</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="2781751915" data-proof-val="0" data-word-txt="$2.8B" data-proof-txt="&mdash;">$2.8B</span></td>
+        <td class="num">43,000</td>
+        <td class="num">$2.6B</td>
         <td><span class="tier">T1 · regulatory filing</span></td>
         <td><span class="asof">2026-07-02</span></td>
       </tr>
-      <tr data-name="MARA Holdings" data-btc="36303" data-score="31" data-age="30" data-verifiable="0">
-        <td><span class="chip gF" style="--i:3" title="F · 31/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade F, 31 of 100">F</span></td>
+      <tr data-name="MARA Holdings" data-btc="36303" data-score="31" data-age="3">
+        <td><span class="chip gF" style="--i:3" title="F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)" aria-hidden="true">F</span><span class="sr-only">F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)</span></td>
         <th scope="row">MARA Holdings<span class="tick">MARA</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="36303" data-proof-val="0" data-word-txt="36,303" data-proof-txt="&mdash;">36,303</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="2348510227" data-proof-val="0" data-word-txt="$2.3B" data-proof-txt="&mdash;">$2.3B</span></td>
+        <td class="num">36,303</td>
+        <td class="num">$2.2B</td>
         <td><span class="tier">T2 · company statement</span></td>
         <td><span class="asof">2026-06-30</span></td>
       </tr>
-      <tr data-name="Bitcoin Standard Treasury Company" data-btc="30021" data-score="36" data-age="30" data-verifiable="0">
-        <td><span class="chip gD" style="--i:4" title="D · 36/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade D, 36 of 100">D</span></td>
-        <th scope="row">Bitcoin Standard Treasury Company<span class="tick">BSTR</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="30021" data-proof-val="0" data-word-txt="30,021" data-proof-txt="&mdash;">30,021</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1942115680" data-proof-val="0" data-word-txt="$1.9B" data-proof-txt="&mdash;">$1.9B</span></td>
-        <td><span class="tier">T2 · company statement</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Bullish" data-btc="24300" data-score="50" data-age="30" data-verifiable="0">
-        <td><span class="chip gC" style="--i:5" title="C · 50/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade C, 50 of 100">C</span></td>
+      <tr data-name="Bullish" data-btc="24300" data-score="50" data-age="3">
+        <td><span class="chip gC" style="--i:4" title="C · 50/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">C</span><span class="sr-only">C · 50/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
         <th scope="row">Bullish<span class="tick">BLSH</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="24300" data-proof-val="0" data-word-txt="24,300" data-proof-txt="&mdash;">24,300</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1572013292" data-proof-val="0" data-word-txt="$1.6B" data-proof-txt="&mdash;">$1.6B</span></td>
+        <td class="num">24,300</td>
+        <td class="num">$1.5B</td>
         <td><span class="tier">T1 · regulatory filing</span></td>
         <td><span class="asof">2026-06-30</span></td>
       </tr>
-      <tr data-name="Strive Inc" data-btc="19864" data-score="45" data-age="32" data-verifiable="0">
-        <td><span class="chip gD" style="--i:6" title="D · 45/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade D, 45 of 100">D</span></td>
+      <tr data-name="Strive Inc" data-btc="19864" data-score="45" data-age="5">
+        <td><span class="chip gD" style="--i:5" title="D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">D</span><span class="sr-only">D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
         <th scope="row">Strive Inc<span class="tick">ASST</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="19864" data-proof-val="0" data-word-txt="19,864" data-proof-txt="&mdash;">19,864</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1285040001" data-proof-val="0" data-word-txt="$1.3B" data-proof-txt="&mdash;">$1.3B</span></td>
+        <td class="num">19,864</td>
+        <td class="num">$1.2B</td>
         <td><span class="tier">T1 · regulatory filing</span></td>
         <td><span class="asof">2026-06-28</span></td>
       </tr>
-      <tr data-name="SpaceX" data-btc="18712" data-score="20" data-age="30" data-verifiable="0">
-        <td><span class="chip gF" style="--i:7" title="F · 20/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+30)" tabindex="0" role="img" aria-label="Grade F, 20 of 100">F</span></td>
-        <th scope="row">SpaceX<span class="tick">private</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="18712" data-proof-val="0" data-word-txt="18,712" data-proof-txt="&mdash;">18,712</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1210514926" data-proof-val="0" data-word-txt="$1.2B" data-proof-txt="&mdash;">$1.2B</span></td>
-        <td><span class="tier">T3 · third-party attribution</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Coinbase Global" data-btc="16492" data-score="45" data-age="30" data-verifiable="0">
-        <td><span class="chip gD" style="--i:8" title="D · 45/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Obtain independent attestation of custodian balances (+10)" tabindex="0" role="img" aria-label="Grade D, 45 of 100">D</span></td>
+      <tr data-name="Coinbase Global" data-btc="16492" data-score="45" data-age="3">
+        <td><span class="chip gD" style="--i:6" title="D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">D</span><span class="sr-only">D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
         <th scope="row">Coinbase Global<span class="tick">COIN</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="16492" data-proof-val="0" data-word-txt="16,492" data-proof-txt="&mdash;">16,492</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1066898897" data-proof-val="0" data-word-txt="$1.1B" data-proof-txt="&mdash;">$1.1B</span></td>
+        <td class="num">16,492</td>
+        <td class="num">$989.5M</td>
         <td><span class="tier">T1 · regulatory filing</span></td>
         <td><span class="asof">2026-06-30</span></td>
       </tr>
-      <tr data-name="Riot Platforms" data-btc="15680" data-score="31" data-age="30" data-verifiable="0">
-        <td><span class="chip gF" style="--i:9" title="F · 31/100 — to raise it: Publish wallet addresses that reconcile on-chain (+40); Move disclosure into regulatory filings (+14)" tabindex="0" role="img" aria-label="Grade F, 31 of 100">F</span></td>
+      <tr data-name="Riot Platforms" data-btc="15680" data-score="31" data-age="3">
+        <td><span class="chip gF" style="--i:7" title="F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)" aria-hidden="true">F</span><span class="sr-only">F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)</span></td>
         <th scope="row">Riot Platforms<span class="tick">RIOT</span></th>
-        <td class="num flip"><span class="flipnum" data-kind="btc" data-word-val="15680" data-proof-val="0" data-word-txt="15,680" data-proof-txt="&mdash;">15,680</span></td>
-        <td class="num flip"><span class="flipnum" data-kind="usdc" data-word-val="1014369070" data-proof-val="0" data-word-txt="$1.0B" data-proof-txt="&mdash;">$1.0B</span></td>
+        <td class="num">15,680</td>
+        <td class="num">$940.8M</td>
         <td><span class="tier">T2 · company statement</span></td>
         <td><span class="asof">2026-06-30</span></td>
+      </tr>
+      <tr data-name="Block, Inc." data-btc="9032" data-score="80" data-age="94">
+        <td><span class="chip gB" style="--i:8" title="B · 80/100 — to raise it: Publish the attestor, report date and report link (+10); Refresh the holdings disclosure (+5)" aria-hidden="true">B</span><span class="sr-only">B · 80/100 — to raise it: Publish the attestor, report date and report link (+10); Refresh the holdings disclosure (+5)</span></td>
+        <th scope="row">Block, Inc.<span class="tick">XYZ</span></th>
+        <td class="num">9,032</td>
+        <td class="num">$541.9M</td>
+        <td><span class="tier">T0 · on-chain verified</span></td>
+        <td><span class="asof">2026-03-31</span></td>
       </tr>
           </tbody>
         </table>
       </div>
-      <p class="board-note">Require proof and <span class="mono">$0</span> of $70.9B
-      survives &mdash; <span class="mono">0%</span> of every disclosed coin is backed by addresses
-      anyone can check. Hover a grade for what would raise it. Grades are evidence-quality opinions
-      from the <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md" style="color:inherit">public rubric</a>, not audits and not
-      investment advice.</p>
+      <p class="sr-only" id="sortStatus" role="status" aria-live="polite"></p>
+      <p class="board-note">Grades come from the <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md" style="color:inherit">public
+      rubric</a> &mdash; independent opinions about disclosure evidence, not audits and not investment
+      advice. Every company on this board can raise its grade, and each grade carries what would
+      raise it.</p>
+      <p class="board-snap">Graded from the registry snapshot 2026-07-03
+      &middot; &ldquo;as of&rdquo; is each company&rsquo;s own disclosure date &middot; prices rebuild
+      nightly; the registry is updated by hand, not by the nightly job</p>
+      <div class="attributed">
+        <h3>Reported, not graded</h3>
+        <p><span class="mono">Bitcoin Standard Treasury Company &middot; 30,021 BTC</span>
+        &mdash; Not yet a listed issuer — the Cantor Equity Partners I business combination had not closed and its original terms were abandoned on 2026-07-08. No public company exists to grade, so no letter is assigned.</p>
+        <p><span class="mono">SpaceX &middot; 18,712 BTC</span>
+        &mdash; Private company with no public filing obligation. The holding is attributed by third parties, not disclosed by the company, so there is no disclosure to grade.</p>
+        <p>These 48,733 BTC are excluded from every figure above, which counts only
+        what companies disclosed for themselves. Including them would inflate the disclosed
+        total by coins nobody claimed.</p>
+      </div>
     </section>
   </header>
 
   <div class="figures-band">
     <div class="wrap">
       <div class="figures" role="list" aria-label="Key figures">
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="int" data-value="10">10</span><span class="fig-label">companies rated</span></div>
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="btc" data-value="1095249">1,095,249</span><span class="fig-label">BTC disclosed &mdash; 5.2% of the 21M cap</span></div>
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="usdc" data-value="70853744259">$70.9B</span><span class="fig-label">at spot (BTC $64,692, coinbase-live)</span></div>
-        <div class="figure hot" role="listitem"><span class="fig-num">0%</span><span class="fig-label">provable on-chain by anyone</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="int" data-value="9">9</span><span class="fig-label">companies graded</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="btc" data-value="1055548">1,055,548</span><span class="fig-label">BTC they disclosed &mdash; 5.0% of the 21M cap</span></div>
+        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="usdc" data-value="63332880000">$63.3B</span><span class="fig-label">at spot (BTC $60,000, override)</span></div>
+        <div class="figure hot" role="listitem"><span class="fig-num">0.9%</span><span class="fig-label">of their disclosed coins come with proof anyone can check</span></div>
         <div class="figure hot" role="listitem"><span class="fig-num">0</span><span class="fig-label">A grades awarded &mdash; the standard is open</span></div>
       </div>
     </div>
   </div>
 
   <section id="method" class="wrap">
-    <h2>The grade measures proof, not promises.</h2>
-    <p class="sec-lede">Five pillars, 100 points, scored only from disclosed, dated, sourced
-    facts &mdash; the rubric operationalizes what regulators already said about reserve reports
-    and evidence. Current field: C D F. Anyone can re-run every grade from the
-    public registry.</p>
+    <h2>Five pillars. 100 points. Every one a sourced fact.</h2>
+    <p class="sec-lede">Four pillars score the evidence behind the coins; the fifth scores the
+    balance sheet carrying them, because fixed obligations against a volatile asset thin the
+    margin that evidence sits on. Nothing is estimated, and where DATproof hasn&rsquo;t sourced
+    something it says so instead of scoring it. Current field: B C D F. Anyone
+    can re-run every grade from the public registry.</p>
     <div class="rubric">
       <div class="rubric-row reveal">
         <h3>On-chain proof</h3>
         <span class="rubric-pts">40 pts</span>
-        <p>Published wallet addresses that reconcile against the live chain. All-or-nothing: existence is either independently checkable or it isn&#x27;t. An A is impossible without it.</p>
+        <p>Something a reader can check on the chain themselves: published wallet addresses, or the outputs the company controls with signatures proving that control. All-or-nothing — existence is either independently checkable or it isn&#x27;t. An A is impossible without it.</p>
       </div>
       <div class="rubric-row reveal">
         <h3>Disclosure quality</h3>
@@ -485,7 +510,7 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
       <div class="rubric-row reveal">
         <h3>Disclosure freshness</h3>
         <span class="rubric-pts">10 pts</span>
-        <p>A balance is a point-in-time claim that decays daily. Full marks inside 45 days, partial to 120, none beyond.</p>
+        <p>A balance is a point-in-time claim that decays daily. Full marks inside 45 days, partial to 120, none beyond — measured against the registry snapshot, so no grade ever falls just because time passed on DATproof&#x27;s side.</p>
       </div>
       <div class="rubric-row reveal">
         <h3>Balance-sheet resilience</h3>
@@ -496,24 +521,55 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
     <div class="gradekey" aria-label="Grade scale">
       <span class="k"><span class="chip gA" aria-hidden="true">A</span> proven on-chain</span>
       <span class="k"><span class="chip gB" aria-hidden="true">B</span> proven, with caveats</span>
-      <span class="k"><span class="chip gC" aria-hidden="true">C</span> well-documented trust</span>
+      <span class="k"><span class="chip gC" aria-hidden="true">C</span> well-documented, still unproven</span>
       <span class="k"><span class="chip gD" aria-hidden="true">D</span> thin evidence</span>
-      <span class="k"><span class="chip gF" aria-hidden="true">F</span> take their word</span>
+      <span class="k"><span class="chip gF" aria-hidden="true">F</span> little an investor can check</span>
     </div>
     <div class="method-cta">
-      <a class="btn-pill" href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">Read the methodology</a>
-      <a class="btn-quiet" href="tearsheet/">Today&rsquo;s tearsheet</a>
+      <a class="btn-pill" href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">Read the full rubric (on GitHub)</a>
+      <a class="btn-quiet" href="tearsheet/">Today&rsquo;s numbers</a>
     </div>
   </section>
 
   <section class="wrap case-teaser reveal">
     <h2>Why grade proof at all?</h2>
-    <p>These companies chose the one asset designed to need no trust &mdash; then asked for
-    trust anyway. The full case &mdash; custody confidentiality, encumbered coins, the regulators&rsquo;
-    own warnings, and who&rsquo;s already solving it &mdash; is four short acts, every quote verbatim
-    and cited.</p>
+    <p>Bitcoin is the first treasury asset whose ownership anyone can verify &mdash; and almost
+    no company uses that. <em>&ldquo;The reasons are real, and worth stating fairly&rdquo;</em>:
+    custody confidentiality, security concerns, and no rule requiring it. The full case &mdash;
+    including what a balance alone can&rsquo;t tell you and who is already solving it &mdash; is
+    four short acts, every quote verbatim and cited.</p>
     <div class="method-cta">
       <a class="btn-quiet" href="the-case/">Read the case &rarr;</a>
+    </div>
+  </section>
+
+  <section id="accountability" class="wrap reveal">
+    <h2>Who made this, and how to correct it.</h2>
+    <p class="sec-lede">A page that grades named companies owes them a way to answer back, and
+    owes its readers a statement of its own interests. Both are here rather than left to be
+    discovered.</p>
+    <div class="account">
+      <div>
+        <h3>Who</h3>
+        <p>One person, not an institution: <a href="https://github.com/lucascashwell3-ai/datproof">Lucas Cashwell</a>, a
+        risk-and-controls background in financial services. &ldquo;Rating agency&rdquo; describes
+        what the site does, not its size. The method is public precisely so nobody has to take
+        the author&rsquo;s word either &mdash; the rubric, the registry and the engine are all in
+        one open repository.</p>
+      </div>
+      <div>
+        <h3>Corrections and right of reply</h3>
+        <p>A graded company that believes a figure, date, tier or letter is wrong can
+        <a href="https://github.com/lucascashwell3-ai/datproof/issues/new">open a correction request</a>. Requests are public and
+        timestamped, answered within five business days, and a correction that changes a grade is
+        noted on the page with its date. Evidence submitted &mdash; a filing reference, an
+        attestation report, published addresses &mdash; is applied to the registry the same way
+        as anything else.</p>
+      </div>
+      <div>
+        <h3>Interests</h3>
+        <p>DATproof takes no advertising, no sponsorship and no payment from any rated company or proof-of-reserves vendor, and none has ever been offered or accepted. The author has a risk-and-controls background in financial services and is moving into crypto-native risk and compliance — a professional interest that the visibility of this project serves, stated here rather than left to be discovered.</p>
+      </div>
     </div>
   </section>
 
@@ -529,16 +585,16 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
         <span class="fig-label">200-week moving average</span>
       </div>
       <div class="figure">
-        <span class="fig-num mono">1.02&times;</span>
+        <span class="fig-num mono">0.94&times;</span>
         <span class="fig-label">spot vs the long-term trend</span>
       </div>
       <div class="figure">
-        <span class="fig-num mono">-48.1%</span>
+        <span class="fig-num mono">-51.9%</span>
         <span class="fig-label">vs all-time-high close</span>
       </div>
     </div>
     <p class="strip-note">The largest premium to trend: Strategy Inc&rsquo;s average cost is <span class="mono">1.19&times;</span> the 200-week moving average &mdash; accumulated above the long-term trend line.</p>
-    <p class="asof-line">history: coinbase-live &middot; Coinbase Exchange daily candles &middot; as of 2026-07-30T20:32:20Z</p>
+    <p class="asof-line">history: cached-snapshot &middot; Coinbase Exchange daily candles &middot; as of 2026-07-30T14:38:42Z</p>
     </div>
   </section>
 
@@ -546,10 +602,11 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
     <div class="wrap">
       <p>Built by <a href="https://github.com/lucascashwell3-ai">Lucas Cashwell</a> &mdash; applying
       verification-grade rigor to digital-asset treasuries. Registry, rubric and pipeline are open:
-      <a href="https://github.com/lucascashwell3-ai/datproof">github.com/lucascashwell3-ai/datproof</a>. Regenerated 2026-07-30 20:32 UTC.</p>
+      <a href="https://github.com/lucascashwell3-ai/datproof">github.com/lucascashwell3-ai/datproof</a>. Regenerated 2026-07-31 03:21 UTC.</p>
       <p>Holdings figures are company disclosures as of their stated dates. Companies know where their
       bitcoin is; this page measures what <em>investors</em> can independently verify. Grades are
-      independent evidence-quality opinions, not audits. Nothing here is investment advice.</p>
+      independent evidence-quality opinions, not audits. Nothing here is investment advice.
+      Think something here is wrong? <a href="#accountability">Ask for a correction</a>.</p>
     </div>
   </footer>
 </main>
@@ -656,6 +713,7 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
 
   /* scoreboard sorting */
   var tbody = board ? board.querySelector('tbody') : null;
+  var sortStatus = document.getElementById('sortStatus');
   function sortBoard(key, dir) {
     var rows = Array.prototype.slice.call(tbody.rows);
     rows.sort(function (a, b) {
@@ -666,56 +724,47 @@ table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-wi
     });
     rows.forEach(function (r) { tbody.appendChild(r); });
   }
+  /* Reordering ten rows is silent to a screen reader: aria-sort is read when a
+     header is visited, not when it changes. Announce the result instead. */
+  function announce(th, shown) {
+    if (!sortStatus || !th) return;
+    var label = (th.textContent || '').trim();
+    sortStatus.textContent = 'Sorted by ' + label + ', ' + shown + '. ' +
+      (tbody ? tbody.rows.length : 0) + ' rows.';
+  }
+  /* aria-sort describes what the reader SEES, so it is derived from the
+     displayed values, not from the sign of the sort key: "as of" sorts on age
+     ascending, which puts the newest date on top — that is descending to a
+     reader. Text columns start A-Z; numeric columns start highest-first. */
+  function applySort(th, dir) {
+    var key = th.dataset.key;
+    var displayDesc = key === 'age' ? dir > 0 : dir < 0;
+    th.setAttribute('aria-sort', displayDesc ? 'descending' : 'ascending');
+    sortBoard(key, dir);
+    announce(th, displayDesc
+      ? (key === 'name' ? 'Z to A' : 'highest first')
+      : (key === 'name' ? 'A to Z' : 'lowest first'));
+  }
   if (board) {
     var ths = board.querySelectorAll('thead th[data-key]');
     ths.forEach(function (th) {
       th.querySelector('button').addEventListener('click', function () {
         var was = th.getAttribute('aria-sort');
+        var firstClick = !was;
         ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
-        var dir = was === 'descending' ? 1 : -1;
-        th.setAttribute('aria-sort', dir === -1 ? 'descending' : 'ascending');
-        sortBoard(th.dataset.key, dir);
+        var dir;
+        if (firstClick) dir = th.dataset.key === 'name' ? 1 : (th.dataset.key === 'age' ? 1 : -1);
+        else dir = was === 'descending' ? 1 : -1;
+        if (!firstClick && th.dataset.key === 'age') dir = was === 'descending' ? -1 : 1;
+        applySort(th, dir);
       });
     });
     var viewSeg = document.getElementById('viewSeg');
     if (viewSeg) segInit(viewSeg, function (v) {
       ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
-      if (v === 'holdings') { mark('btc'); sortBoard('btc', -1); }
-      else if (v === 'proof') { mark('score'); sortBoard('score', -1); }
-      else { mark('age'); sortBoard('age', 1); }
-      function mark(k) {
-        var th = board.querySelector('th[data-key="' + k + '"]');
-        if (th) th.setAttribute('aria-sort', v === 'fresh' ? 'ascending' : 'descending');
-      }
-    });
-  }
-
-  /* THE signature: burden of proof */
-  var bopSeg = document.getElementById('bopSeg');
-  var bopNum = document.getElementById('bopNum');
-  var bopCap = document.getElementById('bopCap');
-  if (bopSeg && bopNum) {
-    bopNum.dataset.now = bopNum.dataset.wordVal;
-    segInit(bopSeg, function (v) {
-      var proof = v === 'proof';
-      document.body.classList.toggle('proofmode', proof);
-      /* headers must say what the column now means — "0 BTC" under a plain
-         "BTC" header reads as a holdings claim, not an evidence statement */
-      if (board) Array.prototype.forEach.call(
-        board.querySelectorAll('thead [data-word]'), function (el) {
-          el.textContent = proof ? el.dataset.proof : el.dataset.word;
-        });
-      tweenTo(bopNum, parseFloat(proof ? bopNum.dataset.proofVal : bopNum.dataset.wordVal),
-              proof ? bopNum.dataset.proofTxt : bopNum.dataset.wordTxt, 850);
-      if (bopCap) bopCap.textContent = proof ? bopCap.dataset.proof : bopCap.dataset.word;
-      if (tbody) Array.prototype.forEach.call(tbody.rows, function (row) {
-        if (row.dataset.verifiable !== '1') row.classList.toggle('unproven', proof);
-        row.querySelectorAll('.flipnum').forEach(function (el) {
-          if (!el.dataset.now) el.dataset.now = el.dataset.wordVal;
-          tweenTo(el, parseFloat(proof ? el.dataset.proofVal : el.dataset.wordVal),
-                  proof ? el.dataset.proofTxt : el.dataset.wordTxt, 750);
-        });
-      });
+      var key = v === 'holdings' ? 'btc' : (v === 'proof' ? 'score' : 'age');
+      var th = board.querySelector('th[data-key="' + key + '"]');
+      if (th) applySort(th, key === 'age' ? 1 : -1);
     });
   }
 })();
