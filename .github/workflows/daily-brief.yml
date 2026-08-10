@@ -15,6 +15,15 @@ permissions:
   pages: write
   id-token: write
 
+# Added 2026-08-09 after the 08-06 run failed with "Timeout reached, aborting! Current status:
+# deployment_in_progress" — a second deployment was already running, so this one waited out its
+# clock and died. The data commit had already landed, so the repo moved on and the SITE did not.
+# One deploy at a time, and never cancel one halfway: a cancelled Pages deploy can leave the
+# live site serving a half-published build.
+concurrency:
+  group: pages-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   brief:
     runs-on: ubuntu-latest
@@ -61,3 +70,19 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+        with:
+          # Default is 10 minutes. The 08-06 failure burned that whole budget waiting behind
+          # another deployment and then gave up. With the concurrency group above this should
+          # not happen again; the longer clock is the second line of defence, because a slow
+          # deploy is worth waiting for and a stale site is not.
+          timeout: 1200000
+
+      # A failed deploy used to end the run silently — the commit landed, the site did not, and
+      # nothing said so until someone read the run log days later. Now the run says it out loud.
+      - name: Say plainly that the site did not update
+        if: failure() && steps.deploy.outcome == 'failure'
+        run: |
+          echo "::error title=Site not updated::The data commit landed but the Pages deploy failed."
+          echo "The repo and the live site now disagree. The next scheduled run will rebuild and"
+          echo "redeploy from current main, so this usually heals itself within a day."
+          echo "To fix it now instead: re-run this workflow."
