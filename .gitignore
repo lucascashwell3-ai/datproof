@@ -41,4 +41,5 @@ SESSION_STATUS.md
 !/.claude/skills/
 /.claude/skills/*
 !/.claude/skills/impeccable/
+!/.claude/settings.json
 briefs/linkedin-post-*.md
