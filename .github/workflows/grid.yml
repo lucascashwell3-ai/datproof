@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install httpx beautifulsoup4 lxml pypdf
+      - run: pip install httpx requests beautifulsoup4 lxml pypdf
 
       # Each puller is idempotent and keeps last-good data on failure. A failed pull must not
       # blank the site, so failures here are logged, not fatal.
