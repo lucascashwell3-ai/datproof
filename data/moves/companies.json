@@ -1,0 +1,5 @@
+[
+  {"ticker": "MSTR", "name": "Strategy", "file": "MSTR.csv", "top": true},
+  {"ticker": "ASST", "name": "Strive", "file": "ASST.csv", "top": true},
+  {"ticker": "3350", "name": "Metaplanet", "file": "3350.csv", "top": true}
+]

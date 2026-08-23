@@ -1,0 +1,60 @@
+name: DATproof grid — daily data + deploy
+
+on:
+  schedule:
+    - cron: "45 12 * * *" # 12:45 UTC daily (~8:45am ET), after the Monday-morning 8-Ks land
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install httpx beautifulsoup4 lxml pypdf
+
+      # Each puller is idempotent and keeps last-good data on failure. A failed pull must not
+      # blank the site, so failures here are logged, not fatal.
+      - name: Pull new filings (Strategy, Strive, Metaplanet)
+        run: |
+          python scripts/pull_mstr.py || echo "::warning::MSTR pull failed — site keeps prior data"
+          python scripts/pull_asst.py || echo "::warning::ASST pull failed — site keeps prior data"
+          python scripts/pull_metaplanet.py || echo "::warning::Metaplanet pull failed — site keeps prior data"
+      - name: Ticker (BTC price, block height)
+        run: python scripts/fetch_ticker.py || echo "::warning::ticker fetch failed — keeping last values"
+      - name: Build site
+        run: python scripts/build_grid_site.py
+
+      - name: Commit data + site
+        run: |
+          git config user.name "datproof-bot"
+          git config user.email "actions@github.com"
+          git add data/ site/index.html
+          git diff --cached --quiet || git commit -m "grid: daily data $(date -u +%F)"
+          git push
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1200000
+      - name: Say plainly that the site did not update
+        if: failure() && steps.deploy.outcome == 'failure'
+        run: echo "::error title=Site not updated::Data commit landed but the Pages deploy failed. Re-run this workflow."

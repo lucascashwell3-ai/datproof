@@ -1,774 +1,110 @@
-<!doctype html>
-<html lang="en" id="top">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DATproof — the rating agency for bitcoin-treasury proof</title>
-<meta name="description" content="Every major corporate bitcoin holder graded A–F on how much of its disclosed position an investor can independently check. 9 companies · 1,055,548 BTC ($81.5B) · 0.9% of it backed by public wallet addresses. Public rubric, registry snapshot 2026-07-03.">
-<meta property="og:title" content="DATproof — the rating agency for bitcoin-treasury proof">
-<meta property="og:description" content="Every major corporate bitcoin holder graded A–F on how much of its disclosed position an investor can independently check. 9 companies · 1,055,548 BTC ($81.5B) · 0.9% of it backed by public wallet addresses. Public rubric, registry snapshot 2026-07-03.">
-<meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0d12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23e3b74f' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DATproof — bitcoin is eating corporate treasuries</title>
+<meta name="description" content="Every public-company bitcoin purchase since 2020, day by day, each square linked to its filing. Plus the case for why digital asset treasuries take over.">
 <style>
-
-:root {
-  --bg: oklch(0.13 0.012 260);
-  --bg-raise: oklch(0.165 0.014 260);
-  --bg-panel: oklch(0.15 0.013 260);
-  --text: oklch(0.93 0.008 90);
-  --muted: oklch(0.71 0.014 260);
-  /* 0.62, not 0.55: this token carries the sort headers, tickers and disclosure
-     dates — the provenance — and 0.55 computed 4.06:1 against the page. */
-  --faint: oklch(0.62 0.014 260);
-  --line: oklch(0.27 0.018 260);
-  --line-soft: oklch(0.22 0.016 260);
-  --gold: oklch(0.8 0.115 88);
-  --gold-deep: oklch(0.66 0.12 80);
-  --g-a: oklch(0.8 0.115 88);
-  --g-b: oklch(0.74 0.1 145);
-  --g-c: oklch(0.76 0.02 260);
-  --g-d: oklch(0.72 0.11 55);
-  --g-f: oklch(0.64 0.15 25);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --spring: linear(0, 0.0767, 0.248, 0.4478, 0.6355, 0.7903, 0.9053, 0.9821, 1.0272, 1.0483, 1.0533, 1.0486, 1.0392, 1.0286, 1.0187, 1.0106, 1.0046, 1.0007, 0.9984, 0.9974, 0.9972, 0.9976, 0.9985, 0.9993, 1);
-  --wrap-pad: clamp(1.25rem, 4vw, 2.5rem);
-  --wrap-max: 1120px;
-  --rule-w: calc(min(var(--wrap-max), 100%) - 2 * var(--wrap-pad));
-  --rule-framed: linear-gradient(90deg, transparent, var(--line) 14%, var(--line) 86%, transparent);
-  --serif: "Fraunces", Georgia, serif;
-  --sans: "Inter", system-ui, sans-serif;
-  --monof: "IBM Plex Mono", ui-monospace, monospace;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body {
-  background: var(--bg); color: var(--text);
-  font: 400 1.0625rem/1.68 var(--sans);
-  -webkit-font-smoothing: antialiased; overflow-x: hidden;
-}
-::selection { background: var(--gold); color: var(--bg); }
-a { color: inherit; }
-.mono { font-family: var(--monof); font-variant-numeric: tabular-nums; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.wrap { max-width: var(--wrap-max); margin: 0 auto; padding: 0 var(--wrap-pad); }
-:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold); border-radius: 4px; }
-
-/* atmosphere: gold aurora + grain, fixed behind everything */
-.atmo { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.atmo::before {
-  content: ""; position: absolute; inset: -20%;
-  background:
-    radial-gradient(42% 34% at 72% 6%, oklch(0.45 0.1 80 / 0.34), transparent 70%),
-    radial-gradient(55% 42% at 12% 30%, oklch(0.3 0.05 265 / 0.5), transparent 72%),
-    radial-gradient(40% 34% at 85% 78%, oklch(0.34 0.07 75 / 0.14), transparent 70%);
-}
-.atmo::after {
-  content: ""; position: absolute; inset: 0; opacity: 0.055;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* capsule nav */
-.nav {
-  position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%);
-  z-index: 10; display: flex; align-items: center; gap: 0.35rem;
-  /* Opaque: translucent chrome let the scoreboard's own figures show through
-     the bar as it scrolled, which reads as a rendering fault, not a style. */
-  background: oklch(0.16 0.014 260); border: 1px solid var(--line); border-radius: 999px;
-  padding: 0.4rem 0.5rem 0.4rem 1.1rem;
-  box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
-  white-space: nowrap;
-}
-.nav .wordmark { font: 600 1.02rem/1 var(--serif); letter-spacing: 0.01em; margin-right: 0.65rem; text-decoration: none; }
-.nav .wordmark .seal { color: var(--gold); }
-.nav a.item {
-  font-size: 0.84rem; color: var(--muted); text-decoration: none;
-  padding: 0.42rem 0.7rem; border-radius: 999px;
-  transition: color 140ms ease;
-}
-@media (hover: hover) and (pointer: fine) { .nav a.item:hover { color: var(--text); } }
-.nav a.cta {
-  font-size: 0.84rem; font-weight: 600; text-decoration: none;
-  color: var(--bg); background: var(--gold);
-  padding: 0.46rem 0.95rem; border-radius: 999px; margin-left: 0.35rem;
-  transition: transform 120ms var(--ease-out);
-}
-.nav a.cta:active { transform: scale(0.96); }
-/* Narrow screens drop the in-page jumps but keep "The case" — it is the page
-   that separates "hasn't published" from "is hiding something", and hiding it
-   on phones left the letter grades as the only thing a phone reader could see. */
-@media (max-width: 680px) {
-  .nav { top: 0.6rem; padding-left: 0.85rem; gap: 0.15rem; }
-  .nav a.item.jump { display: none; }
-  .nav .wordmark { margin-right: 0.35rem; }
-  .nav a.item, .nav a.cta { font-size: 0.8rem; padding-inline: 0.6rem; }
-}
-
-h2 {
-  font: 480 clamp(1.7rem, 3.4vw, 2.4rem)/1.15 var(--serif);
-  letter-spacing: -0.01em; max-width: 26ch; text-wrap: balance;
-}
-.sec-lede { margin-top: 1rem; max-width: 58ch; color: var(--muted); }
-section { padding: clamp(2.6rem, 7vh, 4.6rem) 0; }
-
-footer { position: relative; padding: 2.6rem 0 3rem; margin-top: 2rem; }
-footer::before {
-  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: var(--rule-w); height: 1px; background: var(--rule-framed);
-}
-footer p { font-size: 0.88rem; color: var(--muted); max-width: 72ch; }
-footer p + p { margin-top: 0.6rem; font-size: 0.8rem; }
-footer a { color: var(--text); }
-
-/* reveal-on-scroll (transform/opacity only; inert without JS or under reduced motion) */
-@media (prefers-reduced-motion: no-preference) {
-  .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out); }
-  .js .reveal.on { opacity: 1; transform: none; }
-}
-
-/* hero */
-.hero { padding-block: clamp(6.5rem, 13vh, 9rem) clamp(1.6rem, 3vh, 2.4rem); }
-.kicker {
-  font-family: var(--monof); font-size: 0.78rem; letter-spacing: 0.22em;
-  color: var(--gold); text-transform: uppercase; margin-bottom: 1.4rem;
-}
-.kicker .type { display: inline-block; vertical-align: bottom; white-space: nowrap; }
-@media (prefers-reduced-motion: no-preference) {
-  .js .kicker .type {
-    /* 20 chars; ch units ignore the 0.22em tracking, so add it back per char */
-    overflow: hidden; width: calc(20ch + 20 * 0.22em);
-    border-right: 2px solid var(--gold);
-    animation: typing 1.3s steps(20) 250ms backwards, caret-off 1ms linear 3.4s forwards;
-  }
-  @keyframes typing { from { width: 0; } }
-  @keyframes caret-off { to { border-color: transparent; } }
-}
-h1 {
-  font: 400 clamp(2.4rem, 5.8vw, 4.2rem)/1.1 var(--serif);
-  letter-spacing: -0.015em; text-wrap: balance; max-width: 20ch;
-}
-h1 em { font-style: italic; color: var(--gold); }
-.hero-sub { margin-top: 1.4rem; max-width: 56ch; color: var(--muted); font-size: 1.08rem; }
-.hero-sub strong { color: var(--text); font-weight: 500; }
-
-/* the proof panel — scoreboard IS the hero */
-.proof-panel {
-  margin-top: clamp(2rem, 4.5vh, 3.2rem);
-  background: oklch(0.15 0.013 260 / 0.82); backdrop-filter: blur(6px);
-  border: 1px solid var(--line); border-radius: 18px;
-  padding: clamp(1.2rem, 3vw, 2.2rem);
-  box-shadow: 0 30px 80px oklch(0 0 0 / 0.45);
-}
-.panel-top { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; justify-content: space-between; }
-
-/* segmented controls — spring-glide pill (pure CSS easing, JS moves it) */
-.seg { position: relative; display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: oklch(0.12 0.012 260 / 0.7); }
-.seg .thumb {
-  position: absolute; top: 3px; bottom: 3px; left: 0; width: 10px;
-  border-radius: 999px; background: oklch(0.24 0.02 260);
-  border: 1px solid oklch(0.32 0.02 260);
-  transition: transform 500ms var(--spring), width 500ms var(--spring);
-  will-change: transform;
-}
-.seg button {
-  position: relative; z-index: 1; appearance: none; background: none; border: 0;
-  font: 500 0.84rem/1 var(--sans); color: var(--muted); cursor: pointer;
-  padding: 0.55rem 0.95rem; border-radius: 999px; transition: color 180ms ease;
-}
-.seg button[aria-pressed="true"] { color: var(--text); }
-@media (prefers-reduced-motion: reduce) { .seg .thumb { transition: none; } }
-
-/* the headline figure — both numbers stated at once, no state to discover */
-.bop-figure { margin: clamp(1.4rem, 3.5vh, 2.2rem) 0 0; }
-.bop-num {
-  display: block; font-family: var(--monof); font-weight: 500;
-  font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1.05; letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-.bop-cap { display: block; margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; max-width: 56ch; }
-.bop-cap .mono { color: var(--gold); font-size: 0.92em; }
-.bop-defuse {
-  display: block; margin-top: 0.9rem; padding-top: 0.9rem;
-  border-top: 1px solid var(--line-soft); max-width: 62ch;
-  color: var(--text); font-size: 0.98rem;
-}
-
-/* scoreboard table */
-.board-scroll { overflow-x: auto; margin-top: clamp(1.3rem, 3vh, 2rem); -webkit-overflow-scrolling: touch; }
-table.board { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; }
-.board thead th {
-  font-family: var(--monof); font-weight: 500; font-size: 0.7rem; text-transform: uppercase;
-  letter-spacing: 0.07em; color: var(--faint); text-align: left;
-  padding: 0.45rem 0.9rem 0.55rem 0; border-bottom: 1px solid var(--line); white-space: nowrap;
-}
-.board thead th.num { text-align: right; }
-.board thead th button {
-  appearance: none; background: none; border: 0; color: inherit; font: inherit;
-  letter-spacing: inherit; text-transform: inherit; cursor: pointer; padding: 0;
-}
-.board thead th button::after { content: "↕"; opacity: 0.4; margin-left: 0.35em; }
-.board thead th[aria-sort="descending"] button::after { content: "↓"; opacity: 1; color: var(--gold); }
-.board thead th[aria-sort="ascending"] button::after { content: "↑"; opacity: 1; color: var(--gold); }
-.board tbody th, .board tbody td {
-  padding: 0.72rem 0.9rem 0.72rem 0; border-bottom: 1px solid var(--line-soft);
-  vertical-align: baseline; text-align: left;
-}
-.board tbody th { font-weight: 500; }
-.board td.num, .board th.num { text-align: right; font-family: var(--monof); font-variant-numeric: tabular-nums; }
-.board td.dim { color: var(--muted); }
-.board .tick { color: var(--faint); font-family: var(--monof); font-size: 0.8rem; margin-left: 0.5em; }
-.board .tier { font-family: var(--monof); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
-.board .asof { font-family: var(--monof); font-size: 0.78rem; color: var(--faint); white-space: nowrap; }
-.board tbody tr { transition: opacity 450ms ease; }
-
-/* grade chips — stamped like a rubber stamp */
-.chip {
-  display: inline-grid; place-items: center; width: 2.15rem; height: 2.15rem;
-  border-radius: 8px; font: 600 1.05rem/1 var(--serif);
-  border: 1px solid; cursor: help;
-}
-.chip.gA { color: var(--g-a); border-color: oklch(0.8 0.115 88 / 0.6); background: oklch(0.8 0.115 88 / 0.12); }
-.chip.gB { color: var(--g-b); border-color: oklch(0.74 0.1 145 / 0.55); background: oklch(0.74 0.1 145 / 0.1); }
-.chip.gC { color: var(--g-c); border-color: oklch(0.76 0.02 260 / 0.5); background: oklch(0.76 0.02 260 / 0.08); }
-.chip.gD { color: var(--g-d); border-color: oklch(0.72 0.11 55 / 0.55); background: oklch(0.72 0.11 55 / 0.1); }
-.chip.gF { color: var(--g-f); border-color: oklch(0.64 0.15 25 / 0.55); background: oklch(0.64 0.15 25 / 0.1); }
-@media (prefers-reduced-motion: no-preference) {
-  .stamp-run .chip {
-    animation: stamp 520ms var(--spring) backwards;
-    animation-delay: calc(var(--i) * 45ms);
-  }
-  @keyframes stamp { from { transform: scale(1.45); opacity: 0; } }
-}
-
-.board-note { margin-top: 1.1rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
-.board-note .mono { color: var(--gold); }
-.board-snap { margin-top: 0.6rem; font-family: var(--monof); font-size: 0.76rem; color: var(--faint); }
-
-/* attributed but ungraded — reported for completeness, never given a letter */
-.attributed { margin-top: 1.6rem; padding-top: 1.1rem; border-top: 1px solid var(--line-soft); }
-.attributed h3 { font: 500 0.95rem/1.3 var(--sans); color: var(--text); }
-.attributed p { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); max-width: 72ch; text-wrap: pretty; }
-.attributed .mono { color: var(--text); }
-
-/* accountability: who made this, how to dispute it, what the author holds */
-.account { display: grid; gap: 1.6rem 2.5rem; margin-top: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.account h3 { font: 500 1.05rem/1.3 var(--serif); }
-.account p { margin-top: 0.5rem; font-size: 0.92rem; color: var(--muted); text-wrap: pretty; }
-.account a { color: var(--gold); }
-
-/* figure band */
-.figures-band { position: relative; margin: clamp(2.6rem, 7vh, 4.6rem) 0 0; padding-block: clamp(2.4rem, 5.5vh, 3.4rem); }
-.figures-band::before, .figures-band::after {
-  content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-  width: var(--rule-w); height: 1px; background: var(--rule-framed);
-}
-.figures-band::before { top: 0; }
-.figures-band::after { bottom: 0; }
-.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.6rem 2.5rem; }
-.fig-num { display: block; font-family: var(--monof); font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--text); font-variant-numeric: tabular-nums; }
-.fig-label { display: block; margin-top: 0.35rem; font-size: 0.84rem; color: var(--muted); }
-.figure.hot .fig-num { color: var(--gold); }
-
-/* method — a ruled ledger, not cards */
-.rubric { margin-top: 2.2rem; border-top: 1px solid var(--line); }
-.rubric-row {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 2rem;
-  padding: 1.05rem 0; border-bottom: 1px solid var(--line-soft); align-items: baseline;
-}
-.rubric-row h3 { font: 500 1.08rem/1.3 var(--serif); }
-.rubric-row p { grid-column: 1; font-size: 0.92rem; color: var(--muted); max-width: 62ch; text-wrap: pretty; }
-.rubric-pts { font-family: var(--monof); color: var(--gold); font-size: 0.95rem; white-space: nowrap; }
-.gradekey { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-top: 1.8rem; align-items: center; }
-.gradekey .chip { cursor: default; }
-.gradekey .k { display: flex; align-items: center; gap: 0.55rem; font-size: 0.85rem; color: var(--muted); }
-.method-cta { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
-.btn-pill {
-  display: inline-block; text-decoration: none; font-weight: 600; font-size: 0.95rem;
-  color: var(--bg); background: linear-gradient(180deg, oklch(0.85 0.11 90), var(--gold-deep));
-  padding: 0.8rem 1.5rem; border-radius: 999px;
-  box-shadow: 0 1px 0 oklch(1 0 0 / 0.25) inset, 0 10px 30px oklch(0.66 0.12 80 / 0.25);
-  transition: transform 130ms var(--ease-out);
-}
-.btn-pill:active { transform: scale(0.97); }
-.btn-quiet {
-  display: inline-block; text-decoration: none; font-weight: 500; font-size: 0.92rem;
-  color: var(--text); border: 1px solid var(--line); background: var(--bg-raise);
-  padding: 0.76rem 1.4rem; border-radius: 999px;
-  transition: border-color 140ms ease, transform 130ms var(--ease-out);
-}
-.btn-quiet:active { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) {
-  .btn-pill:hover { transform: translateY(-1px); }
-  .btn-quiet:hover { border-color: var(--gold); }
-}
-
-/* case teaser + cycle */
-.case-teaser p { margin-top: 1rem; max-width: 58ch; color: var(--muted); }
-.cycle { position: relative; background: var(--bg-raise); margin-block: clamp(2.6rem, 7vh, 4.6rem); }
-.cycle::before, .cycle::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--line) 8%, var(--line) 92%, transparent);
-}
-.cycle::before { top: 0; }
-.cycle::after { bottom: 0; }
-.strip-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2rem; margin-top: 2.4rem; }
-.strip-note { margin-top: 1.8rem; max-width: 60ch; color: var(--muted); }
-.strip-note .mono { color: var(--gold); }
-.asof-line { margin-top: 1.6rem; font-size: 0.76rem; color: var(--faint); font-family: var(--monof); }
-
-</style>
-</head>
-<body>
-<div class="atmo" aria-hidden="true"></div>
-
-<nav class="nav" aria-label="Main">
-  <a class="wordmark" href="#top">DATproof<span class="seal">.</span></a>
-  <a class="item jump" href="#scoreboard">Scoreboard</a>
-  <a class="item jump" href="#method">Method</a>
-  <a class="item" href="the-case/">The case</a>
-  <a class="cta" href="tearsheet/">Today&rsquo;s numbers</a>
-</nav>
-
-<main>
-  <header class="hero wrap">
-    <p class="kicker"><span class="type">Don&rsquo;t trust &middot; verify</span></p>
-    <h1>The rating agency for <em>bitcoin&#8209;treasury proof</em>.</h1>
-    <p class="hero-sub">Provable, well&#8209;managed bitcoin on the balance sheet is a serious,
-    long&#8209;term way to finance a business. DATproof grades every major corporate holder
-    <strong>A&ndash;F on how much of the position an investor can check</strong> &mdash; and how
-    much room for error the balance sheet leaves behind it. One public rubric, applied the same
-    way to everyone. <strong>The A is still unclaimed.</strong></p>
-
-    <section class="proof-panel" id="scoreboard" aria-label="The scoreboard">
-      <div class="panel-top">
-        <div class="seg" id="viewSeg" role="group" aria-label="Scoreboard view">
-          <span class="thumb" aria-hidden="true"></span>
-          <button type="button" data-v="holdings" aria-pressed="true">Holdings</button>
-          <button type="button" data-v="proof" aria-pressed="false">Proof quality</button>
-          <button type="button" data-v="fresh" aria-pressed="false">Freshness</button>
-        </div>
-      </div>
-
-      <div class="bop-figure">
-        <span class="bop-num">$81.5B</span>
-        <span class="bop-cap">in bitcoin disclosed by 9 companies. <span class="mono">0.9%</span>
-        of it comes with proof the public can check on-chain.</span>
-        <span class="bop-defuse">No company here is accused of anything. They know where their
-        bitcoin is; this page measures what an outside investor can check independently, and a low
-        grade means missing evidence, not wrongdoing. The bar is clearable and Block, Inc. clears it &mdash; which is why the rest of the field sitting at C, D and F is a finding about evidence, not an impossible standard.</span>
-      </div>
-
-      <div class="board-scroll">
-        <table class="board" id="board">
-          <caption class="sr-only">Grades, holdings and disclosure evidence per company</caption>
-          <thead>
-            <tr>
-              <th scope="col" data-key="score" aria-sort="none"><button type="button">Grade</button></th>
-              <th scope="col" data-key="name"><button type="button">Company</button></th>
-              <th scope="col" class="num" data-key="btc" aria-sort="descending"><button type="button">BTC</button></th>
-              <th scope="col" class="num"><span>Value</span></th>
-              <th scope="col"><span>Evidence</span></th>
-              <th scope="col" data-key="age"><button type="button">As of</button></th>
-            </tr>
-          </thead>
-          <tbody>
-      <tr data-name="Strategy Inc" data-btc="847363" data-score="40" data-age="3">
-        <td><span class="chip gD" style="--i:0" title="D · 40/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">D</span><span class="sr-only">D · 40/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
-        <th scope="row">Strategy Inc<span class="tick">MSTR</span></th>
-        <td class="num">847,363</td>
-        <td class="num">$65.4B</td>
-        <td><span class="tier">T1 · regulatory filing</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Twenty One Capital" data-btc="43514" data-score="31" data-age="3">
-        <td><span class="chip gF" style="--i:1" title="F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)" aria-hidden="true">F</span><span class="sr-only">F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)</span></td>
-        <th scope="row">Twenty One Capital<span class="tick">XXI</span></th>
-        <td class="num">43,514</td>
-        <td class="num">$3.4B</td>
-        <td><span class="tier">T2 · company statement</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Metaplanet Inc" data-btc="43000" data-score="55" data-age="1">
-        <td><span class="chip gC" style="--i:2" title="C · 55/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Reduce fixed obligations against the position (+5)" aria-hidden="true">C</span><span class="sr-only">C · 55/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Reduce fixed obligations against the position (+5)</span></td>
-        <th scope="row">Metaplanet Inc<span class="tick">3350.T</span></th>
-        <td class="num">43,000</td>
-        <td class="num">$3.3B</td>
-        <td><span class="tier">T1 · regulatory filing</span></td>
-        <td><span class="asof">2026-07-02</span></td>
-      </tr>
-      <tr data-name="MARA Holdings" data-btc="36303" data-score="31" data-age="3">
-        <td><span class="chip gF" style="--i:3" title="F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)" aria-hidden="true">F</span><span class="sr-only">F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)</span></td>
-        <th scope="row">MARA Holdings<span class="tick">MARA</span></th>
-        <td class="num">36,303</td>
-        <td class="num">$2.8B</td>
-        <td><span class="tier">T2 · company statement</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Bullish" data-btc="24300" data-score="50" data-age="3">
-        <td><span class="chip gC" style="--i:4" title="C · 50/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">C</span><span class="sr-only">C · 50/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
-        <th scope="row">Bullish<span class="tick">BLSH</span></th>
-        <td class="num">24,300</td>
-        <td class="num">$1.9B</td>
-        <td><span class="tier">T1 · regulatory filing</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Strive Inc" data-btc="19864" data-score="45" data-age="5">
-        <td><span class="chip gD" style="--i:5" title="D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">D</span><span class="sr-only">D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
-        <th scope="row">Strive Inc<span class="tick">ASST</span></th>
-        <td class="num">19,864</td>
-        <td class="num">$1.5B</td>
-        <td><span class="tier">T1 · regulatory filing</span></td>
-        <td><span class="asof">2026-06-28</span></td>
-      </tr>
-      <tr data-name="Coinbase Global" data-btc="16492" data-score="45" data-age="3">
-        <td><span class="chip gD" style="--i:6" title="D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)" aria-hidden="true">D</span><span class="sr-only">D · 45/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Obtain independent attestation of custodian balances (+10)</span></td>
-        <th scope="row">Coinbase Global<span class="tick">COIN</span></th>
-        <td class="num">16,492</td>
-        <td class="num">$1.3B</td>
-        <td><span class="tier">T1 · regulatory filing</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Riot Platforms" data-btc="15680" data-score="31" data-age="3">
-        <td><span class="chip gF" style="--i:7" title="F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)" aria-hidden="true">F</span><span class="sr-only">F · 31/100 — to raise it: Publish wallet addresses, or the outputs it controls with signatures proving control (+40); Source the current holdings figure to a regulatory filing (+14)</span></td>
-        <th scope="row">Riot Platforms<span class="tick">RIOT</span></th>
-        <td class="num">15,680</td>
-        <td class="num">$1.2B</td>
-        <td><span class="tier">T2 · company statement</span></td>
-        <td><span class="asof">2026-06-30</span></td>
-      </tr>
-      <tr data-name="Block, Inc." data-btc="9032" data-score="80" data-age="94">
-        <td><span class="chip gB" style="--i:8" title="B · 80/100 — to raise it: Publish the attestor, report date and report link (+10); Refresh the holdings disclosure (+5)" aria-hidden="true">B</span><span class="sr-only">B · 80/100 — to raise it: Publish the attestor, report date and report link (+10); Refresh the holdings disclosure (+5)</span></td>
-        <th scope="row">Block, Inc.<span class="tick">XYZ</span></th>
-        <td class="num">9,032</td>
-        <td class="num">$697.5M</td>
-        <td><span class="tier">T0 · on-chain verified</span></td>
-        <td><span class="asof">2026-03-31</span></td>
-      </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="sr-only" id="sortStatus" role="status" aria-live="polite"></p>
-      <p class="board-note">Grades come from the <a href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md" style="color:inherit">public
-      rubric</a> &mdash; independent opinions about disclosure evidence, not audits and not investment
-      advice. Every company on this board can raise its grade, and each grade carries what would
-      raise it.</p>
-      <p class="board-snap">Graded from the registry snapshot 2026-07-03
-      &middot; &ldquo;as of&rdquo; is each company&rsquo;s own disclosure date &middot; prices rebuild
-      nightly; the registry is updated by hand, not by the nightly job</p>
-      <div class="attributed">
-        <h3>Reported, not graded</h3>
-        <p><span class="mono">Bitcoin Standard Treasury Company &middot; 30,021 BTC</span>
-        &mdash; Not yet a listed issuer — the Cantor Equity Partners I business combination had not closed and its original terms were abandoned on 2026-07-08. No public company exists to grade, so no letter is assigned.</p>
-        <p><span class="mono">SpaceX &middot; 18,712 BTC</span>
-        &mdash; Private company with no public filing obligation. The holding is attributed by third parties, not disclosed by the company, so there is no disclosure to grade.</p>
-        <p>These 48,733 BTC are excluded from every figure above, which counts only
-        what companies disclosed for themselves. Including them would inflate the disclosed
-        total by coins nobody claimed.</p>
-      </div>
-    </section>
-  </header>
-
-  <div class="figures-band">
-    <div class="wrap">
-      <div class="figures" role="list" aria-label="Key figures">
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="int" data-value="9">9</span><span class="fig-label">companies graded</span></div>
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="btc" data-value="1055548">1,055,548</span><span class="fig-label">BTC they disclosed &mdash; 5.0% of the 21M cap</span></div>
-        <div class="figure" role="listitem"><span class="fig-num countup" data-kind="usdc" data-value="81509727947">$81.5B</span><span class="fig-label">at spot (BTC $77,220, coinbase-live)</span></div>
-        <div class="figure hot" role="listitem"><span class="fig-num">0.9%</span><span class="fig-label">of their disclosed coins come with proof anyone can check</span></div>
-        <div class="figure hot" role="listitem"><span class="fig-num">0</span><span class="fig-label">A grades awarded &mdash; the standard is open</span></div>
-      </div>
-    </div>
-  </div>
-
-  <section id="method" class="wrap">
-    <h2>Five pillars. 100 points. Every one a sourced fact.</h2>
-    <p class="sec-lede">Four pillars score the evidence behind the coins; the fifth scores the
-    balance sheet carrying them, because fixed obligations against a volatile asset thin the
-    margin that evidence sits on. Nothing is estimated, and where DATproof hasn&rsquo;t sourced
-    something it says so instead of scoring it. Current field: B C D F. Anyone
-    can re-run every grade from the public registry.</p>
-    <div class="rubric">
-      <div class="rubric-row reveal">
-        <h3>On-chain proof</h3>
-        <span class="rubric-pts">40 pts</span>
-        <p>Something a reader can check on the chain themselves: published wallet addresses, or the outputs the company controls with signatures proving that control. All-or-nothing — existence is either independently checkable or it isn&#x27;t. An A is impossible without it.</p>
-      </div>
-      <div class="rubric-row reveal">
-        <h3>Disclosure quality</h3>
-        <span class="rubric-pts">30 pts</span>
-        <p>Regulatory filings carry liability for misstatement; press releases don&#x27;t. Scored from the registry&#x27;s evidence tiers — filings earn full marks, statements partial, third-party attribution none.</p>
-      </div>
-      <div class="rubric-row reveal">
-        <h3>Independent attestation</h3>
-        <span class="rubric-pts">10 pts</span>
-        <p>A disclosed third-party check on custodian balances narrows the trust gap — credited, and capped, because the referees themselves warn it is not assurance.</p>
-      </div>
-      <div class="rubric-row reveal">
-        <h3>Disclosure freshness</h3>
-        <span class="rubric-pts">10 pts</span>
-        <p>A balance is a point-in-time claim that decays daily. Full marks inside 45 days, partial to 120, none beyond — measured against the registry snapshot, so no grade ever falls just because time passed on DATproof&#x27;s side.</p>
-      </div>
-      <div class="rubric-row reveal">
-        <h3>Balance-sheet resilience</h3>
-        <span class="rubric-pts">10 pts</span>
-        <p>Fixed obligations serviced against a volatile asset thin the evidence&#x27;s margin for error. Clean structure earns full marks.</p>
-      </div>
-    </div>
-    <div class="gradekey" aria-label="Grade scale">
-      <span class="k"><span class="chip gA" aria-hidden="true">A</span> proven on-chain</span>
-      <span class="k"><span class="chip gB" aria-hidden="true">B</span> proven, with caveats</span>
-      <span class="k"><span class="chip gC" aria-hidden="true">C</span> well-documented, still unproven</span>
-      <span class="k"><span class="chip gD" aria-hidden="true">D</span> thin evidence</span>
-      <span class="k"><span class="chip gF" aria-hidden="true">F</span> little an investor can check</span>
-    </div>
-    <div class="method-cta">
-      <a class="btn-pill" href="https://github.com/lucascashwell3-ai/datproof/blob/main/METHODOLOGY.md">Read the full rubric (on GitHub)</a>
-      <a class="btn-quiet" href="tearsheet/">Today&rsquo;s numbers</a>
-    </div>
-  </section>
-
-  <section class="wrap case-teaser reveal">
-    <h2>Why grade proof at all?</h2>
-    <p>Bitcoin is the first treasury asset whose ownership anyone can verify &mdash; and almost
-    no company uses that. <em>&ldquo;The reasons are real, and worth stating fairly&rdquo;</em>:
-    custody confidentiality, security concerns, and no rule requiring it. The full case &mdash;
-    including what a balance alone can&rsquo;t tell you and who is already solving it &mdash; is
-    four short acts, every quote verbatim and cited.</p>
-    <div class="method-cta">
-      <a class="btn-quiet" href="the-case/">Read the case &rarr;</a>
-    </div>
-  </section>
-
-  <section id="accountability" class="wrap reveal">
-    <h2>Who made this, and how to correct it.</h2>
-    <p class="sec-lede">A page that grades named companies owes them a way to answer back, and
-    owes its readers a statement of its own interests. Both are here rather than left to be
-    discovered.</p>
-    <div class="account">
-      <div>
-        <h3>Who</h3>
-        <p>One person, not an institution: <a href="https://github.com/lucascashwell3-ai/datproof">Lucas Cashwell</a>, a
-        risk-and-controls background in financial services. &ldquo;Rating agency&rdquo; describes
-        what the site does, not its size. The method is public precisely so nobody has to take
-        the author&rsquo;s word either &mdash; the rubric, the registry and the engine are all in
-        one open repository.</p>
-      </div>
-      <div>
-        <h3>Corrections and right of reply</h3>
-        <p>A graded company that believes a figure, date, tier or letter is wrong can
-        <a href="https://github.com/lucascashwell3-ai/datproof/issues/new">open a correction request</a>. Requests are public and
-        timestamped, answered within five business days, and a correction that changes a grade is
-        noted on the page with its date. Evidence submitted &mdash; a filing reference, an
-        attestation report, published addresses &mdash; is applied to the registry the same way
-        as anything else.</p>
-      </div>
-      <div>
-        <h3>Interests</h3>
-        <p>DATproof takes no advertising, no sponsorship and no payment from any rated company or proof-of-reserves vendor, and none has ever been offered or accepted. The author has a risk-and-controls background in financial services and is building verification tooling for digital-asset treasuries — work shared openly in this project.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="cycle" class="cycle">
-    <div class="wrap">
-      <h2>Cycle position, above the sentiment noise.</h2>
-      <p class="sec-lede">The 200-week moving average is the slowest widely-watched trend line in
-      bitcoin &mdash; the humble investor&rsquo;s reference point. DATproof reads every treasury&rsquo;s
-      disclosed cost basis against it.</p>
-    <div class="strip-figures">
-      <div class="figure">
-        <span class="fig-num mono">$64,283</span>
-        <span class="fig-label">200-week moving average</span>
-      </div>
-      <div class="figure">
-        <span class="fig-num mono">1.20&times;</span>
-        <span class="fig-label">spot vs the long-term trend</span>
-      </div>
-      <div class="figure">
-        <span class="fig-num mono">-38.1%</span>
-        <span class="fig-label">vs all-time-high close</span>
-      </div>
-    </div>
-    <p class="strip-note">The largest premium to trend: Strategy Inc&rsquo;s average cost is <span class="mono">1.18&times;</span> the 200-week moving average &mdash; accumulated above the long-term trend line.</p>
-    <p class="asof-line">history: coinbase-live &middot; Coinbase Exchange daily candles &middot; as of 2026-08-22T13:06:14Z</p>
-    </div>
-  </section>
-
-  <footer>
-    <div class="wrap">
-      <p>Built by <a href="https://github.com/lucascashwell3-ai">Lucas Cashwell</a> &mdash; applying
-      verification-grade rigor to digital-asset treasuries. Registry, rubric and pipeline are open:
-      <a href="https://github.com/lucascashwell3-ai/datproof">github.com/lucascashwell3-ai/datproof</a>. Regenerated 2026-08-22 13:06 UTC.</p>
-      <p>Holdings figures are company disclosures as of their stated dates. Companies know where their
-      bitcoin is; this page measures what <em>investors</em> can independently verify. Grades are
-      independent evidence-quality opinions, not audits. Nothing here is investment advice.
-      Think something here is wrong? <a href="#accountability">Ask for a correction</a>.</p>
-    </div>
-  </footer>
-</main>
-
+:root{--bg:#0a0b0e;--panel:#0f1115;--rule:#1e222a;--fg:#d9dce2;--dim:#6e7480;--g0:#171a20;--g1:#1d4d2c;--g2:#2f8a3e;--g3:#5ad66a;--acc:#f7931a;--up:#5ad66a;--down:#e0564f;--link:#9cc3ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--link);text-decoration:none}
+.ticker{display:flex;gap:28px;overflow-x:auto;white-space:nowrap;padding:9px 20px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--dim)}.ticker b{color:var(--fg);font-weight:500}.ticker .up{color:var(--up)}.ticker .down{color:var(--down)}
+nav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule)}
+nav .logo{font-weight:600;font-size:15px}nav .logo i{color:var(--acc);font-style:normal}nav .logo::before{content:'~ $ ';color:var(--dim);font-weight:400}
+nav a{color:var(--dim);margin-left:18px;font-size:13px}nav a::before{content:'./'}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.hero{padding:40px 0 16px}
+.prompt{color:var(--dim);font-size:13px}.prompt b{color:var(--acc);font-weight:600}
+h1{font-size:clamp(22px,3.4vw,34px);line-height:1.15;margin:8px 0 6px;font-weight:600;letter-spacing:-.01em}
+h1::after{content:'▌';color:var(--acc);animation:bl 1s steps(1) infinite;margin-left:2px}@keyframes bl{50%{opacity:0}}
+.sub{color:var(--dim);margin:0 0 22px;max-width:80ch}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}.stat .n{font-size:11px;color:var(--dim)}.stat .n::before{content:'# '}.stat .v{font-size:22px;font-weight:600;margin-top:2px}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px}
+.ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:10px;flex-wrap:wrap}.ph h3{margin:0;font-size:13px;font-weight:600}.ph h3::before{content:'> ';color:var(--acc)}.ph span{color:var(--dim);font-size:11px}
+.gy,.gr{display:grid;gap:2px;align-items:center;--lab:46px}.gy span{font-size:10px;color:var(--dim);overflow:hidden;white-space:nowrap}.gl{font-size:11px;color:var(--dim);text-align:right;padding-right:6px}
+.gr a,.gr i{display:block;aspect-ratio:1;border-radius:1.5px;background:var(--g0)}.gr .v1{background:var(--g1)}.gr .v2{background:var(--g2)}.gr .v3{background:var(--g3)}.gr a:hover{outline:1px solid #fff}.gr{margin-top:3px}
+.gr{opacity:0;animation:in .35s forwards;animation-delay:calc(var(--i)*.14s)}@keyframes in{to{opacity:1}}
+#more{display:none}#more.open{display:block}
+.toggle{margin-top:10px;background:none;border:1px dashed var(--rule);color:var(--dim);font:inherit;font-size:12px;padding:6px 10px;border-radius:4px;cursor:pointer}.toggle:hover{color:var(--fg);border-color:var(--dim)}
+.legend{color:var(--dim);font-size:11px;display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.legend i{display:inline-block;width:9px;height:9px;border-radius:1.5px}
+.ascii{color:#2d323c;white-space:pre;font-size:10px;line-height:1.15;margin:14px 0 0;overflow-x:auto}
+.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin:14px 0 60px}
+.book{font-size:12px}.book .r{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule)}.book .r:last-child{border:0}.book .r a{font-size:11px}.book em{font-style:normal;color:var(--dim);font-size:10px;border:1px solid var(--rule);padding:0 4px;border-radius:3px}
+.bar{height:4px;background:var(--g0);border-radius:2px;overflow:hidden;margin:4px 0 2px}.bar i{display:block;height:100%;background:var(--g3)}
+.empty{color:var(--dim);font-size:12px}
+.why h2{font-size:16px;margin:0 0 14px;font-weight:600}.why h2::before{content:'> ';color:var(--acc)}
+.q{color:var(--acc);margin:14px 0 4px}.q::before{content:'? '}.a{margin:0;color:#c3c7cf;max-width:64ch}
+.sig{margin-top:18px;padding-top:12px;border-top:1px dashed var(--rule);color:var(--dim);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{color:var(--bg);background:var(--g3);padding:5px 10px;border-radius:4px;font-weight:600;cursor:pointer;border:0;font:inherit}
+footer{color:var(--dim);font-size:11px;padding:0 20px 40px;max-width:1200px;margin:0 auto}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}nav a{margin-left:10px}}
+@media(prefers-reduced-motion:reduce){.gr{animation:none;opacity:1}h1::after{animation:none}}
+</style></head><body>
+<div class="ticker" id="ticker"></div>
+<nav><div class="logo">DAT<i>proof</i></div><div><a href="#grid">grid</a><a href="#trackers">trackers</a><a href="#why">why</a><a href="https://lucascashwell3-ai.github.io/">lucas</a></div></nav>
+<div class="wrap">
+<div class="hero">
+<p class="prompt"><b>datproof</b> ~ $ show btc-purchases --top 3 --since 2020</p>
+<h1>Bitcoin is eating corporate treasuries.</h1>
+<p class="sub">every lit square is a day a public company bought bitcoin with treasury money, straight from its filings. three companies shown; the rest are one click away.</p>
+<div class="stats" id="stats"></div>
+<div class="panel" id="grid"><div class="ph"><h3>purchase activity · 2020 → today</h3><span>darker = more BTC that day · click a square for the filing</span></div>
+<div id="top"></div><div id="more"></div>
+<button class="toggle" id="tg" hidden></button>
+<div class="legend"><span>less</span><i style="background:var(--g0)"></i><i style="background:var(--g1)"></i><i style="background:var(--g2)"></i><i style="background:var(--g3)"></i><span>more</span></div>
+<div class="ascii">  ┌──────┐      ┌───────────────┐      ┌─────┐
+  │ cash │ ───► │ ATM/STRC/SATA │ ───► │ BTC │   block ──■──■──■──■──►
+  └──────┘      └───────────────┘      └─────┘</div></div>
+</div>
+<div class="layout">
+<div id="trackers">
+<div class="panel"><div class="ph"><h3>STRC · Strategy 10% perpetual preferred</h3><span>at-the-market sales · latest filings</span></div><div class="book" id="book-STRC"></div></div>
+<div class="panel" style="margin-top:14px"><div class="ph"><h3>SATA · Strive perpetual preferred</h3><span>strive files cumulative totals, not weekly sales</span></div><div class="book" id="book-SATA"></div></div>
+</div>
+<div class="panel why" id="why"><h2>why digital asset treasuries are going to take over</h2>
+<p class="q">isn't bitcoin too volatile for company cash?</p>
+<p class="a">over four weeks, yes. over four years, it has beaten every asset a treasurer is allowed to hold. the question isn't "is it risky" — it's "what does sitting still cost."</p>
+<p class="q">aren't treasuries the safe choice?</p>
+<p class="a">safe from swings, and guaranteed to lose to the printer. 4% on a bill is a slow leak, not a return.</p>
+<p class="q">so what does a CFO actually buy?</p>
+<p class="a">STRC or SATA: a fixed 10%+ coupon, backed by a pile of bitcoin and cash several times larger than what's owed. the yield of the asset, the swings stripped off.</p>
+<p class="q">who's doing it?</p>
+<p class="a">the grid. strategy since 2020, metaplanet and strive since. the rows get denser every year. that's the whole point.</p>
+<div class="sig"><span>written by lucas cashwell · every number links to its filing</span><button class="btn" id="share">copy link ↗</button></div>
+</div>
+</div>
+</div>
+<footer id="foot"></footer>
+<script>window.DATA={"generated":"2026-08-22","start":"2020-01-06","series":[{"t":"MSTR","name":"Strategy","top":true,"cells":{"2020-08-11":3,"2020-09-14":3,"2020-12-04":2,"2021-01-22":1,"2021-02-02":1,"2021-03-01":1,"2021-03-05":1,"2021-03-12":1,"2021-04-05":1,"2021-05-13":1,"2021-05-18":1,"2021-08-23":2,"2021-09-12":3,"2021-11-29":2,"2021-12-08":2,"2021-12-29":2,"2022-01-31":1,"2022-04-04":2,"2022-06-28":1,"2022-09-19":1,"2022-12-21":2,"2022-12-24":1,"2023-03-23":2,"2023-04-04":1,"2023-06-27":3,"2023-09-24":2,"2023-11-29":3,"2023-12-26":3,"2024-02-25":2,"2024-03-10":3,"2024-03-18":3,"2024-06-19":3,"2024-09-12":3,"2024-09-19":3,"2024-11-10":3,"2024-11-17":3,"2024-11-24":3,"2024-12-01":3,"2024-12-08":3,"2024-12-15":3,"2024-12-22":2,"2024-12-29":2,"2024-12-31":1,"2025-01-12":2,"2025-01-20":3,"2025-01-26":3,"2025-02-09":3,"2025-02-23":3,"2025-03-16":1,"2025-03-23":2,"2025-03-30":3,"2025-04-13":2,"2025-04-20":2,"2025-04-27":3,"2025-05-04":2,"2025-05-11":3,"2025-05-18":2,"2025-05-25":2,"2025-06-01":1,"2025-06-08":1,"2025-06-15":3,"2025-06-22":1,"2025-06-29":2,"2025-07-13":2,"2025-07-20":2,"2025-08-03":3,"2025-08-10":1,"2025-08-17":1,"2025-08-24":2,"2025-09-01":2,"2025-09-07":2,"2025-09-14":1,"2025-09-21":1,"2025-09-28":1,"2025-10-12":1,"2025-10-19":1,"2025-10-26":1,"2025-11-02":1,"2025-11-09":1,"2025-11-16":3,"2025-11-30":1,"2025-12-07":3,"2025-12-14":3,"2025-12-28":2,"2025-12-31":1,"2026-01-04":2,"2026-01-11":3,"2026-01-19":3,"2026-01-25":2,"2026-02-01":1,"2026-02-08":2,"2026-02-16":2,"2026-02-22":1,"2026-03-01":2,"2026-03-08":3,"2026-03-15":3,"2026-03-22":1,"2026-04-05":2,"2026-04-12":3,"2026-04-19":3,"2026-04-26":2,"2026-05-10":1,"2026-05-17":3,"2026-06-07":2,"2026-06-14":2,"2026-06-21":1},"btc":{"2020-08-11":21454.0,"2020-09-14":16796.0,"2020-12-04":2574.0,"2021-01-22":314.0,"2021-02-02":295.0,"2021-03-01":328.0,"2021-03-05":205.0,"2021-03-12":262.0,"2021-04-05":253.0,"2021-05-13":271.0,"2021-05-18":229.0,"2021-08-23":3907.0,"2021-09-12":8957.0,"2021-11-29":7002.0,"2021-12-08":1434.0,"2021-12-29":1914.0,"2022-01-31":660.0,"2022-04-04":4167.0,"2022-06-28":480.0,"2022-09-19":301.0,"2022-12-21":2395.0,"2022-12-24":810.0,"2023-03-23":6455.0,"2023-04-04":1045.0,"2023-06-27":12333.0,"2023-09-24":5445.0,"2023-11-29":16130.0,"2023-12-26":14620.0,"2024-02-25":3000.0,"2024-03-10":12000.0,"2024-03-18":9245.0,"2024-06-19":11931.0,"2024-09-12":18300.0,"2024-09-19":7420.0,"2024-11-10":27200.0,"2024-11-17":51780.0,"2024-11-24":55500.0,"2024-12-01":15400.0,"2024-12-08":21550.0,"2024-12-15":15350.0,"2024-12-22":5262.0,"2024-12-29":2138.0,"2024-12-31":1070.0,"2025-01-12":2530.0,"2025-01-20":11000.0,"2025-01-26":10107.0,"2025-02-09":7633.0,"2025-02-23":20356.0,"2025-03-16":130.0,"2025-03-23":6911.0,"2025-03-30":22048.0,"2025-04-13":3459.0,"2025-04-20":6556.0,"2025-04-27":15355.0,"2025-05-04":1895.0,"2025-05-11":13390.0,"2025-05-18":7390.0,"2025-05-25":4020.0,"2025-06-01":705.0,"2025-06-08":1045.0,"2025-06-15":10100.0,"2025-06-22":245.0,"2025-06-29":4980.0,"2025-07-13":4225.0,"2025-07-20":6220.0,"2025-08-03":21021.0,"2025-08-10":155.0,"2025-08-17":430.0,"2025-08-24":3081.0,"2025-09-01":4048.0,"2025-09-07":1955.0,"2025-09-14":525.0,"2025-09-21":850.0,"2025-09-28":196.0,"2025-10-12":220.0,"2025-10-19":168.0,"2025-10-26":390.0,"2025-11-02":397.0,"2025-11-09":487.0,"2025-11-16":8178.0,"2025-11-30":130.0,"2025-12-07":10624.0,"2025-12-14":10645.0,"2025-12-28":1229.0,"2025-12-31":3.0,"2026-01-04":1283.0,"2026-01-11":13627.0,"2026-01-19":22305.0,"2026-01-25":2932.0,"2026-02-01":855.0,"2026-02-08":1142.0,"2026-02-16":2486.0,"2026-02-22":592.0,"2026-03-01":3015.0,"2026-03-08":17994.0,"2026-03-15":22337.0,"2026-03-22":1031.0,"2026-04-05":4871.0,"2026-04-12":13927.0,"2026-04-19":34164.0,"2026-04-26":3273.0,"2026-05-10":535.0,"2026-05-17":24869.0,"2026-06-07":1550.0,"2026-06-14":1587.0,"2026-06-21":520.0},"src":{"2020-08-11":"https://www.sec.gov/Archives/edgar/data/1050446/000119312520215604/d921849d8k.htm","2020-09-14":"https://www.sec.gov/Archives/edgar/data/1050446/000119312520245835/d42524d8k.htm","2020-12-04":"https://www.sec.gov/Archives/edgar/data/1050446/000119312520310787/d22733d8k.htm","2021-01-22":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521014227/d113711d8k.htm","2021-02-02":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521025369/d124926d8k.htm","2021-03-01":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521062322/d103788d8k.htm","2021-03-05":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521070446/d145869d8k.htm","2021-03-12":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521078715/d154639d8k.htm","2021-04-05":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521105625/d113059d8k.htm","2021-05-13":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521159855/d540617d8k.htm","2021-05-18":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521164617/d167554d8k.htm","2021-08-23":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521254529/d384256d8k.htm","2021-09-12":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521270915/d232429d8k.htm","2021-11-29":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521341815/d191335d8k.htm","2021-12-08":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521352140/d270832d8k.htm","2021-12-29":"https://www.sec.gov/Archives/edgar/data/1050446/000119312521369767/d261142d8k.htm","2022-01-31":"https://www.sec.gov/Archives/edgar/data/1050446/000119312522024027/d275576d8k.htm","2022-04-04":"https://www.sec.gov/Archives/edgar/data/1050446/000119312522095632/d292215d8k.htm","2022-06-28":"https://www.sec.gov/Archives/edgar/data/1050446/000119312522184423/d374401d8k.htm","2022-09-19":"https://www.sec.gov/Archives/edgar/data/1050446/000119312522247427/d355455d8k.htm","2022-12-21":"https://www.sec.gov/Archives/edgar/data/1050446/000119312522313098/d398241d8k.htm","2022-12-24":"https://www.sec.gov/Archives/edgar/data/1050446/000119312522313098/d398241d8k.htm","2023-03-23":"https://www.sec.gov/Archives/edgar/data/1050446/000119312523079839/d467124d8k.htm","2023-04-04":"https://www.sec.gov/Archives/edgar/data/1050446/000119312523091616/d486424d8k.htm","2023-06-27":"https://www.sec.gov/Archives/edgar/data/1050446/000119312523176793/d520680d8k.htm","2023-09-24":"https://www.sec.gov/Archives/edgar/data/1050446/000119312523240932/d390258d8k.htm","2023-11-29":"https://www.sec.gov/Archives/edgar/data/1050446/000119312523285756/d618268d8k.htm","2023-12-26":"https://www.sec.gov/Archives/edgar/data/1050446/000119312523303488/d517550d8k.htm","2024-02-25":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524045396/d786266d8k.htm","2024-03-10":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524064331/d738431d8k.htm","2024-03-18":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524070801/d805979d8k.htm","2024-06-19":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524164014/d851818d8k.htm","2024-09-12":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524218462/d808510d8k.htm","2024-09-19":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524222498/d822569d8k.htm","2024-11-10":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524255184/d908568d8k.htm","2024-11-17":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524260452/d828461d8k.htm","2024-11-24":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524264733/d844494d8k.htm","2024-12-01":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524268429/d898104d8k.htm","2024-12-08":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524272923/d873652d8k.htm","2024-12-15":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524279044/d843539d8k.htm","2024-12-22":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524283686/d892375d8k.htm","2024-12-29":"https://www.sec.gov/Archives/edgar/data/1050446/000119312524286217/d896561d8k.htm","2024-12-31":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525001854/d878544d8k.htm","2025-01-12":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525005000/d884652d8k.htm","2025-01-20":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525009102/d853769d8k.htm","2025-01-26":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525012671/d923383d8k.htm","2025-02-09":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525023183/d914889d8k.htm","2025-02-23":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025025233/mstr-20250224.htm","2025-03-16":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025039835/mstr-20250317.htm","2025-03-23":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025043494/mstr-20250324.htm","2025-03-30":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025047219/mstr-20250331.htm","2025-04-13":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025053501/mstr-20250331.htm","2025-04-20":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025056007/mstr-20250331.htm","2025-04-27":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025058962/mstr-20250331.htm","2025-05-04":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025063168/mstr-20250331.htm","2025-05-11":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025068580/mstr-20250331.htm","2025-05-18":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025073962/mstr-20250331.htm","2025-05-25":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025077387/mstr-ex99_1.htm","2025-06-01":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025080022/mstr-20250331.htm","2025-06-08":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025083448/mstr-20250331.htm","2025-06-15":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025086545/mstr-20250616.htm","2025-06-22":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025088711/mstr-20250616.htm","2025-06-29":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025091211/mstr-20250616.htm","2025-07-13":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025095461/mstr-20250714.htm","2025-07-20":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025097081/mstr-20250616.htm","2025-08-03":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025101634/mstr-20250804.htm","2025-08-10":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025106241/mstr-20250804.htm","2025-08-17":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025109566/mstr-20250818.htm","2025-08-24":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025111093/mstr-20250818.htm","2025-09-01":"https://www.sec.gov/Archives/edgar/data/1050446/000105044625000008/mstr-20250902.htm","2025-09-07":"https://www.sec.gov/Archives/edgar/data/1050446/000095017025113360/mstr-20250902.htm","2025-09-14":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525202827/mstr-20250902.htm","2025-09-21":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525210048/mstr-20250902.htm","2025-09-28":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525221772/mstr-20250902.htm","2025-10-12":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525238132/mstr-ex99_1.htm","2025-10-19":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525243049/mstr-20250902.htm","2025-10-26":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525250751/mstr-20250902.htm","2025-11-02":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525261714/mstr-20250902.htm","2025-11-09":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525273310/mstr-20250902.htm","2025-11-16":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525283991/mstr-20251117.htm","2025-11-30":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525303157/d69948d8k.htm","2025-12-07":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525310607/mstr-20251117.htm","2025-12-14":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525318468/mstr-20251117.htm","2025-12-28":"https://www.sec.gov/Archives/edgar/data/1050446/000119312525332296/mstr-20251117.htm","2025-12-31":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526001550/mstr-20260105.htm","2026-01-04":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526001550/mstr-20260105.htm","2026-01-11":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526009811/mstr-20260105.htm","2026-01-19":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526016002/mstr-20260105.htm","2026-01-25":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526021726/mstr-20260105.htm","2026-02-01":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526032731/mstr-20260131.htm","2026-02-08":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526041944/mstr-20260105.htm","2026-02-16":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526053105/mstr-20260105.htm","2026-02-22":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526062489/mstr-20260223.htm","2026-03-01":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526084264/mstr-20260228.htm","2026-03-08":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526097598/d122015d8k.htm","2026-03-15":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526107263/mstr-20260223.htm","2026-03-22":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526118584/mstr-20260223.htm","2026-04-05":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526142925/mstr-20260406.htm","2026-04-12":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526152015/mstr-20260223.htm","2026-04-19":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526162756/mstr-20260223.htm","2026-04-26":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526178994/mstr-20260223.htm","2026-05-10":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526215754/mstr-20260504.htm","2026-05-17":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526227918/mstr-20260504.htm","2026-06-07":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526260709/mstr-20260504.htm","2026-06-14":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526270311/mstr-20260504.htm","2026-06-21":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526276717/mstr-20260504.htm"}},{"t":"ASST","name":"Strive","top":true,"cells":{"2025-09-12":1,"2025-09-22":3,"2025-10-28":1,"2025-11-10":3,"2025-11-09":3,"2025-12-31":3,"2026-01-12":2,"2026-01-28":2,"2026-05-12":3,"2026-05-18":2,"2026-05-22":3,"2026-06-01":3,"2026-06-07":1,"2026-06-14":2,"2026-06-21":3,"2026-07-02":1,"2026-07-10":1,"2026-07-17":1,"2026-07-24":2,"2026-07-31":1,"2026-08-07":2,"2026-08-14":2},"btc":{"2025-09-12":69.0,"2025-09-22":5816.0,"2025-10-28":72.3,"2025-11-10":1567.0,"2025-11-09":1567.2,"2025-12-31":1741.2,"2026-01-12":123.0,"2026-01-28":333.89,"2026-05-12":1381.0,"2026-05-18":381.61,"2026-05-22":1109.0,"2026-06-01":2500.0,"2026-06-07":32.0,"2026-06-14":73.0,"2026-06-21":759.0,"2026-07-02":17.76,"2026-07-10":18.0,"2026-07-17":21.0,"2026-07-24":79.0,"2026-07-31":20.0,"2026-08-07":147.0,"2026-08-14":79.0},"src":{"2025-09-12":"https://www.sec.gov/Archives/edgar/data/1920406/000121390025087278/ea0257129-8k_strive.htm","2025-09-22":"https://www.sec.gov/Archives/edgar/data/1920406/000095010325011928/dp234646_8k.htm","2025-10-28":"https://www.sec.gov/Archives/edgar/data/1920406/000095010325013686/dp236381_8k.htm","2025-11-10":"https://www.sec.gov/Archives/edgar/data/1920406/000114036125041295/ny20056805x8_8k.htm","2025-11-09":"https://www.sec.gov/Archives/edgar/data/1920406/000114036125041298/ny20056805x11_8k.htm","2025-12-31":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026000225/asst-20260105.htm","2026-01-12":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026001928/asst-20260113.htm","2026-01-28":"https://www.sec.gov/Archives/edgar/data/1920406/000114036126002606/ny20063534x6_8k.htm","2026-05-12":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026034804/asst-20260514.htm","2026-05-18":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026036139/asst-20260519.htm","2026-05-22":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026037925/asst-20260526.htm","2026-06-01":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026039677/asst-20260602.htm","2026-06-07":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026041386/asst-20260608.htm","2026-06-14":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026043032/asst-20260615.htm","2026-06-21":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026044484/asst-20260622.htm","2026-07-02":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026047102/asst-20260706.htm","2026-07-10":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026047938/asst-20260713.htm","2026-07-17":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026048764/asst-20260720.htm","2026-07-24":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026049666/asst-20260727.htm","2026-07-31":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026051539/asst-20260803.htm","2026-08-07":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026054983/asst-20260810.htm","2026-08-14":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026057224/asst-20260817.htm"}},{"t":"3350","name":"Metaplanet","top":true,"cells":{"2024-04-23":1,"2024-05-10":1,"2024-06-11":1,"2024-07-01":1,"2024-07-08":1,"2024-07-16":1,"2024-07-22":1,"2024-08-13":1,"2024-08-20":1,"2024-09-10":1,"2024-10-01":1,"2024-10-07":1,"2024-10-11":1,"2024-10-15":1,"2024-10-28":2,"2024-11-19":1,"2024-12-23":2,"2025-02-17":2,"2025-02-20":1,"2025-02-25":2,"2025-03-03":2,"2025-03-05":2,"2025-03-12":2,"2025-03-18":2,"2025-03-24":2,"2025-04-01":3,"2025-04-02":2,"2025-04-14":2,"2025-04-21":2,"2025-04-24":2,"2025-05-07":2,"2025-05-12":3,"2025-05-19":3,"2025-06-02":3,"2025-06-16":3,"2025-06-23":3,"2025-06-26":3,"2025-06-30":3,"2025-07-07":3,"2025-07-14":3,"2025-07-28":3,"2025-08-04":2,"2025-08-12":2,"2025-08-18":3,"2025-08-25":1,"2025-09-01":3,"2025-09-08":2,"2025-09-22":3,"2025-10-01":3,"2025-12-30":3,"2026-04-02":3,"2026-07-02":3},"btc":{"2024-04-23":97.8519,"2024-05-10":19.8698,"2024-06-11":23.351,"2024-07-01":20.195,"2024-07-08":42.466,"2024-07-16":21.877,"2024-07-22":20.381,"2024-08-13":57.103,"2024-08-20":57.273,"2024-09-10":38.464,"2024-10-01":107.913,"2024-10-07":108.786,"2024-10-11":108.999,"2024-10-15":106.976,"2024-10-28":156.783,"2024-11-19":124.117,"2024-12-23":619.7,"2025-02-17":269.43,"2025-02-20":68.59,"2025-02-25":135.0,"2025-03-03":156.0,"2025-03-05":497.0,"2025-03-12":162.0,"2025-03-18":150.0,"2025-03-24":150.0,"2025-04-01":696.0,"2025-04-02":160.0,"2025-04-14":319.0,"2025-04-21":330.0,"2025-04-24":145.0,"2025-05-07":555.0,"2025-05-12":1241.0,"2025-05-19":1004.0,"2025-06-02":1088.0,"2025-06-16":1112.0,"2025-06-23":1111.0,"2025-06-26":1234.0,"2025-06-30":1005.0,"2025-07-07":2205.0,"2025-07-14":797.0,"2025-07-28":780.0,"2025-08-04":463.0,"2025-08-12":518.0,"2025-08-18":775.0,"2025-08-25":103.0,"2025-09-01":1009.0,"2025-09-08":136.0,"2025-09-22":5419.0,"2025-10-01":5268.0,"2025-12-30":4279.0,"2026-04-02":5075.0,"2026-07-02":2823.0},"src":{"2024-04-23":"https://contents.xj-storage.jp/xcontents/33500/edb234c1/fc3c/4411/b94d/93e68c65a48e/140120240423574327.pdf","2024-05-10":"https://contents.xj-storage.jp/xcontents/33500/d6c0a821/cb05/4b92/a47b/ce61ea935a66/140120240509587510.pdf","2024-06-11":"https://contents.xj-storage.jp/xcontents/33500/7a1b93bb/ab2b/4713/abe9/e2ce84dbdd8a/140120240610525851.pdf","2024-07-01":"https://contents.xj-storage.jp/xcontents/33500/a732c107/ac16/4f4b/8c0c/65184ceab604/140120240630541695.pdf","2024-07-08":"https://contents.xj-storage.jp/xcontents/33500/45ad0209/87f1/4786/bced/9e17dc876d4e/140120240705545154.pdf","2024-07-16":"https://contents.xj-storage.jp/xcontents/33500/52b6cdc8/db89/45d1/98ba/32c2ca7c9907/140120240711548046.pdf","2024-07-22":"https://contents.xj-storage.jp/xcontents/33500/7806eef2/8074/4020/b661/27448cbe2749/140120240719551721.pdf","2024-08-13":"https://contents.xj-storage.jp/xcontents/33500/02202d0f/7ad6/47b4/9d12/0703c1c37d14/140120240812570515.pdf","2024-08-20":"https://contents.xj-storage.jp/xcontents/33500/e577d2c3/9caf/4fca/afae/2851f9cbc914/140120240819573615.pdf","2024-09-10":"https://contents.xj-storage.jp/xcontents/33500/95844a3d/35ac/4ada/a81c/393d693a6beb/140120240910582882.pdf","2024-10-01":"https://contents.xj-storage.jp/xcontents/33500/ca1e38f5/87c2/442b/834b/d036ade084ee/140120241001591835.pdf","2024-10-07":"https://contents.xj-storage.jp/xcontents/33500/dbb660db/aa33/424e/9501/a100101104c4/140120241007594264.pdf","2024-10-11":"https://contents.xj-storage.jp/xcontents/33500/aebea0ee/95bd/4814/b863/c7d6200c736f/140120241010596497.pdf","2024-10-15":"https://contents.xj-storage.jp/xcontents/33500/4cb51e0d/c27f/4041/8dff/ca9f60d2a0be/140120241014597614.pdf","2024-10-28":"https://contents.xj-storage.jp/xcontents/33500/487f6694/b407/4f59/a4cf/bcf7397caf41/140120241027503385.pdf","2024-11-19":"https://contents.xj-storage.jp/xcontents/33500/31ab3733/fd77/4b13/83f7/4fd6573aea78/140120241119526153.pdf","2024-12-23":"https://contents.xj-storage.jp/xcontents/33500/83ccb67f/4ee2/4f76/a2c8/dbeaed64901f/140120241223542705.pdf","2025-02-17":"https://contents.xj-storage.jp/xcontents/33500/48af2770/79db/4815/a311/218a09326aee/140120250217577218.pdf","2025-02-20":"https://contents.xj-storage.jp/xcontents/33500/90fcc21c/c896/422d/9608/be1db325f222/140120250219579085.pdf","2025-02-25":"https://contents.xj-storage.jp/xcontents/33500/587a7248/93b6/4420/9718/c824528c5ba5/140120250224580996.pdf","2025-03-03":"https://contents.xj-storage.jp/xcontents/33500/755f49a9/cc5f/49e2/9dd2/989ae72fa7fe/140120250227584380.pdf","2025-03-05":"https://contents.xj-storage.jp/xcontents/33500/774adeb0/54ca/424a/a643/e985d7625f39/140120250303587158.pdf","2025-03-12":"https://contents.xj-storage.jp/xcontents/33500/7487ff00/478d/4c7e/967e/a3e521507b3c/140120250311591878.pdf","2025-03-18":"https://contents.xj-storage.jp/xcontents/33500/2502d641/04e4/41f6/95bd/41c18fce4ee0/140120250318595859.pdf","2025-03-24":"https://contents.xj-storage.jp/xcontents/33500/18774b9a/4535/44d5/a00a/72510d180c53/140120250319596926.pdf","2025-04-01":"https://contents.xj-storage.jp/xcontents/33500/5d8413b7/6ade/43cb/90e2/3ffadef17e1e/140120250331505547.pdf","2025-04-02":"https://contents.xj-storage.jp/xcontents/33500/9a6d1851/9369/4b11/8d76/b97766e5bfc8/140120250402507426.pdf","2025-04-14":"https://contents.xj-storage.jp/xcontents/33500/586e1353/8083/46b1/954c/f58d1b7ede76/140120250414514812.pdf","2025-04-21":"https://contents.xj-storage.jp/xcontents/33500/f793edaa/6e05/472f/be9e/55e806c611e4/140120250421518843.pdf","2025-04-24":"https://contents.xj-storage.jp/xcontents/33500/a4e12035/bd1f/4f96/ab6b/351ca5abafb3/140120250424522107.pdf","2025-05-07":"https://contents.xj-storage.jp/xcontents/33500/927207bf/e02f/4886/afac/dd3b31e9ded4/140120250507531191.pdf","2025-05-12":"https://contents.xj-storage.jp/xcontents/33500/7b5b050d/db6f/4d6d/80c9/413b5032ccf2/140120250512539862.pdf","2025-05-19":"https://contents.xj-storage.jp/xcontents/33500/b701fd66/1080/4ce0/9206/7989fd6ade07/140120250519557359.pdf","2025-06-02":"https://contents.xj-storage.jp/xcontents/33500/ecf0abd9/8e80/42de/b7d2/85b6fd49fd52/140120250602575945.pdf","2025-06-16":"https://contents.xj-storage.jp/xcontents/33500/082ed274/e200/44ec/9d39/26bddc247c15/140120250613588963.pdf","2025-06-23":"https://contents.xj-storage.jp/xcontents/33500/2bb70b03/5d55/44e3/a9e9/3a31fcd41d34/140120250623595833.pdf","2025-06-26":"https://contents.xj-storage.jp/xcontents/33500/719ccbc2/6793/4910/bf53/9100387fbe0b/140120250626500409.pdf","2025-06-30":"https://contents.xj-storage.jp/xcontents/33500/3d6255c7/433a/4436/b6b2/dcfc7d9047b7/140120250629503690.pdf","2025-07-07":"https://contents.xj-storage.jp/xcontents/33500/45de2b0c/c2ed/46b2/b9f0/f62347b86384/140120250707508946.pdf","2025-07-14":"https://contents.xj-storage.jp/xcontents/33500/df61aad9/5f0d/40d3/b102/e02b21680b97/140120250714513142.pdf","2025-07-28":"https://contents.xj-storage.jp/xcontents/33500/9806b237/5fe7/40c6/8b61/22cbfc3ae063/140120250728521246.pdf","2025-08-04":"https://contents.xj-storage.jp/xcontents/33500/a973873b/742a/4701/bdf3/984018d73b0b/140120250804528195.pdf","2025-08-12":"https://contents.xj-storage.jp/xcontents/33500/eea7fff5/4a56/4a57/980a/3ed9bcdbb3d3/140120250810538593.pdf","2025-08-18":"https://contents.xj-storage.jp/xcontents/33500/21238f4a/f136/4bff/8067/235fb53c1676/140120250818543237.pdf","2025-08-25":"https://contents.xj-storage.jp/xcontents/33500/fe395e8a/36d0/46b2/906c/1f12e627eefb/140120250825546539.pdf","2025-09-01":"https://contents.xj-storage.jp/xcontents/33500/6e67b123/848e/48c5/9bab/adb39f09acfc/140120250829550238.pdf","2025-09-08":"https://contents.xj-storage.jp/xcontents/33500/79adabbe/1109/42b6/8880/601a71578e24/140120250908554247.pdf","2025-09-22":"https://contents.xj-storage.jp/xcontents/33500/196a6538/f233/41d3/bc04/0634f13cf7e6/140120250922560689.pdf","2025-10-01":"https://contents.xj-storage.jp/xcontents/33500/42049202/db98/40c8/83c4/1af0a508d7a6/140120251001566267.pdf","2025-12-30":"https://contents.xj-storage.jp/xcontents/33500/4a51c54b/ec98/4363/bc59/64c440d858e3/140120251229527957.pdf","2026-04-02":"https://metaplanet.jp/disclosure/en/20260402T160721Z-_4_2_2026__-_Notice_of_Additional_Purchase_of_Bitcoin___2_.pdf","2026-07-02":"https://contents.xj-storage.jp/xcontents/33500/ef8f0fb6/d3f6/44c3/aafb/fbe407834e59/140120260702587030.pdf"}}],"stats":{"companies":3,"purchase_days":180,"total_btc":848986.0856999999,"credit_ytd":7849700000.0,"last_buy":{"t":"ASST","date":"2026-08-17","btc":79.0,"url":"https://www.sec.gov/Archives/edgar/data/1920406/000162828026057224/asst-20260817.htm"},"strc_month":0,"sata_month":0},"books":{"STRC":[{"date":"2026-05-18","usd":1949000000.0,"units":19519801.0,"period":"2026-05-11 \u2192 2026-05-17","cum":false,"url":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526227918/mstr-20260504.htm"},{"date":"2026-05-11","usd":100000.0,"units":1412.0,"period":"2026-05-04 \u2192 2026-05-10","cum":false,"url":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526215754/mstr-20260504.htm"},{"date":"2026-04-20","usd":2176300000.0,"units":21795389.0,"period":"2026-04-13 \u2192 2026-04-19","cum":false,"url":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526162756/mstr-20260223.htm"},{"date":"2026-04-13","usd":1001300000.0,"units":10028363.0,"period":"2026-04-06 \u2192 2026-04-12","cum":false,"url":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526152015/mstr-20260223.htm"}],"SATA":[{"date":"2026-06-08","usd":326300000.0,"units":3263908.0,"period":"\u2026 \u2192 2026-06-02","cum":true,"url":"https://www.sec.gov/Archives/edgar/data/1920406/000095010326008625/dp248062_424b5-psa.htm"}]},"ticker":{"btc_usd":77079.945,"btc_change_24h":5.575226511618361,"block_height":963663,"as_of":"2026-08-23T02:57:24Z"}};</script>
 <script>
-
-(function () {
-  'use strict';
-  document.documentElement.classList.add('js');
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* reveal on scroll */
-  if (!reduced && 'IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
-      });
-    }, { rootMargin: '0px 0px -8% 0px' });
-    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-  } else {
-    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('on'); });
-  }
-
-  /* number formatting (mirrors the Python builders) */
-  function fmt(kind, v) {
-    if (kind === 'usdc') {
-      if (v >= 1e9) return '$' + (v / 1e9).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'B';
-      if (v >= 1e6) return '$' + (v / 1e6).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M';
-      return '$' + Math.round(v).toLocaleString('en-US');
-    }
-    if (kind === 'btc') return Math.round(v).toLocaleString('en-US');
-    if (kind === 'pct') return v.toFixed(1) + '%';
-    return Math.round(v).toLocaleString('en-US');
-  }
-  function easeOutQuint(t) { return 1 - Math.pow(1 - t, 5); }
-
-  var tweens = new WeakMap();
-  function tweenTo(el, target, finalText, dur) {
-    var kind = el.dataset.kind || 'int';
-    var from = tweens.has(el) ? tweens.get(el) : parseFloat(el.dataset.now || '0');
-    if (reduced || from === target) {
-      tweens.set(el, target); el.textContent = finalText; return;
-    }
-    var t0 = performance.now();
-    var prev = el.dataset.raf;
-    if (prev) cancelAnimationFrame(+prev);
-    function frame(now) {
-      var p = Math.min(1, (now - t0) / dur);
-      var v = from + (target - from) * easeOutQuint(p);
-      tweens.set(el, v);
-      el.textContent = p < 1 ? fmt(kind, v) : finalText;
-      if (p < 1) el.dataset.raf = requestAnimationFrame(frame);
-    }
-    el.dataset.raf = requestAnimationFrame(frame);
-    tweens.set(el, target);
-  }
-
-  /* count-ups: markup carries the final value; animate 0→value on first view */
-  var ups = document.querySelectorAll('.countup');
-  if (!reduced && 'IntersectionObserver' in window && ups.length) {
-    var seen = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        seen.unobserve(e.target);
-        var el = e.target, target = parseFloat(el.dataset.value), text = el.textContent;
-        el.dataset.now = '0';
-        tweenTo(el, target, text, 950);
-      });
-    }, { threshold: 0.4 });
-    ups.forEach(function (el) { seen.observe(el); });
-  }
-
-  /* grade-chip stamp entrance, once, when the board enters view */
-  var board = document.getElementById('board');
-  if (board && !reduced && 'IntersectionObserver' in window) {
-    var so = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { board.classList.add('stamp-run'); so.disconnect(); }
-      });
-    }, { threshold: 0.15 });
-    so.observe(board);
-  }
-
-  /* segmented controls: spring-glide thumb */
-  function segInit(seg, onPick) {
-    var thumb = seg.querySelector('.thumb');
-    var btns = Array.prototype.slice.call(seg.querySelectorAll('button'));
-    function place(btn) {
-      thumb.style.width = btn.offsetWidth + 'px';
-      thumb.style.transform = 'translateX(' + (btn.offsetLeft - 3) + 'px)';
-    }
-    btns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        btns.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-        place(btn); onPick(btn.dataset.v);
-      });
-    });
-    function replace_() { place(seg.querySelector('button[aria-pressed="true"]') || btns[0]); }
-    replace_();
-    addEventListener('resize', replace_);
-    addEventListener('load', replace_);          /* re-measure once web fonts land */
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(replace_);
-  }
-
-  /* scoreboard sorting */
-  var tbody = board ? board.querySelector('tbody') : null;
-  var sortStatus = document.getElementById('sortStatus');
-  function sortBoard(key, dir) {
-    var rows = Array.prototype.slice.call(tbody.rows);
-    rows.sort(function (a, b) {
-      var x, y;
-      if (key === 'name') { x = a.dataset.name; y = b.dataset.name; return dir * x.localeCompare(y); }
-      x = parseFloat(a.dataset[key]); y = parseFloat(b.dataset[key]);
-      return dir * (x - y) || (parseFloat(b.dataset.btc) - parseFloat(a.dataset.btc));
-    });
-    rows.forEach(function (r) { tbody.appendChild(r); });
-  }
-  /* Reordering ten rows is silent to a screen reader: aria-sort is read when a
-     header is visited, not when it changes. Announce the result instead. */
-  function announce(th, shown) {
-    if (!sortStatus || !th) return;
-    var label = (th.textContent || '').trim();
-    sortStatus.textContent = 'Sorted by ' + label + ', ' + shown + '. ' +
-      (tbody ? tbody.rows.length : 0) + ' rows.';
-  }
-  /* aria-sort describes what the reader SEES, so it is derived from the
-     displayed values, not from the sign of the sort key: "as of" sorts on age
-     ascending, which puts the newest date on top — that is descending to a
-     reader. Text columns start A-Z; numeric columns start highest-first. */
-  function applySort(th, dir) {
-    var key = th.dataset.key;
-    var displayDesc = key === 'age' ? dir > 0 : dir < 0;
-    th.setAttribute('aria-sort', displayDesc ? 'descending' : 'ascending');
-    sortBoard(key, dir);
-    announce(th, displayDesc
-      ? (key === 'name' ? 'Z to A' : 'highest first')
-      : (key === 'name' ? 'A to Z' : 'lowest first'));
-  }
-  if (board) {
-    var ths = board.querySelectorAll('thead th[data-key]');
-    ths.forEach(function (th) {
-      th.querySelector('button').addEventListener('click', function () {
-        var was = th.getAttribute('aria-sort');
-        var firstClick = !was;
-        ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
-        var dir;
-        if (firstClick) dir = th.dataset.key === 'name' ? 1 : (th.dataset.key === 'age' ? 1 : -1);
-        else dir = was === 'descending' ? 1 : -1;
-        if (!firstClick && th.dataset.key === 'age') dir = was === 'descending' ? -1 : 1;
-        applySort(th, dir);
-      });
-    });
-    var viewSeg = document.getElementById('viewSeg');
-    if (viewSeg) segInit(viewSeg, function (v) {
-      ths.forEach(function (t) { t.removeAttribute('aria-sort'); });
-      var key = v === 'holdings' ? 'btc' : (v === 'proof' ? 'score' : 'age');
-      var th = board.querySelector('th[data-key="' + key + '"]');
-      if (th) applySort(th, key === 'age' ? 1 : -1);
-    });
-  }
-})();
-
-</script>
-</body>
-</html>
+const D=window.DATA, START=new Date(D.start), END=new Date(D.generated), DAYS=Math.round((END-START)/864e5)+1;
+const YEARS=[];for(let y=START.getFullYear();y<=END.getFullYear();y++)YEARS.push({y,d:Math.max(0,Math.round((new Date(y,0,1)-START)/864e5))});
+const fmt=(n,d=0)=>n==null?'—':n.toLocaleString('en-US',{maximumFractionDigits:d});
+const usd=n=>n==null?'—':n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(0)+'M':'$'+fmt(n);
+// ticker
+const T=D.ticker,S=D.stats;const tk=[];
+if(T.btc_usd)tk.push(`BTC <b>$${fmt(T.btc_usd)}</b> <span class="${T.btc_change_24h>=0?'up':'down'}">${T.btc_change_24h>=0?'+':''}${T.btc_change_24h.toFixed(1)}%</span>`);
+tk.push(`BTC bought by tracked cos <b>${fmt(S.total_btc)} BTC</b>`);
+if(S.last_buy)tk.push(`last buy <b>${S.last_buy.t} · ${S.last_buy.date} · ${fmt(S.last_buy.btc)} BTC</b>`);
+if(S.strc_month)tk.push(`STRC ATM <b>${usd(S.strc_month)}</b> this month`);if(S.sata_month)tk.push(`SATA ATM <b>${usd(S.sata_month)}</b> this month`);
+if(T.block_height)tk.push(`block <b>${fmt(T.block_height)}</b>`);
+document.getElementById('ticker').innerHTML=tk.map(s=>`<span>${s}</span>`).join('');
+document.getElementById('stats').innerHTML=`<div class="stat"><div class="n">companies tracked</div><div class="v">${S.companies}</div></div><div class="stat"><div class="n">purchase days since 2020</div><div class="v">${fmt(S.purchase_days)}</div></div><div class="stat"><div class="n">btc-backed credit raised ${END.getFullYear()}</div><div class="v">${usd(S.credit_ytd)}</div></div>`;
+// grid
+function draw(){
+ const w=document.getElementById('top').clientWidth;const cols=Math.max(40,Math.min(150,Math.floor((w-50)/5)));const per=DAYS/cols;
+ const yr=()=>{let h=`<div class="gy" style="grid-template-columns:var(--lab) repeat(${cols},1fr)"><span></span>`;YEARS.forEach((y,i)=>{const a=Math.round(y.d/per),b=YEARS[i+1]?Math.round(YEARS[i+1].d/per):cols;if(b>a)h+=`<span style="grid-column:span ${b-a}">${y.y}</span>`});return h+'</div>'};
+ const row=(s,ri)=>{const cells=[];for(let i=0;i<cols;i++){let v=0,btc=0,url='',date='';for(let d=Math.floor(i*per);d<Math.floor((i+1)*per);d++){const k=new Date(START.getTime()+d*864e5).toISOString().slice(0,10);if(s.cells[k]){if(s.cells[k]>v)v=s.cells[k];btc+=s.btc[k];url=s.src[k];date=k}}
+  cells.push(v?`<a class="v${v}" href="${url}" target="_blank" rel="noopener" title="${s.name} · ${date} · ${fmt(btc,1)} BTC · filing"></a>`:'<i></i>')}
+  return `<div class="gr" style="grid-template-columns:var(--lab) repeat(${cols},1fr);--i:${ri}"><span class="gl">${s.t}</span>${cells.join('')}</div>`};
+ const top=D.series.filter(s=>s.top),rest=D.series.filter(s=>!s.top);
+ document.getElementById('top').innerHTML=yr()+top.map(row).join('');
+ document.getElementById('more').innerHTML=rest.map(row).join('');
+ const tg=document.getElementById('tg');tg.hidden=!rest.length;tg.textContent=(document.getElementById('more').classList.contains('open')?'− hide ':'+ show ')+rest.length+' more companies';
+}
+draw();let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,120)});
+document.getElementById('tg').onclick=()=>{document.getElementById('more').classList.toggle('open');draw()};
+// books
+for(const k of ['STRC','SATA']){const b=D.books[k],el=document.getElementById('book-'+k);if(!b.length){el.innerHTML='<p class="empty">no sales disclosed yet.</p>';continue}
+ const mx=Math.max(...b.map(r=>r.usd||0));el.innerHTML=b.map(r=>`<div class="r"><span>${r.date}</span><span>${usd(r.usd)}</span><span title="${r.period}">${r.units?fmt(r.units)+' sh':'—'}${r.cum?' <em>cumulative</em>':''}</span><a href="${r.url}" target="_blank" rel="noopener">filing</a></div><div class="bar"><i style="width:${mx?r.usd/mx*100:0}%"></i></div>`).join('')}
+document.getElementById('share').onclick=e=>{navigator.clipboard.writeText(location.href).then(()=>e.target.textContent='copied ✓')};
+document.getElementById('foot').textContent=`data: SEC EDGAR 8-K/424B5 filings + Metaplanet IR disclosures · price: coinbase · block: blockstream · built ${D.generated}${T.as_of?' · ticker as of '+T.as_of:''} · not investment advice`;
+</script></body></html>

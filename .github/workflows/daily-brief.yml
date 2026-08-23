@@ -1,8 +1,8 @@
 name: DATproof daily brief
 
+# SCHEDULE REMOVED 2026-08-22: the A-F scoreboard site this builds is superseded by the
+# activity-grid site (see grid.yml). Kept for manual runs only; do not re-add the cron.
 on:
-  schedule:
-    - cron: "30 12 * * *" # 12:30 UTC daily (~8:30am ET) — site rebuild only, no brief
   workflow_dispatch:
     inputs:
       brief:
