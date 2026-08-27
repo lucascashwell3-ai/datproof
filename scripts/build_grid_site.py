@@ -52,13 +52,10 @@ def main():
     last = max(buys, key=lambda r: r["date"]) if buys else None
     month = today.strftime("%Y-%m")
     def atm_month(inst): return sum(num(r["usd"]) for r in sales if r["instrument"] == inst and r["date"][:7] == month)
-    def book(inst, n=4):
-        rs = sorted([r for r in sales if r["instrument"] == inst], key=lambda r: r["date"], reverse=True)[:n]
-        out = []
-        for r in rs:
-            out.append({"date": r["date"], "usd": num(r["usd"]), "units": num(r["units"]), "period": f'{r.get("period_start") or "…"} → {r.get("period_end") or r["date"]}',
-                        "cum": "cumulative" in (r.get("notes") or "").lower(), "url": r["source_url"]})
-        return out
+    def book(inst):
+        rs = sorted([r for r in sales if r["instrument"] == inst and num(r["usd"])], key=lambda r: r["date"])
+        return [{"date": r["date"], "usd": num(r["usd"]), "units": num(r["units"]),
+                 "cum": "cumulative" in (r.get("notes") or "").lower(), "url": r["source_url"]} for r in rs]
     agg = {}
     for s_ in series:
         for d, v in s_["btc"].items(): agg[d] = agg.get(d, 0) + v
