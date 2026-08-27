@@ -22,8 +22,13 @@ h1::after{content:'▌';color:var(--acc);animation:bl 1s steps(1) infinite;margi
 .gy,.gr{display:grid;gap:2px;align-items:center;--lab:46px}.gy span{font-size:10px;color:var(--dim);overflow:hidden;white-space:nowrap}.gl{font-size:11px;color:var(--dim);text-align:right;padding-right:6px}
 .gr a,.gr i{display:block;aspect-ratio:1;border-radius:1.5px;background:var(--g0)}.gr .v1{background:var(--g1)}.gr .v2{background:var(--g2)}.gr .v3{background:var(--g3)}.gr a:hover{outline:1px solid #fff}.gr{margin-top:3px}
 .gr{opacity:0;animation:in .35s forwards;animation-delay:calc(var(--i)*.14s)}@keyframes in{to{opacity:1}}
+.agg{display:grid;grid-auto-flow:column;gap:2px;height:52px;margin:2px 0 18px}
+.agg i{display:block;height:100%;border-radius:1.5px;background:#14161c}
+.agg .v1{background:var(--g1)}.agg .v2{background:var(--g2)}
+.agg .v3{background:#41b452;box-shadow:0 0 7px rgba(90,214,106,.4)}
+.agg .v4{background:var(--g3);box-shadow:0 0 12px rgba(90,214,106,.75)}
 #more{display:none}#more.open{display:block}
-.toggle{margin-top:10px;background:none;border:1px dashed var(--rule);color:var(--dim);font:inherit;font-size:12px;padding:6px 10px;border-radius:4px;cursor:pointer}.toggle:hover{color:var(--fg);border-color:var(--dim)}
+.toggle{display:block;width:100%;text-align:left;margin-top:8px;background:none;border:0;border-top:1px solid var(--rule);color:var(--dim);font:inherit;font-size:12px;padding:8px 2px 2px;cursor:pointer}.toggle::before{content:"▸ ";color:var(--acc)}.toggle.open::before{content:"▾ "}.toggle:hover{color:var(--fg);border-color:var(--dim)}
 .legend{color:var(--dim);font-size:11px;display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.legend i{display:inline-block;width:9px;height:9px;border-radius:1.5px}
 .ascii{color:#2d323c;white-space:pre;font-size:10px;line-height:1.15;margin:14px 0 0;overflow-x:auto}
 .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin:14px 0 60px}
@@ -42,17 +47,15 @@ footer{color:var(--dim);font-size:11px;padding:0 20px 40px;max-width:1200px;marg
 <nav><div class="logo">DAT<i>proof</i></div><div><a href="#grid">grid</a><a href="#trackers">trackers</a><a href="#why">why</a><a href="https://lucascashwell3-ai.github.io/">lucas</a></div></nav>
 <div class="wrap">
 <div class="hero">
-<p class="prompt"><b>datproof</b> ~ $ show btc-purchases --top 3 --since 2020</p>
+<p class="prompt"><b>datproof</b> ~ $ show dat-inflows --aggregate --since 2020</p>
 <h1>Bitcoin is eating corporate treasuries.</h1>
-<p class="sub">every lit square is a day a public company bought bitcoin with treasury money, straight from its filings. three companies shown; the rest are one click away.</p>
+<p class="sub">every lit square is a day a public company bought bitcoin with treasury money, straight from its filings. the big band is all tracked DATs combined; the named rows are the two leaders. more one click away.</p>
 <div class="stats" id="stats"></div>
-<div class="panel" id="grid"><div class="ph"><h3>purchase activity · 2020 → today</h3><span>darker = more BTC that day · click a square for the filing</span></div>
+<div class="panel" id="grid"><div class="ph"><h3>DAT bitcoin inflows · 2020 → today</h3><span>all tracked companies summed · brighter = more BTC · click a company square for its filing</span></div>
 <div id="top"></div><div id="more"></div>
 <button class="toggle" id="tg" hidden></button>
 <div class="legend"><span>less</span><i style="background:var(--g0)"></i><i style="background:var(--g1)"></i><i style="background:var(--g2)"></i><i style="background:var(--g3)"></i><span>more</span></div>
-<div class="ascii">  ┌──────┐      ┌───────────────┐      ┌─────┐
-  │ cash │ ───► │ ATM/STRC/SATA │ ───► │ BTC │   block ──■──■──■──■──►
-  └──────┘      └───────────────┘      └─────┘</div></div>
+</div>
 </div>
 <div class="layout">
 <div id="trackers">
@@ -95,10 +98,13 @@ function draw(){
  const row=(s,ri)=>{const cells=[];for(let i=0;i<cols;i++){let v=0,btc=0,url='',date='';for(let d=Math.floor(i*per);d<Math.floor((i+1)*per);d++){const k=new Date(START.getTime()+d*864e5).toISOString().slice(0,10);if(s.cells[k]){if(s.cells[k]>v)v=s.cells[k];btc+=s.btc[k];url=s.src[k];date=k}}
   cells.push(v?`<a class="v${v}" href="${url}" target="_blank" rel="noopener" title="${s.name} · ${date} · ${fmt(btc,1)} BTC · filing"></a>`:'<i></i>')}
   return `<div class="gr" style="grid-template-columns:var(--lab) repeat(${cols},1fr);--i:${ri}"><span class="gl">${s.t}</span>${cells.join('')}</div>`};
+ const aggRow=()=>{const cells=[];for(let i=0;i<cols;i++){let v=0,btc=0,date='';for(let d=Math.floor(i*per);d<Math.floor((i+1)*per);d++){const k=new Date(START.getTime()+d*864e5).toISOString().slice(0,10);if(D.agg.cells[k]){if(D.agg.cells[k]>v)v=D.agg.cells[k];btc+=D.agg.btc[k];date=k}}
+  cells.push(v?`<i class="v${v}" title="${date} · ${fmt(btc,1)} BTC across tracked DATs"></i>`:'<i></i>')}
+  return `<div class="agg" style="grid-template-columns:repeat(${cols},1fr)">${cells.join('')}</div>`};
  const top=D.series.filter(s=>s.top),rest=D.series.filter(s=>!s.top);
- document.getElementById('top').innerHTML=yr()+top.map(row).join('');
+ document.getElementById('top').innerHTML=aggRow()+yr()+top.map((s,i)=>row(s,i)).join('');
  document.getElementById('more').innerHTML=rest.map(row).join('');
- const tg=document.getElementById('tg');tg.hidden=!rest.length;tg.textContent=(document.getElementById('more').classList.contains('open')?'− hide ':'+ show ')+rest.length+' more companies';
+ const tg=document.getElementById('tg');tg.hidden=!rest.length;const open=document.getElementById('more').classList.contains('open');tg.classList.toggle('open',open);tg.textContent=(open?'hide':'show')+' '+rest.length+' more tracked compan'+(rest.length==1?'y':'ies');
 }
 draw();let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,120)});
 document.getElementById('tg').onclick=()=>{document.getElementById('more').classList.toggle('open');draw()};

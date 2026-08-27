@@ -59,10 +59,17 @@ def main():
             out.append({"date": r["date"], "usd": num(r["usd"]), "units": num(r["units"]), "period": f'{r.get("period_start") or "…"} → {r.get("period_end") or r["date"]}',
                         "cum": "cumulative" in (r.get("notes") or "").lower(), "url": r["source_url"]})
         return out
+    agg = {}
+    for s_ in series:
+        for d, v in s_["btc"].items(): agg[d] = agg.get(d, 0) + v
+    avals = sorted(agg.values()); an = len(avals)
+    a1, a2, a3 = (avals[an // 4], avals[an // 2], avals[3 * an // 4]) if an >= 4 else (0, 0, 0)
+    agg_cells = {d: (4 if v >= a3 else 3 if v >= a2 else 2 if v >= a1 else 1) for d, v in agg.items()}
     ticker = json.loads(TICKER.read_text()) if TICKER.exists() else {}
     data = {
         "generated": today.isoformat(), "start": START.isoformat(),
         "series": series,
+        "agg": {"cells": agg_cells, "btc": agg},
         "stats": {"companies": len(series), "purchase_days": purchase_days, "total_btc": total_btc, "credit_ytd": credit_ytd,
                   "last_buy": {"t": last["ticker"], "date": last["date"], "btc": num(last["btc"]), "url": last["source_url"]} if last else None,
                   "strc_month": atm_month("STRC"), "sata_month": atm_month("SATA")},
