@@ -1,5 +1,5 @@
 """Build site/index.html from data/moves/*.csv + data/ticker.json. Every number on the page traces to a row with a source_url."""
-import csv, json, pathlib, datetime as dt, html
+import csv, json, pathlib, datetime as dt, html, re
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MOVES = ROOT / "data" / "moves"
 TICKER = ROOT / "data" / "ticker.json"
@@ -28,7 +28,7 @@ def main():
     rows = load()
     today = dt.date.today()
     buys = [r for r in rows if r["type"] == "btc_buy" and num(r["btc"])]
-    sales = [r for r in rows if r["type"] == "atm_sale" and num(r["usd"])]
+    sales = [r for r in rows if r["type"] == "atm_sale"]
     # per-company per-day btc (keyed on period_end if present, else filing date)
     grid = {}
     for r in buys:
@@ -48,14 +48,22 @@ def main():
     # stats
     purchase_days = sum(len(s["btc"]) for s in series)
     total_btc = sum(sum(s["btc"].values()) for s in series)
-    credit_ytd = sum(num(r["usd"]) for r in sales if r["instrument"] in CREDIT and r["date"][:4] == str(today.year))
+    credit_ytd = sum(num(r["usd"]) or 0 for r in sales if r["instrument"] in CREDIT and r["date"][:4] == str(today.year))
     last = max(buys, key=lambda r: r["date"]) if buys else None
     month = today.strftime("%Y-%m")
-    def atm_month(inst): return sum(num(r["usd"]) for r in sales if r["instrument"] == inst and r["date"][:7] == month)
+    def atm_month(inst): return sum(num(r["usd"]) or 0 for r in sales if r["instrument"] == inst and r["date"][:7] == month)
     def book(inst):
-        rs = sorted([r for r in sales if r["instrument"] == inst and num(r["usd"])], key=lambda r: r["date"])
-        return [{"date": r["date"], "usd": num(r["usd"]), "units": num(r["units"]),
-                 "cum": "cumulative" in (r.get("notes") or "").lower(), "url": r["source_url"]} for r in rs]
+        out = []
+        for r in sorted([r for r in sales if r["instrument"] == inst], key=lambda r: r["date"]):
+            units = num(r["units"])
+            # Strive's weekly 8-Ks table share-count changes without proceeds; recover the delta from the note
+            m = re.search(r"change ([\d,]+)", r.get("notes") or "")
+            if units is None and m: units = float(m.group(1).replace(",", ""))
+            if num(r["usd"]) is None and units is None: continue
+            out.append({"date": r["date"], "usd": num(r["usd"]), "units": units,
+                        "cum": "cumulative" in (r.get("notes") or "").lower(),
+                        "window": bool(m), "url": r["source_url"]})
+        return out
     agg = {}
     for s_ in series:
         for d, v in s_["btc"].items(): agg[d] = agg.get(d, 0) + v

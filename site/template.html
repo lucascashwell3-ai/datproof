@@ -23,10 +23,11 @@ h1::after{content:'▌';color:var(--acc);animation:bl 1s steps(1) infinite;margi
 .gy,.gr{display:grid;gap:2px;align-items:center;--lab:46px}.gy span{font-size:10px;color:var(--dim);overflow:hidden;white-space:nowrap}.gl{font-size:11px;color:var(--dim);text-align:right;padding-right:6px}
 .gr a,.gr i{display:block;aspect-ratio:1;border-radius:1.5px;background:var(--g0)}.gr .v1{background:var(--g1)}.gr .v2{background:var(--g2)}.gr .v3{background:var(--g3)}.gr a:hover{outline:1px solid #fff}.gr{margin-top:3px}
 .gr{opacity:0;animation:in .35s forwards;animation-delay:calc(var(--i)*.14s)}@keyframes in{to{opacity:1}}
-.aggwrap{position:relative;height:52px;margin:2px 0 18px}
-.aggwrap canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
-.agg{position:absolute;inset:0;display:grid;grid-auto-flow:column;gap:0}
-.agg i{display:block;height:100%;background:transparent}
+.agg{display:grid;grid-auto-flow:column;gap:2px;height:52px;margin:2px 0 18px}
+.agg i{display:block;height:100%;border-radius:1.5px;background:#14161c}
+.agg .v1{background:var(--g1)}.agg .v2{background:var(--g2)}
+.agg .v3{background:#41b452;box-shadow:0 0 7px rgba(90,214,106,.4)}
+.agg .v4{background:var(--g3);box-shadow:0 0 12px rgba(90,214,106,.75)}
 #more{display:none}#more.open{display:block}
 .toggle{display:block;width:100%;text-align:left;margin-top:8px;background:none;border:0;border-top:1px solid var(--rule);color:var(--dim);font:inherit;font-size:12px;padding:8px 2px 2px;cursor:pointer}.toggle::before{content:"▸ ";color:var(--acc)}.toggle.open::before{content:"▾ "}.toggle:hover{color:var(--fg);border-color:var(--dim)}
 .legend{color:var(--dim);font-size:11px;display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.legend i{display:inline-block;width:9px;height:9px;border-radius:1.5px}
@@ -38,7 +39,12 @@ h1::after{content:'▌';color:var(--acc);animation:bl 1s steps(1) infinite;margi
 .live{font-size:10px;color:var(--g3);border:1px solid var(--g1);padding:1px 6px;border-radius:10px}
 .what{color:var(--dim);font-size:12px;margin:2px 0 12px;max-width:60ch}.what b{color:var(--fg)}
 .tk .big{font-size:28px;font-weight:700;margin:0 0 10px}.tk .big small{font-size:12px;color:var(--dim);font-weight:400}
-.tk canvas{width:100%;height:150px;image-rendering:pixelated;display:block}
+.bars{display:grid;grid-auto-flow:column;gap:4px;align-items:end;height:110px}
+.bars a{display:block;background:var(--g2);border-radius:2px 2px 0 0;min-height:3px}
+.bars a:hover{background:var(--g3)}.bars a.hot{background:var(--g3);box-shadow:0 0 8px rgba(90,214,106,.5)}
+.tk details{margin-top:10px}.tk summary{cursor:pointer;color:var(--dim);font-size:12px;padding:4px 0}
+.tk summary::marker{content:''}.tk summary::before{content:'▸ ';color:var(--acc)}
+.tk details[open] summary::before{content:'▾ '}
 .tk .lab{display:flex;justify-content:space-between;color:var(--dim);font-size:10px;margin-top:6px}
 .rc{margin-top:12px;font-size:12px}.rc .r{display:grid;grid-template-columns:74px minmax(0,1fr) auto auto;gap:8px;padding:7px 0;border-bottom:1px dashed var(--rule);align-items:baseline}.rc .r span{overflow-wrap:anywhere}
 .rc .r:last-child{border:0}.rc .amt{font-weight:700}.rc .dim{color:var(--dim)}
@@ -112,40 +118,25 @@ function draw(){
   return `<div class="gr" style="grid-template-columns:var(--lab) repeat(${cols},1fr);--i:${ri}"><span class="gl">${s.t}</span>${cells.join('')}</div>`};
  const aggRow=()=>{const cells=[];for(let i=0;i<cols;i++){let v=0,btc=0,date='';for(let d=Math.floor(i*per);d<Math.floor((i+1)*per);d++){const k=new Date(START.getTime()+d*864e5).toISOString().slice(0,10);if(D.agg.cells[k]){if(D.agg.cells[k]>v)v=D.agg.cells[k];btc+=D.agg.btc[k];date=k}}
   cells.push(v?`<i class="v${v}" title="${date} · ${fmt(btc,1)} BTC across tracked DATs"></i>`:'<i></i>')}
-  return `<div class="aggwrap"><canvas id="aggcv"></canvas><div class="agg" style="grid-template-columns:repeat(${cols},1fr)">${cells.join('')}</div></div>`};
+  return `<div class="agg" style="grid-template-columns:repeat(${cols},1fr)">${cells.join('')}</div>`};
  const top=D.series.filter(s=>s.top),rest=D.series.filter(s=>!s.top);
  document.getElementById('top').innerHTML=aggRow()+yr()+top.map((s,i)=>row(s,i)).join('');
- (function(){const cv=document.getElementById('aggcv'),ctx=cv.getContext&&cv.getContext('2d');if(!ctx)return;
-  const B=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];const W=cols*4,H=40;cv.width=W;cv.height=H;
-  ctx.fillStyle='#0f1115';ctx.fillRect(0,0,W,H);
-  const vals=[];for(let i=0;i<cols;i++){let v=0;for(let d=Math.floor(i*per);d<Math.floor((i+1)*per);d++){const k=new Date(START.getTime()+d*864e5).toISOString().slice(0,10);if(D.agg.cells[k]>v)v=D.agg.cells[k]}vals.push(v)}
-  const LUM={0:0.07,1:0.35,2:0.55,3:0.8,4:1};
-  vals.forEach((v,i)=>{const x0=i*4,lum0=LUM[v];
-   for(let y=0;y<H;y++)for(let x=x0;x<x0+3;x++){const edge=1-0.35*Math.abs(y-H/2)/(H/2);const lum=lum0*edge;
-    if(lum>B[y&3][x&3]/16){ctx.fillStyle=v>=4?'#5ad66a':v==3?'#41b452':v==2?'#2f8a3e':v==1?'#1d4d2c':'#171a20';ctx.fillRect(x,y,1,1)}}
-   if(v>=4){ctx.save();ctx.shadowColor='rgba(90,214,106,.8)';ctx.shadowBlur=6;ctx.fillStyle='rgba(90,214,106,.25)';ctx.fillRect(x0,0,3,H);ctx.restore()}});
- })();
  document.getElementById('more').innerHTML=rest.map(row).join('');
  const tg=document.getElementById('tg');tg.hidden=!rest.length;const open=document.getElementById('more').classList.contains('open');tg.classList.toggle('open',open);tg.textContent=(open?'hide':'show')+' '+rest.length+' more tracked compan'+(rest.length==1?'y':'ies');
 }
 draw();let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,120)});
 document.getElementById('tg').onclick=()=>{document.getElementById('more').classList.toggle('open');draw()};
-// trackers: Bayer-dithered drumbeat + receipt
-const BAYER=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
-function drum(cvs,S){const ctx=cvs.getContext&&cvs.getContext('2d');if(!ctx)return;const W=330,H=75;cvs.width=W;cvs.height=H;
- ctx.fillStyle='#0f1115';ctx.fillRect(0,0,W,H);const mx=Math.max(...S.map(r=>r.usd)),n=S.length,slot=W/n,bw=Math.max(4,Math.floor(slot*0.62));
- S.forEach((r,i)=>{const h=Math.max(2,Math.round(r.usd/mx*(H-6))),x0=Math.round(i*slot+(slot-bw)/2),y0=H-h;
-  for(let y=y0;y<H;y++)for(let x=x0;x<x0+bw;x++){const t=(y-y0)/h,lum=1-0.75*t;
-   if(lum>BAYER[y&3][x&3]/16){ctx.fillStyle=lum>0.66?'#5ad66a':lum>0.4?'#2f8a3e':'#1d4d2c';ctx.fillRect(x,y,1,1)}}
-  if(r.usd===mx)for(let y=Math.max(0,y0-8);y<y0;y++)for(let x=x0-2;x<x0+bw+2;x++){
-   if((1-(y0-y)/8)*0.5>BAYER[y&3][x&3]/16){ctx.fillStyle='rgba(90,214,106,0.55)';ctx.fillRect(x,y,1,1)}}})}
+// trackers: solid drumbeat + collapsed receipt
 for(const k of ['STRC','SATA']){const S=D.books[k],el=document.getElementById('tk-'+k);
- if(!S.length){el.innerHTML='<p class="empty">no sales with disclosed proceeds yet.</p>';continue}
- const total=S.reduce((a,r)=>a+r.usd,0),last=S[S.length-1];
- el.innerHTML=`<div class="big">${usd(last.usd)} <small>raised ${last.cum?'through':'·'} ${last.date}${last.cum?' (running total)':''}</small></div>
- <canvas></canvas><div class="lab"><span>${S[0].date}</span><span>one bar per filed sale · click a row for the filing · total filed: ${usd(total)}</span><span>${last.date}</span></div>
- <div class="rc">${S.slice(-4).reverse().map(r=>`<div class="r"><span class="dim">${r.date}</span><span>sold ${r.units?fmt(r.units)+' shares':'—'}${r.cum?' <em>running total</em>':''}</span><span class="amt">${usd(r.usd)}</span><a href="${r.url}" target="_blank" rel="noopener">filing →</a></div>`).join('')}</div>`;
- drum(el.querySelector('canvas'),S)}
+ if(!S.length){el.innerHTML='<p class="empty">no sales disclosed yet.</p>';continue}
+ const dollars=S.filter(r=>r.usd!=null&&!r.cum), windows=S.filter(r=>r.window);
+ const bars=dollars.length>=windows.length?dollars:windows, byUsd=bars===dollars;
+ const v=r=>byUsd?r.usd:r.units, mx=Math.max(...bars.map(v)), last=S[S.length-1];
+ const cumRow=[...S].reverse().find(r=>r.cum&&r.usd!=null), latest$=cumRow||[...S].reverse().find(r=>r.usd!=null);
+ el.innerHTML=`<div class="big">${latest$?usd(latest$.usd):'—'} <small>${latest$&&latest$.cum?'raised through '+latest$.date+' (running total, per filing)':latest$?'raised · '+latest$.date:''}</small></div>
+ <div class="bars" style="grid-template-columns:repeat(${bars.length},1fr)">${bars.map(r=>`<a href="${r.url}" target="_blank" rel="noopener" class="${v(r)===mx?'hot':''}" style="height:${Math.max(3,v(r)/mx*100)}%" title="${r.date} · ${byUsd?usd(r.usd):fmt(r.units)+' shares'}"></a>`).join('')}</div>
+ <div class="lab"><span>${bars[0].date}</span><span>${byUsd?'one bar per filed sale ($ raised)':'one bar per 8-K window — shares sold from the filing\'s share-count table; proceeds not itemized'}</span><span>${bars[bars.length-1].date}</span></div>
+ <details><summary>filings (${S.length})</summary><div class="rc">${[...S].reverse().map(r=>`<div class="r"><span class="dim">${r.date}</span><span>${r.units?'sold '+fmt(r.units)+' shares':'sale'}${r.cum?' <em>running total</em>':''}${r.window?' <em>share-count table</em>':''}</span><span class="amt">${r.usd!=null?usd(r.usd):'—'}</span><a href="${r.url}" target="_blank" rel="noopener">filing →</a></div>`).join('')}</div></details>`}
 document.getElementById('share').onclick=e=>{navigator.clipboard.writeText(location.href).then(()=>e.target.textContent='copied ✓')};
 document.getElementById('foot').textContent=`data: SEC EDGAR 8-K/424B5 filings + Metaplanet IR disclosures · price: coinbase · block: blockstream · built ${D.generated}${T.as_of?' · ticker as of '+T.as_of:''} · not investment advice`;
 </script></body></html>
