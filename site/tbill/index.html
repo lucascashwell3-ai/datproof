@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your T-bill vs. BTC-backed credit — DATproof</title>
+<meta name="description" content="3-month T-bill vs STRC vs SATA: the yields side by side, what backs each in real numbers, and what $10M for 12 months pays. Sourced and dated.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+:root{--bg:#0a0b0e;--panel:#0f1115;--rule:#1e222a;--fg:#d9dce2;--dim:#6e7480;--acc:#f7931a;--up:#5ad66a;--down:#e0564f;--link:#9cc3ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+nav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule)}
+nav .logo{font-weight:600;font-size:15px}nav .logo i{color:var(--acc);font-style:normal}nav .logo::before{content:'~ $ ';color:var(--dim);font-weight:400}
+nav a{color:var(--dim);margin-left:18px;font-size:13px}nav a::before{content:'./'}
+main{max-width:980px;margin:0 auto;padding:34px 20px 60px}
+.prompt{color:var(--dim);font-size:13px}.prompt b{color:var(--acc);font-weight:600}
+h1{font-size:clamp(22px,3.4vw,34px);line-height:1.15;margin:8px 0 6px;font-weight:600;letter-spacing:-.01em}
+h1::after{content:'▌';color:var(--acc);animation:bl 1s steps(1) infinite;margin-left:2px}@keyframes bl{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){h1::after{animation:none}}
+.sub{color:var(--dim);margin:0 0 26px;max-width:78ch}
+.sub b{color:var(--fg);font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.col{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:18px 16px;display:flex;flex-direction:column;gap:8px}
+.col.hot{border-color:#3a2c14;background:linear-gradient(180deg,#15110a 0%,var(--panel) 55%)}
+.col .name{font-size:12px;color:var(--dim)}.col .name::before{content:'# '}
+.col .yield{font-size:38px;font-weight:600;line-height:1}
+.col.hot .yield{color:var(--acc)}
+.col .what{font-size:12.5px;color:var(--dim);line-height:1.5;flex:1}
+.col .what b{color:var(--fg);font-weight:600}
+.col .src{font-size:11px;color:var(--dim)}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px;margin-bottom:12px}
+.ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+.ph h3{margin:0;font-size:13px;font-weight:600}.ph h3::before{content:'> ';color:var(--acc)}
+.ph span{color:var(--dim);font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;color:var(--dim);text-align:left;font-weight:500;padding:6px 8px;border-bottom:1px solid var(--rule)}
+td{padding:8px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.r,th.r{text-align:right}
+td:first-child{white-space:nowrap}
+.pay{font-weight:600;font-size:15px}
+.plus{color:var(--up);font-weight:600}
+.muted{color:var(--dim)}
+.bar{height:10px;border-radius:2px;background:#171a20;position:relative;overflow:hidden;margin-top:4px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--acc)}
+.bar.tb i{background:#4a5160}
+.straight p{margin:0 0 12px;max-width:80ch;font-size:13.5px;line-height:1.65}
+.straight p:last-child{margin-bottom:0}
+.straight b{color:var(--acc);font-weight:600}
+.straight .q{color:var(--fg);font-weight:600}.straight .q::before{content:'> ';color:var(--acc)}
+footer{border-top:1px solid var(--rule);margin-top:28px;padding-top:14px;font-size:11.5px;color:var(--dim);line-height:1.8}
+footer b{color:var(--fg);font-weight:500}
+.fwd{background:var(--panel);border:1px dashed #3a2c14;border-radius:6px;padding:14px 16px;margin-top:16px;font-size:13px;color:var(--dim)}
+.fwd b{color:var(--fg)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">DAT<i>proof</i></div>
+  <div><a href="../">grid</a><a href="#backing">backing</a><a href="#sources">sources</a></div>
+</nav>
+<main>
+  <div class="prompt">~ $ datproof <b>--compare</b> tbill strc sata</div>
+  <h1>Your T-bill vs. BTC-backed credit</h1>
+  <p class="sub">Your cash pile earns <b>3.84%</b> in 3-month T-bills. BTC-backed credit — the perpetual
+  preferred stock of bitcoin treasury companies — pays <b>12–13%</b>, in cash, at fixed dollar rates,
+  with billions in bitcoin and cash behind it. Same idea as a bond coupon; roughly three times the yield.
+  Here are the numbers, each with its source and date.</p>
+
+  <div class="cols">
+    <div class="col">
+      <div class="name">3-month T-bill</div>
+      <div class="yield">3.84%</div>
+      <div class="what"><b>The default.</b> 3-month U.S. Treasury yield. Backed by the full faith and
+      credit of the U.S. government. Averaged 3.81% over the last 12 months, down from 4.26% a year ago.</div>
+      <div class="src"><a href="https://fred.stlouisfed.org/series/DGS3MO" rel="noopener">U.S. Treasury / FRED</a> · 2026-08-27</div>
+    </div>
+    <div class="col hot">
+      <div class="name">STRC · Strategy "Stretch"</div>
+      <div class="yield">12.00%</div>
+      <div class="what"><b>Variable-rate perpetual preferred.</b> Pays cash semi-monthly. The rate is
+      managed to defend a $100 price — it started at 9% in July 2025 and has been raised, never cut,
+      to 12% today. Behind it: the largest corporate bitcoin position on earth.</div>
+      <div class="src"><a href="https://www.strategy.com/press/strategy-announces-approval-of-strc-semi-monthly-dividends_06-08-2026" rel="noopener">Strategy press</a> · Aug 2026 rate</div>
+    </div>
+    <div class="col hot">
+      <div class="name">SATA · Strive Series A</div>
+      <div class="yield">13.00%</div>
+      <div class="what"><b>Perpetual preferred that pays every business day.</b> $0.0516 per share, per
+      day — 13.00% per annum, declared through Aug 31. Strive has paid daily since June 16 and held
+      13% since April.</div>
+      <div class="src"><a href="https://www.sec.gov/Archives/edgar/data/0001920406/000162828026056908/asst-20260813.htm" rel="noopener">Strive 8-K</a> · 2026-08-13</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h3>$10,000,000 for 12 months, at today's declared rates</h3><span>before taxes and price moves</span></div>
+    <table>
+      <tr><th></th><th class="r">it pays</th><th class="r">vs the T-bill</th><th style="width:40%"></th></tr>
+      <tr>
+        <td>3-mo T-bill, rolled</td>
+        <td class="r pay">$384,000</td>
+        <td class="r muted">—</td>
+        <td><div class="bar tb"><i style="width:29.5%"></i></div></td>
+      </tr>
+      <tr>
+        <td>STRC at 12.00%</td>
+        <td class="r pay">$1,200,000</td>
+        <td class="r plus">+$816,000</td>
+        <td><div class="bar"><i style="width:92.3%"></i></div></td>
+      </tr>
+      <tr>
+        <td>SATA at 13.00%</td>
+        <td class="r pay">$1,300,000</td>
+        <td class="r plus">+$916,000</td>
+        <td><div class="bar"><i style="width:100%"></i></div></td>
+      </tr>
+    </table>
+    <p class="muted" style="font-size:11.5px;margin:10px 0 0">Straight arithmetic on the declared rates above.
+    STRC's rate is set monthly and has only moved up in its first year; SATA's is board-declared and has held
+    13% since April. Neither is guaranteed — that's what the next section is for.</p>
+  </div>
+
+  <div class="panel" id="backing">
+    <div class="ph"><h3>What actually backs each dollar</h3><span>holdings filing-sourced · BTC at $79,296 (Aug 30)</span></div>
+    <table>
+      <tr><th></th><th>backing</th><th class="r">size</th></tr>
+      <tr>
+        <td>T-bill</td>
+        <td class="muted">Full faith and credit of the U.S. government.</td>
+        <td class="r">—</td>
+      </tr>
+      <tr>
+        <td>STRC</td>
+        <td class="muted">Strategy's balance sheet: <b style="color:var(--fg)">840,447 BTC</b> (~$66.6B)
+        plus a <b style="color:var(--fg)">$4.8B</b> USD reserve, kept to cover ~3 years of dividends.
+        Holdings as of Aug 17 <a href="https://www.theblock.co/news/business/2026-08-17-michael-saylor-strategy-btc-411942" rel="noopener">8-K</a>.</td>
+        <td class="r pay">~$71B</td>
+      </tr>
+      <tr>
+        <td>SATA</td>
+        <td class="muted">Strive's balance sheet: <b style="color:var(--fg)">21,356 BTC</b> (~$1.69B)
+        plus <b style="color:var(--fg)">$171.9M</b> cash — and the cash pile grew the same week they
+        bought. Holdings as of Aug 21 <a href="https://www.theblock.co/news/business/2026-08-24-strive-acquires-1110-bitcoin-for-81-5-million-as-total-holdings-reach-21356-btc-412604" rel="noopener">8-K</a>.</td>
+        <td class="r pay">~$1.9B</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="panel straight">
+    <div class="ph"><h3>The two questions every CFO asks</h3><span>straight answers</span></div>
+    <p class="q">Isn't bitcoin too volatile for company cash?</p>
+    <p>Holding BTC outright is volatile — that's why this page isn't about holding BTC outright.
+    STRC and SATA strip the volatility off: you hold a <b>fixed-dollar claim</b> that pays a
+    <b>fixed-dollar cash rate</b>, and the bitcoin sits underneath as collateral, not as your position.
+    BTC could fall by half and Strategy would still be sitting on roughly $33B of bitcoin plus its
+    $4.8B cash reserve. The volatility is the cushion's problem before it is ever yours.</p>
+    <p class="q">Then what's the catch vs. a T-bill?</p>
+    <p>Three honest ones. The dividends are <b>declared, not contractual</b> — a board sets them
+    (Strategy's has only raised; Strive's has held 13% since April). The <b>price isn't par-stable
+    yet</b> — STRC has traded below its $100 anchor, near $95 this summer, which is why the rate
+    mechanism exists and has ratcheted from 9% to 12%. And a corporate preferred is
+    <b>not the U.S. government</b>. That's the trade: a marginal, measurable step out on risk —
+    cushioned by the numbers above — for roughly <b>three times the cash yield</b>.</p>
+  </div>
+
+  <div class="fwd"><b>Forward this page.</b> Every figure above carries its source and date — check them,
+  then send it to whoever manages your cash. The live record of what these companies do every day is on
+  the <a href="../">DATproof grid</a>.</div>
+
+  <footer id="sources">
+    <b>Sources & dates</b> — nothing on this page is estimated.<br>
+    3-mo Treasury: <a href="https://fred.stlouisfed.org/series/DGS3MO" rel="noopener">FRED DGS3MO</a> (constant maturity), 3.84% as of 2026-08-27; 12-mo average 3.81%.<br>
+    STRC rate: <a href="https://www.strategy.com/press/strategy-announces-approval-of-strc-semi-monthly-dividends_06-08-2026" rel="noopener">Strategy</a>, 12.00% per annum for August 2026, semi-monthly. Launched 9.00% July 2025. Below-par trading: <a href="https://cryptobriefing.com/strategy-strc-two-month-high-trading/" rel="noopener">$95.39, Aug 2026</a>.<br>
+    SATA rate: <a href="https://www.sec.gov/Archives/edgar/data/0001920406/000162828026056908/asst-20260813.htm" rel="noopener">Strive 8-K, 2026-08-13</a> — 13.00% per annum, $0.0516/share daily, Aug 3–31.<br>
+    Strategy holdings: 840,447 BTC + $4.8B USD reserve, as of 2026-08-17 (<a href="https://www.theblock.co/news/business/2026-08-17-michael-saylor-strategy-btc-411942" rel="noopener">8-K coverage</a>).<br>
+    Strive holdings: 21,356 BTC + $171.9M cash, as of 2026-08-21 (<a href="https://www.theblock.co/news/business/2026-08-24-strive-acquires-1110-bitcoin-for-81-5-million-as-total-holdings-reach-21356-btc-412604" rel="noopener">8-K coverage</a>).<br>
+    BTC price for cushion math: $79,296 as of 2026-08-30 17:00Z (DATproof ticker).<br>
+    Not investment advice. Preferred dividends are declared by each board and can change.
+    Built by <a href="https://lucascashwell3-ai.github.io/portfolio-v2/" rel="noopener">Lucas Cashwell</a> · part of <a href="../">DATproof</a>.
+  </footer>
+</main>
+</body>
+</html>
