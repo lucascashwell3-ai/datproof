@@ -1,11 +1,11 @@
-# DATproof — bitcoin is eating corporate treasuries
+# DATproof
 
 **[Live site →](https://lucascashwell3-ai.github.io/datproof/)**
 
-Public companies are moving their treasuries into bitcoin. DATproof shows it happening,
-day by day: every disclosed BTC purchase since 2020 on one activity grid, every square
-linked to the filing behind it. Beside the buys, the funding: at-the-market share sales
-and the digital credit instruments (STRC, SATA) that raise the cash.
+An adoption accelerator for digital asset treasuries — an information hub for corporate
+Bitcoin purchase data. Every disclosed BTC purchase since 2020 on one activity grid, each
+square linked to the filing behind it, with the funding beside the buys: at-the-market
+share sales and the digital credit instruments (STRC, SATA) that raise the cash.
 
 ## How it works
 
