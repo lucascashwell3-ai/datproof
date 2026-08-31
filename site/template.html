@@ -1,110 +1,192 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DATproof — bitcoin is eating corporate treasuries</title>
-<meta name="description" content="Every public-company bitcoin purchase since 2020, day by day, each square linked to its filing. Plus the case for why digital asset treasuries take over.">
+<title>DATproof</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="How much bitcoin public companies hold, when they bought it, and how BTC-backed credit finances it — every number from a filing.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0b0e;--panel:#0f1115;--rule:#1e222a;--fg:#d9dce2;--dim:#6e7480;--g0:#171a20;--g1:#1d4d2c;--g2:#2f8a3e;--g3:#5ad66a;--acc:#f7931a;--up:#5ad66a;--down:#e0564f;--link:#9cc3ff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+:root{--bg:#0a0b0e;--panel:#0f1115;--rule:#1e222a;--fg:#d9dce2;--dim:#6e7480;--g0:#171a20;--g1:#1d4d2c;--g2:#2f8a3e;--g3:#5ad66a;--acc:#f7931a;--down:#e0564f;--link:#9cc3ff;--mono:"JetBrains Mono",Menlo,monospace;--sans:"Space Grotesk",system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--sans)}
 a{color:var(--link);text-decoration:none}
-.ticker{display:flex;gap:28px;overflow-x:auto;white-space:nowrap;padding:9px 20px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--dim)}.ticker b{color:var(--fg);font-weight:500}.ticker .up{color:var(--up)}.ticker .down{color:var(--down)}
+.ticker{display:flex;gap:28px;overflow-x:auto;white-space:nowrap;padding:9px 20px;border-bottom:1px solid var(--rule);font:12px var(--mono);color:var(--dim)}
+.ticker b{color:var(--fg);font-weight:500}.ticker .up{color:var(--g3)}.ticker .down{color:var(--down)}
 nav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule)}
-nav .logo{font-weight:600;font-size:15px}nav .logo i{color:var(--acc);font-style:normal}nav .logo::before{content:'~ $ ';color:var(--dim);font-weight:400}
-nav a{color:var(--dim);margin-left:18px;font-size:13px}nav a::before{content:'./'}
-.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
-.hero{padding:40px 0 16px}
-.prompt{color:var(--dim);font-size:13px}.prompt b{color:var(--acc);font-weight:600}
-h1{font-size:clamp(22px,3.4vw,34px);line-height:1.15;margin:8px 0 6px;font-weight:600;letter-spacing:-.01em}
-h1::after{content:'▌';color:var(--acc);animation:bl 1s steps(1) infinite;margin-left:2px}@keyframes bl{50%{opacity:0}}
-.sub{color:var(--dim);margin:0 0 22px;max-width:80ch}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.stat{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}.stat .n{font-size:11px;color:var(--dim)}.stat .n::before{content:'# '}.stat .v{font-size:22px;font-weight:600;margin-top:2px}
-.panel{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px}
-.ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:10px;flex-wrap:wrap}.ph h3{margin:0;font-size:13px;font-weight:600}.ph h3::before{content:'> ';color:var(--acc)}.ph span{color:var(--dim);font-size:11px}
-.gy,.gr{display:grid;gap:2px;align-items:center;--lab:46px}.gy span{font-size:10px;color:var(--dim);overflow:hidden;white-space:nowrap}.gl{font-size:11px;color:var(--dim);text-align:right;padding-right:6px}
-.gr a,.gr i{display:block;aspect-ratio:1;border-radius:1.5px;background:var(--g0)}.gr .v1{background:var(--g1)}.gr .v2{background:var(--g2)}.gr .v3{background:var(--g3)}.gr a:hover{outline:1px solid #fff}.gr{margin-top:3px}
-.gr{opacity:0;animation:in .35s forwards;animation-delay:calc(var(--i)*.14s)}@keyframes in{to{opacity:1}}
-#more{display:none}#more.open{display:block}
-.toggle{margin-top:10px;background:none;border:1px dashed var(--rule);color:var(--dim);font:inherit;font-size:12px;padding:6px 10px;border-radius:4px;cursor:pointer}.toggle:hover{color:var(--fg);border-color:var(--dim)}
-.legend{color:var(--dim);font-size:11px;display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.legend i{display:inline-block;width:9px;height:9px;border-radius:1.5px}
-.ascii{color:#2d323c;white-space:pre;font-size:10px;line-height:1.15;margin:14px 0 0;overflow-x:auto}
-.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin:14px 0 60px}
-.book{font-size:12px}.book .r{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule)}.book .r:last-child{border:0}.book .r a{font-size:11px}.book em{font-style:normal;color:var(--dim);font-size:10px;border:1px solid var(--rule);padding:0 4px;border-radius:3px}
-.bar{height:4px;background:var(--g0);border-radius:2px;overflow:hidden;margin:4px 0 2px}.bar i{display:block;height:100%;background:var(--g3)}
-.empty{color:var(--dim);font-size:12px}
-.why h2{font-size:16px;margin:0 0 14px;font-weight:600}.why h2::before{content:'> ';color:var(--acc)}
-.q{color:var(--acc);margin:14px 0 4px}.q::before{content:'? '}.a{margin:0;color:#c3c7cf;max-width:64ch}
-.sig{margin-top:18px;padding-top:12px;border-top:1px dashed var(--rule);color:var(--dim);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.btn{color:var(--bg);background:var(--g3);padding:5px 10px;border-radius:4px;font-weight:600;cursor:pointer;border:0;font:inherit}
-footer{color:var(--dim);font-size:11px;padding:0 20px 40px;max-width:1200px;margin:0 auto}
-@media(max-width:820px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}nav a{margin-left:10px}}
-@media(prefers-reduced-motion:reduce){.gr{animation:none;opacity:1}h1::after{animation:none}}
+nav .logo{font:600 15px var(--mono)}nav .logo i{color:var(--acc);font-style:normal}
+nav a{color:var(--dim);margin-left:20px;font-size:14px}nav a:hover{color:var(--fg)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+.act{padding:62px 0 6px;opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.act.on{opacity:1;transform:none}
+.hero{min-height:62vh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:40px 0}
+.hero .n{font:700 clamp(58px,10vw,118px)/1 var(--mono);letter-spacing:-.03em;color:var(--g3);text-shadow:0 0 26px rgba(90,214,106,.32)}
+.hero p{color:#a9adb8;font-size:clamp(16px,2.2vw,19px);max-width:52ch;margin:16px auto 0}
+.hero p b{color:var(--fg)}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:26px}
+.panel h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.01em}
+.panel .lede{margin:6px 0 0;color:var(--dim);font-size:14px;max-width:58ch}
+.rowlab{font:11px var(--mono);color:var(--dim);margin:18px 0 5px}
+.cells{display:grid;gap:3px}
+.cells i,.cells a{display:block;aspect-ratio:1;border-radius:2px;background:var(--g0)}
+.cells .v1{background:var(--g1)}.cells .v2{background:var(--g2)}.cells .v3{background:var(--g3)}.cells .v4{background:var(--g3);box-shadow:0 0 7px rgba(90,214,106,.55)}
+.months{display:grid;margin-top:10px;font:11px var(--mono);color:var(--dim)}
+.months span{border-left:1px solid var(--rule);padding:4px 0 0 6px;overflow:hidden;white-space:nowrap}
+.gfoot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:12px}
+.exp{font:600 12px var(--mono);color:var(--fg);background:#12141b;border:1px solid var(--rule);border-radius:7px;padding:8px 14px;cursor:pointer;transition:border-color .2s}
+.exp:hover{border-color:var(--g2)}.exp b{color:var(--acc);font-weight:600;margin-right:6px}
+.legend{display:flex;gap:6px;align-items:center;color:var(--dim);font:11px var(--mono)}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.trk{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.trk{grid-template-columns:1fr}}
+@property --beam{syntax:'<angle>';initial-value:0deg;inherits:false}
+.beam{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:26px;display:flex;flex-direction:column}
+.beam::before{content:'';position:absolute;inset:-1px;border-radius:12px;padding:1px;
+ background:conic-gradient(from var(--beam),transparent 0deg,transparent 306deg,rgba(247,147,26,.8) 336deg,transparent 360deg);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+ animation:beam 7s linear infinite;pointer-events:none}
+.beam:nth-child(2)::before{animation-delay:-3.5s}
+@keyframes beam{to{--beam:360deg}}
+.beam h3{margin:0 0 2px;font-size:17px}
+.what{color:var(--dim);font-size:13px;margin:0 0 22px}
+.stats{display:flex;gap:40px;flex:1}.stats>div{flex:1}
+.l{font:11px var(--mono);color:var(--acc)}
+.v{font:700 clamp(24px,3vw,32px) var(--mono);color:var(--g3);margin-top:8px}
+.c{font:12px var(--mono);color:var(--dim);margin-top:6px}
+.bfoot{margin-top:22px;padding-top:12px;border-top:1px solid var(--rule);font:11px var(--mono);color:var(--dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.why h2{font-size:21px;margin:0 0 6px}
+.why{max-width:66ch}
+.q{color:var(--acc);font:600 15px var(--sans);margin:18px 0 4px}
+.a{margin:0;color:#c3c7cf}
+.close{padding:70px 0 100px}
+.close h2{font-size:clamp(19px,2.6vw,26px);margin:0 0 14px}
+.sig{color:var(--dim);font:12px var(--mono);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{color:var(--bg);background:var(--g3);padding:8px 14px;border-radius:6px;font:600 13px var(--mono);border:0;cursor:pointer}
+footer{color:var(--dim);font:11px var(--mono);padding:0 20px 40px;max-width:1000px;margin:0 auto}
+@media(prefers-reduced-motion:reduce){.act{opacity:1;transform:none;transition:none}
+.beam::before{animation:none;background:conic-gradient(from 40deg,transparent 0 306deg,rgba(247,147,26,.45) 336deg,transparent 360deg)}}
 </style></head><body>
 <div class="ticker" id="ticker"></div>
-<nav><div class="logo">DAT<i>proof</i></div><div><a href="#grid">grid</a><a href="#trackers">trackers</a><a href="#why">why</a><a href="https://lucascashwell3-ai.github.io/">lucas</a></div></nav>
+<nav><div class="logo">DAT<i>proof</i></div><div><a href="#grid">activity</a><a href="#credit">credit</a><a href="#why">why</a><a href="https://lucascashwell3-ai.github.io/">lucas</a></div></nav>
 <div class="wrap">
-<div class="hero">
-<p class="prompt"><b>datproof</b> ~ $ show btc-purchases --top 3 --since 2020</p>
-<h1>Bitcoin is eating corporate treasuries.</h1>
-<p class="sub">every lit square is a day a public company bought bitcoin with treasury money, straight from its filings. three companies shown; the rest are one click away.</p>
-<div class="stats" id="stats"></div>
-<div class="panel" id="grid"><div class="ph"><h3>purchase activity · 2020 → today</h3><span>darker = more BTC that day · click a square for the filing</span></div>
-<div id="top"></div><div id="more"></div>
-<button class="toggle" id="tg" hidden></button>
+
+<section class="act on hero">
+<div class="n" id="hero-n">0</div>
+<p><b>bitcoin</b> moved onto corporate balance sheets since 2020 — and it's only going to increase.</p>
+</section>
+
+<section class="act" id="grid">
+<div class="panel">
+<h2>Purchase activity</h2>
+<p class="lede">Each square is one week of bitcoin buying — the brighter, the more BTC purchased. Squares open a company's purchase disclosure.</p>
+<div class="rowlab">ALL DATs</div><div class="cells" id="g-all"></div>
+<div class="rowlab">Strategy · MSTR</div><div class="cells" id="g-mstr"></div>
+<div class="rowlab">Strive · ASST</div><div class="cells" id="g-asst"></div>
+<div class="months" id="g-ax"></div>
+<div class="gfoot">
+<button class="exp" id="g-exp"></button>
 <div class="legend"><span>less</span><i style="background:var(--g0)"></i><i style="background:var(--g1)"></i><i style="background:var(--g2)"></i><i style="background:var(--g3)"></i><span>more</span></div>
-<div class="ascii">  ┌──────┐      ┌───────────────┐      ┌─────┐
-  │ cash │ ───► │ ATM/STRC/SATA │ ───► │ BTC │   block ──■──■──■──■──►
-  └──────┘      └───────────────┘      └─────┘</div></div>
 </div>
-<div class="layout">
-<div id="trackers">
-<div class="panel"><div class="ph"><h3>STRC · Strategy 10% perpetual preferred</h3><span>at-the-market sales · latest filings</span></div><div class="book" id="book-STRC"></div></div>
-<div class="panel" style="margin-top:14px"><div class="ph"><h3>SATA · Strive perpetual preferred</h3><span>strive files cumulative totals, not weekly sales</span></div><div class="book" id="book-SATA"></div></div>
 </div>
-<div class="panel why" id="why"><h2>why digital asset treasuries are going to take over</h2>
+</section>
+
+<section class="act" id="credit">
+<div class="trk">
+<div class="beam"><h3>STRC</h3><p class="what">Strategy's preferred stock — sold for cash, cash buys bitcoin.</p>
+<div class="stats" id="strc"></div><div class="bfoot" id="strc-f"></div></div>
+<div class="beam"><h3>SATA</h3><p class="what">Strive's preferred stock — same machine, newer program.</p>
+<div class="stats" id="sata"></div><div class="bfoot" id="sata-f"></div></div>
+</div>
+</section>
+
+<section class="act why" id="why">
+<h2>Why this takes over.</h2>
 <p class="q">isn't bitcoin too volatile for company cash?</p>
 <p class="a">over four weeks, yes. over four years, it has beaten every asset a treasurer is allowed to hold. the question isn't "is it risky" — it's "what does sitting still cost."</p>
 <p class="q">aren't treasuries the safe choice?</p>
 <p class="a">safe from swings, and guaranteed to lose to the printer. 4% on a bill is a slow leak, not a return.</p>
 <p class="q">so what does a CFO actually buy?</p>
-<p class="a">STRC or SATA: a fixed 10%+ coupon, backed by a pile of bitcoin and cash several times larger than what's owed. the yield of the asset, the swings stripped off.</p>
+<p class="a">STRC or SATA: a double-digit coupon backed by a pile of bitcoin and cash several times larger than what's owed. the yield of the asset, the swings stripped off.</p>
 <p class="q">who's doing it?</p>
-<p class="a">the grid. strategy since 2020, metaplanet and strive since. the rows get denser every year. that's the whole point.</p>
-<div class="sig"><span>written by lucas cashwell · every number links to its filing</span><button class="btn" id="share">copy link ↗</button></div>
-</div>
-</div>
+<p class="a">the grid above. the rows get denser every year. that's the whole point.</p>
+</section>
+
+<section class="act close">
+<h2>Send this to the person who manages your company's cash.</h2>
+<div class="sig"><span>written by lucas cashwell · every number links to its disclosure</span><button class="btn" id="share">copy link ↗</button></div>
+</section>
+
 </div>
 <footer id="foot"></footer>
 <script>/*__DATA__*/</script>
 <script>
-const D=window.DATA, START=new Date(D.start), END=new Date(D.generated), DAYS=Math.round((END-START)/864e5)+1;
-const YEARS=[];for(let y=START.getFullYear();y<=END.getFullYear();y++)YEARS.push({y,d:Math.max(0,Math.round((new Date(y,0,1)-START)/864e5))});
-const fmt=(n,d=0)=>n==null?'—':n.toLocaleString('en-US',{maximumFractionDigits:d});
+const D=window.DATA,S=D.stats,R=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt=n=>n==null?'—':n.toLocaleString('en-US',{maximumFractionDigits:0});
 const usd=n=>n==null?'—':n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(0)+'M':'$'+fmt(n);
-// ticker
-const T=D.ticker,S=D.stats;const tk=[];
+// ticker — every label derived from data
+const T=D.ticker,tk=[];
 if(T.btc_usd)tk.push(`BTC <b>$${fmt(T.btc_usd)}</b> <span class="${T.btc_change_24h>=0?'up':'down'}">${T.btc_change_24h>=0?'+':''}${T.btc_change_24h.toFixed(1)}%</span>`);
-tk.push(`BTC bought by tracked cos <b>${fmt(S.total_btc)} BTC</b>`);
-if(S.last_buy)tk.push(`last buy <b>${S.last_buy.t} · ${S.last_buy.date} · ${fmt(S.last_buy.btc)} BTC</b>`);
-if(S.strc_month)tk.push(`STRC ATM <b>${usd(S.strc_month)}</b> this month`);if(S.sata_month)tk.push(`SATA ATM <b>${usd(S.sata_month)}</b> this month`);
+tk.push(`tracked-company BTC <b>${fmt(S.total_btc)}</b>`);
+if(S.last_buy)tk.push(`latest buy <b>${S.last_buy.t} · ${S.last_buy.date} · ${fmt(S.last_buy.btc)} BTC</b>`);
 if(T.block_height)tk.push(`block <b>${fmt(T.block_height)}</b>`);
-document.getElementById('ticker').innerHTML=tk.map(s=>`<span>${s}</span>`).join('');
-document.getElementById('stats').innerHTML=`<div class="stat"><div class="n">companies tracked</div><div class="v">${S.companies}</div></div><div class="stat"><div class="n">purchase days since 2020</div><div class="v">${fmt(S.purchase_days)}</div></div><div class="stat"><div class="n">btc-backed credit raised ${END.getFullYear()}</div><div class="v">${usd(S.credit_ytd)}</div></div>`;
-// grid
-function draw(){
- const w=document.getElementById('top').clientWidth;const cols=Math.max(40,Math.min(150,Math.floor((w-50)/5)));const per=DAYS/cols;
- const yr=()=>{let h=`<div class="gy" style="grid-template-columns:var(--lab) repeat(${cols},1fr)"><span></span>`;YEARS.forEach((y,i)=>{const a=Math.round(y.d/per),b=YEARS[i+1]?Math.round(YEARS[i+1].d/per):cols;if(b>a)h+=`<span style="grid-column:span ${b-a}">${y.y}</span>`});return h+'</div>'};
- const row=(s,ri)=>{const cells=[];for(let i=0;i<cols;i++){let v=0,btc=0,url='',date='';for(let d=Math.floor(i*per);d<Math.floor((i+1)*per);d++){const k=new Date(START.getTime()+d*864e5).toISOString().slice(0,10);if(s.cells[k]){if(s.cells[k]>v)v=s.cells[k];btc+=s.btc[k];url=s.src[k];date=k}}
-  cells.push(v?`<a class="v${v}" href="${url}" target="_blank" rel="noopener" title="${s.name} · ${date} · ${fmt(btc,1)} BTC · filing"></a>`:'<i></i>')}
-  return `<div class="gr" style="grid-template-columns:var(--lab) repeat(${cols},1fr);--i:${ri}"><span class="gl">${s.t}</span>${cells.join('')}</div>`};
- const top=D.series.filter(s=>s.top),rest=D.series.filter(s=>!s.top);
- document.getElementById('top').innerHTML=yr()+top.map(row).join('');
- document.getElementById('more').innerHTML=rest.map(row).join('');
- const tg=document.getElementById('tg');tg.hidden=!rest.length;tg.textContent=(document.getElementById('more').classList.contains('open')?'− hide ':'+ show ')+rest.length+' more companies';
+document.getElementById('ticker').innerHTML=tk.map(x=>`<span>${x}</span>`).join('');
+// hero count-up (fallback lands the number even without animation frames)
+(function(){const el=document.getElementById('hero-n'),N=S.total_btc|0;
+ if(R){el.textContent=fmt(N);return}
+ setTimeout(()=>el.textContent=fmt(N),2200);
+ const t0=performance.now();(function f(now){const p=Math.min(1,(now-t0)/1500),e=1-Math.pow(1-p,3);el.textContent=fmt(Math.round(N*e));if(p<1)requestAnimationFrame(f)})(t0);
+})();
+// grid — polished G1 with time expansion
+const START=new Date(D.start),END=new Date(D.generated);
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const mstr=D.series.find(s=>s.t==='MSTR'),asst=D.series.find(s=>s.t==='ASST');
+let expanded=false;
+function drawGrid(){
+ const width=document.getElementById('g-all').clientWidth||900;
+ const maxCols=Math.max(40,Math.min(160,Math.floor(width/6.5)));
+ const from=expanded?START:new Date(END.getTime()-52*7*864e5);
+ const span=END.getTime()-from.getTime();
+ const cols=Math.min(maxCols,Math.max(26,Math.round(span/(7*864e5))));
+ const step=span/cols;
+ const bucket=map=>{const out=[];for(let i=0;i<cols;i++){let v=0,btc=0,dt='';const t=from.getTime()+i*step;
+  for(let d=t;d<Math.min(t+step,END.getTime());d+=864e5){const k=new Date(d).toISOString().slice(0,10);if(map.cells[k]){v=Math.max(v,map.cells[k]);btc+=map.btc[k];dt=k}}
+  const wd=new Date(t);out.push({v,btc,dt,label:MN[wd.getMonth()]+' '+wd.getDate()+', '+wd.getFullYear()})}return out};
+ const draw=(id,arr,name,link)=>{const el=document.getElementById(id);el.style.gridTemplateColumns='repeat('+cols+',1fr)';
+  el.innerHTML=arr.map(c=>{if(!c.v)return '<i></i>';const t=`${name} · week of ${c.label} · ${fmt(Math.round(c.btc))} BTC`;
+   const url=link&&link.src&&link.src[c.dt];return url?`<a class="v${Math.min(c.v,4)}" href="${url}" target="_blank" rel="noopener" title="${t}"></a>`:`<i class="v${Math.min(c.v,4)}" title="${t}"></i>`}).join('')};
+ draw('g-all',bucket(D.agg),'All DATs',null);
+ draw('g-mstr',bucket(mstr),'Strategy',mstr);
+ draw('g-asst',bucket(asst),'Strive',asst);
+ // axis: months when recent, years when expanded
+ const ax=document.getElementById('g-ax'),spans=[];let cur=null;
+ for(let i=0;i<cols;i++){const d=new Date(from.getTime()+i*step);
+  const key=expanded?String(d.getFullYear()):d.getFullYear()+'-'+d.getMonth();
+  const lab=expanded?String(d.getFullYear()):MN[d.getMonth()]+(d.getMonth()===0?' ’'+String(d.getFullYear()).slice(2):'');
+  if(key!==cur){spans.push({lab,n:0});cur=key}spans[spans.length-1].n++}
+ ax.style.gridTemplateColumns=spans.map(s=>s.n+'fr').join(' ');
+ ax.innerHTML=spans.map((s,i)=>'<span>'+((i===0&&s.n<3)?'':s.lab)+'</span>').join('');
+ document.getElementById('g-exp').innerHTML=expanded?'<b>−</b>last 12 months':'<b>+</b>'+START.getFullYear()+' → '+(END.getFullYear()-1);
 }
-draw();let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,120)});
-document.getElementById('tg').onclick=()=>{document.getElementById('more').classList.toggle('open');draw()};
-// books
-for(const k of ['STRC','SATA']){const b=D.books[k],el=document.getElementById('book-'+k);if(!b.length){el.innerHTML='<p class="empty">no sales disclosed yet.</p>';continue}
- const mx=Math.max(...b.map(r=>r.usd||0));el.innerHTML=b.map(r=>`<div class="r"><span>${r.date}</span><span>${usd(r.usd)}</span><span title="${r.period}">${r.units?fmt(r.units)+' sh':'—'}${r.cum?' <em>cumulative</em>':''}</span><a href="${r.url}" target="_blank" rel="noopener">filing</a></div><div class="bar"><i style="width:${mx?r.usd/mx*100:0}%"></i></div>`).join('')}
+drawGrid();addEventListener('resize',()=>{clearTimeout(window._t);window._t=setTimeout(drawGrid,120)});
+document.getElementById('g-exp').onclick=()=>{expanded=!expanded;drawGrid()};
+// credit cards — labels derive from rows
+const B=D.books;
+const strcD=B.STRC.filter(r=>r.usd&&!r.cum),strcTot=strcD.reduce((a,r)=>a+r.usd,0),strcLast=strcD[strcD.length-1];
+const sataCum=[...B.SATA].reverse().find(r=>r.cum&&r.usd);
+if(strcLast){
+ document.getElementById('strc').innerHTML=
+  '<div><div class="l">raised to date</div><div class="v">'+usd(strcTot)+'</div><div class="c">across '+strcD.length+' filed sales</div></div>'+
+  '<div><div class="l">latest sale</div><div class="v">'+usd(strcLast.usd)+'</div><div class="c">'+strcLast.date+'</div></div>';
+ document.getElementById('strc-f').innerHTML='<span>source: SEC filings</span><a href="'+strcLast.url+'" target="_blank" rel="noopener">latest disclosure ↗</a>';
+}
+const asstBuys=Object.keys(asst.btc).sort(),lastBuyDate=asstBuys[asstBuys.length-1];
+if(sataCum&&lastBuyDate){
+ document.getElementById('sata').innerHTML=
+  '<div><div class="l">raised to date</div><div class="v">'+usd(sataCum.usd)+'</div><div class="c">as of '+sataCum.date+'</div></div>'+
+  '<div><div class="l">latest bitcoin buy</div><div class="v">'+fmt(Math.round(asst.btc[lastBuyDate]))+' BTC</div><div class="c">'+lastBuyDate+'</div></div>';
+ document.getElementById('sata-f').innerHTML='<span>source: SEC filings</span><a href="'+asst.src[lastBuyDate]+'" target="_blank" rel="noopener">latest disclosure ↗</a>';
+}
+// staging
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.15});
+document.querySelectorAll('.act:not(.hero)').forEach(e=>io.observe(e));
+if(R)document.querySelectorAll('.act').forEach(e=>e.classList.add('on'));
 document.getElementById('share').onclick=e=>{navigator.clipboard.writeText(location.href).then(()=>e.target.textContent='copied ✓')};
-document.getElementById('foot').textContent=`data: SEC EDGAR 8-K/424B5 filings + Metaplanet IR disclosures · price: coinbase · block: blockstream · built ${D.generated}${T.as_of?' · ticker as of '+T.as_of:''} · not investment advice`;
+document.getElementById('foot').textContent=`data: SEC EDGAR and issuer disclosures · price: coinbase · block: blockstream · built ${D.generated} · not investment advice`;
 </script></body></html>
