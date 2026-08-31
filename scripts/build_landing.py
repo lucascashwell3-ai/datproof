@@ -43,14 +43,13 @@ CORRECTIONS_URL = "https://github.com/lucascashwell3-ai/datproof/issues/new"
 
 # Standing conflicts disclosure. Every research publisher carries one; its absence
 # is the cheapest possible attack on a site that grades named issuers.
-# LUCAS: fill AUTHOR_POSITIONS with one sentence stating what you do or don't hold
+# Fill AUTHOR_POSITIONS with one sentence stating what the author does or doesn't hold
 # (bitcoin, and any rated issuer). Left empty the sentence is omitted rather than
 # guessed — an invented disclosure would be worse than a missing one.
 AUTHOR_POSITIONS = ""
 AUTHOR_INTEREST = (
-    "The author has a risk-and-controls background in financial services and is moving "
-    "building verification tooling — work shared openly "
-    "in this project."
+    "The author has a risk-and-controls background in financial services "
+    "and builds public verification tooling for digital-asset treasuries."
 )
 AUTHOR_COMMERCIAL = (
     "DATproof takes no advertising, no sponsorship and no payment from any rated company "

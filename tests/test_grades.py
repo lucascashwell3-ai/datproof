@@ -110,7 +110,7 @@ def test_live_registry_has_no_a_yet_and_is_not_uniform():
 def test_methodology_doc_matches_engine():
     # METHODOLOGY.md is the rubric's public form — weights and bands must appear.
     from pathlib import Path
-    doc = (Path(__file__).resolve().parents[1] / "METHODOLOGY.md").read_text(encoding="utf-8")
+    doc = (Path(__file__).resolve().parents[1] / "archive" / "2026-07-rating-agency" / "METHODOLOGY.md").read_text(encoding="utf-8")
     for needle in (str(PROOF_POINTS), str(max(DISCLOSURE_POINTS.values())),
                    str(ATTESTATION_POINTS), str(FRESHNESS_FULL), str(STRUCTURE_CLEAN)):
         assert needle in doc

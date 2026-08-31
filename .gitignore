@@ -44,3 +44,5 @@ SESSION_STATUS.md
 !/.claude/settings.json
 briefs/linkedin-post-*.md
 data/moves/.cache/
+briefs/
+.claude/

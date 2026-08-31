@@ -6,7 +6,7 @@ available, Claude adds an executive commentary section on top of them (the
 model narrates the data — it never produces the data).
 
 Also emits a LinkedIn post draft so the daily automation has ready-to-edit
-content in Lucas's voice (see claude-universe/automation/TONE_OF_VOICE.md).
+content in the author's voice (tone guide kept internally).
 """
 
 import os
@@ -99,7 +99,7 @@ def render_brief(metrics: LandscapeMetrics, findings: list[Finding],
 def render_linkedin_draft(metrics: LandscapeMetrics, findings: list[Finding],
                           spot: SpotPrice) -> str:
     """Post draft grounded in today's data. Intentionally plain — the tone file
-    in claude-universe governs final voice; this gives the facts a shape."""
+    kept internally governs final voice; this gives the facts a shape."""
     top = metrics.companies[0].company if metrics.companies else None
     worst = min(
         (m for m in metrics.companies if m.unrealized_pnl_pct is not None),
