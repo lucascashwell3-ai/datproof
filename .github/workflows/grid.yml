@@ -1,3 +1,5 @@
+# Schedule re-registered 2026-09-03: crons did not carry over to the recreated repo;
+# GitHub binds them when the workflow file is pushed, so this edit re-arms the daily run.
 name: DATproof grid — daily data + deploy
 
 on:
