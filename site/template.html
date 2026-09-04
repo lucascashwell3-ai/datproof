@@ -75,7 +75,7 @@ footer{color:var(--dim);font:11px var(--mono);padding:0 20px 40px;max-width:1000
 <section class="act" id="grid">
 <div class="panel">
 <h2>Purchase activity</h2>
-<p class="lede">Each square is one week of bitcoin buying — the brighter, the more BTC purchased. Squares open a company's purchase disclosure.</p>
+<p class="lede" id="g-lede">Each square is one week of bitcoin buying — the brighter, the more BTC purchased. Squares open a company's purchase disclosure.</p>
 <div class="rowlab">ALL DATs</div><div class="cells" id="g-all"></div>
 <div class="rowlab">Strategy · MSTR</div><div class="cells" id="g-mstr"></div>
 <div class="rowlab">Strive · ASST</div><div class="cells" id="g-asst"></div>
@@ -145,6 +145,7 @@ function drawGrid(){
  const span=END.getTime()-from.getTime();
  const cols=Math.min(maxCols,52); // expanded reuses the 12-month cell count — bucket the wider span into it
  const step=span/cols;
+ const wk=Math.round(step/(7*864e5));document.getElementById('g-lede').textContent='Each square is '+(wk<=1?'one week':'about '+wk+' weeks')+' of bitcoin buying — the brighter, the more BTC purchased. Squares open a company\'s purchase disclosure.';
  const fullDate=d=>MN[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
  const bucket=map=>{const out=[];for(let i=0;i<cols;i++){let v=0,btc=0,dt='';const t0=from.getTime()+i*step,t1=Math.min(t0+step,END.getTime());
   for(let d=t0;d<t1;d+=864e5){const k=new Date(d).toISOString().slice(0,10);if(map.cells[k]){v=Math.max(v,map.cells[k]);btc+=map.btc[k];dt=k}}
