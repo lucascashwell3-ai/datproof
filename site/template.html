@@ -143,13 +143,16 @@ function drawGrid(){
  const maxCols=Math.max(40,Math.min(160,Math.floor(width/6.5)));
  const from=expanded?START:new Date(END.getTime()-52*7*864e5);
  const span=END.getTime()-from.getTime();
- const cols=Math.min(maxCols,Math.max(26,Math.round(span/(7*864e5))));
+ const cols=Math.min(maxCols,52); // expanded reuses the 12-month cell count — bucket the wider span into it
  const step=span/cols;
- const bucket=map=>{const out=[];for(let i=0;i<cols;i++){let v=0,btc=0,dt='';const t=from.getTime()+i*step;
-  for(let d=t;d<Math.min(t+step,END.getTime());d+=864e5){const k=new Date(d).toISOString().slice(0,10);if(map.cells[k]){v=Math.max(v,map.cells[k]);btc+=map.btc[k];dt=k}}
-  const wd=new Date(t);out.push({v,btc,dt,label:MN[wd.getMonth()]+' '+wd.getDate()+', '+wd.getFullYear()})}return out};
+ const fullDate=d=>MN[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+ const bucket=map=>{const out=[];for(let i=0;i<cols;i++){let v=0,btc=0,dt='';const t0=from.getTime()+i*step,t1=Math.min(t0+step,END.getTime());
+  for(let d=t0;d<t1;d+=864e5){const k=new Date(d).toISOString().slice(0,10);if(map.cells[k]){v=Math.max(v,map.cells[k]);btc+=map.btc[k];dt=k}}
+  const s=new Date(t0),e=new Date(t1-864e5),days=Math.round((t1-t0)/864e5);
+  const label=days<=8?'week of '+fullDate(s):(s.getFullYear()===e.getFullYear()?MN[s.getMonth()]+' '+s.getDate():fullDate(s))+' – '+fullDate(e);
+  out.push({v,btc,dt,label})}return out};
  const draw=(id,arr,name,link)=>{const el=document.getElementById(id);el.style.gridTemplateColumns='repeat('+cols+',1fr)';
-  el.innerHTML=arr.map(c=>{if(!c.v)return '<i></i>';const t=`${name} · week of ${c.label} · ${fmt(Math.round(c.btc))} BTC`;
+  el.innerHTML=arr.map(c=>{if(!c.v)return '<i></i>';const t=`${name} · ${c.label} · ${fmt(Math.round(c.btc))} BTC`;
    const url=link&&link.src&&link.src[c.dt];return url?`<a class="v${Math.min(c.v,4)}" href="${url}" target="_blank" rel="noopener" title="${t}"></a>`:`<i class="v${Math.min(c.v,4)}" title="${t}"></i>`}).join('')};
  draw('g-all',bucket(D.agg),'All DATs',null);
  draw('g-mstr',bucket(mstr),'Strategy',mstr);
