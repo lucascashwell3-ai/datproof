@@ -140,7 +140,7 @@ const mstr=D.series.find(s=>s.t==='MSTR'),asst=D.series.find(s=>s.t==='ASST');
 let expanded=false;
 function drawGrid(){
  const width=document.getElementById('g-all').clientWidth||900;
- const maxCols=Math.max(40,Math.min(160,Math.floor(width/6.5)));
+ const maxCols=Math.max(8,Math.floor(width/10)); // ~10px per cell (incl. gap) keeps cells readable at any width
  const from=expanded?START:new Date(END.getTime()-52*7*864e5);
  const span=END.getTime()-from.getTime();
  const cols=Math.min(maxCols,52); // expanded reuses the 12-month cell count — bucket the wider span into it
