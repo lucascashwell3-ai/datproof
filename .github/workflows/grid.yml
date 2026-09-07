@@ -4,8 +4,11 @@ name: DATproof grid — daily data + deploy
 
 on:
   schedule:
-    # re-registered 2026-09-03: schedules can detach when a repo is recreated
-    - cron: "45 12 * * *" # 12:45 UTC daily (~8:45am ET), after the Monday-morning 8-Ks land
+    # 12:50 UTC daily (~8:50am ET), after the Monday-morning 8-Ks land.
+    # Touched 2026-09-07 so GitHub re-registers the schedule (it went quiet after 09-03).
+    - cron: "50 12 * * *"
+  push:
+    branches: [main]   # every merge rebuilds and publishes the site at once
   workflow_dispatch:
 
 permissions:
