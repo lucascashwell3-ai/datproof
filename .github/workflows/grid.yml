@@ -8,7 +8,7 @@ on:
     # Touched 2026-09-07 so GitHub re-registers the schedule (it went quiet after 09-03).
     - cron: "50 12 * * *"
   push:
-    branches: [main]   # every merge rebuilds and publishes the site at once
+    branches: [main]   # every merge rebuilds and publishes the site at once (re-enabled 2026-09-07)
   workflow_dispatch:
 
 permissions:
