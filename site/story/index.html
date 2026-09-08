@@ -9,10 +9,12 @@ html{scroll-behavior:auto}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans);font-variant-numeric:tabular-nums}
 a{color:var(--link);text-decoration:none}
 
-.tag{position:fixed;z-index:70;font:400 11px/1.4 var(--sans);color:var(--dim);letter-spacing:.06em}
-.tag i{color:var(--acc);font-style:normal}
-body.mode-flow .tag{top:16px;left:24px}
-body.mode-stage .tag{bottom:16px;left:24px}
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule);background:var(--bg)}
+.site-nav .logo{font:600 15px var(--sans);color:var(--fg);margin-left:0}
+.site-nav .logo i{color:var(--acc);font-style:normal}
+.site-nav a{color:var(--dim);margin-left:20px;font-size:14px}
+.site-nav a:hover{color:var(--fg)}
+.site-nav a.current{color:var(--fg)}
 
 /* ---- shared beat/content styles ---- */
 .beat-inner{max-width:1100px;width:100%;margin:0 auto}
@@ -102,7 +104,7 @@ body.mode-stage .src{min-height:0;display:block;margin-top:10px}
 footer{color:var(--dim);font:400 12px var(--sans);letter-spacing:.03em;padding:48px 24px 64px;max-width:1100px;margin:0 auto;text-align:center}
 
 /* ---- progress bar (segments are clickable — jump to that beat) ---- */
-.progress-bar{position:fixed;top:24px;left:0;right:0;padding:0 24px;box-sizing:border-box;z-index:50}
+.progress-bar{position:fixed;top:79px;left:0;right:0;padding:0 24px;box-sizing:border-box;z-index:50}
 .progress-inner{max-width:1000px;margin:0 auto;display:flex;gap:6px}
 .seg{flex:1;height:3px;background:rgba(255,255,255,.14);border-radius:2px;overflow:hidden;cursor:pointer}
 .seg .fill{display:block;width:100%;height:100%;background:var(--g3);transform-origin:left;transform:scaleX(0);border-radius:2px}
@@ -139,7 +141,7 @@ body.mode-stage{overflow:hidden;height:100vh}
 body.mode-stage html{overflow:hidden}
 .stage{position:fixed;inset:0;overflow:hidden}
 .slide-track{position:absolute;inset:0;display:flex;width:600vw;height:100%;transform:translateX(0);transition:transform .9s cubic-bezier(.65,0,.35,1);will-change:transform}
-.slide{flex:0 0 100vw;width:100vw;height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:96px 24px 40px;position:relative;opacity:1;transition:opacity .9s cubic-bezier(.65,0,.35,1);will-change:opacity}
+.slide{flex:0 0 100vw;width:100vw;height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:118px 24px 40px;position:relative;opacity:1;transition:opacity .9s cubic-bezier(.65,0,.35,1);will-change:opacity}
 .slide.leaving{opacity:.6}
 .slide:nth-child(even){background:var(--panel)}
 
@@ -179,7 +181,7 @@ body.mode-flow #fallbackMode{display:block}
 body.mode-stage .slide,body.mode-stage .beat,body.mode-stage .slide::before{background:transparent!important}
 </style></head><body>
 
-<a class="tag" href="../">DAT<i>proof</i></a>
+<nav class="site-nav"><a class="logo" href="../">DAT<i>proof</i></a><div><a href="../#grid">activity</a><a href="../#credit">credit</a><a href="../#why">why</a><a href="./" class="current">story</a><a href="https://lucascashwell3-ai.github.io/proof/">lucas</a></div></nav>
 
 <!-- ============ STAGE MODE (B2 layout + B3 chart morph) ============ -->
 <div id="stageMode">
@@ -927,7 +929,15 @@ function initStage(){
       calloutEl.style.right = 'auto';
       calloutEl.style.left = '0px';
       calloutEl.style.transform = '';
-      if(phone){ calloutEl.style.top = CALLOUT_INSET + 'px'; return; }
+      if(phone){
+        // phone: bars sit at the bottom of the box and the left arrow at mid-height —
+        // park the stat just above the bars so nothing sits under the arrow
+        var pb = barsWrapEl.querySelector('.bars').getBoundingClientRect();
+        var pl = chartShared.getBoundingClientRect();
+        var ph = calloutEl.offsetHeight || 93;
+        calloutEl.style.top = Math.max(CALLOUT_INSET, Math.round((pb.top - pl.top) - ph - 16)) + 'px';
+        return;
+      }
       // desktop: bars sit near the top of the box; centre the stat on the bars block
       var barsBox = barsWrapEl.querySelector('.bars').getBoundingClientRect();
       var layerBox = chartShared.getBoundingClientRect();
