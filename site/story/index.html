@@ -929,7 +929,15 @@ function initStage(){
       calloutEl.style.right = 'auto';
       calloutEl.style.left = '0px';
       calloutEl.style.transform = '';
-      if(phone){ calloutEl.style.top = CALLOUT_INSET + 'px'; return; }
+      if(phone){
+        // phone: bars sit at the bottom of the box and the left arrow at mid-height —
+        // park the stat just above the bars so nothing sits under the arrow
+        var pb = barsWrapEl.querySelector('.bars').getBoundingClientRect();
+        var pl = chartShared.getBoundingClientRect();
+        var ph = calloutEl.offsetHeight || 93;
+        calloutEl.style.top = Math.max(CALLOUT_INSET, Math.round((pb.top - pl.top) - ph - 16)) + 'px';
+        return;
+      }
       // desktop: bars sit near the top of the box; centre the stat on the bars block
       var barsBox = barsWrapEl.querySelector('.bars').getBoundingClientRect();
       var layerBox = chartShared.getBoundingClientRect();
