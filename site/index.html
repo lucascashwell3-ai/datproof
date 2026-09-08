@@ -53,6 +53,12 @@ nav a{color:var(--dim);margin-left:20px;font-size:14px}nav a:hover{color:var(--f
 .bfoot{margin-top:22px;padding-top:12px;border-top:1px solid var(--rule);font:11px var(--mono);color:var(--dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .why h2{font-size:21px;margin:0 0 6px}
 .why{max-width:66ch}
+.story h2{font-size:21px;margin:0 0 6px}
+.story .lede{margin:6px 0 0;color:var(--dim);font-size:14px;max-width:58ch}
+.story iframe{display:block;width:100%;height:min(88vh,760px);margin-top:22px;border:1px solid var(--rule);border-radius:12px;background:var(--bg);overflow:hidden}
+.story-open{display:block;text-align:right;margin-top:10px;color:var(--dim);font:12px var(--mono)}
+.story-open:hover{color:var(--fg)}
+@media(max-width:600px){.story iframe{height:min(80vh,620px)}}
 .q{color:var(--acc);font:600 15px var(--sans);margin:18px 0 4px}
 .a{margin:0;color:#c3c7cf}
 .close{padding:70px 0 100px}
@@ -64,7 +70,7 @@ footer{color:var(--dim);font:11px var(--mono);padding:0 20px 40px;max-width:1000
 .beam::before{animation:none;background:conic-gradient(from 40deg,transparent 0 306deg,rgba(247,147,26,.45) 336deg,transparent 360deg)}}
 </style></head><body>
 <div class="ticker" id="ticker"></div>
-<nav><div class="logo">DAT<i>proof</i></div><div><a href="#grid">activity</a><a href="#credit">credit</a><a href="#why">why</a><a href="story/">story</a><a href="https://lucascashwell3-ai.github.io/">lucas</a></div></nav>
+<nav><div class="logo">DAT<i>proof</i></div><div><a href="#grid">activity</a><a href="#credit">credit</a><a href="#why">why</a><a href="#story">story</a><a href="https://lucascashwell3-ai.github.io/">lucas</a></div></nav>
 <div class="wrap">
 
 <section class="act on hero">
@@ -94,6 +100,13 @@ footer{color:var(--dim);font:11px var(--mono);padding:0 20px 40px;max-width:1000
 <div class="beam"><h3>SATA</h3><p class="what">Strive's preferred stock — same machine, newer program.</p>
 <div class="stats" id="sata"></div><div class="bfoot" id="sata-f"></div></div>
 </div>
+</section>
+
+<section class="act story" id="story">
+<h2>The story.</h2>
+<p class="lede">Six beats on why the risk-free rate is the wrong yardstick, and where digital credit fits.</p>
+<iframe src="story/" title="The story" loading="lazy" scrolling="no"></iframe>
+<a class="story-open" href="story/">open full screen ↗</a>
 </section>
 
 <section class="act why" id="why">
