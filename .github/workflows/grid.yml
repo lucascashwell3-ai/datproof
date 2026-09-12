@@ -29,9 +29,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+    # No `environment:` here — that block gates the whole job on the environment's own branch
+    # rules before a single step runs, which would block every non-main dry run outright
+    # regardless of the DRY_RUN checks below. Only the deploy job (main-only) needs it.
+    outputs:
+      dry_run: ${{ steps.dry-run.outputs.dry_run }}
     steps:
       - uses: actions/checkout@v4
 
@@ -39,11 +41,14 @@ jobs:
       # dry_run=false dispatch on main, is a real run. Everything else pulls, builds, and checks
       # only.
       - name: Determine dry-run mode
+        id: dry-run
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ] || [ "${{ github.ref }}" != "refs/heads/main" ]; then
             echo "DRY_RUN=true" >> "$GITHUB_ENV"
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
           else
             echo "DRY_RUN=false" >> "$GITHUB_ENV"
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/setup-python@v5
         with:
@@ -104,13 +109,25 @@ jobs:
           git status --short data/ site/
           echo "DRY RUN — pulls + build + checks passed, nothing committed or deployed" >> "$GITHUB_STEP_SUMMARY"
 
+  deploy:
+    needs: build
+    if: needs.build.outputs.dry_run != 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      # Re-checkout main (not the triggering SHA) — the build job may have just pushed a new
+      # data + site commit, and this needs that commit's site/, not the older one that kicked
+      # off the run.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/upload-pages-artifact@v3
-        if: env.DRY_RUN != 'true'
         with:
           path: site
       - name: Deploy to GitHub Pages
         id: deploy
-        if: env.DRY_RUN != 'true'
         uses: actions/deploy-pages@v4
         with:
           timeout: 1200000
