@@ -17,6 +17,13 @@ share sales and the digital credit instruments (STRC, SATA) that raise the cash.
   CSVs plus a keyless BTC ticker (`scripts/fetch_ticker.py`).
 - **The Action** — `.github/workflows/grid.yml` re-pulls, rebuilds, and redeploys the site
   every day.
+- **Dry runs** — `gh workflow run grid.yml --ref <branch> -f dry_run=true` pulls, builds, and
+  runs the checks below with nothing committed or deployed; any run on a branch other than
+  `main` does the same automatically, so a branch can never push data to `main`.
+- **Source status** — `data/run-status.json`, written and committed each run, records
+  ok/failed per data source, the newest filing date found for each, and whether the data has
+  gone stale — so a source that fails quietly (old behavior: keep last data, stay green,
+  nobody notices) now shows up instead of hiding.
 
 ## Run it locally
 

@@ -10,6 +10,12 @@ on:
   push:
     branches: [main]   # every merge rebuilds and publishes the site at once (re-enabled 2026-09-07)
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Pull, build, run checks — no commit, no deploy"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -17,42 +23,106 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.repository }}
+  group: grid
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+    # No `environment:` here — that block gates the whole job on the environment's own branch
+    # rules before a single step runs, which would block every non-main dry run outright
+    # regardless of the DRY_RUN checks below. Only the deploy job (main-only) needs it.
+    outputs:
+      dry_run: ${{ steps.dry-run.outputs.dry_run }}
     steps:
       - uses: actions/checkout@v4
+
+      # A branch run must never push to main — only a scheduled/push run on main, or an explicit
+      # dry_run=false dispatch on main, is a real run. Everything else pulls, builds, and checks
+      # only.
+      - name: Determine dry-run mode
+        id: dry-run
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ] || [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "DRY_RUN=true" >> "$GITHUB_ENV"
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "DRY_RUN=false" >> "$GITHUB_ENV"
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - run: pip install httpx requests beautifulsoup4 lxml pypdf
 
       # Each puller is idempotent and keeps last-good data on failure. A failed pull must not
-      # blank the site, so failures here are logged, not fatal.
+      # blank the site, so failures here are logged, not fatal — but the exit code is kept so
+      # the status step below can show it instead of losing it.
       - name: Pull new filings (Strategy, Strive, Metaplanet)
         run: |
-          python scripts/pull_mstr.py || echo "::warning::MSTR pull failed — site keeps prior data"
-          python scripts/pull_asst.py || echo "::warning::ASST pull failed — site keeps prior data"
-          python scripts/pull_metaplanet.py || echo "::warning::Metaplanet pull failed — site keeps prior data"
+          mstr=ok; asst=ok; metaplanet=ok
+          python scripts/pull_mstr.py || { mstr=failed; echo "::warning::MSTR pull failed — site keeps prior data"; }
+          python scripts/pull_asst.py || { asst=failed; echo "::warning::ASST pull failed — site keeps prior data"; }
+          python scripts/pull_metaplanet.py || { metaplanet=failed; echo "::warning::Metaplanet pull failed — site keeps prior data"; }
+          echo "mstr=$mstr" >> "$GITHUB_ENV"
+          echo "asst=$asst" >> "$GITHUB_ENV"
+          echo "metaplanet=$metaplanet" >> "$GITHUB_ENV"
       - name: Ticker (BTC price, block height)
-        run: python scripts/fetch_ticker.py || echo "::warning::ticker fetch failed — keeping last values"
+        run: |
+          ticker=ok
+          python scripts/fetch_ticker.py || { ticker=failed; echo "::warning::ticker fetch failed — keeping last values"; }
+          echo "ticker=$ticker" >> "$GITHUB_ENV"
       - name: Build site
         run: python scripts/build_grid_site.py
+      - name: Source status + freshness
+        run: |
+          python scripts/run_status.py \
+            --mstr-status "${mstr:-ok}" \
+            --asst-status "${asst:-ok}" \
+            --metaplanet-status "${metaplanet:-ok}" \
+            --ticker-status "${ticker:-ok}"
 
+      # A second run of this job (manual dispatch or overlap with the schedule) used to lose the
+      # push race and go red; rebase-and-retry below makes an overlap harmless instead.
       - name: Commit data + site
+        if: env.DRY_RUN != 'true' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ site/index.html
-          git diff --cached --quiet || git commit -m "grid: daily data $(date -u +%F)"
-          git push
+          git add data/ data/run-status.json site/index.html
+          if git diff --cached --quiet; then
+            echo "no data changes — nothing to push"
+          else
+            git commit -m "grid: daily data $(date -u +%F)"
+            ok=0
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then ok=1; break; fi
+              echo "push attempt $i rejected — rebasing on main"
+              git pull --rebase --autostash origin main || true
+              sleep 5
+            done
+            if [ "$ok" != "1" ]; then echo "::error title=grid push failed::data not published after 3 attempts"; exit 1; fi
+          fi
+      - name: Dry-run summary
+        if: env.DRY_RUN == 'true'
+        run: |
+          git status --short data/ site/
+          echo "DRY RUN — pulls + build + checks passed, nothing committed or deployed" >> "$GITHUB_STEP_SUMMARY"
 
+  deploy:
+    needs: build
+    if: needs.build.outputs.dry_run != 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      # Re-checkout main (not the triggering SHA) — the build job may have just pushed a new
+      # data + site commit, and this needs that commit's site/, not the older one that kicked
+      # off the run.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
