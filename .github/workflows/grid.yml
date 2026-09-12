@@ -17,7 +17,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.repository }}
+  group: grid
   cancel-in-progress: false
 
 jobs:
@@ -45,13 +45,26 @@ jobs:
       - name: Build site
         run: python scripts/build_grid_site.py
 
+      # A second run of this job (manual dispatch or overlap with the schedule) used to lose the
+      # push race and go red; rebase-and-retry below makes an overlap harmless instead.
       - name: Commit data + site
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
           git add data/ site/index.html
-          git diff --cached --quiet || git commit -m "grid: daily data $(date -u +%F)"
-          git push
+          if git diff --cached --quiet; then
+            echo "no data changes — nothing to push"
+          else
+            git commit -m "grid: daily data $(date -u +%F)"
+            ok=0
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then ok=1; break; fi
+              echo "push attempt $i rejected — rebasing on main"
+              git pull --rebase --autostash origin main || true
+              sleep 5
+            done
+            if [ "$ok" != "1" ]; then echo "::error title=grid push failed::data not published after 3 attempts"; exit 1; fi
+          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
