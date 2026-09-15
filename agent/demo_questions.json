@@ -1,0 +1,2282 @@
+[
+  {
+    "question": "What is Strive's dividend coverage if Bitcoin falls to $40,000?",
+    "tool_calls": [
+      {
+        "tool": "stress",
+        "arguments": {
+          "company": "asst",
+          "btc_price": 40000
+        },
+        "output": {
+          "company": "asst",
+          "accession": "0001628280-26-061682",
+          "filed": "2026-09-14",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "as_of": "2026-09-11",
+          "btc_price_used": 40000,
+          "metrics_at_price": {
+            "btc_usd_used": 40000,
+            "sata_rate_used": 0.13,
+            "sats_per_share_effective": 26324.4,
+            "btc_per_share_change_pct": null,
+            "sats_per_share_fully_diluted": 25474.0,
+            "btc_fmv_usd": 1000000000,
+            "sata_notional_usd": 1039796600,
+            "amplification_ratio": 1.0398,
+            "treasury_asset_value_usd": 1254013000,
+            "annual_dividend_usd": 135173558,
+            "total_dividend_coverage_yrs": 9.28,
+            "dividend_reserve_months": 22.5,
+            "ntav_per_share_effective": 2.26,
+            "breakeven_arr": 0.1078,
+            "net_senior_claims_usd": 785783600,
+            "net_senior_claims_btc": 19644.59,
+            "claim_ratio": 0.785784,
+            "cebe_sats_per_share": 5457.0,
+            "cebe_nav_per_share_usd": 2.18,
+            "notes": [
+              "no debt/convertible-note row in this filing; treated as $0 debt"
+            ]
+          },
+          "breakeven_btc_price_usd": 31431.34,
+          "breakeven_btc_price_definition": "Net senior claims (USD) / BTC held \u2014 the price at which senior claims (SATA + debt, net of cash and STRC) equal the value of the bitcoin, i.e. where common's share of the bitcoin goes to zero.",
+          "amplification_markers": {
+            "price_at_30pct_amplification": 138639.55,
+            "price_at_100pct_amplification": 41591.86,
+            "definition": "The BTC price at which (SATA notional + debt) / BTC market value crosses 30% / 100%, holding this filing's SATA notional and debt fixed."
+          }
+        }
+      }
+    ],
+    "answer": "At $40,000/BTC (filing 0001628280-26-061682, 2026-09-14), total dividend coverage falls to 9.28 years (from 16.46 years at the filing's own $78,862 BTC price) \u2014 treasury asset value drops with BTC, but the annual dividend and dividend reserve months (funded by cash + STRC, not BTC) don't move."
+  },
+  {
+    "question": "How many sats per share did Strive add in the week ending Sept 11, and was it accretive after senior claims?",
+    "tool_calls": [
+      {
+        "tool": "diff",
+        "arguments": {
+          "company": "asst"
+        },
+        "output": {
+          "prev": {
+            "accession": "0001628280-26-060809",
+            "filed": "2026-09-08",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 25839.9,
+              "btc_per_share_change_pct": null,
+              "sats_per_share_fully_diluted": 24993.7,
+              "btc_fmv_usd": 1934556240.045,
+              "sata_notional_usd": 999542500,
+              "amplification_ratio": 0.5167,
+              "treasury_asset_value_usd": 2186520240.045,
+              "annual_dividend_usd": 129940525,
+              "total_dividend_coverage_yrs": 16.83,
+              "dividend_reserve_months": 23.3,
+              "ntav_per_share_effective": 12.5,
+              "breakeven_arr": 0.0594,
+              "net_senior_claims_usd": 747578500,
+              "net_senior_claims_btc": 9479.614913,
+              "claim_ratio": 0.386434,
+              "cebe_sats_per_share": 15335.3,
+              "cebe_nav_per_share_usd": 12.09,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026060809/asst-20260908.htm",
+            "as_of": "2026-09-04"
+          },
+          "cur": {
+            "accession": "0001628280-26-061682",
+            "filed": "2026-09-14",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 26324.4,
+              "btc_per_share_change_pct": 0.01875,
+              "sats_per_share_fully_diluted": 25474.0,
+              "btc_fmv_usd": 1971542375.0,
+              "sata_notional_usd": 1039796600,
+              "amplification_ratio": 0.5274,
+              "treasury_asset_value_usd": 2225555375,
+              "annual_dividend_usd": 135173558,
+              "total_dividend_coverage_yrs": 16.46,
+              "dividend_reserve_months": 22.5,
+              "ntav_per_share_effective": 12.49,
+              "breakeven_arr": 0.0607,
+              "net_senior_claims_usd": 785783600,
+              "net_senior_claims_btc": 9964.071911,
+              "claim_ratio": 0.398563,
+              "cebe_sats_per_share": 15321.0,
+              "cebe_nav_per_share_usd": 12.08,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+            "as_of": "2026-09-11"
+          },
+          "row_changes": {
+            "cash_usd": {
+              "prior_filing": {
+                "prior": 183500000,
+                "current": 202600000,
+                "change": 19100000
+              },
+              "cur_filing": {
+                "prior": 202600000,
+                "current": 204200000,
+                "change": 1600000
+              }
+            },
+            "strc_fair_value_usd": {
+              "prior_filing": {
+                "prior": 49152000,
+                "current": 49364000,
+                "change": 212000
+              },
+              "cur_filing": {
+                "prior": 49364000,
+                "current": 49813000,
+                "change": 449000
+              }
+            },
+            "strc_shares": {
+              "prior_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              }
+            },
+            "btc": {
+              "prior_filing": {
+                "prior": 23156,
+                "current": 24531,
+                "change": 1375
+              },
+              "cur_filing": {
+                "prior": 24531,
+                "current": 25000,
+                "change": 469
+              }
+            },
+            "class_a": {
+              "prior_filing": {
+                "prior": 83470035,
+                "current": 85696647,
+                "change": 2226612
+              },
+              "cur_filing": {
+                "prior": 85696647,
+                "current": 85730853,
+                "change": 34206
+              }
+            },
+            "class_b": {
+              "prior_filing": {
+                "prior": 9792535,
+                "current": 9237911,
+                "change": -554624
+              },
+              "cur_filing": {
+                "prior": 9237911,
+                "current": 9237911,
+                "change": 0
+              }
+            },
+            "effective_common": {
+              "prior_filing": {
+                "prior": 93262570,
+                "current": 94934558,
+                "change": 1671988
+              },
+              "cur_filing": {
+                "prior": 94934558,
+                "current": 94968764,
+                "change": 34206
+              }
+            },
+            "options": {
+              "prior_filing": {
+                "prior": 991941,
+                "current": 945153,
+                "change": -46788
+              },
+              "cur_filing": {
+                "prior": 945153,
+                "current": 901487,
+                "change": -43666
+              }
+            },
+            "unvested_awards": {
+              "prior_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              }
+            },
+            "fully_diluted": {
+              "prior_filing": {
+                "prior": 96523351,
+                "current": 98148551,
+                "change": 1625200
+              },
+              "cur_filing": {
+                "prior": 98148551,
+                "current": 98139091,
+                "change": -9460
+              }
+            },
+            "warrants": {
+              "prior_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              }
+            },
+            "debt_usd": {
+              "prior_filing": null,
+              "cur_filing": null
+            },
+            "sata_shares": {
+              "prior_filing": {
+                "prior": 9073914,
+                "current": 9995425,
+                "change": 921511
+              },
+              "cur_filing": {
+                "prior": 9995425,
+                "current": 10397966,
+                "change": 402541
+              }
+            }
+          },
+          "reconciliation": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "reconciles": true,
+            "checks": [
+              {
+                "check": "dates_chain",
+                "pass": true,
+                "prev_as_of": "2026-09-04",
+                "cur_as_of_prior": "2026-09-04"
+              },
+              {
+                "check": "cash_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 202600000,
+                "cur_prior": 202600000
+              },
+              {
+                "check": "strc_fair_value_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 49364000,
+                "cur_prior": 49364000
+              },
+              {
+                "check": "strc_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 505000,
+                "cur_prior": 505000
+              },
+              {
+                "check": "btc_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 24531,
+                "cur_prior": 24531
+              },
+              {
+                "check": "class_a_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 85696647,
+                "cur_prior": 85696647
+              },
+              {
+                "check": "class_b_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9237911,
+                "cur_prior": 9237911
+              },
+              {
+                "check": "effective_common_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 94934558,
+                "cur_prior": 94934558
+              },
+              {
+                "check": "options_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 945153,
+                "cur_prior": 945153
+              },
+              {
+                "check": "unvested_awards_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 2268840,
+                "cur_prior": 2268840
+              },
+              {
+                "check": "fully_diluted_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 98148551,
+                "cur_prior": 98148551
+              },
+              {
+                "check": "warrants_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 26596010,
+                "cur_prior": 26596010
+              },
+              {
+                "check": "sata_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9995425,
+                "cur_prior": 9995425
+              },
+              {
+                "check": "btc_change_matches_purchase",
+                "pass": true,
+                "btc_row_change": 469,
+                "purchase_btc": 469,
+                "diff": 0
+              },
+              {
+                "check": "cash_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 1600000,
+                "stated": 1600000,
+                "diff": 0
+              },
+              {
+                "check": "strc_fair_value_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 449000,
+                "stated": 449000,
+                "diff": 0
+              },
+              {
+                "check": "strc_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "btc_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 469,
+                "stated": 469,
+                "diff": 0
+              },
+              {
+                "check": "class_a_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "class_b_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "effective_common_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "options_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -43666,
+                "stated": -43666,
+                "diff": 0
+              },
+              {
+                "check": "unvested_awards_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "fully_diluted_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -9460,
+                "stated": -9460,
+                "diff": 0
+              },
+              {
+                "check": "warrants_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "sata_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 402541,
+                "stated": 402541,
+                "diff": 0
+              }
+            ]
+          },
+          "verdict": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "btc_usd_used": 78861.695,
+            "gross_btc_added": 469,
+            "new_senior_claims_btc": 484.456998,
+            "net_btc_for_common": -15.456998,
+            "dilution_pct": -9.6e-05,
+            "sats_per_share_before": 25839.9,
+            "sats_per_share_after": 26324.4,
+            "sats_per_share_change_pct": 0.01875,
+            "cebe_sats_before": 15335.3,
+            "cebe_sats_after": 15321.0,
+            "cebe_change_pct": -0.000932,
+            "verdict": "dilutive",
+            "funding_mix": {
+              "sata_raised_usd": 40254100,
+              "common_shares_issued": 34206,
+              "btc_spent_usd": 36560426,
+              "cash_change_usd": 1600000,
+              "dividends_paid_usd_est": 2063055.72
+            },
+            "sources_and_uses": {
+              "sources": {
+                "sata_raised_usd": 40254100,
+                "common_raised_usd_est": null,
+                "other": 0.0
+              },
+              "uses": {
+                "btc_spent_usd": 36560426,
+                "dividends_paid_usd_est": 2063055.72,
+                "cash_change_usd": 1600000,
+                "strc_change_usd": 0.0
+              },
+              "unexplained_usd": 30618.28,
+              "notes": [
+                "common_raised_usd_est is null: the filings state the Class A share-count change and the BTC purchase's average price, but never common stock's issue price or gross proceeds -- multiplying the share change by the BTC average price would conflate two unrelated prices, so it is left unestimated rather than computed that way",
+                "STRC value change is mark-to-market, not cash"
+              ]
+            },
+            "notes": [
+              "dividends_paid_usd_est = 4 payment date(s) in (2026-09-04, 2026-09-11] x 9,995,425 SATA shares outstanding as of the prior filing, held constant for the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+            ]
+          },
+          "company": "asst",
+          "data_source": "local checkout: data/ledger/asst/diff.json",
+          "as_of": "2026-09-11",
+          "breakeven_btc_price_this_week": 81460.77,
+          "breakeven_btc_price_definition": "(change in SATA notional + change in debt - change in cash - change in STRC fair value) / gross BTC added \u2014 the BTC price at which this week's new senior claims exactly used up the bitcoin bought."
+        }
+      }
+    ],
+    "answer": "Sats per effective share went from 25839.9 to 26324.4 (+1.88%) \u2014 up. But after senior claims, CEBE sats/share fell from 15335.3 to 15321.0 (-0.09%) \u2014 the week was dilutive for common once SATA and debt claims are netted out."
+  },
+  {
+    "question": "What's the break-even Bitcoin price where common's Bitcoin goes to zero?",
+    "tool_calls": [
+      {
+        "tool": "stress",
+        "arguments": {
+          "company": "asst",
+          "btc_price": 78861.695
+        },
+        "output": {
+          "company": "asst",
+          "accession": "0001628280-26-061682",
+          "filed": "2026-09-14",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "as_of": "2026-09-11",
+          "btc_price_used": 78861.695,
+          "metrics_at_price": {
+            "btc_usd_used": 78861.695,
+            "sata_rate_used": 0.13,
+            "sats_per_share_effective": 26324.4,
+            "btc_per_share_change_pct": null,
+            "sats_per_share_fully_diluted": 25474.0,
+            "btc_fmv_usd": 1971542375.0,
+            "sata_notional_usd": 1039796600,
+            "amplification_ratio": 0.5274,
+            "treasury_asset_value_usd": 2225555375,
+            "annual_dividend_usd": 135173558,
+            "total_dividend_coverage_yrs": 16.46,
+            "dividend_reserve_months": 22.5,
+            "ntav_per_share_effective": 12.49,
+            "breakeven_arr": 0.0607,
+            "net_senior_claims_usd": 785783600,
+            "net_senior_claims_btc": 9964.071911,
+            "claim_ratio": 0.398563,
+            "cebe_sats_per_share": 15321.0,
+            "cebe_nav_per_share_usd": 12.08,
+            "notes": [
+              "no debt/convertible-note row in this filing; treated as $0 debt"
+            ]
+          },
+          "breakeven_btc_price_usd": 31431.34,
+          "breakeven_btc_price_definition": "Net senior claims (USD) / BTC held \u2014 the price at which senior claims (SATA + debt, net of cash and STRC) equal the value of the bitcoin, i.e. where common's share of the bitcoin goes to zero.",
+          "amplification_markers": {
+            "price_at_30pct_amplification": 138639.55,
+            "price_at_100pct_amplification": 41591.86,
+            "definition": "The BTC price at which (SATA notional + debt) / BTC market value crosses 30% / 100%, holding this filing's SATA notional and debt fixed."
+          }
+        }
+      }
+    ],
+    "answer": "$31,431.34/BTC (filing 0001628280-26-061682, 2026-09-14) \u2014 the price at which net senior claims (SATA notional, net of cash and STRC, no debt on this filing) equal the value of the bitcoin held."
+  },
+  {
+    "question": "How much SATA was sold in the week ending Sept 11 and how much Bitcoin did it buy?",
+    "tool_calls": [
+      {
+        "tool": "diff",
+        "arguments": {
+          "company": "asst"
+        },
+        "output": {
+          "prev": {
+            "accession": "0001628280-26-060809",
+            "filed": "2026-09-08",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 25839.9,
+              "btc_per_share_change_pct": null,
+              "sats_per_share_fully_diluted": 24993.7,
+              "btc_fmv_usd": 1934556240.045,
+              "sata_notional_usd": 999542500,
+              "amplification_ratio": 0.5167,
+              "treasury_asset_value_usd": 2186520240.045,
+              "annual_dividend_usd": 129940525,
+              "total_dividend_coverage_yrs": 16.83,
+              "dividend_reserve_months": 23.3,
+              "ntav_per_share_effective": 12.5,
+              "breakeven_arr": 0.0594,
+              "net_senior_claims_usd": 747578500,
+              "net_senior_claims_btc": 9479.614913,
+              "claim_ratio": 0.386434,
+              "cebe_sats_per_share": 15335.3,
+              "cebe_nav_per_share_usd": 12.09,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026060809/asst-20260908.htm",
+            "as_of": "2026-09-04"
+          },
+          "cur": {
+            "accession": "0001628280-26-061682",
+            "filed": "2026-09-14",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 26324.4,
+              "btc_per_share_change_pct": 0.01875,
+              "sats_per_share_fully_diluted": 25474.0,
+              "btc_fmv_usd": 1971542375.0,
+              "sata_notional_usd": 1039796600,
+              "amplification_ratio": 0.5274,
+              "treasury_asset_value_usd": 2225555375,
+              "annual_dividend_usd": 135173558,
+              "total_dividend_coverage_yrs": 16.46,
+              "dividend_reserve_months": 22.5,
+              "ntav_per_share_effective": 12.49,
+              "breakeven_arr": 0.0607,
+              "net_senior_claims_usd": 785783600,
+              "net_senior_claims_btc": 9964.071911,
+              "claim_ratio": 0.398563,
+              "cebe_sats_per_share": 15321.0,
+              "cebe_nav_per_share_usd": 12.08,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+            "as_of": "2026-09-11"
+          },
+          "row_changes": {
+            "cash_usd": {
+              "prior_filing": {
+                "prior": 183500000,
+                "current": 202600000,
+                "change": 19100000
+              },
+              "cur_filing": {
+                "prior": 202600000,
+                "current": 204200000,
+                "change": 1600000
+              }
+            },
+            "strc_fair_value_usd": {
+              "prior_filing": {
+                "prior": 49152000,
+                "current": 49364000,
+                "change": 212000
+              },
+              "cur_filing": {
+                "prior": 49364000,
+                "current": 49813000,
+                "change": 449000
+              }
+            },
+            "strc_shares": {
+              "prior_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              }
+            },
+            "btc": {
+              "prior_filing": {
+                "prior": 23156,
+                "current": 24531,
+                "change": 1375
+              },
+              "cur_filing": {
+                "prior": 24531,
+                "current": 25000,
+                "change": 469
+              }
+            },
+            "class_a": {
+              "prior_filing": {
+                "prior": 83470035,
+                "current": 85696647,
+                "change": 2226612
+              },
+              "cur_filing": {
+                "prior": 85696647,
+                "current": 85730853,
+                "change": 34206
+              }
+            },
+            "class_b": {
+              "prior_filing": {
+                "prior": 9792535,
+                "current": 9237911,
+                "change": -554624
+              },
+              "cur_filing": {
+                "prior": 9237911,
+                "current": 9237911,
+                "change": 0
+              }
+            },
+            "effective_common": {
+              "prior_filing": {
+                "prior": 93262570,
+                "current": 94934558,
+                "change": 1671988
+              },
+              "cur_filing": {
+                "prior": 94934558,
+                "current": 94968764,
+                "change": 34206
+              }
+            },
+            "options": {
+              "prior_filing": {
+                "prior": 991941,
+                "current": 945153,
+                "change": -46788
+              },
+              "cur_filing": {
+                "prior": 945153,
+                "current": 901487,
+                "change": -43666
+              }
+            },
+            "unvested_awards": {
+              "prior_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              }
+            },
+            "fully_diluted": {
+              "prior_filing": {
+                "prior": 96523351,
+                "current": 98148551,
+                "change": 1625200
+              },
+              "cur_filing": {
+                "prior": 98148551,
+                "current": 98139091,
+                "change": -9460
+              }
+            },
+            "warrants": {
+              "prior_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              }
+            },
+            "debt_usd": {
+              "prior_filing": null,
+              "cur_filing": null
+            },
+            "sata_shares": {
+              "prior_filing": {
+                "prior": 9073914,
+                "current": 9995425,
+                "change": 921511
+              },
+              "cur_filing": {
+                "prior": 9995425,
+                "current": 10397966,
+                "change": 402541
+              }
+            }
+          },
+          "reconciliation": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "reconciles": true,
+            "checks": [
+              {
+                "check": "dates_chain",
+                "pass": true,
+                "prev_as_of": "2026-09-04",
+                "cur_as_of_prior": "2026-09-04"
+              },
+              {
+                "check": "cash_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 202600000,
+                "cur_prior": 202600000
+              },
+              {
+                "check": "strc_fair_value_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 49364000,
+                "cur_prior": 49364000
+              },
+              {
+                "check": "strc_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 505000,
+                "cur_prior": 505000
+              },
+              {
+                "check": "btc_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 24531,
+                "cur_prior": 24531
+              },
+              {
+                "check": "class_a_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 85696647,
+                "cur_prior": 85696647
+              },
+              {
+                "check": "class_b_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9237911,
+                "cur_prior": 9237911
+              },
+              {
+                "check": "effective_common_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 94934558,
+                "cur_prior": 94934558
+              },
+              {
+                "check": "options_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 945153,
+                "cur_prior": 945153
+              },
+              {
+                "check": "unvested_awards_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 2268840,
+                "cur_prior": 2268840
+              },
+              {
+                "check": "fully_diluted_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 98148551,
+                "cur_prior": 98148551
+              },
+              {
+                "check": "warrants_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 26596010,
+                "cur_prior": 26596010
+              },
+              {
+                "check": "sata_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9995425,
+                "cur_prior": 9995425
+              },
+              {
+                "check": "btc_change_matches_purchase",
+                "pass": true,
+                "btc_row_change": 469,
+                "purchase_btc": 469,
+                "diff": 0
+              },
+              {
+                "check": "cash_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 1600000,
+                "stated": 1600000,
+                "diff": 0
+              },
+              {
+                "check": "strc_fair_value_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 449000,
+                "stated": 449000,
+                "diff": 0
+              },
+              {
+                "check": "strc_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "btc_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 469,
+                "stated": 469,
+                "diff": 0
+              },
+              {
+                "check": "class_a_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "class_b_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "effective_common_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "options_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -43666,
+                "stated": -43666,
+                "diff": 0
+              },
+              {
+                "check": "unvested_awards_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "fully_diluted_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -9460,
+                "stated": -9460,
+                "diff": 0
+              },
+              {
+                "check": "warrants_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "sata_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 402541,
+                "stated": 402541,
+                "diff": 0
+              }
+            ]
+          },
+          "verdict": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "btc_usd_used": 78861.695,
+            "gross_btc_added": 469,
+            "new_senior_claims_btc": 484.456998,
+            "net_btc_for_common": -15.456998,
+            "dilution_pct": -9.6e-05,
+            "sats_per_share_before": 25839.9,
+            "sats_per_share_after": 26324.4,
+            "sats_per_share_change_pct": 0.01875,
+            "cebe_sats_before": 15335.3,
+            "cebe_sats_after": 15321.0,
+            "cebe_change_pct": -0.000932,
+            "verdict": "dilutive",
+            "funding_mix": {
+              "sata_raised_usd": 40254100,
+              "common_shares_issued": 34206,
+              "btc_spent_usd": 36560426,
+              "cash_change_usd": 1600000,
+              "dividends_paid_usd_est": 2063055.72
+            },
+            "sources_and_uses": {
+              "sources": {
+                "sata_raised_usd": 40254100,
+                "common_raised_usd_est": null,
+                "other": 0.0
+              },
+              "uses": {
+                "btc_spent_usd": 36560426,
+                "dividends_paid_usd_est": 2063055.72,
+                "cash_change_usd": 1600000,
+                "strc_change_usd": 0.0
+              },
+              "unexplained_usd": 30618.28,
+              "notes": [
+                "common_raised_usd_est is null: the filings state the Class A share-count change and the BTC purchase's average price, but never common stock's issue price or gross proceeds -- multiplying the share change by the BTC average price would conflate two unrelated prices, so it is left unestimated rather than computed that way",
+                "STRC value change is mark-to-market, not cash"
+              ]
+            },
+            "notes": [
+              "dividends_paid_usd_est = 4 payment date(s) in (2026-09-04, 2026-09-11] x 9,995,425 SATA shares outstanding as of the prior filing, held constant for the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+            ]
+          },
+          "company": "asst",
+          "data_source": "local checkout: data/ledger/asst/diff.json",
+          "as_of": "2026-09-11",
+          "breakeven_btc_price_this_week": 81460.77,
+          "breakeven_btc_price_definition": "(change in SATA notional + change in debt - change in cash - change in STRC fair value) / gross BTC added \u2014 the BTC price at which this week's new senior claims exactly used up the bitcoin bought."
+        }
+      }
+    ],
+    "answer": "$40,254,100 of SATA was raised (402,541 shares x $100 par) and Strive bought 469 BTC (~$36,560,426 at the week's average purchase price) \u2014 the SATA raise covered the BTC buy plus part of that week's SATA dividend (~$2,063,056 est.), leaving $30,618.28 unexplained."
+  },
+  {
+    "question": "Which filing states Strive's cash on Sept 11?",
+    "tool_calls": [
+      {
+        "tool": "metric",
+        "arguments": {
+          "company": "asst",
+          "name": "cash"
+        },
+        "output": {
+          "company": "asst",
+          "metric": "cash_usd",
+          "value": 204200000,
+          "unit": "USD",
+          "definition": "Row from the filing's holdings table: Cash and cash equivalents.",
+          "note": null,
+          "prior": 202600000,
+          "change": 1600000,
+          "as_of": "2026-09-11",
+          "filed": "2026-09-14",
+          "accession": "0001628280-26-061682",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "btc_price_used": 78861.695
+        }
+      },
+      {
+        "tool": "source",
+        "arguments": {
+          "company": "asst",
+          "accession": "0001628280-26-061682",
+          "field": "cash"
+        },
+        "output": {
+          "company": "asst",
+          "accession": "0001628280-26-061682",
+          "field": "cash_usd",
+          "as_of": "2026-09-11",
+          "filed": "2026-09-14",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/history.json",
+          "prior": 202600000,
+          "current": 204200000,
+          "change": 1600000,
+          "text_cached": true,
+          "text_fragment": "Cash and cash equivalents (in thousands) | $ | 202,600 | $ | 204,200 | $ | 1,600 |"
+        }
+      }
+    ],
+    "answer": "The 8-K filed 2026-09-14 (accession 0001628280-26-061682), reporting the week 'as of' 2026-09-11: cash and cash equivalents of $204,200,000. Filing text: \"Cash and cash equivalents (in thousands) | $ | 202,600 | $ | 204,200 | $ | 1,600 |\" \u2014 https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm"
+  },
+  {
+    "question": "Did the Sept 14 filing reconcile with the prior week?",
+    "tool_calls": [
+      {
+        "tool": "diff",
+        "arguments": {
+          "company": "asst"
+        },
+        "output": {
+          "prev": {
+            "accession": "0001628280-26-060809",
+            "filed": "2026-09-08",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 25839.9,
+              "btc_per_share_change_pct": null,
+              "sats_per_share_fully_diluted": 24993.7,
+              "btc_fmv_usd": 1934556240.045,
+              "sata_notional_usd": 999542500,
+              "amplification_ratio": 0.5167,
+              "treasury_asset_value_usd": 2186520240.045,
+              "annual_dividend_usd": 129940525,
+              "total_dividend_coverage_yrs": 16.83,
+              "dividend_reserve_months": 23.3,
+              "ntav_per_share_effective": 12.5,
+              "breakeven_arr": 0.0594,
+              "net_senior_claims_usd": 747578500,
+              "net_senior_claims_btc": 9479.614913,
+              "claim_ratio": 0.386434,
+              "cebe_sats_per_share": 15335.3,
+              "cebe_nav_per_share_usd": 12.09,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026060809/asst-20260908.htm",
+            "as_of": "2026-09-04"
+          },
+          "cur": {
+            "accession": "0001628280-26-061682",
+            "filed": "2026-09-14",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 26324.4,
+              "btc_per_share_change_pct": 0.01875,
+              "sats_per_share_fully_diluted": 25474.0,
+              "btc_fmv_usd": 1971542375.0,
+              "sata_notional_usd": 1039796600,
+              "amplification_ratio": 0.5274,
+              "treasury_asset_value_usd": 2225555375,
+              "annual_dividend_usd": 135173558,
+              "total_dividend_coverage_yrs": 16.46,
+              "dividend_reserve_months": 22.5,
+              "ntav_per_share_effective": 12.49,
+              "breakeven_arr": 0.0607,
+              "net_senior_claims_usd": 785783600,
+              "net_senior_claims_btc": 9964.071911,
+              "claim_ratio": 0.398563,
+              "cebe_sats_per_share": 15321.0,
+              "cebe_nav_per_share_usd": 12.08,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+            "as_of": "2026-09-11"
+          },
+          "row_changes": {
+            "cash_usd": {
+              "prior_filing": {
+                "prior": 183500000,
+                "current": 202600000,
+                "change": 19100000
+              },
+              "cur_filing": {
+                "prior": 202600000,
+                "current": 204200000,
+                "change": 1600000
+              }
+            },
+            "strc_fair_value_usd": {
+              "prior_filing": {
+                "prior": 49152000,
+                "current": 49364000,
+                "change": 212000
+              },
+              "cur_filing": {
+                "prior": 49364000,
+                "current": 49813000,
+                "change": 449000
+              }
+            },
+            "strc_shares": {
+              "prior_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              }
+            },
+            "btc": {
+              "prior_filing": {
+                "prior": 23156,
+                "current": 24531,
+                "change": 1375
+              },
+              "cur_filing": {
+                "prior": 24531,
+                "current": 25000,
+                "change": 469
+              }
+            },
+            "class_a": {
+              "prior_filing": {
+                "prior": 83470035,
+                "current": 85696647,
+                "change": 2226612
+              },
+              "cur_filing": {
+                "prior": 85696647,
+                "current": 85730853,
+                "change": 34206
+              }
+            },
+            "class_b": {
+              "prior_filing": {
+                "prior": 9792535,
+                "current": 9237911,
+                "change": -554624
+              },
+              "cur_filing": {
+                "prior": 9237911,
+                "current": 9237911,
+                "change": 0
+              }
+            },
+            "effective_common": {
+              "prior_filing": {
+                "prior": 93262570,
+                "current": 94934558,
+                "change": 1671988
+              },
+              "cur_filing": {
+                "prior": 94934558,
+                "current": 94968764,
+                "change": 34206
+              }
+            },
+            "options": {
+              "prior_filing": {
+                "prior": 991941,
+                "current": 945153,
+                "change": -46788
+              },
+              "cur_filing": {
+                "prior": 945153,
+                "current": 901487,
+                "change": -43666
+              }
+            },
+            "unvested_awards": {
+              "prior_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              }
+            },
+            "fully_diluted": {
+              "prior_filing": {
+                "prior": 96523351,
+                "current": 98148551,
+                "change": 1625200
+              },
+              "cur_filing": {
+                "prior": 98148551,
+                "current": 98139091,
+                "change": -9460
+              }
+            },
+            "warrants": {
+              "prior_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              }
+            },
+            "debt_usd": {
+              "prior_filing": null,
+              "cur_filing": null
+            },
+            "sata_shares": {
+              "prior_filing": {
+                "prior": 9073914,
+                "current": 9995425,
+                "change": 921511
+              },
+              "cur_filing": {
+                "prior": 9995425,
+                "current": 10397966,
+                "change": 402541
+              }
+            }
+          },
+          "reconciliation": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "reconciles": true,
+            "checks": [
+              {
+                "check": "dates_chain",
+                "pass": true,
+                "prev_as_of": "2026-09-04",
+                "cur_as_of_prior": "2026-09-04"
+              },
+              {
+                "check": "cash_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 202600000,
+                "cur_prior": 202600000
+              },
+              {
+                "check": "strc_fair_value_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 49364000,
+                "cur_prior": 49364000
+              },
+              {
+                "check": "strc_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 505000,
+                "cur_prior": 505000
+              },
+              {
+                "check": "btc_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 24531,
+                "cur_prior": 24531
+              },
+              {
+                "check": "class_a_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 85696647,
+                "cur_prior": 85696647
+              },
+              {
+                "check": "class_b_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9237911,
+                "cur_prior": 9237911
+              },
+              {
+                "check": "effective_common_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 94934558,
+                "cur_prior": 94934558
+              },
+              {
+                "check": "options_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 945153,
+                "cur_prior": 945153
+              },
+              {
+                "check": "unvested_awards_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 2268840,
+                "cur_prior": 2268840
+              },
+              {
+                "check": "fully_diluted_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 98148551,
+                "cur_prior": 98148551
+              },
+              {
+                "check": "warrants_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 26596010,
+                "cur_prior": 26596010
+              },
+              {
+                "check": "sata_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9995425,
+                "cur_prior": 9995425
+              },
+              {
+                "check": "btc_change_matches_purchase",
+                "pass": true,
+                "btc_row_change": 469,
+                "purchase_btc": 469,
+                "diff": 0
+              },
+              {
+                "check": "cash_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 1600000,
+                "stated": 1600000,
+                "diff": 0
+              },
+              {
+                "check": "strc_fair_value_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 449000,
+                "stated": 449000,
+                "diff": 0
+              },
+              {
+                "check": "strc_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "btc_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 469,
+                "stated": 469,
+                "diff": 0
+              },
+              {
+                "check": "class_a_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "class_b_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "effective_common_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "options_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -43666,
+                "stated": -43666,
+                "diff": 0
+              },
+              {
+                "check": "unvested_awards_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "fully_diluted_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -9460,
+                "stated": -9460,
+                "diff": 0
+              },
+              {
+                "check": "warrants_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "sata_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 402541,
+                "stated": 402541,
+                "diff": 0
+              }
+            ]
+          },
+          "verdict": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "btc_usd_used": 78861.695,
+            "gross_btc_added": 469,
+            "new_senior_claims_btc": 484.456998,
+            "net_btc_for_common": -15.456998,
+            "dilution_pct": -9.6e-05,
+            "sats_per_share_before": 25839.9,
+            "sats_per_share_after": 26324.4,
+            "sats_per_share_change_pct": 0.01875,
+            "cebe_sats_before": 15335.3,
+            "cebe_sats_after": 15321.0,
+            "cebe_change_pct": -0.000932,
+            "verdict": "dilutive",
+            "funding_mix": {
+              "sata_raised_usd": 40254100,
+              "common_shares_issued": 34206,
+              "btc_spent_usd": 36560426,
+              "cash_change_usd": 1600000,
+              "dividends_paid_usd_est": 2063055.72
+            },
+            "sources_and_uses": {
+              "sources": {
+                "sata_raised_usd": 40254100,
+                "common_raised_usd_est": null,
+                "other": 0.0
+              },
+              "uses": {
+                "btc_spent_usd": 36560426,
+                "dividends_paid_usd_est": 2063055.72,
+                "cash_change_usd": 1600000,
+                "strc_change_usd": 0.0
+              },
+              "unexplained_usd": 30618.28,
+              "notes": [
+                "common_raised_usd_est is null: the filings state the Class A share-count change and the BTC purchase's average price, but never common stock's issue price or gross proceeds -- multiplying the share change by the BTC average price would conflate two unrelated prices, so it is left unestimated rather than computed that way",
+                "STRC value change is mark-to-market, not cash"
+              ]
+            },
+            "notes": [
+              "dividends_paid_usd_est = 4 payment date(s) in (2026-09-04, 2026-09-11] x 9,995,425 SATA shares outstanding as of the prior filing, held constant for the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+            ]
+          },
+          "company": "asst",
+          "data_source": "local checkout: data/ledger/asst/diff.json",
+          "as_of": "2026-09-11",
+          "breakeven_btc_price_this_week": 81460.77,
+          "breakeven_btc_price_definition": "(change in SATA notional + change in debt - change in cash - change in STRC fair value) / gross BTC added \u2014 the BTC price at which this week's new senior claims exactly used up the bitcoin bought."
+        }
+      }
+    ],
+    "answer": "Yes \u2014 reconciles=True, all 26 checks passed (dates chain, every row rolls forward from the Sept 8 filing's 'current' to this filing's 'prior', and the BTC-row change matches the stated purchase)."
+  },
+  {
+    "question": "What was amplification on Aug 31?",
+    "tool_calls": [
+      {
+        "tool": "metric",
+        "arguments": {
+          "company": "asst",
+          "name": "amplification",
+          "as_of": "2026-08-31"
+        },
+        "output": {
+          "company": "asst",
+          "metric": "amplification_ratio",
+          "value": 0.4969,
+          "unit": "ratio",
+          "definition": "(SATA preferred notional + debt) / BTC market value \u2014 how much of the bitcoin is financed by senior claims rather than common equity.",
+          "note": null,
+          "as_of": "2026-08-28",
+          "filed": "2026-08-31",
+          "accession": "0001628280-26-059468",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026059468/asst-20260831.htm",
+          "data_source": "local checkout: data/ledger/asst/history.json",
+          "btc_price_used": 78861.695
+        }
+      }
+    ],
+    "answer": "0.4969 (filing 0001628280-26-059468, filed 2026-08-31, as-of 2026-08-28) \u2014 (SATA notional + debt) / BTC market value at that filing's $78,861.695 BTC price."
+  },
+  {
+    "question": "How many warrants are outstanding and at what strike?",
+    "tool_calls": [
+      {
+        "tool": "metric",
+        "arguments": {
+          "company": "asst",
+          "name": "warrants"
+        },
+        "output": {
+          "company": "asst",
+          "metric": "warrants",
+          "value": 26596010,
+          "unit": "shares",
+          "definition": "Row from the filing's holdings table: Shares Underlying Traditional Warrants.",
+          "note": null,
+          "prior": 26596010,
+          "change": 0,
+          "as_of": "2026-09-11",
+          "filed": "2026-09-14",
+          "accession": "0001628280-26-061682",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "btc_price_used": 78861.695
+        }
+      }
+    ],
+    "answer": "26,596,010 traditional warrants outstanding as of the latest filing (0001628280-26-061682). Strike price is not in the ledger \u2014 the weekly 8-K holdings table states the warrant share count only, never a strike price, so this agent can't answer that part; check the original warrant agreement exhibit."
+  },
+  {
+    "question": "How close is Strive's amplification to the 30% and 100% thresholds, and at what BTC price would it cross each?",
+    "tool_calls": [
+      {
+        "tool": "stress",
+        "arguments": {
+          "company": "asst",
+          "btc_price": 78861.695
+        },
+        "output": {
+          "company": "asst",
+          "accession": "0001628280-26-061682",
+          "filed": "2026-09-14",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "as_of": "2026-09-11",
+          "btc_price_used": 78861.695,
+          "metrics_at_price": {
+            "btc_usd_used": 78861.695,
+            "sata_rate_used": 0.13,
+            "sats_per_share_effective": 26324.4,
+            "btc_per_share_change_pct": null,
+            "sats_per_share_fully_diluted": 25474.0,
+            "btc_fmv_usd": 1971542375.0,
+            "sata_notional_usd": 1039796600,
+            "amplification_ratio": 0.5274,
+            "treasury_asset_value_usd": 2225555375,
+            "annual_dividend_usd": 135173558,
+            "total_dividend_coverage_yrs": 16.46,
+            "dividend_reserve_months": 22.5,
+            "ntav_per_share_effective": 12.49,
+            "breakeven_arr": 0.0607,
+            "net_senior_claims_usd": 785783600,
+            "net_senior_claims_btc": 9964.071911,
+            "claim_ratio": 0.398563,
+            "cebe_sats_per_share": 15321.0,
+            "cebe_nav_per_share_usd": 12.08,
+            "notes": [
+              "no debt/convertible-note row in this filing; treated as $0 debt"
+            ]
+          },
+          "breakeven_btc_price_usd": 31431.34,
+          "breakeven_btc_price_definition": "Net senior claims (USD) / BTC held \u2014 the price at which senior claims (SATA + debt, net of cash and STRC) equal the value of the bitcoin, i.e. where common's share of the bitcoin goes to zero.",
+          "amplification_markers": {
+            "price_at_30pct_amplification": 138639.55,
+            "price_at_100pct_amplification": 41591.86,
+            "definition": "The BTC price at which (SATA notional + debt) / BTC market value crosses 30% / 100%, holding this filing's SATA notional and debt fixed."
+          }
+        }
+      }
+    ],
+    "answer": "At the filing's own BTC price ($78,861.695), amplification is 0.5274 \u2014 already above 30%. It would cross 100% only if BTC fell to $41,591.86, and rise back to exactly 30% only if BTC rose to $138,639.55 (both holding this filing's SATA notional and debt fixed)."
+  },
+  {
+    "question": "What is Strive's CEBE per share, and how did it change from the prior filing?",
+    "tool_calls": [
+      {
+        "tool": "metric",
+        "arguments": {
+          "company": "asst",
+          "name": "cebe"
+        },
+        "output": {
+          "company": "asst",
+          "metric": "cebe_sats_per_share",
+          "value": 15321.0,
+          "unit": "sats per fully diluted share",
+          "definition": "(BTC held - net senior claims in BTC) x 100,000,000 / fully diluted shares \u2014 common's share of the bitcoin after senior claims. Framework: cebetracker.io.",
+          "note": null,
+          "as_of": "2026-09-11",
+          "filed": "2026-09-14",
+          "accession": "0001628280-26-061682",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "btc_price_used": 78861.695
+        }
+      },
+      {
+        "tool": "diff",
+        "arguments": {
+          "company": "asst"
+        },
+        "output": {
+          "prev": {
+            "accession": "0001628280-26-060809",
+            "filed": "2026-09-08",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 25839.9,
+              "btc_per_share_change_pct": null,
+              "sats_per_share_fully_diluted": 24993.7,
+              "btc_fmv_usd": 1934556240.045,
+              "sata_notional_usd": 999542500,
+              "amplification_ratio": 0.5167,
+              "treasury_asset_value_usd": 2186520240.045,
+              "annual_dividend_usd": 129940525,
+              "total_dividend_coverage_yrs": 16.83,
+              "dividend_reserve_months": 23.3,
+              "ntav_per_share_effective": 12.5,
+              "breakeven_arr": 0.0594,
+              "net_senior_claims_usd": 747578500,
+              "net_senior_claims_btc": 9479.614913,
+              "claim_ratio": 0.386434,
+              "cebe_sats_per_share": 15335.3,
+              "cebe_nav_per_share_usd": 12.09,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026060809/asst-20260908.htm",
+            "as_of": "2026-09-04"
+          },
+          "cur": {
+            "accession": "0001628280-26-061682",
+            "filed": "2026-09-14",
+            "metrics": {
+              "btc_usd_used": 78861.695,
+              "sata_rate_used": 0.13,
+              "sats_per_share_effective": 26324.4,
+              "btc_per_share_change_pct": 0.01875,
+              "sats_per_share_fully_diluted": 25474.0,
+              "btc_fmv_usd": 1971542375.0,
+              "sata_notional_usd": 1039796600,
+              "amplification_ratio": 0.5274,
+              "treasury_asset_value_usd": 2225555375,
+              "annual_dividend_usd": 135173558,
+              "total_dividend_coverage_yrs": 16.46,
+              "dividend_reserve_months": 22.5,
+              "ntav_per_share_effective": 12.49,
+              "breakeven_arr": 0.0607,
+              "net_senior_claims_usd": 785783600,
+              "net_senior_claims_btc": 9964.071911,
+              "claim_ratio": 0.398563,
+              "cebe_sats_per_share": 15321.0,
+              "cebe_nav_per_share_usd": 12.08,
+              "notes": [
+                "no debt/convertible-note row in this filing; treated as $0 debt"
+              ]
+            },
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+            "as_of": "2026-09-11"
+          },
+          "row_changes": {
+            "cash_usd": {
+              "prior_filing": {
+                "prior": 183500000,
+                "current": 202600000,
+                "change": 19100000
+              },
+              "cur_filing": {
+                "prior": 202600000,
+                "current": 204200000,
+                "change": 1600000
+              }
+            },
+            "strc_fair_value_usd": {
+              "prior_filing": {
+                "prior": 49152000,
+                "current": 49364000,
+                "change": 212000
+              },
+              "cur_filing": {
+                "prior": 49364000,
+                "current": 49813000,
+                "change": 449000
+              }
+            },
+            "strc_shares": {
+              "prior_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 505000,
+                "current": 505000,
+                "change": 0
+              }
+            },
+            "btc": {
+              "prior_filing": {
+                "prior": 23156,
+                "current": 24531,
+                "change": 1375
+              },
+              "cur_filing": {
+                "prior": 24531,
+                "current": 25000,
+                "change": 469
+              }
+            },
+            "class_a": {
+              "prior_filing": {
+                "prior": 83470035,
+                "current": 85696647,
+                "change": 2226612
+              },
+              "cur_filing": {
+                "prior": 85696647,
+                "current": 85730853,
+                "change": 34206
+              }
+            },
+            "class_b": {
+              "prior_filing": {
+                "prior": 9792535,
+                "current": 9237911,
+                "change": -554624
+              },
+              "cur_filing": {
+                "prior": 9237911,
+                "current": 9237911,
+                "change": 0
+              }
+            },
+            "effective_common": {
+              "prior_filing": {
+                "prior": 93262570,
+                "current": 94934558,
+                "change": 1671988
+              },
+              "cur_filing": {
+                "prior": 94934558,
+                "current": 94968764,
+                "change": 34206
+              }
+            },
+            "options": {
+              "prior_filing": {
+                "prior": 991941,
+                "current": 945153,
+                "change": -46788
+              },
+              "cur_filing": {
+                "prior": 945153,
+                "current": 901487,
+                "change": -43666
+              }
+            },
+            "unvested_awards": {
+              "prior_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 2268840,
+                "current": 2268840,
+                "change": 0
+              }
+            },
+            "fully_diluted": {
+              "prior_filing": {
+                "prior": 96523351,
+                "current": 98148551,
+                "change": 1625200
+              },
+              "cur_filing": {
+                "prior": 98148551,
+                "current": 98139091,
+                "change": -9460
+              }
+            },
+            "warrants": {
+              "prior_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              },
+              "cur_filing": {
+                "prior": 26596010,
+                "current": 26596010,
+                "change": 0
+              }
+            },
+            "debt_usd": {
+              "prior_filing": null,
+              "cur_filing": null
+            },
+            "sata_shares": {
+              "prior_filing": {
+                "prior": 9073914,
+                "current": 9995425,
+                "change": 921511
+              },
+              "cur_filing": {
+                "prior": 9995425,
+                "current": 10397966,
+                "change": 402541
+              }
+            }
+          },
+          "reconciliation": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "reconciles": true,
+            "checks": [
+              {
+                "check": "dates_chain",
+                "pass": true,
+                "prev_as_of": "2026-09-04",
+                "cur_as_of_prior": "2026-09-04"
+              },
+              {
+                "check": "cash_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 202600000,
+                "cur_prior": 202600000
+              },
+              {
+                "check": "strc_fair_value_usd_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 49364000,
+                "cur_prior": 49364000
+              },
+              {
+                "check": "strc_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 505000,
+                "cur_prior": 505000
+              },
+              {
+                "check": "btc_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 24531,
+                "cur_prior": 24531
+              },
+              {
+                "check": "class_a_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 85696647,
+                "cur_prior": 85696647
+              },
+              {
+                "check": "class_b_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9237911,
+                "cur_prior": 9237911
+              },
+              {
+                "check": "effective_common_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 94934558,
+                "cur_prior": 94934558
+              },
+              {
+                "check": "options_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 945153,
+                "cur_prior": 945153
+              },
+              {
+                "check": "unvested_awards_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 2268840,
+                "cur_prior": 2268840
+              },
+              {
+                "check": "fully_diluted_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 98148551,
+                "cur_prior": 98148551
+              },
+              {
+                "check": "warrants_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 26596010,
+                "cur_prior": 26596010
+              },
+              {
+                "check": "sata_shares_rolls_forward",
+                "pass": true,
+                "restated": false,
+                "prev_current": 9995425,
+                "cur_prior": 9995425
+              },
+              {
+                "check": "btc_change_matches_purchase",
+                "pass": true,
+                "btc_row_change": 469,
+                "purchase_btc": 469,
+                "diff": 0
+              },
+              {
+                "check": "cash_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 1600000,
+                "stated": 1600000,
+                "diff": 0
+              },
+              {
+                "check": "strc_fair_value_usd_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 449000,
+                "stated": 449000,
+                "diff": 0
+              },
+              {
+                "check": "strc_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "btc_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 469,
+                "stated": 469,
+                "diff": 0
+              },
+              {
+                "check": "class_a_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "class_b_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "effective_common_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 34206,
+                "stated": 34206,
+                "diff": 0
+              },
+              {
+                "check": "options_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -43666,
+                "stated": -43666,
+                "diff": 0
+              },
+              {
+                "check": "unvested_awards_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "fully_diluted_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": -9460,
+                "stated": -9460,
+                "diff": 0
+              },
+              {
+                "check": "warrants_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 0,
+                "stated": 0,
+                "diff": 0
+              },
+              {
+                "check": "sata_shares_change_matches_current_minus_prior",
+                "pass": true,
+                "expected": 402541,
+                "stated": 402541,
+                "diff": 0
+              }
+            ]
+          },
+          "verdict": {
+            "prev_accession": "0001628280-26-060809",
+            "cur_accession": "0001628280-26-061682",
+            "btc_usd_used": 78861.695,
+            "gross_btc_added": 469,
+            "new_senior_claims_btc": 484.456998,
+            "net_btc_for_common": -15.456998,
+            "dilution_pct": -9.6e-05,
+            "sats_per_share_before": 25839.9,
+            "sats_per_share_after": 26324.4,
+            "sats_per_share_change_pct": 0.01875,
+            "cebe_sats_before": 15335.3,
+            "cebe_sats_after": 15321.0,
+            "cebe_change_pct": -0.000932,
+            "verdict": "dilutive",
+            "funding_mix": {
+              "sata_raised_usd": 40254100,
+              "common_shares_issued": 34206,
+              "btc_spent_usd": 36560426,
+              "cash_change_usd": 1600000,
+              "dividends_paid_usd_est": 2063055.72
+            },
+            "sources_and_uses": {
+              "sources": {
+                "sata_raised_usd": 40254100,
+                "common_raised_usd_est": null,
+                "other": 0.0
+              },
+              "uses": {
+                "btc_spent_usd": 36560426,
+                "dividends_paid_usd_est": 2063055.72,
+                "cash_change_usd": 1600000,
+                "strc_change_usd": 0.0
+              },
+              "unexplained_usd": 30618.28,
+              "notes": [
+                "common_raised_usd_est is null: the filings state the Class A share-count change and the BTC purchase's average price, but never common stock's issue price or gross proceeds -- multiplying the share change by the BTC average price would conflate two unrelated prices, so it is left unestimated rather than computed that way",
+                "STRC value change is mark-to-market, not cash"
+              ]
+            },
+            "notes": [
+              "dividends_paid_usd_est = 4 payment date(s) in (2026-09-04, 2026-09-11] x 9,995,425 SATA shares outstanding as of the prior filing, held constant for the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+            ]
+          },
+          "company": "asst",
+          "data_source": "local checkout: data/ledger/asst/diff.json",
+          "as_of": "2026-09-11",
+          "breakeven_btc_price_this_week": 81460.77,
+          "breakeven_btc_price_definition": "(change in SATA notional + change in debt - change in cash - change in STRC fair value) / gross BTC added \u2014 the BTC price at which this week's new senior claims exactly used up the bitcoin bought."
+        }
+      }
+    ],
+    "answer": "15321.0 sats/fully-diluted-share (filing 0001628280-26-061682). Versus the prior filing (Sept 8), CEBE fell from 15335.3 to 15321.0 (-0.09%) \u2014 dilutive, per cebetracker.io's framework."
+  },
+  {
+    "question": "How many months of dividend reserve does Strive have, and what happens if Bitcoin drops to $50,000?",
+    "tool_calls": [
+      {
+        "tool": "metric",
+        "arguments": {
+          "company": "asst",
+          "name": "reserve months"
+        },
+        "output": {
+          "company": "asst",
+          "metric": "dividend_reserve_months",
+          "value": 22.5,
+          "unit": "months",
+          "definition": "(Cash + STRC fair value) / annual dividend x 12 \u2014 months the dividend could be paid from cash-like reserves alone.",
+          "note": null,
+          "as_of": "2026-09-11",
+          "filed": "2026-09-14",
+          "accession": "0001628280-26-061682",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "btc_price_used": 78861.695
+        }
+      },
+      {
+        "tool": "stress",
+        "arguments": {
+          "company": "asst",
+          "btc_price": 50000
+        },
+        "output": {
+          "company": "asst",
+          "accession": "0001628280-26-061682",
+          "filed": "2026-09-14",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+          "data_source": "local checkout: data/ledger/asst/latest.json",
+          "as_of": "2026-09-11",
+          "btc_price_used": 50000,
+          "metrics_at_price": {
+            "btc_usd_used": 50000,
+            "sata_rate_used": 0.13,
+            "sats_per_share_effective": 26324.4,
+            "btc_per_share_change_pct": null,
+            "sats_per_share_fully_diluted": 25474.0,
+            "btc_fmv_usd": 1250000000,
+            "sata_notional_usd": 1039796600,
+            "amplification_ratio": 0.8318,
+            "treasury_asset_value_usd": 1504013000,
+            "annual_dividend_usd": 135173558,
+            "total_dividend_coverage_yrs": 11.13,
+            "dividend_reserve_months": 22.5,
+            "ntav_per_share_effective": 4.89,
+            "breakeven_arr": 0.0899,
+            "net_senior_claims_usd": 785783600,
+            "net_senior_claims_btc": 15715.672,
+            "claim_ratio": 0.628627,
+            "cebe_sats_per_share": 9460.4,
+            "cebe_nav_per_share_usd": 4.73,
+            "notes": [
+              "no debt/convertible-note row in this filing; treated as $0 debt"
+            ]
+          },
+          "breakeven_btc_price_usd": 31431.34,
+          "breakeven_btc_price_definition": "Net senior claims (USD) / BTC held \u2014 the price at which senior claims (SATA + debt, net of cash and STRC) equal the value of the bitcoin, i.e. where common's share of the bitcoin goes to zero.",
+          "amplification_markers": {
+            "price_at_30pct_amplification": 138639.55,
+            "price_at_100pct_amplification": 41591.86,
+            "definition": "The BTC price at which (SATA notional + debt) / BTC market value crosses 30% / 100%, holding this filing's SATA notional and debt fixed."
+          }
+        }
+      }
+    ],
+    "answer": "22.5 months today. At $50,000/BTC it's still 22.5 months, unchanged \u2014 dividend reserve months is funded by cash + STRC fair value, neither of which depends on the BTC price, so a BTC drawdown alone doesn't touch it (amplification and dividend coverage do move, though: coverage falls to 11.13 years)."
+  },
+  {
+    "question": "List Strive's last 3 filings with sats-per-share and verdict, to see the trend.",
+    "tool_calls": [
+      {
+        "tool": "filings",
+        "arguments": {
+          "company": "asst",
+          "limit": 3
+        },
+        "output": {
+          "company": "asst",
+          "data_source": "local checkout: data/ledger/asst/history.json",
+          "btc_price_used": 78861.695,
+          "definition": "verdict/reconciliation compare each filing to the one immediately before it, both at the ledger's current BTC price (see btc_price_used), so the change reflects capital-markets activity rather than a moving BTC price.",
+          "count": 3,
+          "total_filings": 17,
+          "filings": [
+            {
+              "filed": "2026-09-14",
+              "accession": "0001628280-26-061682",
+              "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+              "as_of": "2026-09-11",
+              "btc_held": {
+                "prior": 24531,
+                "current": 25000,
+                "change": 469
+              },
+              "sats_per_share_effective": 26324.4,
+              "amplification_ratio": 0.5274,
+              "cebe_sats_per_share": 15321.0,
+              "verdict": "dilutive",
+              "reconciles_with_prior_filing": true,
+              "failed_reconciliation_checks": []
+            },
+            {
+              "filed": "2026-09-08",
+              "accession": "0001628280-26-060809",
+              "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026060809/asst-20260908.htm",
+              "as_of": "2026-09-04",
+              "btc_held": {
+                "prior": 23156,
+                "current": 24531,
+                "change": 1375
+              },
+              "sats_per_share_effective": 25839.9,
+              "amplification_ratio": 0.5167,
+              "cebe_sats_per_share": 15335.3,
+              "verdict": "accretive",
+              "reconciles_with_prior_filing": true,
+              "failed_reconciliation_checks": []
+            },
+            {
+              "filed": "2026-08-31",
+              "accession": "0001628280-26-059468",
+              "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026059468/asst-20260831.htm",
+              "as_of": "2026-08-28",
+              "btc_held": {
+                "prior": 21356,
+                "current": 23156,
+                "change": 1800
+              },
+              "sats_per_share_effective": 24828.8,
+              "amplification_ratio": 0.4969,
+              "cebe_sats_per_share": 15125.9,
+              "verdict": "accretive",
+              "reconciles_with_prior_filing": true,
+              "failed_reconciliation_checks": []
+            }
+          ]
+        }
+      }
+    ],
+    "answer": "2026-09-14 (0001628280-26-061682): 26324.4 sats/share, verdict=dilutive; 2026-09-08 (0001628280-26-060809): 25839.9 sats/share, verdict=accretive; 2026-08-31 (0001628280-26-059468): 24828.8 sats/share, verdict=accretive"
+  }
+]

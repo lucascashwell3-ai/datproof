@@ -1,0 +1,82 @@
+ 
+ asst-20260908 false 0001920406 0001920406 2026-09-08 2026-09-08 0001920406 us-gaap:CommonClassAMember 2026-09-08 2026-09-08 0001920406 us-gaap:SeriesAPreferredStockMember 2026-09-08 2026-09-08 
+ UNITED STATES 
+ SECURITIES AND EXCHANGE COMMISSION 
+ WASHINGTON, D.C. 20549 
+ _________________________________________________________ 
+ FORM 8-K 
+ _________________________________________________________ 
+ CURRENT REPORT 
+ Pursuant to Section 13 or 15(d) of the Securities Exchange Act of 1934 
+ Date of Report (Date of earliest event reported): September 8, 2026 
+ _________________________________________________________ 
+ STRIVE, INC. 
+ (Exact name of Registrant as Specified in Its Charter) 
+ _________________________________________________________ 
+ Nevada | 001-41612 | 88-1293236 
+ | 
+ (State or Other Jurisdiction
+of Incorporation) | (Commission File Number) | (IRS Employer
+Identification No.) | 
+ 200 Crescent Ct. , Suite 1400 , Dallas , Texas 75201 
+ | 
+ (Address of principal executive offices and zip code) | 
+ Registrant’s Telephone Number, Including Area Code: ( 855 ) 427-7360 
+ (Former Name or Former Address, if Changed Since Last Report) 
+ _________________________________________________________ 
+ Check the appropriate box below if the Form 8-K filing is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions: 
+ ☐ | Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425) 
+ | 
+ ☐ | Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12) 
+ | 
+ ☐ | Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240.14d-2(b)) | 
+ ☐ | Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13e-4(c)) | 
+ Securities registered pursuant to Section 12(b) of the Act: 
+ Title of each class | Trading
+Symbol(s) | Name of each exchange on which registered | 
+ Class A common stock, $0.001 par value per share | ASST | The Nasdaq Stock Market LLC | 
+ Variable Rate Series A Perpetual Preferred Stock, $0.001 par value per share | SATA | The Nasdaq Stock Market LLC | 
+ Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 (§ 230.405 of this chapter) or Rule 12b-2 of the Securities Exchange Act of 1934 (§ 240.12b-2 of this chapter). 
+ Emerging growth company ☒ 
+ If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. o 
+ Item 8.01. Other Events. 
+ On September 8, 2026, Strive, Inc. ("Strive" or the "Company") announced that during the period from August 31, 2026 through September 4, 2026, Strive purchased 1,375 bitcoin at an average price of approximately $79,281 per bitcoin, inclusive of fees and expenses. The Company also announced the following updates to its holdings of cash and cash equivalents, bitcoin, and Variable Rate Series A Perpetual Stretch Preferred Stock of Strategy Inc. (the "STRC Stock") and shares outstanding of Class A common stock, Class B common stock, and Variable Rate Series A Perpetual Preferred Stock (the "SATA Stock"):
+ As of August 28, 2026 | As of September 4, 2026 | Change | 
+ Cash and cash equivalents (in thousands) | $ | 183,500 | $ | 202,600 | $ | 19,100 | 
+ Fair value of STRC Stock (in thousands) | $ | 49,152 | $ | 49,364 | $ | 212 | 
+ Shares of STRC held | 505,000 | 505,000 | — | 
+ Bitcoin held | 23,156 | 24,531 | 1,375 | 
+ Shares outstanding: (1) 
+ | 
+ Class A common stock | 83,470,035 | 85,696,647 | 2,226,612 | 
+ Class B common stock | 9,792,535 | 9,237,911 | (554,624) | 
+ Effective Common Shares Outstanding (2) 
+ | 93,262,570 | 94,934,558 | 1,671,988 | 
+ Options (3) 
+ | 991,941 | 945,153 | (46,788) | 
+ Unvested employee stock awards (3) 
+ | 2,268,840 | 2,268,840 | — | 
+ Assumed Fully Diluted Shares (4) 
+ | 96,523,351 | 98,148,551 | 1,625,200 | 
+ Shares Underlying Traditional Warrants (5) 
+ | 26,596,010 | 26,596,010 | — | 
+ SATA Stock | 9,073,914 | 9,995,425 | 921,511 | 
+ (1) Includes shares outstanding and shares sold through 4:00pm EST, which will be issued on the following business day. (2) Effective Common Shares Outstanding is calculated as the sum of Class A common stock and Class B common stock. (3) Represents outstanding, but unvested employee stock awards, which are subject to ongoing time and/or performance conditions. For any awards in which the achievement of performance conditions affect the number of shares to ultimately vest, represents the target number of shares granted. (4) Assumed Fully Diluted Shares Outstanding represents Effective Common Shares Outstanding plus shares underlying all potentially dilutive securities, including options and unvested RSUs. Shares underlying Traditional Warrants are excluded from this figure. (5) Represents shares exercisable underlying Traditional Warrants. Exercises of traditional warrants subject to the payment of exercise price to Company. 
+ | 
+ Cautionary Statement Regarding Forward-Looking Statements 
+ Certain statements herein and in the press release attached hereto may constitute “forward-looking statements” within the meaning of the Private Securities Litigation Reform Act of 1995, Section 27A of the Securities Act of 1933, as amended (the “Securities Act”), and Rule 175 promulgated thereunder, and Section 21E of the Securities Exchange Act of 1934, as amended (the “Exchange Act”), and Rule 3b-6 promulgated thereunder, which statements involve inherent risks and uncertainties. Examples of forward-looking statements include, but are not limited to, express or implied statements regarding the outlook and expectations of Strive and its subsidiaries, the strategic benefits and financial benefits of the merger transaction with Semler Scientific, Inc. (the "merger transaction"), including the expected impact of the merger transaction on Strive's future financial performance and the ability to successfully integrate the combined businesses, and Strive’s intentions with respect to adjusting the SATA Stock dividend rate. Such statements are often characterized by the use of qualified words (and their derivatives) such as “may,” “will,” “anticipate,” “could,” “should,” “would,” “believe,” “contemplate,” “expect,” “estimate,” “continue,” “plan,” “project,” “predict,” “potential,” “assume,” “forecast,” “target,” “budget,” “outlook,” “trend,” “guidance,” “objective,” “goal,” “strategy,” “opportunity,” and “intend,” as well as words of similar meaning or other statements concerning opinions or judgments of Strive and its management team about future events. Forward-looking statements are based on assumptions as of the time they are made and are subject to risks, uncertainties and other factors that are difficult to predict with regard to timing, extent, likelihood and degree of occurrence, which could cause actual results to differ materially from anticipated results expressed or implied by such forward-looking statements as a result of various important factors. Other risks, uncertainties and assumptions, including, among others, the following: 
+ • the outcome of any legal proceedings that may be instituted against Strive or its subsidiaries; 
+ • the possibility that the anticipated benefits of the merger transaction are not realized when expected or at all, including as a result of changes in, or problems arising from, implementation of Bitcoin treasury strategies and risks associated with Bitcoin and other digital assets, general economic and market conditions, interest and exchange rates, monetary policy, and laws and regulations and their enforcement; 
+ • the diversion of management’s attention from ongoing business operations and opportunities; 
+ • dilution caused by Strive’s issuance of additional shares of its Class A common stock or SATA Stock; 
+ • potential adverse reactions of Strive’s clients and customers or changes to business or employee relationships, including those resulting from the completion of the merger transaction; 
+ • other factors that may affect future results of Strive or the future trading performance of its Class A common stock or SATA Stock. 
+ These factors are not necessarily all of the factors that could cause Strive’s actual results, performance or achievements to differ materially from those expressed in or implied by any of the forward-looking statements. Other factors, including unknown or unpredictable factors, also could harm Strive’s results. 
+ Although Strive believes that its expectations with respect to forward-looking statements are based upon reasonable assumptions within the bounds of its existing knowledge of its business and operations, there can be no assurance that the actual results of Strive will not differ materially from any projected future results expressed or implied by such forward-looking statements. Additional factors that could cause results to differ materially from those described above can be found in Strive’s Annual Report on Form 10-K, for the fiscal year ended December 31, 2025, and other documents subsequently filed by Strive with the SEC. 
+ The actual results anticipated may not be realized or, even if substantially realized, they may not have the expected consequences to or effects on Strive or its businesses or operations. Investors are cautioned not to rely too heavily on any such forward-looking statements. Forward-looking statements contained herein and in the press release attached hereto speak only as of the date hereof, and Strive undertakes no obligation to update or clarify these forward-looking statements, whether as a result of new information, future events or otherwise, except to the extent required by applicable law. 
+ SIGNATURE 
+ Pursuant to the requirements of the Securities Exchange Act of 1934, as amended, the Registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized. 
+ Strive, Inc. | 
+ Date: | September 8, 2026 | By: | /s/ Matthew Cole | 
+ Matthew Cole | 
+ Chief Executive Officer | 

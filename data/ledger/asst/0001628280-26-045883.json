@@ -1,0 +1,66 @@
+{
+  "company": "ASST",
+  "cik": 1920406,
+  "accession": "0001628280-26-045883",
+  "filed": "2026-06-29",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026045883/asst-20260629.htm",
+  "period": {
+    "as_of_prior": "2026-06-18",
+    "as_of": "2026-06-26"
+  },
+  "purchase": null,
+  "rows": {
+    "cash_usd": {
+      "prior": 144500000,
+      "current": 141700000,
+      "change": -2800000
+    },
+    "strc_fair_value_usd": {
+      "prior": 44738000,
+      "current": 37658000,
+      "change": -7080000
+    },
+    "strc_shares": {
+      "prior": 505000,
+      "current": 505000,
+      "change": 0
+    },
+    "btc": {
+      "prior": 19864,
+      "current": 19864,
+      "change": 0
+    },
+    "class_a": {
+      "prior": 71787867,
+      "current": 71864809,
+      "change": 76942
+    },
+    "class_b": {
+      "prior": 9780018,
+      "current": 9780018,
+      "change": 0
+    },
+    "effective_common": null,
+    "options": null,
+    "unvested_awards": null,
+    "fully_diluted": null,
+    "warrants": null,
+    "debt_usd": null,
+    "sata_shares": {
+      "prior": 7829502,
+      "current": 7829502,
+      "change": 0
+    }
+  },
+  "sata_rate": 0.13,
+  "notes": [
+    "'effective_common' row not present in this filing",
+    "'options' row not present in this filing",
+    "'unvested_awards' row not present in this filing",
+    "'fully_diluted' row not present in this filing",
+    "'warrants' row not present in this filing",
+    "'debt_usd' row not present in this filing",
+    "no purchase sentence found in this filing (no BTC bought this period, or wording drifted)"
+  ],
+  "parse_warnings": []
+}

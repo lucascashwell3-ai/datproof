@@ -67,6 +67,8 @@ jobs:
           echo "mstr=$mstr" >> "$GITHUB_ENV"
           echo "asst=$asst" >> "$GITHUB_ENV"
           echo "metaplanet=$metaplanet" >> "$GITHUB_ENV"
+      - name: ASST ledger (weekly 8-K holdings tables + metrics)
+        run: python scripts/ledger_asst.py || { echo "::warning::ASST ledger failed — site keeps prior ledger"; }
       - name: Ticker (BTC price, block height)
         run: |
           ticker=ok
@@ -89,7 +91,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html
+          git add data/ data/run-status.json data/ledger/ site/index.html site/api/
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else

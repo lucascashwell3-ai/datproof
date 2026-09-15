@@ -1,0 +1,87 @@
+{
+  "company": "ASST",
+  "cik": 1920406,
+  "accession": "0001628280-26-060809",
+  "filed": "2026-09-08",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026060809/asst-20260908.htm",
+  "period": {
+    "as_of_prior": "2026-08-28",
+    "as_of": "2026-09-04"
+  },
+  "purchase": {
+    "from": "2026-08-31",
+    "to": "2026-09-04",
+    "btc": 1375,
+    "avg_usd": 79281,
+    "total_usd": null,
+    "note": "filing says 'approximately'; total purchase amount not stated in filing"
+  },
+  "rows": {
+    "cash_usd": {
+      "prior": 183500000,
+      "current": 202600000,
+      "change": 19100000
+    },
+    "strc_fair_value_usd": {
+      "prior": 49152000,
+      "current": 49364000,
+      "change": 212000
+    },
+    "strc_shares": {
+      "prior": 505000,
+      "current": 505000,
+      "change": 0
+    },
+    "btc": {
+      "prior": 23156,
+      "current": 24531,
+      "change": 1375
+    },
+    "class_a": {
+      "prior": 83470035,
+      "current": 85696647,
+      "change": 2226612
+    },
+    "class_b": {
+      "prior": 9792535,
+      "current": 9237911,
+      "change": -554624
+    },
+    "effective_common": {
+      "prior": 93262570,
+      "current": 94934558,
+      "change": 1671988
+    },
+    "options": {
+      "prior": 991941,
+      "current": 945153,
+      "change": -46788
+    },
+    "unvested_awards": {
+      "prior": 2268840,
+      "current": 2268840,
+      "change": 0
+    },
+    "fully_diluted": {
+      "prior": 96523351,
+      "current": 98148551,
+      "change": 1625200
+    },
+    "warrants": {
+      "prior": 26596010,
+      "current": 26596010,
+      "change": 0
+    },
+    "debt_usd": null,
+    "sata_shares": {
+      "prior": 9073914,
+      "current": 9995425,
+      "change": 921511
+    }
+  },
+  "sata_rate": 0.13,
+  "notes": [
+    "'debt_usd' row not present in this filing"
+  ],
+  "parse_warnings": []
+}

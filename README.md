@@ -25,6 +25,12 @@ share sales and the digital credit instruments (STRC, SATA) that raise the cash.
   gone stale — so a source that fails quietly (old behavior: keep last data, stay green,
   nobody notices) now shows up instead of hiding.
 
+## For AI assistants
+
+`agent/` is an MCP server: connect Claude Desktop, claude.ai, Cursor, or any other MCP client
+to it and ask questions about a covered company's filings directly, with the filing attached
+to every answer. See `agent/README.md`.
+
 ## Run it locally
 
 ```bash

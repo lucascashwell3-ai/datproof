@@ -1,0 +1,155 @@
+{
+  "company": "ASST",
+  "cik": 1920406,
+  "accession": "0001628280-26-061682",
+  "filed": "2026-09-14",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061682/asst-20260914.htm",
+  "period": {
+    "as_of_prior": "2026-09-04",
+    "as_of": "2026-09-11"
+  },
+  "purchase": {
+    "from": "2026-09-08",
+    "to": "2026-09-11",
+    "btc": 469,
+    "avg_usd": 77954,
+    "total_usd": null,
+    "note": "filing says 'approximately'; total purchase amount not stated in filing"
+  },
+  "rows": {
+    "cash_usd": {
+      "prior": 202600000,
+      "current": 204200000,
+      "change": 1600000
+    },
+    "strc_fair_value_usd": {
+      "prior": 49364000,
+      "current": 49813000,
+      "change": 449000
+    },
+    "strc_shares": {
+      "prior": 505000,
+      "current": 505000,
+      "change": 0
+    },
+    "btc": {
+      "prior": 24531,
+      "current": 25000,
+      "change": 469
+    },
+    "class_a": {
+      "prior": 85696647,
+      "current": 85730853,
+      "change": 34206
+    },
+    "class_b": {
+      "prior": 9237911,
+      "current": 9237911,
+      "change": 0
+    },
+    "effective_common": {
+      "prior": 94934558,
+      "current": 94968764,
+      "change": 34206
+    },
+    "options": {
+      "prior": 945153,
+      "current": 901487,
+      "change": -43666
+    },
+    "unvested_awards": {
+      "prior": 2268840,
+      "current": 2268840,
+      "change": 0
+    },
+    "fully_diluted": {
+      "prior": 98148551,
+      "current": 98139091,
+      "change": -9460
+    },
+    "warrants": {
+      "prior": 26596010,
+      "current": 26596010,
+      "change": 0
+    },
+    "debt_usd": null,
+    "sata_shares": {
+      "prior": 9995425,
+      "current": 10397966,
+      "change": 402541
+    }
+  },
+  "sata_rate": 0.13,
+  "notes": [
+    "'debt_usd' row not present in this filing"
+  ],
+  "parse_warnings": [],
+  "metrics": {
+    "btc_usd_used": 78861.695,
+    "sata_rate_used": 0.13,
+    "sats_per_share_effective": 26324.4,
+    "btc_per_share_change_pct": 0.01875,
+    "sats_per_share_fully_diluted": 25474.0,
+    "btc_fmv_usd": 1971542375.0,
+    "sata_notional_usd": 1039796600,
+    "amplification_ratio": 0.5274,
+    "treasury_asset_value_usd": 2225555375,
+    "annual_dividend_usd": 135173558,
+    "total_dividend_coverage_yrs": 16.46,
+    "dividend_reserve_months": 22.5,
+    "ntav_per_share_effective": 12.49,
+    "breakeven_arr": 0.0607,
+    "net_senior_claims_usd": 785783600,
+    "net_senior_claims_btc": 9964.071911,
+    "claim_ratio": 0.398563,
+    "cebe_sats_per_share": 15321.0,
+    "cebe_nav_per_share_usd": 12.08,
+    "notes": [
+      "no debt/convertible-note row in this filing; treated as $0 debt"
+    ]
+  },
+  "verdict": {
+    "prev_accession": "0001628280-26-060809",
+    "cur_accession": "0001628280-26-061682",
+    "btc_usd_used": 78861.695,
+    "gross_btc_added": 469,
+    "new_senior_claims_btc": 484.456998,
+    "net_btc_for_common": -15.456998,
+    "dilution_pct": -9.6e-05,
+    "sats_per_share_before": 25839.9,
+    "sats_per_share_after": 26324.4,
+    "sats_per_share_change_pct": 0.01875,
+    "cebe_sats_before": 15335.3,
+    "cebe_sats_after": 15321.0,
+    "cebe_change_pct": -0.000932,
+    "verdict": "dilutive",
+    "funding_mix": {
+      "sata_raised_usd": 40254100,
+      "common_shares_issued": 34206,
+      "btc_spent_usd": 36560426,
+      "cash_change_usd": 1600000,
+      "dividends_paid_usd_est": 2063055.72
+    },
+    "sources_and_uses": {
+      "sources": {
+        "sata_raised_usd": 40254100,
+        "common_raised_usd_est": null,
+        "other": 0.0
+      },
+      "uses": {
+        "btc_spent_usd": 36560426,
+        "dividends_paid_usd_est": 2063055.72,
+        "cash_change_usd": 1600000,
+        "strc_change_usd": 0.0
+      },
+      "unexplained_usd": 30618.28,
+      "notes": [
+        "common_raised_usd_est is null: the filings state the Class A share-count change and the BTC purchase's average price, but never common stock's issue price or gross proceeds -- multiplying the share change by the BTC average price would conflate two unrelated prices, so it is left unestimated rather than computed that way",
+        "STRC value change is mark-to-market, not cash"
+      ]
+    },
+    "notes": [
+      "dividends_paid_usd_est = 4 payment date(s) in (2026-09-04, 2026-09-11] x 9,995,425 SATA shares outstanding as of the prior filing, held constant for the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+    ]
+  }
+}
