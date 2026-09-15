@@ -1,0 +1,414 @@
+{
+  "prev": {
+    "accession": "0001628280-26-060809",
+    "filed": "2026-09-08",
+    "metrics": {
+      "btc_usd_used": 78861.695,
+      "sata_rate_used": 0.13,
+      "sats_per_share_effective": 25839.9,
+      "sats_per_share_fully_diluted": 24993.7,
+      "btc_fmv_usd": 1934556240.045,
+      "sata_notional_usd": 999542500,
+      "amplification_ratio": 0.5167,
+      "treasury_asset_value_usd": 2186520240.045,
+      "annual_dividend_usd": 129940525,
+      "total_dividend_coverage_yrs": 16.83,
+      "dividend_reserve_months": 23.3,
+      "ntav_per_share_effective": 12.5,
+      "breakeven_arr": 0.0594,
+      "net_senior_claims_usd": 747578500,
+      "net_senior_claims_btc": 9479.614913,
+      "claim_ratio": 0.386434,
+      "cebe_sats_per_share": 15335.3,
+      "cebe_nav_per_share_usd": 12.09,
+      "notes": [
+        "no debt/convertible-note row in this filing; treated as $0 debt"
+      ]
+    }
+  },
+  "cur": {
+    "accession": "0001628280-26-061682",
+    "filed": "2026-09-14",
+    "metrics": {
+      "btc_usd_used": 78861.695,
+      "sata_rate_used": 0.13,
+      "sats_per_share_effective": 26324.4,
+      "sats_per_share_fully_diluted": 25474.0,
+      "btc_fmv_usd": 1971542375.0,
+      "sata_notional_usd": 1039796600,
+      "amplification_ratio": 0.5274,
+      "treasury_asset_value_usd": 2225555375,
+      "annual_dividend_usd": 135173558,
+      "total_dividend_coverage_yrs": 16.46,
+      "dividend_reserve_months": 22.5,
+      "ntav_per_share_effective": 12.49,
+      "breakeven_arr": 0.0607,
+      "net_senior_claims_usd": 785783600,
+      "net_senior_claims_btc": 9964.071911,
+      "claim_ratio": 0.398563,
+      "cebe_sats_per_share": 15321.0,
+      "cebe_nav_per_share_usd": 12.08,
+      "notes": [
+        "no debt/convertible-note row in this filing; treated as $0 debt"
+      ]
+    }
+  },
+  "row_changes": {
+    "cash_usd": {
+      "prior_filing": {
+        "prior": 183500000,
+        "current": 202600000,
+        "change": 19100000
+      },
+      "cur_filing": {
+        "prior": 202600000,
+        "current": 204200000,
+        "change": 1600000
+      }
+    },
+    "strc_fair_value_usd": {
+      "prior_filing": {
+        "prior": 49152000,
+        "current": 49364000,
+        "change": 212000
+      },
+      "cur_filing": {
+        "prior": 49364000,
+        "current": 49813000,
+        "change": 449000
+      }
+    },
+    "strc_shares": {
+      "prior_filing": {
+        "prior": 505000,
+        "current": 505000,
+        "change": 0
+      },
+      "cur_filing": {
+        "prior": 505000,
+        "current": 505000,
+        "change": 0
+      }
+    },
+    "btc": {
+      "prior_filing": {
+        "prior": 23156,
+        "current": 24531,
+        "change": 1375
+      },
+      "cur_filing": {
+        "prior": 24531,
+        "current": 25000,
+        "change": 469
+      }
+    },
+    "class_a": {
+      "prior_filing": {
+        "prior": 83470035,
+        "current": 85696647,
+        "change": 2226612
+      },
+      "cur_filing": {
+        "prior": 85696647,
+        "current": 85730853,
+        "change": 34206
+      }
+    },
+    "class_b": {
+      "prior_filing": {
+        "prior": 9792535,
+        "current": 9237911,
+        "change": -554624
+      },
+      "cur_filing": {
+        "prior": 9237911,
+        "current": 9237911,
+        "change": 0
+      }
+    },
+    "effective_common": {
+      "prior_filing": {
+        "prior": 93262570,
+        "current": 94934558,
+        "change": 1671988
+      },
+      "cur_filing": {
+        "prior": 94934558,
+        "current": 94968764,
+        "change": 34206
+      }
+    },
+    "options": {
+      "prior_filing": {
+        "prior": 991941,
+        "current": 945153,
+        "change": -46788
+      },
+      "cur_filing": {
+        "prior": 945153,
+        "current": 901487,
+        "change": -43666
+      }
+    },
+    "unvested_awards": {
+      "prior_filing": {
+        "prior": 2268840,
+        "current": 2268840,
+        "change": 0
+      },
+      "cur_filing": {
+        "prior": 2268840,
+        "current": 2268840,
+        "change": 0
+      }
+    },
+    "fully_diluted": {
+      "prior_filing": {
+        "prior": 96523351,
+        "current": 98148551,
+        "change": 1625200
+      },
+      "cur_filing": {
+        "prior": 98148551,
+        "current": 98139091,
+        "change": -9460
+      }
+    },
+    "warrants": {
+      "prior_filing": {
+        "prior": 26596010,
+        "current": 26596010,
+        "change": 0
+      },
+      "cur_filing": {
+        "prior": 26596010,
+        "current": 26596010,
+        "change": 0
+      }
+    },
+    "debt_usd": {
+      "prior_filing": null,
+      "cur_filing": null
+    },
+    "sata_shares": {
+      "prior_filing": {
+        "prior": 9073914,
+        "current": 9995425,
+        "change": 921511
+      },
+      "cur_filing": {
+        "prior": 9995425,
+        "current": 10397966,
+        "change": 402541
+      }
+    }
+  },
+  "reconciliation": {
+    "prev_accession": "0001628280-26-060809",
+    "cur_accession": "0001628280-26-061682",
+    "reconciles": true,
+    "checks": [
+      {
+        "check": "dates_chain",
+        "pass": true,
+        "prev_as_of": "2026-09-04",
+        "cur_as_of_prior": "2026-09-04"
+      },
+      {
+        "check": "cash_usd_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 202600000,
+        "cur_prior": 202600000
+      },
+      {
+        "check": "strc_fair_value_usd_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 49364000,
+        "cur_prior": 49364000
+      },
+      {
+        "check": "strc_shares_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 505000,
+        "cur_prior": 505000
+      },
+      {
+        "check": "btc_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 24531,
+        "cur_prior": 24531
+      },
+      {
+        "check": "class_a_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 85696647,
+        "cur_prior": 85696647
+      },
+      {
+        "check": "class_b_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 9237911,
+        "cur_prior": 9237911
+      },
+      {
+        "check": "effective_common_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 94934558,
+        "cur_prior": 94934558
+      },
+      {
+        "check": "options_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 945153,
+        "cur_prior": 945153
+      },
+      {
+        "check": "unvested_awards_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 2268840,
+        "cur_prior": 2268840
+      },
+      {
+        "check": "fully_diluted_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 98148551,
+        "cur_prior": 98148551
+      },
+      {
+        "check": "warrants_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 26596010,
+        "cur_prior": 26596010
+      },
+      {
+        "check": "sata_shares_rolls_forward",
+        "pass": true,
+        "restated": false,
+        "prev_current": 9995425,
+        "cur_prior": 9995425
+      },
+      {
+        "check": "btc_change_matches_purchase",
+        "pass": true,
+        "btc_row_change": 469,
+        "purchase_btc": 469,
+        "diff": 0
+      },
+      {
+        "check": "cash_usd_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 1600000,
+        "stated": 1600000,
+        "diff": 0
+      },
+      {
+        "check": "strc_fair_value_usd_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 449000,
+        "stated": 449000,
+        "diff": 0
+      },
+      {
+        "check": "strc_shares_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 0,
+        "stated": 0,
+        "diff": 0
+      },
+      {
+        "check": "btc_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 469,
+        "stated": 469,
+        "diff": 0
+      },
+      {
+        "check": "class_a_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 34206,
+        "stated": 34206,
+        "diff": 0
+      },
+      {
+        "check": "class_b_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 0,
+        "stated": 0,
+        "diff": 0
+      },
+      {
+        "check": "effective_common_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 34206,
+        "stated": 34206,
+        "diff": 0
+      },
+      {
+        "check": "options_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": -43666,
+        "stated": -43666,
+        "diff": 0
+      },
+      {
+        "check": "unvested_awards_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 0,
+        "stated": 0,
+        "diff": 0
+      },
+      {
+        "check": "fully_diluted_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": -9460,
+        "stated": -9460,
+        "diff": 0
+      },
+      {
+        "check": "warrants_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 0,
+        "stated": 0,
+        "diff": 0
+      },
+      {
+        "check": "sata_shares_change_matches_current_minus_prior",
+        "pass": true,
+        "expected": 402541,
+        "stated": 402541,
+        "diff": 0
+      }
+    ]
+  },
+  "verdict": {
+    "prev_accession": "0001628280-26-060809",
+    "cur_accession": "0001628280-26-061682",
+    "btc_usd_used": 78861.695,
+    "gross_btc_added": 469,
+    "new_senior_claims_btc": 484.456998,
+    "net_btc_for_common": -15.456998,
+    "dilution_pct": -9.6e-05,
+    "cebe_sats_before": 15335.3,
+    "cebe_sats_after": 15321.0,
+    "cebe_change_pct": -0.000932,
+    "verdict": "dilutive",
+    "funding_mix": {
+      "sata_raised_usd": 40254100,
+      "common_shares_issued": 34206,
+      "btc_spent_usd": 36560426,
+      "cash_change_usd": 1600000
+    },
+    "notes": []
+  }
+}
