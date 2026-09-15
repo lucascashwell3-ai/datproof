@@ -102,6 +102,28 @@ DIVIDEND_RATE_RE = re.compile(
     r"dividend rate per annum on the Company.s SATA Stock at ([0-9]+(?:\.[0-9]+)?)%", re.IGNORECASE
 )
 
+# ---------- SATA dividend-declaration 8-Ks ----------
+# Once a month (the 8-K filed around the 15th, Item 8.01) Strive announces the
+# per-annum rate for the *next* rate period, and separately declares a table
+# of daily cash dividends -- one row per business day -- for the *following*
+# calendar month. Both sentences are on every filing that has this table; a
+# filing missing either isn't a dividend-declaration 8-K.
+DIVIDEND_RATE_EFFECTIVE_RE = re.compile(
+    rf"maintained the regular dividend rate per annum on the Company.s SATA Stock at {D}%,\s*"
+    rf"effective for periods commencing on or after {DATE}",
+    re.IGNORECASE,
+)
+# The "(or $X in the aggregate ...)" clause has shown up in real filings with
+# a stray extra ")" before "in the aggregate" (e.g. the 2026-08-14 8-K) -- the
+# trailing "\)?" tolerates that typo without over-matching.
+DIVIDEND_DECL_RE = re.compile(
+    rf"declared daily cash dividends of \$\s*{D}\s*\(or \$\s*{D}\)?\s*in the aggregate for the "
+    rf"full monthly period\)?\s*per share of SATA Stock for each business day for the period "
+    rf"from {DATE} (?:through|to) {DATE}.{{0,120}}?\({D} business days in the aggregate\)",
+    re.IGNORECASE,
+)
+DIVIDEND_PAYMENT_ROW_RE = re.compile(rf"{DATE} \| {DATE} \| \$ \| {D} \|")
+
 
 def _num(x):
     """float -> int when it's a whole number, else the float; None stays None."""
@@ -236,6 +258,91 @@ def sata_rate_for(filing_date, dividend_rates, notes):
     return rate
 
 
+def parse_dividend_filing(text, accession, url):
+    """One 8-K -> (rate_period, declared_month, payments) if it carries the
+    monthly dividend-rate + daily-payment-table announcement, else None.
+    `payments` is one dict per business-day row actually present in the
+    table -- never padded or inferred to match the filing's stated count."""
+    flat = re.sub(r"\s+", " ", text)
+    rm = DIVIDEND_RATE_EFFECTIVE_RE.search(flat)
+    dm = DIVIDEND_DECL_RE.search(flat)
+    if not rm or not dm:
+        return None
+    rate_period = {
+        "effective_from": iso(rm.group(2)),
+        "rate": round(float(rm.group(1)) / 100, 4),
+        "accession": accession,
+        "url": url,
+    }
+    aggregate = clean_num(dm.group(2)) if dm.group(2) else None
+    period_from = iso(dm.group(3))
+    stated_business_days = int(dm.group(5))
+    payments = [
+        {
+            "payment_date": iso(pay_date),
+            "record_date": iso(rec_date),
+            "per_share_usd": clean_num(amt),
+            "accession": accession,
+            "url": url,
+        }
+        for pay_date, rec_date, amt in DIVIDEND_PAYMENT_ROW_RE.findall(flat)
+    ]
+    declared_month = {
+        "month": period_from[:7],
+        "business_days": stated_business_days,
+        "aggregate_per_share": aggregate,
+        "accession": accession,
+        "url": url,
+    }
+    if len(payments) != stated_business_days:
+        declared_month["note"] = (
+            f"filing states {stated_business_days} business days but the payment "
+            f"table has {len(payments)} rows; recorded only the rows actually present"
+        )
+    return rate_period, declared_month, payments
+
+
+def build_dividends(texts):
+    """All dividend-declaration 8-Ks in `texts` (same (filing, text) pairs
+    main() already fetched for the holdings table) -> the dividends.json
+    structure. Nothing here is estimated -- a month with no declaration 8-K
+    (e.g. June 2026, before the first one found in this filing history) just
+    has no payment rows, on purpose."""
+    rate_periods, declared_months, payments, notes = [], [], [], []
+    for f, text in texts:
+        url = filing_url(f["accessionNumber"], f["primaryDocument"])
+        parsed = parse_dividend_filing(text, f["accessionNumber"], url)
+        if parsed is None:
+            continue
+        rate_period, declared_month, month_payments = parsed
+        rate_periods.append(rate_period)
+        declared_months.append(declared_month)
+        if "note" in declared_month:
+            notes.append(f"{f['accessionNumber']}: {declared_month['note']}")
+        payments.extend(month_payments)
+    rate_periods.sort(key=lambda r: r["effective_from"])
+    declared_months.sort(key=lambda m: m["month"])
+    payments.sort(key=lambda p: p["payment_date"])
+    if not payments:
+        notes.append("no dividend-declaration 8-Ks found in this filing history")
+    else:
+        notes.append(
+            f"payment rows run {payments[0]['payment_date']} through {payments[-1]['payment_date']}, "
+            "one calendar month per dividend-declaration 8-K found; a month with no such 8-K on file "
+            "(e.g. before the first one found) has no rows here, not an estimated one -- see each "
+            "8-K's own Amended and Restated SATA Certificate of Designation for how the switch from "
+            "monthly to daily dividends (effective 2026-06-16) was structured, which this history's "
+            "8-Ks never restate as a dollar amount for the June 16-30, 2026 stub period"
+        )
+    return {
+        "company": "ASST",
+        "sata_rate_by_period": rate_periods,
+        "payments": payments,
+        "declared_months": declared_months,
+        "notes": notes,
+    }
+
+
 def build_record(f, text, dividend_rates):
     """One ledger record for filing `f`, or (None, reason) if it has no
     holdings table."""
@@ -270,10 +377,13 @@ def _current(record, key, default=None):
     return row["current"]
 
 
-def metrics(record, btc_usd, sata_par=100.0, sata_rate=None):
+def metrics(record, btc_usd, sata_par=100.0, sata_rate=None, prev=None):
     """Derived treasury metrics for one filing's "current" snapshot, at a
     given BTC price. A metric that needs a row the filing didn't state comes
-    back as null (see `notes`)."""
+    back as null (see `notes`). Pass `prev` (the previous filing's record) to
+    also get `btc_per_share_change_pct` -- bitcoin per effective share versus
+    that filing; left null if `prev` isn't given or either filing lacks
+    effective_common."""
     if sata_rate is None:
         sata_rate = record.get("sata_rate", DEFAULT_SATA_RATE)
     notes = []
@@ -300,6 +410,15 @@ def metrics(record, btc_usd, sata_par=100.0, sata_rate=None):
     if fully_diluted is None:
         notes.append("fully_diluted not stated in this filing; fully-diluted and CEBE metrics are null")
 
+    btc_per_share_change_pct = None
+    if prev is not None:
+        prev_btc, prev_ec = _current(prev, "btc"), _current(prev, "effective_common")
+        prev_sats = round(prev_btc * 1e8 / prev_ec, 1) if prev_btc is not None and prev_ec else None
+        if prev_sats and sats_per_share_effective is not None:
+            btc_per_share_change_pct = round((sats_per_share_effective - prev_sats) / prev_sats, 6)
+        else:
+            notes.append("btc_per_share_change_pct is null: effective_common/btc not available in this filing or the one passed as `prev`")
+
     total_dividend_coverage_yrs = round(treasury_asset_value_usd / annual_dividend_usd, 2) if treasury_asset_value_usd is not None and annual_dividend_usd else None
     dividend_reserve_months = round((cash + strc_fv) / annual_dividend_usd * 12, 1) if annual_dividend_usd else None
     ntav_per_share_effective = round((treasury_asset_value_usd - sata_notional_usd - debt) / effective_common, 2) if treasury_asset_value_usd is not None and effective_common else None
@@ -315,6 +434,7 @@ def metrics(record, btc_usd, sata_par=100.0, sata_rate=None):
         "btc_usd_used": btc_usd,
         "sata_rate_used": sata_rate,
         "sats_per_share_effective": sats_per_share_effective,
+        "btc_per_share_change_pct": btc_per_share_change_pct,
         "sats_per_share_fully_diluted": sats_per_share_fully_diluted,
         "btc_fmv_usd": btc_fmv_usd,
         "sata_notional_usd": sata_notional_usd,
@@ -335,6 +455,48 @@ def metrics(record, btc_usd, sata_par=100.0, sata_rate=None):
 
 
 # ---------- filing-to-filing verdict ----------
+
+_dividend_payments_cache = None
+
+
+def _dividend_payments():
+    """Payment rows from data/ledger/asst/dividends.json, cached per process.
+    [] if that file doesn't exist yet (e.g. dividends haven't been built this
+    run) -- callers treat that the same as "no rows found for this window"."""
+    global _dividend_payments_cache
+    if _dividend_payments_cache is None:
+        path = OUT_DIR / "dividends.json"
+        _dividend_payments_cache = json.loads(path.read_text())["payments"] if path.exists() else []
+    return _dividend_payments_cache
+
+
+def dividends_paid_in_window(prev, cur, payments):
+    """Estimate dividends paid to SATA holders between `cur`'s as_of_prior and
+    as_of (GOAL 2 approximation): sum of per-share payments due strictly
+    after as_of_prior and on/before as_of, times `prev`'s SATA share count --
+    held constant for the whole window, since that's the only count a single
+    filing gives us. Returns (usd_or_None, notes)."""
+    notes = []
+    as_of_prior, as_of = cur["period"]["as_of_prior"], cur["period"]["as_of"]
+    sata_shares = _current(prev, "sata_shares")
+    if sata_shares is None:
+        notes.append("prior filing's SATA share count not stated; dividends_paid_usd_est is null")
+        return None, notes
+    window = [p for p in payments if as_of_prior < p["payment_date"] <= as_of]
+    if not window:
+        notes.append(
+            f"no dividends.json payment rows for {as_of_prior} < payment_date <= {as_of}; "
+            "dividends_paid_usd_est is null"
+        )
+        return None, notes
+    total = _num(sum(p["per_share_usd"] for p in window) * sata_shares)
+    notes.append(
+        f"dividends_paid_usd_est = {len(window)} payment date(s) in ({as_of_prior}, {as_of}] "
+        f"x {sata_shares:,.0f} SATA shares outstanding as of the prior filing, held constant for "
+        "the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+    )
+    return total, notes
+
 
 def verdict(prev, cur, btc_usd):
     """What changed from `prev`'s filing to `cur`'s, holding BTC price fixed
@@ -368,11 +530,19 @@ def verdict(prev, cur, btc_usd):
     prior_fd, cur_fd = _current(prev, "fully_diluted"), _current(cur, "fully_diluted")
     dilution_pct = round((cur_fd - prior_fd) / prior_fd, 6) if prior_fd else None
 
+    # Bitcoin per share, effective shares -- the company's own yardstick (the
+    # daily filings lead with it), computed regardless of whether the more
+    # demanding CEBE metric below is available.
+    prior_m = metrics(prev, btc_usd)
+    cur_m = metrics(cur, btc_usd)
+    sats_before, sats_after = prior_m["sats_per_share_effective"], cur_m["sats_per_share_effective"]
+    sats_change_pct = round((sats_after - sats_before) / sats_before, 6) if sats_before and sats_after is not None else None
+    if sats_before is None or sats_after is None:
+        notes.append("effective_common not stated in one of the two filings; sats_per_share_before/after and sats_per_share_change_pct are null")
+
     cebe_before = cebe_after = cebe_change_pct = None
     label = "unknown"
     if prior_fd and cur_fd:
-        prior_m = metrics(prev, btc_usd)
-        cur_m = metrics(cur, btc_usd)
         cebe_before, cebe_after = prior_m["cebe_sats_per_share"], cur_m["cebe_sats_per_share"]
         if cebe_before is not None and cebe_after is not None:
             cebe_change_pct = round((cebe_after - cebe_before) / abs(cebe_before), 6) if cebe_before else None
@@ -384,6 +554,41 @@ def verdict(prev, cur, btc_usd):
     if purchase.get("btc") is not None and purchase.get("avg_usd") is not None:
         btc_spent_usd = _num(purchase["btc"] * purchase["avg_usd"])
 
+    dividends_paid_usd_est, dividend_notes = dividends_paid_in_window(prev, cur, _dividend_payments())
+    notes.extend(dividend_notes)
+    su_notes = [
+        "common_raised_usd_est is null: the filings state the Class A share-count change and the "
+        "BTC purchase's average price, but never common stock's issue price or gross proceeds -- "
+        "multiplying the share change by the BTC average price would conflate two unrelated prices, "
+        "so it is left unestimated rather than computed that way"
+    ]
+    if dividends_paid_usd_est is None:
+        su_notes.append("dividends_paid_usd_est is null for this window; treated as $0 in unexplained_usd")
+    sata_raised_usd = _num(d_sata_shares * 100)
+    cash_change_usd = _num(d_cash)
+
+    # STRC fair-value change is only a use (or source, if negative) of cash
+    # when Strive actually bought/sold STRC shares that period -- a change in
+    # STRC's own market price on an unchanged share count is a mark-to-market
+    # move, not cash in or out. (The CEBE math above uses the raw fair-value
+    # change (d_strc) regardless, since a mark-to-market move still changes
+    # what backs the SATA claim -- only this cash accounting treats it differently.)
+    strc_shares_row = cur["rows"].get("strc_shares")
+    strc_shares_change = strc_shares_row["change"] if strc_shares_row else None
+    if strc_shares_change is None:
+        strc_change_usd = None
+        su_notes.append("STRC share count not stated in this filing; can't tell whether the STRC "
+                         "fair-value change is cash or mark-to-market, so strc_change_usd is null")
+    elif strc_shares_change == 0:
+        strc_change_usd = 0.0
+        su_notes.append("STRC value change is mark-to-market, not cash")
+    else:
+        strc_change_usd = _num(d_strc)
+        su_notes.append("STRC purchase/sale price not stated; fair-value change used as an estimate")
+
+    sources_total = (sata_raised_usd or 0) + 0  # common_raised_usd_est and other both null/0 here
+    uses_total = (btc_spent_usd or 0) + (dividends_paid_usd_est or 0) + (cash_change_usd or 0) + (strc_change_usd or 0)
+
     return {
         "prev_accession": prev["accession"],
         "cur_accession": cur["accession"],
@@ -392,15 +597,34 @@ def verdict(prev, cur, btc_usd):
         "new_senior_claims_btc": new_senior_claims_btc,
         "net_btc_for_common": net_btc_for_common,
         "dilution_pct": dilution_pct,
+        "sats_per_share_before": sats_before,
+        "sats_per_share_after": sats_after,
+        "sats_per_share_change_pct": sats_change_pct,
         "cebe_sats_before": cebe_before,
         "cebe_sats_after": cebe_after,
         "cebe_change_pct": cebe_change_pct,
         "verdict": label,
         "funding_mix": {
-            "sata_raised_usd": _num(d_sata_shares * 100),
+            "sata_raised_usd": sata_raised_usd,
             "common_shares_issued": _num(d_class_a),
             "btc_spent_usd": btc_spent_usd,
-            "cash_change_usd": _num(d_cash),
+            "cash_change_usd": cash_change_usd,
+            "dividends_paid_usd_est": dividends_paid_usd_est,
+        },
+        "sources_and_uses": {
+            "sources": {
+                "sata_raised_usd": sata_raised_usd,
+                "common_raised_usd_est": None,
+                "other": 0.0,
+            },
+            "uses": {
+                "btc_spent_usd": btc_spent_usd,
+                "dividends_paid_usd_est": dividends_paid_usd_est,
+                "cash_change_usd": cash_change_usd,
+                "strc_change_usd": strc_change_usd,
+            },
+            "unexplained_usd": _num(sources_total - uses_total),
+            "notes": su_notes,
         },
         "notes": notes,
     }
@@ -467,7 +691,7 @@ def diff_record(prev, cur, btc_usd):
         row_changes[key] = {"prior_filing": prev["rows"].get(key), "cur_filing": cur["rows"].get(key)}
     return {
         "prev": {"accession": prev["accession"], "filed": prev["filed"], "metrics": metrics(prev, btc_usd)},
-        "cur": {"accession": cur["accession"], "filed": cur["filed"], "metrics": metrics(cur, btc_usd)},
+        "cur": {"accession": cur["accession"], "filed": cur["filed"], "metrics": metrics(cur, btc_usd, prev=prev)},
         "row_changes": row_changes,
         "reconciliation": reconcile(prev, cur),
         "verdict": verdict(prev, cur, btc_usd),
@@ -519,11 +743,19 @@ def main():
     history_path = OUT_DIR / "history.json"
     history_path.write_text(json.dumps(records, indent=2) + "\n")
 
+    # Dividends (GOAL 1) -- written before latest/diff so verdict()'s
+    # sources-and-uses (GOAL 2) can read dividends.json for this same run.
+    dividends = build_dividends(texts)
+    dividends_path = OUT_DIR / "dividends.json"
+    dividends_path.write_text(json.dumps(dividends, indent=2) + "\n")
+    global _dividend_payments_cache
+    _dividend_payments_cache = None
+
     btc_usd = load_btc_price()
     latest_path = diff_path = None
     if records and btc_usd:
         latest = dict(records[-1])
-        latest["metrics"] = metrics(records[-1], btc_usd)
+        latest["metrics"] = metrics(records[-1], btc_usd, prev=records[-2] if len(records) >= 2 else None)
         latest["verdict"] = verdict(records[-2], records[-1], btc_usd) if len(records) >= 2 else None
         latest_path = OUT_DIR / "latest.json"
         latest_path.write_text(json.dumps(latest, indent=2) + "\n")
@@ -535,16 +767,17 @@ def main():
         print("no data/ticker.json BTC price available — latest.json/diff.json not written", file=sys.stderr)
 
     SITE_DIR.mkdir(parents=True, exist_ok=True)
-    for src in (history_path, latest_path, diff_path):
+    for src in (history_path, latest_path, diff_path, dividends_path):
         if src and src.exists():
             shutil.copyfile(src, SITE_DIR / src.name)
     readme = SITE_DIR / "README.md"
-    if not readme.exists():
-        readme.write_text(SITE_README)
+    readme.write_text(SITE_README)
 
     # ---- report ----
     print(f"scanned {len(filings)} 8-Ks since {a.since}", file=sys.stderr)
     print(f"parsed {len(records)} holdings tables", file=sys.stderr)
+    print(f"parsed {len(dividends['declared_months'])} dividend-declaration 8-Ks "
+          f"-> {len(dividends['payments'])} payment rows", file=sys.stderr)
     print(f"skipped {len(skipped)}:", file=sys.stderr)
     for f, reason in skipped:
         print(f"  {f['filingDate']} {f['accessionNumber']} {f['primaryDocument']}: {reason}", file=sys.stderr)
@@ -580,13 +813,22 @@ own 8-K filings. Every number here traces back to a specific filing — see
   that day's BTC price, and `verdict` — what changed since the prior filing,
   with the BTC price held constant so the change reflects capital markets
   activity (new shares, new preferred stock, new bitcoin bought) rather than
-  a moving BTC price.
+  a moving BTC price. `verdict` leads with bitcoin per effective share
+  (`sats_per_share_before/after`) ahead of the fully-diluted CEBE figure, and
+  carries `sources_and_uses` — an estimated weekly money trail (SATA raised,
+  bitcoin bought, dividends paid, cash and STRC change, and what's left
+  unexplained).
 - **latest per-filing files** (`<accession>.json`) — the same shape as one
   entry in history.json.
 - **diff.json** — the newest filing against the one before it: every row's
   change, both filings' metrics at the same BTC price, and a
   filing-to-filing reconciliation (do the share counts and cash roll
   forward from one filing's "current" to the next one's "prior"?).
+- **dividends.json** — every SATA Stock dividend disclosed in the company's
+  monthly dividend-declaration 8-Ks: the per-annum rate by effective period,
+  one row per business-day cash payment (payment date, record date, $/share),
+  and each month's board-declared totals. Used to estimate the
+  `dividends_paid_usd_est` figure in each `verdict`.
 
 A field that's `null` means the filing didn't state that number — nothing
 here is filled in or estimated. `notes` and `parse_warnings` on each record

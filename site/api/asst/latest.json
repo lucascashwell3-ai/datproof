@@ -88,6 +88,7 @@
     "btc_usd_used": 78861.695,
     "sata_rate_used": 0.13,
     "sats_per_share_effective": 26324.4,
+    "btc_per_share_change_pct": 0.01875,
     "sats_per_share_fully_diluted": 25474.0,
     "btc_fmv_usd": 1971542375.0,
     "sata_notional_usd": 1039796600,
@@ -115,6 +116,9 @@
     "new_senior_claims_btc": 484.456998,
     "net_btc_for_common": -15.456998,
     "dilution_pct": -9.6e-05,
+    "sats_per_share_before": 25839.9,
+    "sats_per_share_after": 26324.4,
+    "sats_per_share_change_pct": 0.01875,
     "cebe_sats_before": 15335.3,
     "cebe_sats_after": 15321.0,
     "cebe_change_pct": -0.000932,
@@ -123,8 +127,29 @@
       "sata_raised_usd": 40254100,
       "common_shares_issued": 34206,
       "btc_spent_usd": 36560426,
-      "cash_change_usd": 1600000
+      "cash_change_usd": 1600000,
+      "dividends_paid_usd_est": 2063055.72
     },
-    "notes": []
+    "sources_and_uses": {
+      "sources": {
+        "sata_raised_usd": 40254100,
+        "common_raised_usd_est": null,
+        "other": 0.0
+      },
+      "uses": {
+        "btc_spent_usd": 36560426,
+        "dividends_paid_usd_est": 2063055.72,
+        "cash_change_usd": 1600000,
+        "strc_change_usd": 0.0
+      },
+      "unexplained_usd": 30618.28,
+      "notes": [
+        "common_raised_usd_est is null: the filings state the Class A share-count change and the BTC purchase's average price, but never common stock's issue price or gross proceeds -- multiplying the share change by the BTC average price would conflate two unrelated prices, so it is left unestimated rather than computed that way",
+        "STRC value change is mark-to-market, not cash"
+      ]
+    },
+    "notes": [
+      "dividends_paid_usd_est = 4 payment date(s) in (2026-09-04, 2026-09-11] x 9,995,425 SATA shares outstanding as of the prior filing, held constant for the window (an approximation -- SATA shares outstanding likely rose within the window too)"
+    ]
   }
 }

@@ -1,0 +1,659 @@
+{
+  "company": "ASST",
+  "sata_rate_by_period": [
+    {
+      "effective_from": "2026-07-01",
+      "rate": 0.13,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "effective_from": "2026-08-01",
+      "rate": 0.13,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "effective_from": "2026-09-01",
+      "rate": 0.13,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "effective_from": "2026-10-01",
+      "rate": 0.13,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    }
+  ],
+  "payments": [
+    {
+      "payment_date": "2026-07-01",
+      "record_date": "2026-06-30",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-02",
+      "record_date": "2026-07-01",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-06",
+      "record_date": "2026-07-02",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-07",
+      "record_date": "2026-07-06",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-08",
+      "record_date": "2026-07-07",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-09",
+      "record_date": "2026-07-08",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-10",
+      "record_date": "2026-07-09",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-13",
+      "record_date": "2026-07-10",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-14",
+      "record_date": "2026-07-13",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-15",
+      "record_date": "2026-07-14",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-16",
+      "record_date": "2026-07-15",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-17",
+      "record_date": "2026-07-16",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-20",
+      "record_date": "2026-07-17",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-21",
+      "record_date": "2026-07-20",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-22",
+      "record_date": "2026-07-21",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-23",
+      "record_date": "2026-07-22",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-24",
+      "record_date": "2026-07-23",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-27",
+      "record_date": "2026-07-24",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-28",
+      "record_date": "2026-07-27",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-29",
+      "record_date": "2026-07-28",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-30",
+      "record_date": "2026-07-29",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-07-31",
+      "record_date": "2026-07-30",
+      "per_share_usd": 0.0493,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "payment_date": "2026-08-03",
+      "record_date": "2026-07-31",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-04",
+      "record_date": "2026-08-03",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-05",
+      "record_date": "2026-08-04",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-06",
+      "record_date": "2026-08-05",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-07",
+      "record_date": "2026-08-06",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-10",
+      "record_date": "2026-08-07",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-11",
+      "record_date": "2026-08-10",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-12",
+      "record_date": "2026-08-11",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-13",
+      "record_date": "2026-08-12",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-14",
+      "record_date": "2026-08-13",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-17",
+      "record_date": "2026-08-14",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-18",
+      "record_date": "2026-08-17",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-19",
+      "record_date": "2026-08-18",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-20",
+      "record_date": "2026-08-19",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-21",
+      "record_date": "2026-08-20",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-24",
+      "record_date": "2026-08-21",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-25",
+      "record_date": "2026-08-24",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-26",
+      "record_date": "2026-08-25",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-27",
+      "record_date": "2026-08-26",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-28",
+      "record_date": "2026-08-27",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-08-31",
+      "record_date": "2026-08-28",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "payment_date": "2026-09-01",
+      "record_date": "2026-08-31",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-02",
+      "record_date": "2026-09-01",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-03",
+      "record_date": "2026-09-02",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-04",
+      "record_date": "2026-09-03",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-08",
+      "record_date": "2026-09-04",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-09",
+      "record_date": "2026-09-08",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-10",
+      "record_date": "2026-09-09",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-11",
+      "record_date": "2026-09-10",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-14",
+      "record_date": "2026-09-11",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-15",
+      "record_date": "2026-09-14",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-16",
+      "record_date": "2026-09-15",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-17",
+      "record_date": "2026-09-16",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-18",
+      "record_date": "2026-09-17",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-21",
+      "record_date": "2026-09-18",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-22",
+      "record_date": "2026-09-21",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-23",
+      "record_date": "2026-09-22",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-24",
+      "record_date": "2026-09-23",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-25",
+      "record_date": "2026-09-24",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-28",
+      "record_date": "2026-09-25",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-29",
+      "record_date": "2026-09-28",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-09-30",
+      "record_date": "2026-09-29",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "payment_date": "2026-10-01",
+      "record_date": "2026-09-30",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-02",
+      "record_date": "2026-10-01",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-05",
+      "record_date": "2026-10-02",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-06",
+      "record_date": "2026-10-05",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-07",
+      "record_date": "2026-10-06",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-08",
+      "record_date": "2026-10-07",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-09",
+      "record_date": "2026-10-08",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-13",
+      "record_date": "2026-10-09",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-14",
+      "record_date": "2026-10-13",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-15",
+      "record_date": "2026-10-14",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-16",
+      "record_date": "2026-10-15",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-19",
+      "record_date": "2026-10-16",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-20",
+      "record_date": "2026-10-19",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-21",
+      "record_date": "2026-10-20",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-22",
+      "record_date": "2026-10-21",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-23",
+      "record_date": "2026-10-22",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-26",
+      "record_date": "2026-10-23",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-27",
+      "record_date": "2026-10-26",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-28",
+      "record_date": "2026-10-27",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-29",
+      "record_date": "2026-10-28",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    },
+    {
+      "payment_date": "2026-10-30",
+      "record_date": "2026-10-29",
+      "per_share_usd": 0.0516,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    }
+  ],
+  "declared_months": [
+    {
+      "month": "2026-07",
+      "business_days": 22,
+      "aggregate_per_share": 1.0846,
+      "accession": "0001628280-26-043013",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026043013/asst-20260615.htm"
+    },
+    {
+      "month": "2026-08",
+      "business_days": 21,
+      "aggregate_per_share": 1.0836,
+      "accession": "0001628280-26-048231",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026048231/asst-20260714.htm"
+    },
+    {
+      "month": "2026-09",
+      "business_days": 21,
+      "aggregate_per_share": 1.0836,
+      "accession": "0001628280-26-056908",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026056908/asst-20260813.htm"
+    },
+    {
+      "month": "2026-10",
+      "business_days": 21,
+      "aggregate_per_share": 1.0836,
+      "accession": "0001628280-26-061949",
+      "url": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026061949/asst-20260914.htm"
+    }
+  ],
+  "notes": [
+    "payment rows run 2026-07-01 through 2026-10-30, one calendar month per dividend-declaration 8-K found; a month with no such 8-K on file (e.g. before the first one found) has no rows here, not an estimated one -- see each 8-K's own Amended and Restated SATA Certificate of Designation for how the switch from monthly to daily dividends (effective 2026-06-16) was structured, which this history's 8-Ks never restate as a dollar amount for the June 16-30, 2026 stub period"
+  ]
+}

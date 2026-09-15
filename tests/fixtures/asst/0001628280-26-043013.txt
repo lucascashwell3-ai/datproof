@@ -1,0 +1,77 @@
+ 
+ asst-20260615 false 0001920406 0001920406 2026-06-15 2026-06-15 0001920406 us-gaap:CommonClassAMember 2026-06-15 2026-06-15 0001920406 us-gaap:SeriesAPreferredStockMember 2026-06-15 2026-06-15 
+ UNITED STATES 
+ SECURITIES AND EXCHANGE COMMISSION 
+ WASHINGTON, D.C. 20549 
+ _________________________________________________________ 
+ FORM 8-K 
+ _________________________________________________________ 
+ CURRENT REPORT 
+ Pursuant to Section 13 or 15(d) of the Securities Exchange Act of 1934 
+ Date of Report (Date of earliest event reported): June 15, 2026 
+ _________________________________________________________ 
+ STRIVE, INC. 
+ (Exact name of Registrant as Specified in Its Charter) 
+ _________________________________________________________ 
+ Nevada | 001-41612 | 88-1293236 
+ | 
+ (State or Other Jurisdiction
+of Incorporation) | (Commission File Number) | (IRS Employer
+Identification No.) | 
+ 200 Crescent Ct. , Suite 1400 , Dallas , Texas 75201 
+ | 
+ (Address of principal executive offices and zip code) | 
+ Registrant’s Telephone Number, Including Area Code: ( 855 ) 427-7360 
+ (Former Name or Former Address, if Changed Since Last Report) 
+ _________________________________________________________ 
+ Check the appropriate box below if the Form 8-K filing is intended to simultaneously satisfy the filing obligation of the registrant under any of the following provisions: 
+ ☐ | Written communications pursuant to Rule 425 under the Securities Act (17 CFR 230.425) 
+ | 
+ ☐ | Soliciting material pursuant to Rule 14a-12 under the Exchange Act (17 CFR 240.14a-12) 
+ | 
+ ☐ | Pre-commencement communications pursuant to Rule 14d-2(b) under the Exchange Act (17 CFR 240.14d-2(b)) | 
+ ☐ | Pre-commencement communications pursuant to Rule 13e-4(c) under the Exchange Act (17 CFR 240.13e-4(c)) | 
+ Securities registered pursuant to Section 12(b) of the Act: 
+ Title of each class | Trading
+Symbol(s) | Name of each exchange on which registered | 
+ Class A common stock, $0.001 par value per share | ASST | The Nasdaq Stock Market LLC | 
+ Variable Rate Series A Perpetual Preferred Stock, $0.001 par value per share | SATA | The Nasdaq Stock Market LLC | 
+ Indicate by check mark whether the registrant is an emerging growth company as defined in Rule 405 of the Securities Act of 1933 (§ 230.405 of this chapter) or Rule 12b-2 of the Securities Exchange Act of 1934 (§ 240.12b-2 of this chapter). 
+ Emerging growth company ☒ 
+ If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. o 
+ Item 8.01. Other Events. 
+ Dividend Rate on SATA Stock 
+ On June 15, 2026, Strive, Inc. ("Strive" or the "Company") announced that its board of directors maintained the regular dividend rate per annum on the Company’s SATA Stock at 13.00%, effective for periods commencing on or after July 1, 2026. 
+ Cash Dividend Declaration 
+ Strive also announced that its board of directors declared daily cash dividends of $0.0493 (or $1.0846 in the aggregate for the full monthly period) per share of SATA Stock for each business day for the period from July 1, 2026 through July 31, 2026, as listed in the table below (22 business days in the aggregate), which represents a per annum dividend rate of 13.00% on the SATA Stock. Daily payments will be made to stockholders of record of SATA Stock at the close of business on the immediately preceding business day. 
+ Payment date | Record date | Dividend | 
+ July 1, 2026 | June 30, 2026 | $ | 0.0493 | 
+ July 2, 2026 | July 1, 2026 | $ | 0.0493 | 
+ July 6, 2026 | July 2, 2026 | $ | 0.0493 | 
+ July 7, 2026 | July 6, 2026 | $ | 0.0493 | 
+ July 8, 2026 | July 7, 2026 | $ | 0.0493 | 
+ July 9, 2026 | July 8, 2026 | $ | 0.0493 | 
+ July 10, 2026 | July 9, 2026 | $ | 0.0493 | 
+ July 13, 2026 | July 10, 2026 | $ | 0.0493 | 
+ July 14, 2026 | July 13, 2026 | $ | 0.0493 | 
+ July 15, 2026 | July 14, 2026 | $ | 0.0493 | 
+ July 16, 2026 | July 15, 2026 | $ | 0.0493 | 
+ July 17, 2026 | July 16, 2026 | $ | 0.0493 | 
+ July 20, 2026 | July 17, 2026 | $ | 0.0493 | 
+ July 21, 2026 | July 20, 2026 | $ | 0.0493 | 
+ July 22, 2026 | July 21, 2026 | $ | 0.0493 | 
+ July 23, 2026 | July 22, 2026 | $ | 0.0493 | 
+ July 24, 2026 | July 23, 2026 | $ | 0.0493 | 
+ July 27, 2026 | July 24, 2026 | $ | 0.0493 | 
+ July 28, 2026 | July 27, 2026 | $ | 0.0493 | 
+ July 29, 2026 | July 28, 2026 | $ | 0.0493 | 
+ July 30, 2026 | July 29, 2026 | $ | 0.0493 | 
+ July 31, 2026 | July 30, 2026 | $ | 0.0493 | 
+ ROC Dividend Guidance 
+ From a U.S. federal income tax perspective, to the extent distributions on the SATA Stock are not treated as being made out of the Company's accumulated or current earnings and profits, they will be treated generally as tax-deferred recovery of capital to the extent of the investor’s tax basis (in the case of a U.S. investor) and will be treated as exempt from U.S. dividend withholding tax (in the case of a non-U.S. investor). The Company does not have any accumulated earnings and profits, and does not expect to generate current earnings and profits in the current year or the foreseeable future. 
+ SIGNATURE 
+ Pursuant to the requirements of the Securities Exchange Act of 1934, as amended, the Registrant has duly caused this report to be signed on its behalf by the undersigned hereunto duly authorized. 
+ Strive, Inc. | 
+ Date: | June 15, 2026 | By: | /s/ Matthew Cole | 
+ Matthew Cole | 
+ Chief Executive Officer | 
