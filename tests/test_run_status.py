@@ -2,7 +2,7 @@
 source must not turn the whole run red. Only "everything failed" or "too stale" is a hard stop.
 """
 
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
@@ -46,7 +46,8 @@ def test_build_status_flags_degraded_on_any_failure(monkeypatch, tmp_path):
 
 def test_main_exits_nonzero_only_when_every_source_failed(monkeypatch, tmp_path):
     mstr_csv = tmp_path / "MSTR.csv"
-    write_csv(mstr_csv, ["2026-09-01"])
+    # a filing from yesterday, so the check never ages into "stale" as the calendar moves
+    write_csv(mstr_csv, [(date.today() - timedelta(days=1)).isoformat()])
     monkeypatch.setattr(run_status, "FILING_SOURCES", {"mstr": mstr_csv})
     monkeypatch.setattr(run_status, "OUT", tmp_path / "run-status.json")
 
@@ -56,5 +57,5 @@ def test_main_exits_nonzero_only_when_every_source_failed(monkeypatch, tmp_path)
     # every source failed: exits 1
     assert run_status.main([
         "--mstr-status", "failed", "--asst-status", "failed",
-        "--metaplanet-status", "failed", "--ticker-status", "failed",
+        "--metaplanet-status", "failed", "--ticker-status", "failed", "--credit-status", "failed",
     ]) == 1

@@ -1,0 +1,1390 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DATproof — the safe-haven story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0e;--panel:#0f1115;--rule:#1e222a;--fg:#d9dce2;--dim:#6e7480;--g0:#171a20;--g1:#1d4d2c;--g2:#2f8a3e;--g3:#5ad66a;--acc:#f7931a;--down:#e0564f;--link:#9cc3ff;--sans:"Space Grotesk",system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans);font-variant-numeric:tabular-nums}
+a{color:var(--link);text-decoration:none}
+
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule);background:var(--bg)}
+.site-nav .logo{font:600 15px var(--sans);color:var(--fg);margin-left:0}
+.site-nav .logo i{color:var(--acc);font-style:normal}
+.site-nav a{color:var(--dim);margin-left:20px;font-size:14px}
+.site-nav a:hover{color:var(--fg)}
+.site-nav a.current{color:var(--fg)}
+
+/* ---- shared beat/content styles ---- */
+.beat-inner{max-width:1100px;width:100%;margin:0 auto}
+h2{font-size:clamp(30px,3.6vw,44px);line-height:1.12;margin:0 0 12px;font-weight:700;letter-spacing:-.02em}
+.copy{color:#c3c7cf;font-size:17px;line-height:1.55;max-width:62ch;margin:0 0 28px}
+body.mode-stage .src{min-height:0;display:block;margin-top:10px}
+
+.big{display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:end;margin-bottom:28px;min-height:calc(clamp(40px,6.5vw,72px) + 14px)}
+.big .num{font:700 clamp(40px,6.5vw,72px)/1 var(--sans);letter-spacing:-.02em;color:var(--g3);text-shadow:0 0 24px rgba(90,214,106,.28);font-variant-numeric:tabular-nums}
+.big .cap{color:var(--dim);font-size:13px;line-height:1.25;font-weight:400;letter-spacing:.02em;max-width:56ch;font-variant-numeric:tabular-nums}
+.beat-btc .big .num{color:var(--acc);text-shadow:0 0 24px rgba(247,147,26,.3)}
+/* narrow screens: stack number over caption so every beat reserves the same height */
+@media(max-width:600px){
+  .big{grid-template-columns:1fr;row-gap:6px;min-height:96px}
+  .big .cap{max-width:100%}
+}
+
+.chart-slot{width:100%;height:clamp(320px,58vh,560px);margin-bottom:18px}
+.chart-slot.credit-bars{margin-top:0}
+
+/* ---- callout: lives inside #chartShared, placed at whichever plot-area corner the line
+   (all series) touches least (see bestCalloutBox in the script) — not anchored to the
+   endpoint, which put the number directly on top of the line on several beats. text-align
+   is set inline per corner (left corner = left-aligned, right corner = right-aligned). the
+   scrim stays as a fallback for the rare case every corner is covered. ---- */
+#callout{position:absolute;pointer-events:none;opacity:0;transition:opacity .15s ease;background:rgba(10,11,14,.82);padding:10px 14px;border-radius:10px}
+#callout .num{display:block;font:700 56px/1 var(--sans);letter-spacing:-.02em;color:var(--g3);text-shadow:0 0 20px rgba(90,214,106,.22);font-variant-numeric:tabular-nums}
+#callout .cap{display:block;margin-top:8px;color:var(--dim);font-size:13px;line-height:1.25;font-weight:400;letter-spacing:.02em;max-width:26ch}
+#callout.btc .num{color:var(--acc);text-shadow:0 0 24px rgba(247,147,26,.3)}
+#callout.b6{padding:0;background:none}
+#callout.b6 .num{font-size:88px}
+#callout.b6 .cap{font-size:15px;max-width:30ch;margin-top:12px;color:#c3c7cf}
+@media(max-width:700px){
+  .chart-slot{height:40vh}
+  /* at this width some beats' copy wraps 3 lines and some wrap 4 (h2 similarly 1 vs 2, and
+     the beat-2 source line — full names now, not series ids, per F3 — wraps to 2 lines
+     while every other beat's fits on 1) — without a floor the six slides' .beat-inner
+     blocks end up different heights, and since the block is vertically centred that drags
+     .chart-slot to a different y per beat, which breaks the shared canvas's single fixed
+     rect. Floor h2/.copy/.src to the tallest beat's wrap at this breakpoint so every beat
+     reserves the same header/source height. */
+  h2{min-height:67.2px}
+  .copy{min-height:105.4px}
+  body.mode-stage .src{min-height:33.6px}
+  #callout{padding:8px 10px}
+  #callout .num{font-size:36px}
+  #callout .cap{font-size:12px;max-width:18ch}
+}
+
+.src{font:400 12px/1.4 var(--sans);color:var(--dim);letter-spacing:.04em;opacity:.85;min-height:54px;display:flex;align-items:center}
+
+/* ---- shared chart layer: single canvas fixed over the stage, positioned onto the active slide's chart-slot ---- */
+.chart-shared{position:fixed;z-index:20;pointer-events:none;opacity:0;transition:opacity .3s ease}
+.chart-shared.ready{opacity:1}
+.chart-shared canvas{width:100%;height:100%;display:block}
+.chart-shared .fallback{position:absolute;inset:0;display:none;align-items:center;color:var(--dim);font:13px var(--sans)}
+.chart-shared .fallback:not([hidden]){display:flex}
+.bars-wrap{position:absolute;inset:0 0 0 34%;display:flex;flex-direction:column;justify-content:flex-start;padding-top:40px;padding-bottom:0;opacity:0}
+.bars{display:flex;flex-direction:column;gap:64px;width:100%}
+.barrow{display:grid;grid-template-columns:170px 1fr 104px;align-items:center;gap:16px;font:400 17px var(--sans)}
+.barrow .lbl{color:var(--fg);font-weight:500;text-align:right}
+.barrow .lbl small{display:block;color:var(--dim);font-size:13px;font-weight:400;margin-top:2px;letter-spacing:.02em}
+.barrow .track{height:36px;background:var(--g0);border-radius:3px;overflow:hidden}
+.barrow .fill{display:block;height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.16,.9,.3,1)}
+.barrow .fill.credit{background:var(--acc);box-shadow:0 0 10px rgba(247,147,26,.35)}
+.barrow .fill.rf{background:var(--dim)}
+.barrow .val{text-align:left;color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums;font-size:20px}
+@media(max-width:600px){
+  #barsWrap{inset:0;justify-content:flex-end;padding-top:0;padding-bottom:0}
+  .bars{gap:20px}
+  .barrow{grid-template-columns:110px 1fr 60px;gap:10px;font-size:12px}
+  .barrow .track{height:20px}
+  .barrow .lbl small{font-size:9.5px;white-space:nowrap}
+  .barrow .val{font-size:12.5px}
+  #callout.b6 .num{font-size:32px}
+  #callout.b6 .cap{max-width:22ch;font-size:13px}
+}
+
+.close-slot{min-height:54px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.close-link{display:inline-flex;align-items:center;gap:8px;font:500 14px var(--sans);color:var(--fg);background:#12141b;border:1px solid var(--rule);border-radius:7px;padding:10px 18px}
+.close-link:hover{border-color:var(--g2)}
+.close-link b{color:var(--acc);font-weight:600}
+
+.replay{display:inline-flex;align-items:center;gap:6px;font:400 13px var(--sans);color:var(--dim);letter-spacing:.03em;background:none;border:0;padding:0;cursor:pointer;opacity:.85}
+.replay:hover{color:var(--fg);opacity:1}
+
+footer{color:var(--dim);font:400 12px var(--sans);letter-spacing:.03em;padding:48px 24px 64px;max-width:1100px;margin:0 auto;text-align:center}
+
+/* ---- progress bar (segments are clickable — jump to that beat) ---- */
+.progress-bar{position:fixed;top:79px;left:0;right:0;padding:0 24px;box-sizing:border-box;z-index:50}
+.progress-inner{max-width:1000px;margin:0 auto;display:flex;gap:6px}
+.seg{flex:1;height:3px;background:rgba(255,255,255,.14);border-radius:2px;overflow:hidden;cursor:pointer}
+.seg .fill{display:block;width:100%;height:100%;background:var(--g3);transform-origin:left;transform:scaleX(0);border-radius:2px}
+body.mode-flow .progress-bar{display:none}
+
+/* ---- nav arrows: vertically centered on the stage, in the gutters outside the
+   content column at >=1200px so they can never land on text or the chart; inside
+   the edges with a 24px gap on narrower screens ---- */
+.navarrow{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:0;background:rgba(10,11,14,.85);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:60;color:var(--dim);transition:color .2s ease,background .2s ease}
+.navarrow:hover{color:var(--fg);background:rgba(10,11,14,.95)}
+.navarrow svg{width:20px;height:20px}
+.navarrow.left{left:12px}
+.navarrow.right{right:12px}
+@media(min-width:1300px){
+  .navarrow.left{left:calc(50% - 550px - 60px)}
+  .navarrow.right{right:calc(50% - 550px - 60px)}
+}
+.navarrow[hidden]{display:none}
+body.mode-flow .navarrow{display:none}
+
+/* ---- reveal (text stagger-in) ---- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
+.reveal.r1{transition-delay:0ms}
+.reveal.r2{transition-delay:120ms}
+.reveal.r3{transition-delay:240ms}
+.reveal.r4{transition-delay:360ms}
+.slide.active .reveal{opacity:1;transform:translateY(0)}
+.slide.leaving .reveal{opacity:0;transform:translateY(-10px);transition-duration:.18s;transition-delay:0ms!important}
+
+/* ---- stage mode: fixed full-viewport horizontal stories ---- */
+#stageMode{display:none}
+body.mode-stage #stageMode{display:block}
+body.mode-stage{overflow:hidden;height:100vh}
+body.mode-stage html{overflow:hidden}
+.stage{position:fixed;inset:0;overflow:hidden}
+.slide-track{position:absolute;inset:0;display:flex;width:600vw;height:100%;transform:translateX(0);transition:transform .9s cubic-bezier(.65,0,.35,1);will-change:transform}
+.slide{flex:0 0 100vw;width:100vw;height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:118px 24px 40px;position:relative;opacity:1;transition:opacity .9s cubic-bezier(.65,0,.35,1);will-change:opacity}
+.slide.leaving{opacity:.6}
+.slide:nth-child(even){background:var(--panel)}
+
+/* ---- fallback mode (reduced motion / ?all=1): plain vertical, everything drawn, no motion — verbatim base layout ---- */
+#fallbackMode{display:none}
+body.mode-flow #fallbackMode{display:block}
+#fallbackMode section.beat{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:130px 24px}
+#fallbackMode section.beat:nth-child(even){background:var(--panel)}
+#fallbackMode .beat-inner{max-width:1100px;width:100%;margin:0 auto}
+#fallbackMode h2{font-size:clamp(32px,4.5vw,52px);line-height:1.12;margin:0 0 18px;font-weight:700;letter-spacing:-.02em}
+#fallbackMode .copy{color:#c3c7cf;font-size:17px;line-height:1.65;max-width:58ch;margin:0 0 44px}
+#fallbackMode .big{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+#fallbackMode .big .num{font:700 clamp(48px,8.5vw,88px)/1 var(--sans);letter-spacing:-.02em;color:var(--g3);text-shadow:0 0 24px rgba(90,214,106,.28)}
+#fallbackMode .big .cap{color:var(--dim);font-size:13px;font-weight:400;letter-spacing:.02em;max-width:26ch}
+#fallbackMode .beat-btc .big .num{color:var(--acc);text-shadow:0 0 24px rgba(247,147,26,.3)}
+#fallbackMode .chart-wrap{position:relative;width:100%;height:280px;margin-bottom:18px}
+#fallbackMode .fallback{position:absolute;inset:0;display:none;align-items:center;color:var(--dim);font:13px var(--sans)}
+#fallbackMode .fallback:not([hidden]){display:flex}
+#fallbackMode .src{font:400 12px/1.4 var(--sans);color:var(--dim);letter-spacing:.04em;opacity:.85}
+#fallbackMode .bars{display:flex;flex-direction:column;gap:18px;margin:8px 0 32px}
+#fallbackMode .barrow{display:grid;grid-template-columns:160px 1fr 80px;align-items:center;gap:14px;font:400 14px var(--sans)}
+#fallbackMode .barrow .lbl{color:var(--fg);font-weight:500;text-align:right}
+#fallbackMode .barrow .lbl small{display:block;color:var(--dim);font-size:11px;font-weight:400;margin-top:2px;letter-spacing:.02em}
+#fallbackMode .barrow .track{height:14px;background:var(--g0);border-radius:3px;overflow:hidden}
+#fallbackMode .barrow .fill{display:block;height:100%;border-radius:3px;width:0}
+#fallbackMode .barrow .fill.credit{background:var(--acc);box-shadow:0 0 10px rgba(247,147,26,.35)}
+#fallbackMode .barrow .fill.rf{background:var(--dim)}
+#fallbackMode .barrow .val{text-align:left;color:var(--fg);font-weight:600}
+#fallbackMode .close-link{display:inline-flex;align-items:center;gap:8px;margin-top:6px;font:500 14px var(--sans);color:var(--fg);background:#12141b;border:1px solid var(--rule);border-radius:7px;padding:10px 18px}
+#fallbackMode .close-link:hover{border-color:var(--g2)}
+#fallbackMode .close-link b{color:var(--acc);font-weight:600}
+#fallbackMode footer{color:var(--dim);font:400 12px var(--sans);letter-spacing:.03em;padding:48px 24px 64px;max-width:1100px;margin:0 auto;text-align:center}
+
+@media(prefers-reduced-motion:reduce){
+  .barrow .fill{transition:none}
+}
+body.mode-stage .slide,body.mode-stage .beat,body.mode-stage .slide::before{background:transparent!important}
+</style></head><body>
+
+<nav class="site-nav"><a class="logo" href="../">DAT<i>proof</i></a><div><a href="../#grid">activity</a><a href="../#credit">credit</a><a href="../#why">why</a><a href="./" class="current">story</a><a href="https://lucascashwell3-ai.github.io/proof/">lucas</a></div></nav>
+
+<!-- ============ STAGE MODE (B2 layout + B3 chart morph) ============ -->
+<div id="stageMode">
+
+<div class="progress-bar"><div class="progress-inner" id="progressBar"></div></div>
+
+<button type="button" class="navarrow left" id="navLeft" aria-label="Previous" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+<button type="button" class="navarrow right" id="navRight" aria-label="Next">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+
+<div class="stage" id="stage">
+<div class="slide-track" id="track">
+
+<!-- BEAT 1 — THE RISK-FREE RATE -->
+<section class="beat slide" id="beat1" data-beat="0">
+<div class="beat-inner">
+<h2 class="reveal r1">The risk-free rate</h2>
+<p class="copy reveal r2">For 200 years finance has measured every investment against government debt. Today that yardstick is the 3-month Treasury bill.</p>
+<div class="chart-slot"></div>
+<div class="src reveal r4">FRED · 3-month Treasury bill · 1934–2026</div>
+</div>
+</section>
+
+<!-- BEAT 2 — WHAT A DOLLAR BUYS -->
+<section class="beat slide" id="beat2" data-beat="1">
+<div class="beat-inner">
+<h2 class="reveal r1">The yardstick is shrinking</h2>
+<p class="copy reveal r2">A 1913 dollar keeps three cents of what it once bought. The standard everything is measured against is the thing losing value.</p>
+<div class="chart-slot"></div>
+<div class="src reveal r4">FRED · purchasing power of the consumer dollar · 1913–2026</div>
+</div>
+</section>
+
+<!-- BEAT 3 — THE PRINTER -->
+<section class="beat slide" id="beat3" data-beat="2">
+<div class="beat-inner">
+<h2 class="reveal r1">The printer never stops</h2>
+<p class="copy reveal r2">Since 1966 the money supply has grown 50 times over, and federal debt 122 times. Risk-free, priced in a unit that will not hold still.</p>
+<div class="chart-slot"></div>
+<div class="src reveal r4">FRED · M2, federal debt · 1966–2026</div>
+</div>
+</section>
+
+<!-- BEAT 4 — THE REAL YIELD -->
+<section class="beat slide" id="beat4" data-beat="3">
+<div class="beat-inner">
+<h2 class="reveal r1">What you actually keep</h2>
+<p class="copy reveal r2">The risk-free return minus inflation. Negative in 38% of all months since 1948. The safest asset in finance regularly pays less than nothing.</p>
+<div class="chart-slot"></div>
+<div class="src reveal r4">FRED · 3-month bill, CPI · 1948–2026</div>
+</div>
+</section>
+
+<!-- BEAT 5 — THE NEW SYSTEM -->
+<section class="beat slide beat-btc" id="beat5" data-beat="4">
+<div class="beat-inner">
+<h2 class="reveal r1">A unit that cannot be printed</h2>
+<p class="copy reveal r2">Bitcoin is capped at 21 million, enforced by code rather than a committee. The first standard with no printer behind it.</p>
+<div class="chart-slot"></div>
+<div class="src reveal r4">FRED · bitcoin, Coinbase · 2014–2026</div>
+</div>
+</section>
+
+<!-- BEAT 6 — THE ANSWER -->
+<section class="beat slide" id="beat6" data-beat="5">
+<div class="beat-inner">
+<h2 class="reveal r1">Digital credit</h2>
+<p class="copy reveal r2">Fixed income paid on top of the asset that cannot be debased. Where the two systems meet.</p>
+<div class="chart-slot credit-bars"></div>
+<div class="src reveal r4">Strategy 8-K · Strive 8-K · FRED</div>
+</div>
+</section>
+
+</div></div>
+</div>
+
+<div class="chart-shared" id="chartShared">
+<canvas id="sharedCanvas"></canvas>
+<div class="fallback" id="chartFallback" hidden>chart unavailable, see number above.</div>
+<div class="bars-wrap" id="barsWrap">
+<div class="bars">
+<div class="barrow"><span class="lbl">STRC<small>Strategy, Aug 2026</small></span><span class="track"><span class="fill credit" id="bar0"></span></span><span class="val">12.00%</span></div>
+<div class="barrow"><span class="lbl">SATA<small>Strive, 08-28</small></span><span class="track"><span class="fill credit" id="bar1"></span></span><span class="val">13.0%</span></div>
+<div class="barrow"><span class="lbl">3-mo bill<small>FRED, 08-27</small></span><span class="track"><span class="fill rf" id="bar2"></span></span><span class="val">3.84%</span></div>
+</div>
+</div>
+<div id="callout"><span class="num" id="calloutNum"></span><span class="cap" id="calloutCap"></span></div>
+</div>
+
+</div>
+
+<!-- ============ FALLBACK MODE (reduced-motion / ?all=1) — verbatim base sections ============ -->
+<div id="fallbackMode">
+
+<section class="beat" id="fbeat1" data-beat="1">
+<div class="beat-inner">
+<h2>The risk-free rate</h2>
+<p class="copy">For 200 years finance has measured every investment against government debt. Today that yardstick is the 3-month Treasury bill.</p>
+<div class="big"><span class="num">3.72%</span><span class="cap">3-month T-bill yield, August 2026</span></div>
+<div class="chart-wrap"><canvas id="fc1"></canvas><div class="fallback" hidden>3-month T-bill yield, 1934–2026 — chart unavailable, see number above.</div></div>
+<div class="src">FRED · TB3MS · 1934–2026</div>
+</div>
+</section>
+
+<section class="beat" id="fbeat2" data-beat="2">
+<div class="beat-inner">
+<h2>The yardstick is shrinking</h2>
+<p class="copy">A 1913 dollar keeps three cents of what it once bought. The standard everything is measured against is the thing losing value.</p>
+<div class="big"><span class="num">2.9%</span><span class="cap">of its 1913 purchasing power, what the dollar keeps today</span></div>
+<div class="chart-wrap"><canvas id="fc2"></canvas><div class="fallback" hidden>Purchasing power of the consumer dollar, 1913–2026 — chart unavailable, see number above.</div></div>
+<div class="src">FRED · CUUR0000SA0R · 1913–2026</div>
+</div>
+</section>
+
+<section class="beat" id="fbeat3" data-beat="3">
+<div class="beat-inner">
+<h2>The printer never stops</h2>
+<p class="copy">Since 1966 the money supply has grown 50 times over, and federal debt 122 times. Risk-free, priced in a unit that will not hold still.</p>
+<div class="big"><span class="num">50x</span><span class="cap">M2 money supply since 1966 · federal debt 122x</span></div>
+<div class="chart-wrap"><canvas id="fc3"></canvas><div class="fallback" hidden>M2 and federal debt, indexed to 1966 — chart unavailable, see number above.</div></div>
+<div class="src">FRED · M2SL, GFDEBTN · 1966–2026</div>
+</div>
+</section>
+
+<section class="beat" id="fbeat4" data-beat="4">
+<div class="beat-inner">
+<h2>What you actually keep</h2>
+<p class="copy">The risk-free return minus inflation. Negative in 38% of all months since 1948. The safest asset in finance regularly pays less than nothing.</p>
+<div class="big"><span class="num">+0.19%</span><span class="cap">real 3-month T-bill yield, July 2026</span></div>
+<div class="chart-wrap"><canvas id="fc4"></canvas><div class="fallback" hidden>Real T-bill yield, 1948–2026, shaded below zero — chart unavailable, see number above.</div></div>
+<div class="src">FRED · TB3MS, CPIAUCSL · 1948–2026</div>
+</div>
+</section>
+
+<section class="beat beat-btc" id="fbeat5" data-beat="5">
+<div class="beat-inner">
+<h2>A unit that cannot be printed</h2>
+<p class="copy">Bitcoin is capped at 21 million, enforced by code rather than a committee. The first standard with no printer behind it.</p>
+<div class="big"><span class="num">$80,309</span><span class="cap">bitcoin, 6 September 2026 · 217x since 2014, log scale</span></div>
+<div class="chart-wrap"><canvas id="fc5"></canvas><div class="fallback" hidden>Bitcoin price, log scale, 2014–2026 — chart unavailable, see number above.</div></div>
+<div class="src">FRED · CBBTCUSD · 2014–2026</div>
+</div>
+</section>
+
+<section class="beat" id="fbeat6" data-beat="6">
+<div class="beat-inner">
+<h2>Digital credit</h2>
+<p class="copy">Fixed income paid on top of the asset that cannot be debased. Where the two systems meet.</p>
+<div class="bars" id="fbars6">
+<div class="barrow"><span class="lbl">STRC<small>Strategy, Aug 2026</small></span><span class="track"><span class="fill credit" data-w="85.7" id="fbar1"></span></span><span class="val">12.00%</span></div>
+<div class="barrow"><span class="lbl">SATA<small>Strive, 08-28</small></span><span class="track"><span class="fill credit" data-w="92.9" id="fbar2"></span></span><span class="val">13.0%</span></div>
+<div class="barrow"><span class="lbl">3-mo bill<small>FRED, 08-27</small></span><span class="track"><span class="fill rf" data-w="27.4" id="fbar3"></span></span><span class="val">3.84%</span></div>
+</div>
+<a class="close-link" href="../">see the issuers → <b>DATproof</b></a>
+</div>
+</section>
+
+
+</div>
+
+<script src="story-data.js"></script>
+<script>
+(function(){
+"use strict";
+var DATA = window.STORY_DATA;
+
+var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var forceAll = new URLSearchParams(location.search).get('all') === '1';
+var showAll = reduceMotion || forceAll;
+var hasCanvas = !!(window.CanvasRenderingContext2D);
+
+var COLOR = {
+  g3: '#5ad66a', g2: '#2f8a3e', g1: '#1d4d2c', dim: '#6e7480',
+  acc: '#f7931a', down: '#e0564f', rule: '#1e222a'
+};
+
+function dpr(){ return Math.max(1, window.devicePixelRatio || 1); }
+function niceLabel(d){ return d.slice(0,4); }
+function indexTo100(points, baseIdx){
+  var base = points[baseIdx][1];
+  return points.map(function(p){ return [p[0], (p[1]/base)*100]; });
+}
+
+// ================= FALLBACK MODE (verbatim base renderer) =================
+function ctxFor(canvas){
+  var rect = canvas.parentElement.getBoundingClientRect();
+  var w = rect.width, h = rect.height;
+  var ratio = dpr();
+  canvas.width = Math.round(w * ratio);
+  canvas.height = Math.round(h * ratio);
+  var ctx = canvas.getContext('2d');
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  return {ctx: ctx, w: w, h: h};
+}
+function scaleY(v, min, max, top, bottom, log){
+  var a = log ? Math.log(Math.max(v, 1e-9)) : v;
+  var lo = log ? Math.log(Math.max(min, 1e-9)) : min;
+  var hi = log ? Math.log(Math.max(max, 1e-9)) : max;
+  var t = (a - lo) / (hi - lo);
+  return bottom - t * (bottom - top);
+}
+function drawOneLine(ctx, path, color, lw){
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineJoin='round'; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(path[0][0], path[0][1]);
+  for(var i=1;i<path.length;i++){ ctx.lineTo(path[i][0], path[i][1]); }
+  ctx.stroke();
+}
+function drawSeriesFull(g, series, opts){
+  opts = opts || {};
+  var pad = {l:6,r:6,t:16,b:22};
+  var top=pad.t, bottom=g.h-pad.b, left=pad.l, right=g.w-pad.r;
+  var pts = series.points, n = pts.length;
+  var vals = pts.map(function(p){return p[1];});
+  var min = opts.min!==undefined?opts.min:Math.min.apply(null,vals);
+  var max = opts.max!==undefined?opts.max:Math.max.apply(null,vals);
+  if(min===max){ max=min+1; }
+  var log = !!opts.log;
+  var ctx=g.ctx; ctx.clearRect(0,0,g.w,g.h);
+  if(opts.zero!==undefined && !log){
+    var zy=scaleY(opts.zero,min,max,top,bottom,false);
+    ctx.strokeStyle=COLOR.rule; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(left,zy); ctx.lineTo(right,zy); ctx.stroke();
+  }
+  var xAt=function(i){ return left+(i/(n-1))*(right-left); };
+  var yAt=function(v){ return scaleY(v,min,max,top,bottom,log); };
+  var path=[]; for(var i=0;i<n;i++){ path.push([xAt(i), yAt(pts[i][1])]); }
+  if(opts.shadeZero){
+    var zy2=scaleY(0,min,max,top,bottom,false);
+    var i2=0;
+    while(i2<path.length-1){
+      var startSign=(path[i2][1]<zy2)?1:-1;
+      var run=[path[i2]]; var j=i2+1;
+      while(j<path.length){
+        var sgn=(path[j][1]<zy2)?1:-1;
+        run.push(path[j]);
+        if(sgn!==startSign){ break; }
+        j++;
+      }
+      ctx.beginPath(); ctx.moveTo(run[0][0],zy2);
+      for(var k=0;k<run.length;k++){ ctx.lineTo(run[k][0],run[k][1]); }
+      ctx.lineTo(run[run.length-1][0],zy2); ctx.closePath();
+      ctx.fillStyle = startSign>0 ? 'rgba(90,214,106,0.14)' : 'rgba(224,86,79,0.16)';
+      ctx.fill();
+      i2=j;
+    }
+  }
+  if(opts.dual){
+    drawOneLine(ctx, path, opts.color||COLOR.g3, opts.lineWidth||2);
+    var pts2=opts.dual.points;
+    var min2=opts.dualMin!==undefined?opts.dualMin:Math.min.apply(null,pts2.map(function(p){return p[1];}));
+    var max2=opts.dualMax!==undefined?opts.dualMax:Math.max.apply(null,pts2.map(function(p){return p[1];}));
+    var xAt2=function(i){ return left+(i/(pts2.length-1))*(right-left); };
+    var yAt2=function(v){ return scaleY(v,min2,max2,top,bottom,log); };
+    var path2=[]; for(var i3=0;i3<pts2.length;i3++){ path2.push([xAt2(i3), yAt2(pts2[i3][1])]); }
+    drawOneLine(ctx, path2, opts.dualColor||COLOR.down, opts.lineWidth||2);
+  } else {
+    drawOneLine(ctx, path, opts.color||COLOR.g3, opts.lineWidth||2);
+  }
+  var last=path[path.length-1];
+  ctx.fillStyle=opts.color||COLOR.g3;
+  ctx.beginPath(); ctx.arc(last[0],last[1],3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=COLOR.dim; ctx.font='400 10px "Space Grotesk", sans-serif';
+  try{ ctx.letterSpacing='0.03em'; }catch(e){}
+  ctx.textBaseline='alphabetic';
+  ctx.textAlign='left'; ctx.fillText(niceLabel(pts[0][0]), left, g.h-6);
+  ctx.textAlign='right'; ctx.fillText(niceLabel(pts[n-1][0]), right, g.h-6);
+}
+function setupFallbackCanvas(id){
+  var canvas=document.getElementById(id);
+  if(!canvas) return null;
+  if(!hasCanvas){
+    canvas.hidden=true;
+    var fb=canvas.parentElement.querySelector('.fallback');
+    if(fb) fb.hidden=false;
+    return null;
+  }
+  return canvas;
+}
+function renderFallback(){
+  var c1=setupFallbackCanvas('fc1'); if(c1){ drawSeriesFull(ctxFor(c1), DATA.TB3MS, {color:COLOR.g3}); }
+  var c2=setupFallbackCanvas('fc2'); if(c2){ drawSeriesFull(ctxFor(c2), DATA.CUUR0000SA0R, {color:COLOR.g3, log:true}); }
+  var c3=setupFallbackCanvas('fc3');
+  if(c3){
+    var m2idx=indexTo100(DATA.M2SL.points,0);
+    var debtStart=DATA.GFDEBTN.points[0][1];
+    var debtidx=DATA.GFDEBTN.points.map(function(p){ return [p[0], (p[1]/debtStart)*100]; });
+    var allvals=m2idx.map(function(x){return x[1];}).concat(debtidx.map(function(x){return x[1];}));
+    var max=Math.max.apply(null,allvals);
+    drawSeriesFull(ctxFor(c3), {points:m2idx}, {color:COLOR.g3, min:0, max:max, dual:{points:debtidx}, dualColor:COLOR.down, dualMin:0, dualMax:max});
+  }
+  var c4=setupFallbackCanvas('fc4'); if(c4){ drawSeriesFull(ctxFor(c4), DATA.REALYIELD, {color:COLOR.g3, zero:0, shadeZero:true}); }
+  var c5=setupFallbackCanvas('fc5'); if(c5){ drawSeriesFull(ctxFor(c5), DATA.CBBTCUSD, {color:COLOR.acc, log:true}); }
+  ['fbar1','fbar2','fbar3'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.style.width = el.dataset.w + '%';
+  });
+  var resizeTimer=null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(function(){
+      if(c1) drawSeriesFull(ctxFor(c1), DATA.TB3MS, {color:COLOR.g3});
+      if(c2) drawSeriesFull(ctxFor(c2), DATA.CUUR0000SA0R, {color:COLOR.g3, log:true});
+      if(c3){
+        var m2idx=indexTo100(DATA.M2SL.points,0);
+        var debtStart=DATA.GFDEBTN.points[0][1];
+        var debtidx=DATA.GFDEBTN.points.map(function(p){ return [p[0], (p[1]/debtStart)*100]; });
+        var allvals=m2idx.map(function(x){return x[1];}).concat(debtidx.map(function(x){return x[1];}));
+        var max=Math.max.apply(null,allvals);
+        drawSeriesFull(ctxFor(c3), {points:m2idx}, {color:COLOR.g3, min:0, max:max, dual:{points:debtidx}, dualColor:COLOR.down, dualMin:0, dualMax:max});
+      }
+      if(c4) drawSeriesFull(ctxFor(c4), DATA.REALYIELD, {color:COLOR.g3, zero:0, shadeZero:true});
+      if(c5) drawSeriesFull(ctxFor(c5), DATA.CBBTCUSD, {color:COLOR.acc, log:true});
+    }, 120);
+  });
+}
+
+if(showAll){
+  document.body.className = 'mode-flow';
+  renderFallback();
+} else {
+  document.body.className = 'mode-stage';
+  initStage();
+}
+
+// ================= STAGE MODE (B2 horizontal stories + B3 chart morph) =================
+function initStage(){
+  var TOTAL = 6;
+  var STORY_MS = 7000;
+  var TRANS_MS = 900;
+  var ENTER_MS = 900;
+  var N = 110;
+
+  // ---- easing: cubic-bezier(.65,0,.35,1), same family drives the track slide, the morph and the count-up ----
+  function cubicBezier(x1,y1,x2,y2){
+    function A(a1,a2){return 1-3*a2+3*a1;}
+    function B(a1,a2){return 3*a2-6*a1;}
+    function C(a1){return 3*a1;}
+    function calcBezier(t,a1,a2){ return ((A(a1,a2)*t+B(a1,a2))*t+C(a1))*t; }
+    function calcSlope(t,a1,a2){ return 3*A(a1,a2)*t*t+2*B(a1,a2)*t+C(a1); }
+    function getTforX(x){
+      var t=x;
+      for(var i=0;i<8;i++){
+        var xEst=calcBezier(t,x1,x2)-x;
+        var d=calcSlope(t,x1,x2);
+        if(Math.abs(d)<1e-6) break;
+        t=t-xEst/d;
+      }
+      return t;
+    }
+    return function(x){
+      if(x<=0) return 0; if(x>=1) return 1;
+      return calcBezier(getTforX(x), y1, y2);
+    };
+  }
+  var EASE = cubicBezier(.65,0,.35,1);
+  function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
+
+  function hexToRgb(hex){ hex=hex.replace('#',''); var n=parseInt(hex,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+  function lerpColor(c1,c2,t){
+    var a=hexToRgb(c1), b=hexToRgb(c2);
+    return 'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')';
+  }
+
+  // ---- resample a raw [date,value] series to N evenly-spaced values (index-space lerp) ----
+  function resample(points, n){
+    var len=points.length;
+    var out=new Array(n);
+    for(var k=0;k<n;k++){
+      var t=(n===1)?0:(k/(n-1));
+      var pos=t*(len-1);
+      var i0=Math.floor(pos), i1=Math.min(i0+1,len-1);
+      var frac=pos-i0;
+      var v0=points[i0][1], v1=points[i1][1];
+      out[k]=v0+(v1-v0)*frac;
+    }
+    return out;
+  }
+  function toNormFrac(vals, min, max, log){
+    var lo = log?Math.log(Math.max(min,1e-9)):min;
+    var hi = log?Math.log(Math.max(max,1e-9)):max;
+    return vals.map(function(v){
+      var a = log?Math.log(Math.max(v,1e-9)):v;
+      var t = (a-lo)/(hi-lo);
+      return 1-t;
+    });
+  }
+  var xFracN = []; for(var xi=0; xi<N; xi++){ xFracN.push(xi/(N-1)); }
+
+  // ---- chart definitions (same series/ranges as base — numbers untouched) ----
+  var m2idx = indexTo100(DATA.M2SL.points, 0);
+  var debtStart = DATA.GFDEBTN.points[0][1];
+  var debtidx = DATA.GFDEBTN.points.map(function(p){ return [p[0], (p[1]/debtStart)*100]; });
+  var b3max = Math.max.apply(null, m2idx.map(function(x){return x[1];}).concat(debtidx.map(function(x){return x[1];})));
+  function autoRange(points){
+    var vals=points.map(function(p){return p[1];});
+    return [Math.min.apply(null,vals), Math.max.apply(null,vals)];
+  }
+  var r1=autoRange(DATA.TB3MS.points), r2=autoRange(DATA.CUUR0000SA0R.points), r4=autoRange(DATA.REALYIELD.points), r5=autoRange(DATA.CBBTCUSD.points);
+
+  var chartDefs = [
+    { lineColor:'g3', yTitle:'', xTitle:'year', chart:{points:DATA.TB3MS.points, min:r1[0], max:r1[1], log:false},
+      startLabel: niceLabel(DATA.TB3MS.points[0][0]), endLabel: niceLabel(DATA.TB3MS.points[DATA.TB3MS.points.length-1][0]) },
+    { lineColor:'g3', yTitle:'', xTitle:'year', chart:{points:DATA.CUUR0000SA0R.points, min:r2[0], max:r2[1], log:true},
+      startLabel: niceLabel(DATA.CUUR0000SA0R.points[0][0]), endLabel: niceLabel(DATA.CUUR0000SA0R.points[DATA.CUUR0000SA0R.points.length-1][0]) },
+    { lineColor:'g3', yTitle:'', xTitle:'year', chart:{points:m2idx, min:0, max:b3max, log:false, secondary:{points:debtidx, min:0, max:b3max, color:'down'}},
+      startLabel: niceLabel(m2idx[0][0]), endLabel: niceLabel(m2idx[m2idx.length-1][0]) },
+    { lineColor:'g3', yTitle:'', xTitle:'year', chart:{points:DATA.REALYIELD.points, min:r4[0], max:r4[1], log:false, zero:0, shadeZero:true},
+      startLabel: niceLabel(DATA.REALYIELD.points[0][0]), endLabel: niceLabel(DATA.REALYIELD.points[DATA.REALYIELD.points.length-1][0]) },
+    { lineColor:'acc', yTitle:'', xTitle:'year', chart:{points:DATA.CBBTCUSD.points, min:r5[0], max:r5[1], log:true},
+      startLabel: niceLabel(DATA.CBBTCUSD.points[0][0]), endLabel: niceLabel(DATA.CBBTCUSD.points[DATA.CBBTCUSD.points.length-1][0]) },
+    { bars:[ {w:85.7}, {w:92.9}, {w:27.4} ] }
+  ];
+  var CALLOUT_CAPS = [
+    '3-month T-bill yield, August 2026',
+    'of its 1913 purchasing power, what the dollar keeps today',
+    'M2 money supply since 1966 · federal debt 122x',
+    'real 3-month T-bill yield, July 2026',
+    'bitcoin, 6 September 2026 · 217x since 2014, log scale',
+    'digital credit yield today, against 3.84% on the 3-month bill'
+  ];
+  var CALLOUT_NUM_BEAT6 = '12–13%';
+  chartDefs.forEach(function(def){
+    if(!def.chart) return;
+    var vals = resample(def.chart.points, N);
+    def.norm = { yFrac: toNormFrac(vals, def.chart.min, def.chart.max, def.chart.log) };
+    if(def.chart.zero !== undefined){
+      var lo = def.chart.min, hi = def.chart.max;
+      def.norm.zeroFrac = 1 - ((def.chart.zero - lo) / (hi - lo));
+    }
+    if(def.chart.secondary){
+      var vals2 = resample(def.chart.secondary.points, N);
+      def.norm.yFrac2 = toNormFrac(vals2, def.chart.secondary.min, def.chart.secondary.max, def.chart.log);
+    }
+  });
+
+  // ---- number count-up config (final text matches the static HTML exactly) ----
+  var counters = {
+    0: {final: 3.72,   fmt: function(v){ return v.toFixed(2) + '%'; }},
+    1: {final: 2.9,    fmt: function(v){ return v.toFixed(1) + '%'; }},
+    2: {final: 50,     fmt: function(v){ return Math.round(v) + 'x'; }},
+    3: {final: 0.19,   fmt: function(v){ return (v>=0?'+':'') + v.toFixed(2) + '%'; }},
+    4: {final: 80309,  fmt: function(v){ return '$' + Math.round(v).toLocaleString('en-US'); }}
+  };
+
+  // ---- DOM refs ----
+  var stageEl = document.getElementById('stage');
+  var track = document.getElementById('track');
+  var progressBar = document.getElementById('progressBar');
+  var replayEl = document.getElementById('replay');
+  var navLeft = document.getElementById('navLeft');
+  var navRight = document.getElementById('navRight');
+  var slideEls = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var chartShared = document.getElementById('chartShared');
+  var canvasEl = document.getElementById('sharedCanvas');
+  var barsWrapEl = document.getElementById('barsWrap');
+  var barEls = [document.getElementById('bar0'), document.getElementById('bar1'), document.getElementById('bar2')];
+  var calloutEl = document.getElementById('callout');
+  var calloutNumEl = document.getElementById('calloutNum');
+  var calloutCapEl = document.getElementById('calloutCap');
+
+  // the callout is one shared DOM node repointed at whichever beat is active — same
+  // element serves every line beat's count-up number, per the base's numEls contract.
+  var numEls = [calloutNumEl, calloutNumEl, calloutNumEl, calloutNumEl, calloutNumEl, null];
+
+  var canvasOK = hasCanvas;
+  if(!canvasOK){
+    canvasEl.hidden = true;
+    document.getElementById('chartFallback').hidden = false;
+  }
+
+  // ---- shared canvas draw core  ----
+  function ctxForStage(){
+    var rect = chartShared.getBoundingClientRect();
+    var w=rect.width, h=rect.height, ratio=dpr();
+    canvasEl.width=Math.round(w*ratio); canvasEl.height=Math.round(h*ratio);
+    var ctx=canvasEl.getContext('2d');
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    return {ctx:ctx, w:w, h:h};
+  }
+  function drawLine(ctx, path, color, lw){
+    ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.lineJoin='round'; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(path[0][0],path[0][1]);
+    for(var i=1;i<path.length;i++){ ctx.lineTo(path[i][0],path[i][1]); }
+    ctx.stroke();
+  }
+  var LEGEND_SW = 8, LEGEND_ROW_H = 16, LEGEND_X_PAD = 6, LEGEND_Y_PAD = 10;
+  // below 1200px the nav arrow sits inline at viewport left:24 (width 48, so its right
+  // edge is at 72) rather than out in the side gutter (that only exists >=1200px per the
+  // .navarrow CSS) — push the legend's left start past it so the arrow's circle never
+  // sits on top of the legend text.
+  function legendX0(plotLeft){
+    var x0 = plotLeft + LEGEND_X_PAD;
+    if(matchMedia('(min-width:1200px)').matches) return x0;
+    var rectLeft = chartShared.getBoundingClientRect().left;
+    return Math.max(x0, 72 - rectLeft);
+  }
+  function drawLegend(ctx, alpha, plotLeft, plotTop){
+    if(alpha<=0) return;
+    ctx.save(); ctx.globalAlpha=alpha;
+    ctx.font='400 12px "Space Grotesk", sans-serif';
+    try{ ctx.letterSpacing='0.02em'; }catch(e){}
+    ctx.textBaseline='middle'; ctx.textAlign='left';
+    var x0=legendX0(plotLeft), y0=plotTop+LEGEND_Y_PAD;
+    ctx.fillStyle=COLOR.g3; ctx.fillRect(x0, y0-LEGEND_SW/2, LEGEND_SW, LEGEND_SW);
+    ctx.fillStyle=COLOR.dim; ctx.fillText('M2 money supply', x0+LEGEND_SW+6, y0);
+    ctx.fillStyle=COLOR.down; ctx.fillRect(x0, y0+LEGEND_ROW_H-LEGEND_SW/2, LEGEND_SW, LEGEND_SW);
+    ctx.fillStyle=COLOR.dim; ctx.fillText('federal debt', x0+LEGEND_SW+6, y0+LEGEND_ROW_H);
+    ctx.restore();
+  }
+  // bounding box of the legend above, in the same pixel space as the chart — used so the
+  // callout's free-space search (below) never lands the number/caption on top of it.
+  function legendBBox(plotLeft, plotTop){
+    var x0=legendX0(plotLeft), y0=plotTop+LEGEND_Y_PAD;
+    return { left:x0-4, top:y0-LEGEND_SW/2-4, width:170, height:LEGEND_ROW_H+LEGEND_SW+8 };
+  }
+  function renderChartFrame(defA, defB, p, fillAlphaOverride){
+    if(!canvasOK) return;
+    var g = ctxForStage();
+    var ctx = g.ctx;
+    var pad = {l:6,r:6,t:26,b:34};
+    var top=pad.t, bottom=g.h-pad.b, left=pad.l, right=g.w-pad.r;
+    ctx.clearRect(0,0,g.w,g.h);
+
+    var hasZeroA = defA.chart.zero!==undefined, hasZeroB = defB.chart.zero!==undefined;
+    var zeroAlpha = (hasZeroA && hasZeroB) ? 1 : (hasZeroB ? p : (hasZeroA ? (1-p) : 0));
+    var zFrac = hasZeroB ? defB.norm.zeroFrac : (hasZeroA ? defA.norm.zeroFrac : 0.5);
+    if(zeroAlpha>0){
+      var zy = top + zFrac*(bottom-top);
+      ctx.save(); ctx.globalAlpha=zeroAlpha;
+      ctx.strokeStyle=COLOR.rule; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(left,zy); ctx.lineTo(right,zy); ctx.stroke();
+      ctx.restore();
+    }
+
+    var path=[];
+    for(var k=0;k<N;k++){
+      var yA=defA.norm.yFrac[k], yB=defB.norm.yFrac[k];
+      var yFrac=yA+(yB-yA)*p;
+      var x=left+xFracN[k]*(right-left);
+      var y=top+yFrac*(bottom-top);
+      path.push([x,y]);
+    }
+
+    var shadeA = !!defA.chart.shadeZero, shadeB = !!defB.chart.shadeZero;
+    var fillAlpha = (fillAlphaOverride!==undefined) ? fillAlphaOverride : (shadeA && shadeB ? 1 : (shadeB ? 0 : (shadeA ? (1-p) : 0)));
+    if(fillAlpha>0 && (shadeA||shadeB)){
+      var zy2 = top + zFrac*(bottom-top);
+      var i2=0;
+      while(i2<path.length-1){
+        var startSign=(path[i2][1]<zy2)?1:-1;
+        var run=[path[i2]]; var j=i2+1;
+        while(j<path.length){
+          var sgn=(path[j][1]<zy2)?1:-1;
+          run.push(path[j]);
+          if(sgn!==startSign){ break; }
+          j++;
+        }
+        ctx.save(); ctx.globalAlpha=fillAlpha;
+        ctx.beginPath(); ctx.moveTo(run[0][0],zy2);
+        for(var kk=0;kk<run.length;kk++){ ctx.lineTo(run[kk][0],run[kk][1]); }
+        ctx.lineTo(run[run.length-1][0],zy2); ctx.closePath();
+        ctx.fillStyle = startSign>0 ? 'rgba(90,214,106,0.14)' : 'rgba(224,86,79,0.16)';
+        ctx.fill(); ctx.restore();
+        i2=j;
+      }
+    }
+
+    var hasSecA = !!(defA.chart.secondary), hasSecB = !!(defB.chart.secondary);
+    if(hasSecA || hasSecB){
+      var secAlpha = (hasSecA && hasSecB) ? 1 : (hasSecB ? p : (1-p));
+      var secYs;
+      if(hasSecA && hasSecB){
+        secYs=[]; for(var s=0;s<N;s++){ var ya=defA.norm.yFrac2[s], yb=defB.norm.yFrac2[s]; secYs.push(ya+(yb-ya)*p); }
+      } else {
+        secYs = hasSecB ? defB.norm.yFrac2 : defA.norm.yFrac2;
+      }
+      var path2=[]; for(var s2=0;s2<N;s2++){ var x2=left+xFracN[s2]*(right-left); var y2=top+secYs[s2]*(bottom-top); path2.push([x2,y2]); }
+      ctx.save(); ctx.globalAlpha=secAlpha;
+      drawLine(ctx, path2, COLOR.down, 2);
+      ctx.restore();
+      // ---- beat-3-only legend (F2): two swatches, top-left inside the plot area, same
+      // crossfade alpha as the secondary line itself so it never ghosts across a morph.
+      drawLegend(ctx, secAlpha, left, top);
+    }
+
+    var colorFrom = COLOR[defA.lineColor], colorTo = COLOR[defB.lineColor];
+    var lineColor = (defA.lineColor===defB.lineColor) ? colorFrom : lerpColor(colorFrom, colorTo, p);
+    drawLine(ctx, path, lineColor, 2);
+    var last=path[path.length-1];
+    ctx.fillStyle=lineColor; ctx.beginPath(); ctx.arc(last[0],last[1],3,0,Math.PI*2); ctx.fill();
+
+    ctx.font='400 10px "Space Grotesk", sans-serif';
+    try{ ctx.letterSpacing='0.03em'; }catch(e){}
+    ctx.textBaseline='alphabetic';
+    if(defA===defB){
+      ctx.fillStyle=COLOR.dim; ctx.globalAlpha=1;
+      ctx.textAlign='left'; ctx.fillText(defA.startLabel, left, g.h-6);
+      ctx.textAlign='right'; ctx.fillText(defA.endLabel, right, g.h-6);
+    } else {
+      ctx.fillStyle=COLOR.dim;
+      ctx.save(); ctx.globalAlpha=1-p;
+      ctx.textAlign='left'; ctx.fillText(defA.startLabel, left, g.h-6);
+      ctx.textAlign='right'; ctx.fillText(defA.endLabel, right, g.h-6);
+      ctx.restore();
+      ctx.save(); ctx.globalAlpha=p;
+      ctx.textAlign='left'; ctx.fillText(defB.startLabel, left, g.h-6);
+      ctx.textAlign='right'; ctx.fillText(defB.endLabel, right, g.h-6);
+      ctx.restore();
+    }
+    ctx.globalAlpha=1;
+
+    // ---- axis titles: small, muted, crossfade alongside the date labels ----
+    ctx.font='400 12px "Space Grotesk", sans-serif';
+    try{ ctx.letterSpacing='0.02em'; }catch(e){}
+    ctx.textBaseline='alphabetic';
+    ctx.fillStyle=COLOR.dim;
+    if(defA===defB){
+      ctx.globalAlpha=.8;
+      ctx.textAlign='left'; ctx.fillText(defA.yTitle||'', left, 16);
+      ctx.textAlign='right'; ctx.fillText(defA.xTitle||'', right, g.h-20);
+    } else {
+      ctx.save(); ctx.globalAlpha=.8*(1-p);
+      ctx.textAlign='left'; ctx.fillText(defA.yTitle||'', left, 16);
+      ctx.textAlign='right'; ctx.fillText(defA.xTitle||'', right, g.h-20);
+      ctx.restore();
+      ctx.save(); ctx.globalAlpha=.8*p;
+      ctx.textAlign='left'; ctx.fillText(defB.yTitle||'', left, 16);
+      ctx.textAlign='right'; ctx.fillText(defB.xTitle||'', right, g.h-20);
+      ctx.restore();
+    }
+    ctx.globalAlpha=1;
+  }
+  function drawStatic(idx){
+    var def=chartDefs[idx];
+    if(!def || !def.chart) return;
+    renderChartFrame(def, def, 0);
+  }
+
+  // ---- callout free-space placement (replaces the old endpoint-anchor): the number sat
+  // ON the line at several beats (endpoint approaches the right edge from above or below,
+  // so a right-anchored box always crossed it). Instead: sample every series' line in the
+  // SAME pixel space renderChartFrame draws in (identical padding, and yFrac already
+  // carries the log/min/max normalization done once in the chartDefs.forEach prep loop
+  // above), test the callout's own measured box at each of the plot area's four corners,
+  // and place it at whichever corner the line touches least — with a 20px clearance ring
+  // so "least" still means "actually clear" whenever any corner qualifies. ----
+  var CALLOUT_INSET = 16, CALLOUT_MARGIN = 20, CALLOUT_BOTTOM_BAND = 32;
+  var CALLOUT_CORNER_ORDER = {tr:0, tl:1, bl:2, br:3}; // tie-break: top-right, then top-left
+  var lastCalloutBox = null, lastCalloutPoints = [], lastCalloutScored = [];
+
+  function chartPlotRect(){
+    var rect = chartShared.getBoundingClientRect();
+    var w = rect.width, h = rect.height;
+    var pad = {l:6,r:6,t:26,b:34};
+    return { w:w, h:h, left:pad.l, right:w-pad.r, top:pad.t, bottom:h-pad.b };
+  }
+  // every series' line, in chartShared-relative pixel space — "all series" per the fix spec,
+  // so beat 3 (M2 + federal debt) contributes both lines, not just the primary one.
+  function sampleLinePoints(idx){
+    var def = chartDefs[idx];
+    if(!def || !def.chart) return [];
+    var plot = chartPlotRect();
+    var pts = [];
+    for(var k=0;k<N;k++){
+      pts.push([ plot.left+xFracN[k]*(plot.right-plot.left), plot.top+def.norm.yFrac[k]*(plot.bottom-plot.top) ]);
+    }
+    if(def.chart.secondary){
+      for(var s=0;s<N;s++){
+        pts.push([ plot.left+xFracN[s]*(plot.right-plot.left), plot.top+def.norm.yFrac2[s]*(plot.bottom-plot.top) ]);
+      }
+    }
+    return pts;
+  }
+  function boxesOverlap(a, b, margin){
+    margin = margin||0;
+    return !(a.left+a.width+margin<=b.left || b.left+b.width+margin<=a.left ||
+             a.top+a.height+margin<=b.top || b.top+b.height+margin<=a.top);
+  }
+  function countPointsInBox(points, box, margin){
+    var x0=box.left-margin, x1=box.left+box.width+margin, y0=box.top-margin, y1=box.top+box.height+margin;
+    var c=0;
+    for(var i=0;i<points.length;i++){
+      if(points[i][0]>=x0 && points[i][0]<=x1 && points[i][1]>=y0 && points[i][1]<=y1) c++;
+    }
+    return c;
+  }
+  function bestCalloutBox(idx, elW, elH){
+    var rect = chartShared.getBoundingClientRect();
+    var w = rect.width, h = rect.height;
+    // below 700px the nav arrow sits in a fixed circle at the viewport's right edge with no
+    // side gutter reserved (that gutter only exists >=1200px), landing right over the
+    // chart's own rightmost ~50px — keep right-side corners clear of that band on phone.
+    var insetRight = matchMedia('(max-width:700px)').matches ? 56 : CALLOUT_INSET;
+    var bottomLimit = h - CALLOUT_BOTTOM_BAND - CALLOUT_INSET - elH;
+    var corners = [
+      { name:'tl', left: CALLOUT_INSET,        top: CALLOUT_INSET, align:'left'  },
+      { name:'tr', left: w-insetRight-elW,      top: CALLOUT_INSET, align:'right' },
+      { name:'bl', left: CALLOUT_INSET,        top: bottomLimit,   align:'left'  },
+      { name:'br', left: w-insetRight-elW,      top: bottomLimit,  align:'right' }
+    ];
+    var points = sampleLinePoints(idx);
+    var scored = corners.map(function(c){
+      var box = {left:c.left, top:c.top, width:elW, height:elH};
+      return { corner:c, box:box, covered:countPointsInBox(points,box,0), clear:countPointsInBox(points,box,CALLOUT_MARGIN)===0 };
+    });
+    // beat 3 also carries a canvas-drawn legend (F2), top-left inside the plot area — a
+    // rectangle roughly the callout's own size, so point-sampling it (like the line) would
+    // often miss the overlap entirely. Hard-exclude any corner whose box touches it,
+    // whenever a non-overlapping corner exists at all.
+    if(idx === 2){
+      var plot = chartPlotRect();
+      var lb = legendBBox(plot.left, plot.top);
+      scored.forEach(function(s){ s.legendHit = boxesOverlap(s.box, lb, CALLOUT_MARGIN); });
+      var noLegend = scored.filter(function(s){ return !s.legendHit; });
+      if(noLegend.length) scored = noLegend;
+    }
+    var clearOnes = scored.filter(function(s){ return s.clear; });
+    var pool = clearOnes.length ? clearOnes : scored; // every corner covered -> least-covered wins, scrim stays
+    pool.sort(function(a,b){
+      return (a.covered-b.covered) || (CALLOUT_CORNER_ORDER[a.corner.name]-CALLOUT_CORNER_ORDER[b.corner.name]);
+    });
+    lastCalloutScored = scored; // debug only: full per-corner scoring for the verification hook
+    return pool[0];
+  }
+
+  var calloutTimers = [];
+  function clearCalloutTimers(){ calloutTimers.forEach(clearTimeout); calloutTimers = []; }
+  function updateCalloutContent(idx){
+    if(idx === 5) calloutNumEl.textContent = CALLOUT_NUM_BEAT6;
+    calloutCapEl.textContent = CALLOUT_CAPS[idx] || '';
+    calloutEl.classList.toggle('btc', idx === 4 || idx === 5);
+    calloutEl.classList.toggle('b6', idx === 5);
+  }
+  // beat 6 has no line to sample and no free corner to search — it's forced to the
+  // top-right inside corner (same 16px inset the line beats use) since the bars live
+  // below it, per the fix spec (skip bestCalloutBox entirely for idx 5).
+  function positionCallout(idx){
+    if(idx === 5){
+      var phone = matchMedia('(max-width:600px)').matches;
+      calloutEl.style.textAlign = 'left';
+      calloutEl.style.right = 'auto';
+      calloutEl.style.left = '0px';
+      calloutEl.style.transform = '';
+      if(phone){
+        // phone: bars sit at the bottom of the box and the left arrow at mid-height —
+        // park the stat just above the bars so nothing sits under the arrow
+        var pb = barsWrapEl.querySelector('.bars').getBoundingClientRect();
+        var pl = chartShared.getBoundingClientRect();
+        var ph = calloutEl.offsetHeight || 93;
+        calloutEl.style.top = Math.max(CALLOUT_INSET, Math.round((pb.top - pl.top) - ph - 16)) + 'px';
+        return;
+      }
+      // desktop: bars sit near the top of the box; centre the stat on the bars block
+      var barsBox = barsWrapEl.querySelector('.bars').getBoundingClientRect();
+      var layerBox = chartShared.getBoundingClientRect();
+      var statH = calloutEl.offsetHeight || 138;
+      calloutEl.style.top = Math.round((barsBox.top - layerBox.top) + (barsBox.height - statH)/2) + 'px';
+      return;
+    }
+    calloutEl.style.transform = '';
+    var def = chartDefs[idx];
+    if(!def || !def.chart) return;
+    var elW = calloutEl.offsetWidth || 200, elH = calloutEl.offsetHeight || 70;
+    var picked = bestCalloutBox(idx, elW, elH);
+    var c = picked.corner, rect = chartShared.getBoundingClientRect();
+    calloutEl.style.textAlign = c.align;
+    if(c.align === 'right'){
+      calloutEl.style.left = 'auto';
+      calloutEl.style.right = (rect.width - c.left - elW) + 'px';
+    } else {
+      calloutEl.style.right = 'auto';
+      calloutEl.style.left = c.left + 'px';
+    }
+    calloutEl.style.top = c.top + 'px';
+    lastCalloutBox = picked.box;
+    lastCalloutPoints = sampleLinePoints(idx);
+  }
+  function calloutShowInstant(idx){
+    clearCalloutTimers();
+    updateCalloutContent(idx);
+    positionCallout(idx);
+    calloutEl.style.transition='none';
+    calloutEl.style.opacity='1';
+  }
+  function startCalloutTransition(fromIdx, toIdx){
+    clearCalloutTimers();
+    var toBars = toIdx===5, fromBars = fromIdx===5;
+    if(toBars){
+      // matches the bars themselves: an immediate parallel dissolve from beat 5 (F4/
+      // runDissolveToBars, bars visible by ~500ms) or a slower sequential crossfade from
+      // any other beat (runCrossfade, bars visible by ~600ms) — fade the old content out
+      // first, then bring the beat-6 callout in roughly when the bars land.
+      var barsDelay = (fromIdx===4) ? 200 : 300;
+      calloutEl.style.transition='opacity 150ms ease';
+      calloutEl.style.opacity='0';
+      calloutTimers.push(setTimeout(function(){
+        updateCalloutContent(toIdx);
+        positionCallout(toIdx);
+        void calloutEl.offsetHeight;
+        calloutEl.style.transition='opacity 400ms ease';
+        calloutEl.style.opacity='1';
+      }, barsDelay));
+      return;
+    }
+    if(fromBars){
+      calloutEl.style.transition='opacity 150ms ease';
+      calloutEl.style.opacity='0';
+      calloutTimers.push(setTimeout(function(){
+        updateCalloutContent(toIdx);
+        positionCallout(toIdx);
+        void calloutEl.offsetHeight;
+        calloutEl.style.transition='opacity 500ms ease';
+        calloutEl.style.opacity='1';
+      }, 1150));
+      return;
+    }
+    var adjacentLine = Math.abs(toIdx-fromIdx)===1;
+    var total = adjacentLine ? TRANS_MS : 600;
+    calloutEl.style.transition='opacity 150ms ease';
+    calloutEl.style.opacity='0';
+    calloutTimers.push(setTimeout(function(){
+      updateCalloutContent(toIdx);
+      positionCallout(toIdx);
+      void calloutEl.offsetHeight;
+      calloutEl.style.transition='opacity '+Math.max(150,total-150)+'ms ease';
+      calloutEl.style.opacity='1';
+    }, 150));
+  }
+
+  // ---- bars (beat 6) ----
+  function setBarWidth(i, w){ barEls[i].style.width = w+'%'; }
+  function setBarsInstant(widths){
+    barEls.forEach(function(el){ el.style.transition='none'; });
+    widths.forEach(function(w,i){ setBarWidth(i,w); });
+    void barEls[0].offsetHeight;
+    barEls.forEach(function(el){ el.style.transition=''; });
+  }
+
+  // ---- chart transition dispatch ----
+  var chartAnim=null;
+  function startChartTransition(fromIdx, toIdx){
+    var adjacentLine = fromIdx<5 && toIdx<5 && Math.abs(toIdx-fromIdx)===1;
+    if(adjacentLine){
+      chartAnim = {fromIdx:fromIdx, toIdx:toIdx, start:performance.now(), duration:TRANS_MS};
+      return;
+    }
+    chartAnim = null;
+    if(fromIdx===4 && toIdx===5){ runDissolveToBars(); return; }
+    if(fromIdx===5 && toIdx===4){ runDissolveFromBars(); return; }
+    runCrossfade(fromIdx, toIdx);
+  }
+  function runCrossfade(fromIdx, toIdx){
+    var toBars = toIdx===5, fromBars = fromIdx===5;
+    var outEl = fromBars ? barsWrapEl : canvasEl;
+    outEl.animate([{opacity:1},{opacity:0}],{duration:300,easing:'ease',fill:'forwards'}).onfinish=function(){
+      outEl.style.opacity='0';
+      if(toBars){
+        setBarsInstant(chartDefs[5].bars.map(function(b){return b.w;}));
+        canvasEl.style.opacity='0';
+        barsWrapEl.style.opacity='0';
+        barsWrapEl.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease',fill:'forwards'}).onfinish=function(){ barsWrapEl.style.opacity='1'; };
+      } else {
+        drawStatic(toIdx);
+        barsWrapEl.style.opacity='0';
+        canvasEl.style.opacity='0';
+        canvasEl.animate([{opacity:0},{opacity:1}],{duration:300,easing:'ease',fill:'forwards'}).onfinish=function(){ canvasEl.style.opacity='1'; };
+      }
+    };
+  }
+  function runDissolveToBars(){
+    setBarsInstant([0,0,0]);
+    barsWrapEl.style.opacity='0';
+    canvasEl.animate([{opacity:1},{opacity:0}],{duration:500,easing:'ease',fill:'forwards'}).onfinish=function(){ canvasEl.style.opacity='0'; };
+    barsWrapEl.animate([{opacity:0},{opacity:1}],{duration:500,easing:'ease',fill:'forwards'}).onfinish=function(){ barsWrapEl.style.opacity='1'; };
+    setTimeout(function(){ setBarWidth(0, chartDefs[5].bars[0].w); }, 60);
+    setTimeout(function(){ setBarWidth(1, chartDefs[5].bars[1].w); }, 560);
+    setTimeout(function(){ setBarWidth(2, chartDefs[5].bars[2].w); }, 710);
+  }
+  function runDissolveFromBars(){
+    setBarWidth(2, 0);
+    setTimeout(function(){ setBarWidth(1, 0); }, 150);
+    setTimeout(function(){
+      setBarWidth(0, 0);
+      canvasEl.style.opacity='0';
+      drawStatic(4);
+      barsWrapEl.animate([{opacity:1},{opacity:0}],{duration:500,easing:'ease',fill:'forwards'}).onfinish=function(){ barsWrapEl.style.opacity='0'; };
+      canvasEl.animate([{opacity:0},{opacity:1}],{duration:500,easing:'ease',fill:'forwards'}).onfinish=function(){ canvasEl.style.opacity='1'; };
+    }, 1150);
+  }
+  function startFillFadeIn(){
+    var def=chartDefs[3];
+    var start=null, dur=450;
+    function step(ts){
+      if(start===null) start=ts;
+      var t=Math.min(1,(ts-start)/dur);
+      renderChartFrame(def, def, 0, t);
+      if(t<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ---- master rAF loop: chart morph + the progress-bar fill (both driven from elapsed time, not CSS transitions) ----
+  function raf(now){
+    if(chartAnim){
+      var t=(now-chartAnim.start)/chartAnim.duration;
+      var done = t>=1;
+      if(done) t=1;
+      var p=EASE(t);
+      renderChartFrame(chartDefs[chartAnim.fromIdx], chartDefs[chartAnim.toIdx], p);
+      if(done){
+        var toIdx=chartAnim.toIdx;
+        chartAnim=null;
+        if(toIdx===3){ startFillFadeIn(); }
+      }
+    }
+    if(!paused && !segCompleted && fillEls[activeSegIndex]){
+      var elapsed = now - segStartTs;
+      var frac = Math.min(1, elapsed/STORY_MS);
+      fillEls[activeSegIndex].style.transform = 'scaleX(' + frac + ')';
+      if(frac>=1){ onSegmentComplete(); }
+    }
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // ---- keep the shared chart pinned over the active slide's reserved chart-slot.
+  // positioning ONLY — never draws. Drawing during a beat change belongs entirely to
+  // the transition (the tween's rAF loop, or the crossfade/dissolve helpers' own
+  // drawStatic calls at the right moment); if this function drew here too, goTo()
+  // would flash the destination's final chart instantly before the tween even starts,
+  // then jump back to animate from the beginning — the "abrupt disappear/reappear" bug.
+  // the nav arrows are positioned by CSS alone (vertically centered on the stage, in
+  // the side gutters outside the content column), so they never need to chase text. ----
+  function positionChart(){
+    var active = slideEls[current];
+    var slot = active && active.querySelector('.chart-slot');
+    if(!slot) return;
+    var r = slot.getBoundingClientRect();
+    // the slot's slide may be mid-slide (off to the side): anchor to the slide's own left edge,
+    // which is 0 at rest, so the shared canvas stays put while the text track moves.
+    var slideLeft = active.getBoundingClientRect().left;
+    chartShared.style.left = (r.left - slideLeft)+'px';
+    chartShared.style.top = r.top+'px';
+    chartShared.style.width = r.width+'px';
+    chartShared.style.height = r.height+'px';
+    chartShared.classList.add('ready');
+  }
+
+  // ---- number count-up on slide entry ----
+  var activeNumAnim=null;
+  function activateBeat(idx){
+    if(activeNumAnim){ cancelAnimationFrame(activeNumAnim.raf); activeNumAnim=null; }
+    var counter=counters[idx]; var numEl=numEls[idx];
+    if(!counter || !numEl) return;
+    var start=null; var state={raf:0};
+    function frame(now){
+      if(start===null) start=now;
+      var t=Math.min(1,(now-start)/ENTER_MS);
+      var e=easeOutCubic(t);
+      numEl.textContent = counter.fmt(counter.final*e);
+      if(t<1){ state.raf=requestAnimationFrame(frame); } else { if(activeNumAnim===state) activeNumAnim=null; }
+    }
+    activeNumAnim=state; state.raf=requestAnimationFrame(frame);
+  }
+
+  // ================= B2 story engine: track slide, segmented progress bar (clickable, rAF-driven fill), pause/continue =================
+  var segEls = [], fillEls = [];
+  for(var i=0;i<TOTAL;i++){
+    var seg = document.createElement('div');
+    seg.className = 'seg';
+    var fill = document.createElement('span');
+    fill.className = 'fill';
+    fill.style.transition = 'none';
+    seg.appendChild(fill);
+    progressBar.appendChild(seg);
+    segEls.push(seg);
+    fillEls.push(fill);
+  }
+
+  var current = 0;
+  var isTransitioning = false;
+  var transitionStartedAt = 0;
+  var activeSegIndex = 0;
+  var segIsLast = false;
+  var segCompleted = false;
+  var paused = false;
+  var segStartTs = 0;
+  var segElapsedAtPause = 0;
+  var resumeTimer = null;
+  var cleanupTimer = null;
+
+  function setSegmentsState(idx){
+    fillEls.forEach(function(f,i){ f.style.transform = 'scaleX(' + (i<idx?1:0) + ')'; });
+  }
+
+  function updateArrows(){
+    navLeft.hidden = (current===0);
+    navRight.hidden = (current===TOTAL-1);
+  }
+
+  // drives fillEls[activeSegIndex] every frame from the rAF loop below (raf()) —
+  // transform:scaleX(elapsed/STORY_MS) with transition:none, so the fill is a
+  // continuous function of elapsed time rather than a CSS transition guess.
+  function startSegmentTimer(idx, isLast){
+    activeSegIndex = idx;
+    segIsLast = !!isLast;
+    paused = false;
+    segCompleted = false;
+    if(replayEl) replayEl.hidden = true;
+    clearTimeout(resumeTimer);
+    fillEls[idx].style.transform = 'scaleX(0)';
+    segStartTs = performance.now();
+    segElapsedAtPause = 0;
+  }
+
+  function onSegmentComplete(){
+    segCompleted = true;
+    if(segIsLast){ if(replayEl) replayEl.hidden = false; return; }
+    goTo(activeSegIndex + 1);
+  }
+
+  function pauseAdvance(){
+    if(paused || segCompleted) return;
+    paused = true;
+    clearTimeout(resumeTimer);
+    segElapsedAtPause = performance.now() - segStartTs;
+  }
+
+  function scheduleUnpause(){
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function(){
+      if(document.hidden) return;
+      if(!paused) return;
+      if(segIsLast && replayEl && !replayEl.hidden) return;
+      paused = false;
+      segStartTs = performance.now() - segElapsedAtPause;
+    }, 0);
+  }
+
+  function goTo(nextIndex, opts){
+    opts = opts || {};
+    nextIndex = Math.max(0, Math.min(TOTAL-1, nextIndex));
+    if(nextIndex === current && !opts.force) return;
+    if(isTransitioning && (performance.now() - transitionStartedAt) < (TRANS_MS * 3)) return;
+    isTransitioning = true;
+    transitionStartedAt = performance.now();
+
+    var prevIndex = current;
+    var prevEl = slideEls[prevIndex];
+    var nextEl = slideEls[nextIndex];
+
+    slideEls.forEach(function(el, i){
+      if(i === prevIndex || i === nextIndex) return;
+      if(!el.classList.contains('active') && !el.classList.contains('leaving')) return;
+      el.classList.remove('active');
+      el.classList.remove('leaving');
+      var rv = el.querySelectorAll('.reveal');
+      var m;
+      for(m=0;m<rv.length;m++){ rv[m].style.transition = 'none'; }
+      void el.offsetWidth;
+      for(m=0;m<rv.length;m++){ rv[m].style.transition = ''; }
+    });
+
+    prevEl.classList.add('leaving');
+    track.style.transform = 'translateX(' + (-nextIndex*100) + 'vw)';
+
+    // incoming text arrives invisible and only rises in after the track has landed —
+    // it plays over the last 200ms of the slide transition, then 600ms after (F1).
+    setTimeout(function(){
+      nextEl.classList.add('active');
+    }, TRANS_MS - 200);
+
+    setSegmentsState(nextIndex);
+    current = nextIndex;
+    updateArrows();
+    positionChart();
+
+    clearTimeout(cleanupTimer);
+    cleanupTimer = setTimeout(function(){
+      prevEl.classList.remove('leaving');
+      // guard: a forced re-entry to the SAME beat (e.g. replay-to-self, or a test
+      // harness restart) makes prevEl===nextEl — don't strip the 'active' state we
+      // just entered off of what is also the current slide.
+      if(prevEl !== nextEl){
+        prevEl.classList.remove('active');
+        var reveals = prevEl.querySelectorAll('.reveal');
+        var k;
+        for(k=0;k<reveals.length;k++){ reveals[k].style.transition = 'none'; }
+        void prevEl.offsetWidth;
+        for(k=0;k<reveals.length;k++){ reveals[k].style.transition = ''; }
+      }
+      isTransitioning = false;
+      positionChart();
+    }, TRANS_MS + 40);
+
+    activateBeat(nextIndex);
+    startChartTransition(prevIndex, nextIndex);
+    startCalloutTransition(prevIndex, nextIndex);
+    startSegmentTimer(nextIndex, nextIndex === TOTAL-1);
+  }
+
+  function manualGoTo(idx){
+    goTo(idx);
+  }
+
+  navLeft.addEventListener('click', function(e){ e.stopPropagation(); manualGoTo(current-1); });
+  navRight.addEventListener('click', function(e){ e.stopPropagation(); manualGoTo(current+1); });
+
+  segEls.forEach(function(seg, i){
+    seg.addEventListener('click', function(e){ e.stopPropagation(); manualGoTo(i); });
+  });
+
+  stageEl.addEventListener('pointerdown', pauseAdvance);
+  window.addEventListener('pointerup', scheduleUnpause);
+
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) pauseAdvance(); else scheduleUnpause();
+  });
+
+  window.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight'){ e.preventDefault(); manualGoTo(current+1); return; }
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); manualGoTo(current-1); return; }
+  });
+
+  var touchStartX = null, touchStartY = null, wasSwipe = false;
+  stageEl.addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    touchStartX = t.clientX; touchStartY = t.clientY;
+    pauseAdvance();
+  }, {passive:true});
+  stageEl.addEventListener('touchend', function(e){
+    if(touchStartX === null) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
+    touchStartX = null;
+    if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)*1.5){
+      wasSwipe = true;
+      if(dx < 0) manualGoTo(current+1); else manualGoTo(current-1);
+    } else {
+      scheduleUnpause();
+    }
+  }, {passive:true});
+  stageEl.addEventListener('click', function(e){
+    if(wasSwipe){ wasSwipe = false; }
+  });
+
+  if(replayEl){
+    replayEl.addEventListener('click', function(e){
+      e.preventDefault();
+      replayEl.hidden = true;
+      goTo(0, {force:true});
+    });
+  }
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      positionChart();
+      if(!chartAnim) drawStatic(current);
+      calloutEl.style.transition='none'; positionCallout(current);
+    }, 120);
+  });
+
+  // ---- debug/verification hook: lets a test harness drive the deck programmatically ----
+  window.__stage = {
+    goTo: function(i){ manualGoTo(i); },
+    next: function(){ manualGoTo(current+1); },
+    prev: function(){ manualGoTo(current-1); },
+    current: function(){ return current; },
+    total: TOTAL,
+    // forces a clean segment-timer restart at beat i without the pause/continue side
+    // effects manualGoTo adds — for tests that need to know exactly when a segment began.
+    restart: function(i){ goTo(i, {force:true}); },
+    // verification hook: the callout box last placed by positionCallout,
+    // and how many of the sampled line points (all series, same points the placement
+    // itself scored) fall inside that box expanded by the 20px clearance margin — should
+    // always be 0.
+    calloutDebug: function(){
+      if(!lastCalloutBox) return null;
+      return {
+        rect: lastCalloutBox,
+        countIn20pxMargin: countPointsInBox(lastCalloutPoints, lastCalloutBox, CALLOUT_MARGIN),
+        allCorners: lastCalloutScored.map(function(s){ return {corner:s.corner.name, covered:s.covered, clearAt20px:s.clear}; })
+      };
+    }
+  };
+
+  // ---- boot: reveal + activate slide 1 ----
+  setTimeout(function(){
+    slideEls[0].classList.add('active');
+    positionChart();
+    drawStatic(0);
+    activateBeat(0);
+    updateArrows();
+    startSegmentTimer(0, TOTAL === 1);
+    calloutShowInstant(0);
+  }, 250);
+}
+})();
+</script>
+</body></html>

@@ -45,9 +45,10 @@ FILING_SOURCES = {
     "asst": MOVES_DIR / "ASST.csv",
     "metaplanet": MOVES_DIR / "3350.csv",
 }
-# "ticker" (data/ticker.json) has no filing date of its own — it's a live price feed, not a
-# disclosure — so it's tracked for ok/failed but left out of latest_filing / staleness.
-ALL_SOURCES = (*FILING_SOURCES, "ticker")
+# "ticker" (data/ticker.json) and "credit" (data/credit.json) have no filing date of their own —
+# they're live issuer feeds, not disclosures — so they're tracked for ok/failed but left out of
+# latest_filing / staleness.
+ALL_SOURCES = (*FILING_SOURCES, "ticker", "credit")
 
 
 def latest_date_in_csv(path: Path) -> str | None:

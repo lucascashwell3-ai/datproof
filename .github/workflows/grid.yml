@@ -72,6 +72,14 @@ jobs:
           ticker=ok
           python scripts/fetch_ticker.py || { ticker=failed; echo "::warning::ticker fetch failed — keeping last values"; }
           echo "ticker=$ticker" >> "$GITHUB_ENV"
+      # Credit family + stress test: DCAP holdings, STRC/SATA, both coverage figures. Each feed
+      # keeps its last good value on failure; any failed feed marks the run degraded.
+      - name: Credit feeds (DCAP, STRC, SATA, coverage inputs)
+        run: |
+          python scripts/fetch_credit.py || echo "::warning::every credit feed failed — keeping last values"
+          credit=$(python -c "import json;s=json.load(open('data/credit.json')).get('status',{});print('failed' if 'failed' in s.values() else 'ok')")
+          [ "$credit" = ok ] || echo "::warning::credit feed degraded: $(python -c "import json;print(json.load(open('data/credit.json'))['status'])")"
+          echo "credit=$credit" >> "$GITHUB_ENV"
       - name: Build site
         run: python scripts/build_grid_site.py
       - name: Source status + freshness
@@ -80,7 +88,8 @@ jobs:
             --mstr-status "${mstr:-ok}" \
             --asst-status "${asst:-ok}" \
             --metaplanet-status "${metaplanet:-ok}" \
-            --ticker-status "${ticker:-ok}"
+            --ticker-status "${ticker:-ok}" \
+            --credit-status "${credit:-ok}"
 
       # A second run of this job (manual dispatch or overlap with the schedule) used to lose the
       # push race and go red; rebase-and-retry below makes an overlap harmless instead.

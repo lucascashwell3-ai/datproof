@@ -3,6 +3,7 @@ import csv, json, pathlib, datetime as dt, html, re
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MOVES = ROOT / "data" / "moves"
 TICKER = ROOT / "data" / "ticker.json"
+CREDIT_JSON = ROOT / "data" / "credit.json"  # scripts/fetch_credit.py
 TEMPLATE = ROOT / "site" / "template.html"
 OUT = ROOT / "site" / "index.html"
 COMPANIES = json.loads((MOVES / "companies.json").read_text())  # [{ticker,name,file,top}]
@@ -80,6 +81,7 @@ def main():
                   "strc_month": atm_month("STRC"), "sata_month": atm_month("SATA")},
         "books": {"STRC": book("STRC"), "SATA": book("SATA")},
         "ticker": ticker,
+        "credit": json.loads(CREDIT_JSON.read_text()) if CREDIT_JSON.exists() else {},
     }
     html_out = TEMPLATE.read_text().replace("/*__DATA__*/", "window.DATA=" + json.dumps(data, separators=(",", ":")) + ";")
     OUT.write_text(html_out)
