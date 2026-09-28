@@ -429,16 +429,18 @@ document.getElementById('g-exp').onclick=()=>{expanded=!expanded;drawGrid()};
 
  // STRC and SATA: the two boxes inside. Same fields, same shape.
  const s=C.strc||{},a=C.sata||{},sv=C.strive||{},st=C.strategy||{};
+ // the SATA share count cites the linked 8-K only when that filing carries the same date; otherwise Strive's page
+ const sharesSrc=d=>sv.filing&&d&&d===sv.btc_as_of?src(sv.filing,'8-K',day(d)):src(sv.source||a.source,site(sv.source||a.source),day(d));
  put('strc-rate',ok(s.rate_pct)&&s.rate_pct>0?pct(s.rate_pct)+per(' a year'):null);
  put('strc-pays',s.pays?esc(s.pays):null);
  put('strc-price',cash(s.price,2)&&cash(s.price,2)+sub('vs $100 face value'));
- put('strc-size',big(s.size_usd)&&big(s.size_usd)+per(' outstanding'));
+ put('strc-size',big(s.size_usd)&&big(s.size_usd)+per(' outstanding')+sub('at $100 face value')+meta(src(s.source,site(s.source),day(s.price_time))));
  opt('strc-src',src(s.source,site(s.source),day(s.price_time)));
  put('sata-rate',ok(a.rate_pct)&&a.rate_pct>0?pct(a.rate_pct)+per(' a year'):null);
  put('sata-pays',a.pays?esc(a.pays):null);
  put('sata-price',cash(a.price,2)&&cash(a.price,2)+sub('vs $100 face value'));
  put('sata-size',big(a.size_usd)&&big(a.size_usd)+per(' outstanding')+
-  (pos(a.shares)?sub((a.shares/1e6).toFixed(2)+'M shares &times; $100 face value')+meta(src(sv.filing,'8-K',day(a.shares_as_of))):''));
+  (pos(a.shares)?sub((a.shares/1e6).toFixed(2)+'M shares &times; $100 face value')+meta(sharesSrc(a.shares_as_of)):''));
  opt('sata-src',src(a.source,site(a.source),day(a.price_date)));
 
  // bitcoin underneath the rocket, each count dated by its own source
@@ -495,7 +497,7 @@ document.getElementById('g-exp').onclick=()=>{expanded=!expanded;drawGrid()};
   row('Bitcoin held',count(sv.btc)&&count(sv.btc)+' BTC',src(sv.filing,'8-K',day(sv.btc_as_of)))+
   row('Cash',big(sv.cash),tr)+
   row('Securities',big(sv.securities),tr)+
-  row('SATA shares',pos(sv.sata_shares)?count(sv.sata_shares):null,src(sv.filing,'8-K',day(sv.as_of)))+
+  row('SATA shares',pos(sv.sata_shares)?count(sv.sata_shares):null,sharesSrc(sv.as_of))+
   row('Yearly rate',pos(sv.sata_rate)&&sv.sata_rate<0.5?pct(sv.sata_rate*100):null,src(sv.source,site(sv.source),day(sv.as_of)))+
   row('One year of SATA dividends',big(obligation),'',ok(obligation)?esc(count(sv.sata_shares)+' shares × $100 face value × '+pct(sv.sata_rate*100)):'');
  document.getElementById('in-strategy').innerHTML=
