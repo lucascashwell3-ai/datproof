@@ -1,10 +1,11 @@
 {
-  "date": "2026-09-27",
+  "date": "2026-09-28",
   "sources": {
     "mstr": "ok",
     "asst": "ok",
     "metaplanet": "ok",
-    "ticker": "ok"
+    "ticker": "ok",
+    "credit": "ok"
   },
   "latest_filing": {
     "mstr": "2026-09-21",
@@ -12,5 +13,5 @@
     "metaplanet": "2026-07-02"
   },
   "degraded": false,
-  "stale_days": 6
+  "stale_days": 7
 }
