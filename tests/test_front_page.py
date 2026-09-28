@@ -62,3 +62,16 @@ def test_page_math_reproduces_strategy_published_figure():
               f"const s={json.dumps(st)};console.log(C.strategyYears(s,s.their_btc_price))")
     ours = float(subprocess.run([node, "-e", script], capture_output=True, text=True, check=True).stdout)
     assert round(ours, 1) == round(st["published_years"], 1)
+
+
+def test_one_vocabulary_for_the_same_things():
+    assert "stated amount" not in TEMPLATE  # "face value" everywhere
+    assert "USD reserve and cash" in TEMPLATE  # Strategy's dollar input is reserve plus cash
+    assert "The bitcoin credit family" in TEMPLATE
+    assert "Next on DATproof: AI money parks in digital credit." in TEMPLATE
+
+
+def test_committed_strive_block_dates_each_number():
+    sv = CREDIT["strive"]
+    for key in ("btc_as_of", "cash_as_of", "as_of", "their_price_date"):
+        assert sv.get(key), key

@@ -13,15 +13,14 @@ The parse_* functions are pure (JSON in, block out) so tests run them on saved c
 """
 from __future__ import annotations
 
-import csv
 import datetime as dt
 import json
 import pathlib
+import statistics
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "credit.json"
-MSTR_CSV = ROOT / "data" / "moves" / "MSTR.csv"
 
 BROWSER_UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
                             "(KHTML, like Gecko) Chrome/128.0 Safari/537.36", "Accept": "application/json"}
@@ -57,16 +56,20 @@ def num(x) -> float:
 
 
 def pays_label(pay_dates: list[str], today: dt.date) -> str:
-    """How often a security pays, read off its own payment calendar (payments dated in the last 31 days)."""
-    recent = [d for d in pay_dates if today - dt.timedelta(days=31) < dt.date.fromisoformat(d) <= today]
-    n = len(set(recent))
-    if n >= 15:
+    """How often a security pays: the median gap between its consecutive payment dates over the
+    last 90 days. A calendar that fits none of the three shapes is refused rather than guessed."""
+    days = sorted({dt.date.fromisoformat(d) for d in pay_dates
+                   if today - dt.timedelta(days=90) < dt.date.fromisoformat(d) <= today})
+    if len(days) < 2:
+        raise Bad("fewer than two payments in the last 90 days")
+    gap = statistics.median((b - a).days for a, b in zip(days, days[1:]))
+    if gap <= 4:
         return "every business day"
-    if n >= 2:
-        return "twice a month" if n == 2 else f"{n} times a month"
-    if n == 1:
+    if 10 <= gap <= 20:
+        return "twice a month"
+    if 25 <= gap <= 35:
         return "monthly"
-    raise Bad("no payments in the last 31 days")
+    raise Bad(f"payment calendar fits no known schedule (median gap {gap} days)")
 
 
 def parse_dcap(j: dict) -> dict:
@@ -135,39 +138,48 @@ def parse_sata(calc: dict, agg: dict, base: dict, today: dt.date) -> dict:
 
 
 def parse_strive(calc: dict, base: dict) -> dict:
+    """Each number keeps its own date: btc_as_of (latest purchase), cash_as_of (latest cash and
+    securities report), as_of (the SATA share count)."""
     rows = calc["data"]["btcHoldings"]
     check(bool(rows), "strive: no daily rows")
     last = max(rows, key=lambda r: r["date"])
-    pref = [p for p in (calc.get("preferredStocks") or []) if p.get("ticker") == "SATA"][0]
+    pref = [p for p in (calc.get("preferredStocks") or []) if p.get("ticker") == "SATA"]
+    check(bool(pref), "strive: no SATA record")
+    pref = pref[0]
     tx = max(base["data"]["transactions"], key=lambda t: t["transaction_date"])
+    cd = max(base["data"]["cashDebt"], key=lambda r: r["date"])
     btc = num(last["btcHoldings"])
     check(btc > 0, "strive: btc")
     check(abs(btc - num(tx["total_btc_holdings"])) < 1, "strive: btc disagrees with latest filing")
-    return {"btc": btc, "cash": num(last["cash"]), "securities": num(last["marketableSecurities"]),
-            "sata_shares": num(pref["shares_outstanding"]), "sata_rate": num(pref["dividend_rate"]),
+    cash, securities = num(last["cash"]), num(last["marketableSecurities"])
+    check(cash == num(cd["cash"]) and securities == num(cd["marketable_securities"]),
+          "strive: cash disagrees with its latest report")
+    shares, rate = num(pref["shares_outstanding"]), num(pref["dividend_rate"])
+    check(shares > 0, "strive: sata shares")
+    check(0 < rate < 0.5, "strive: sata rate")
+    return {"btc": btc, "btc_as_of": tx["transaction_date"], "cash": cash, "securities": securities,
+            "cash_as_of": cd["date"], "sata_shares": shares, "sata_rate": rate,
             "as_of": pref["date"], "filing": tx["source_url"].replace("/ix?doc=", ""),
             "their_btc_price": num(last["btcPrice"]), "their_price_date": last["date"],
             "source": STRIVE_PAGE, "feed": STRIVE_BASE}
 
 
-def latest_filing(path: pathlib.Path) -> dict | None:
-    if not path.exists():
-        return None
-    with path.open() as f:
-        rows = [r for r in csv.DictReader(f) if r.get("type") == "btc_buy" and r.get("source_url")]
-    if not rows:
-        return None
-    r = max(rows, key=lambda r: r["date"])
-    return {"date": r["date"], "url": r["source_url"]}
-
-
-def parse_strategy(j: dict, filing: dict | None) -> dict:
+def parse_strategy(j: dict) -> dict:
+    """usd_assets (USD reserve and cash) is their total reserve minus their bitcoin at their price, so
+    the total alone cannot catch a bad input; the bitcoin part and the dollar part are each checked
+    against the figures strategy.com publishes for them."""
     k = j["results"]
     btc, price = num(k["btcHoldings"]), num(k["ufPrice"])
     obligation = num(k["totalAnnualDividends"])
     usd_assets = round(num(k["totalReserve"]) - btc * price)  # their Reserve minus their BTC Reserve
     check(btc > 0 and price > 0 and obligation > 0, "strategy: inputs")
     check(usd_assets >= 0, "strategy: usd assets")
+    btc_years = btc * price / obligation
+    check(abs(btc_years - num(k["btcYearsOfDividends"])) < 0.05,
+          f"strategy: bitcoin years {btc_years:.2f} != published {num(k['btcYearsOfDividends']):.2f}")
+    usd_months = usd_assets / obligation * 12
+    check(abs(usd_months - num(k["usdMonthsOfDividends"])) < 0.5,
+          f"strategy: dollar months {usd_months:.1f} != published {num(k['usdMonthsOfDividends']):.1f}")
     published = num(k["totalYearsOfCoverage"])
     mine = (btc * price + usd_assets) / obligation
     check(abs(mine - published) < 0.05, f"strategy: formula {mine:.2f} != published {published:.2f}")
@@ -175,7 +187,7 @@ def parse_strategy(j: dict, filing: dict | None) -> dict:
     return {"btc": btc, "usd_assets": usd_assets, "annual_obligation": obligation,
             "their_btc_price": price, "their_price_time": when.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             "published_years": published, "published_btc_years": num(k["btcYearsOfDividends"]),
-            "filing": filing, "source": STRATEGY_PAGE, "feed": STRATEGY_FEED}
+            "source": STRATEGY_PAGE, "feed": STRATEGY_FEED}
 
 
 def get(url: str):
@@ -205,7 +217,7 @@ def main() -> int:
         "sata": lambda: parse_sata(fetch(calc_url), fetch(STRIVE_AGG.format(d0=d0, d1=d1)),
                                    fetch(STRIVE_BASE), today),
         "strive": lambda: parse_strive(fetch(calc_url), fetch(STRIVE_BASE)),
-        "strategy": lambda: parse_strategy(fetch(STRATEGY_FEED), latest_filing(MSTR_CSV)),
+        "strategy": lambda: parse_strategy(fetch(STRATEGY_FEED)),
     }
     for name, job in jobs.items():
         try:

@@ -2,7 +2,9 @@
 // Same arithmetic as datproof/coverage.py (kept in step by tests/test_credit.py):
 //   (bitcoin x price + dollar assets) / one year of dividend (and interest) payments
 (function (root) {
+  // no positive obligation, no answer: NaN, which the page shows as "not published"
   function yearsCovered(btc, price, usdAssets, annualObligation) {
+    if (!(annualObligation > 0)) return NaN;
     return (btc * price + usdAssets) / annualObligation;
   }
   function striveAnnualDividend(sataShares, rate) { return sataShares * 100 * rate; }

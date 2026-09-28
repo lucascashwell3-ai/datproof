@@ -74,6 +74,19 @@ def test_js_and_python_math_agree():
         assert b == pytest.approx(strategy_years(strategy, p), rel=1e-12)
 
 
+def test_js_refuses_a_zero_or_negative_obligation():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node not installed")
+    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'coverage.js'))});"
+              "console.log(JSON.stringify([C.yearsCovered(1,1,1,0),C.yearsCovered(1,1,1,-5),"
+              "C.striveYears({btc:1,cash:1,securities:1,sata_shares:0,sata_rate:0.13},1)].map(Number.isFinite)))")
+    out = json.loads(subprocess.run([node, "-e", script], capture_output=True, text=True, check=True).stdout)
+    assert out == [False, False, False]
+    with pytest.raises(ValueError):
+        years_covered(1, 1, 1, 0)
+
+
 # ---------- parsers on saved copies of each feed ----------
 
 def test_parse_dcap_lines_as_published():
@@ -120,10 +133,21 @@ def test_parse_strive_matches_its_filing():
     assert (s["cash"], s["securities"]) == (229_600_000, 49_748_000)
     assert s["filing"].startswith("https://www.sec.gov/Archives/")
     assert round(strive_years(s, 83_334.47), 1) == 17.0
+    # each number keeps its own date
+    assert (s["btc_as_of"], s["cash_as_of"], s["as_of"]) == ("2026-09-18", "2026-09-18", "2026-09-18")
+
+
+@pytest.mark.parametrize("field,value", [("shares_outstanding", 0), ("shares_outstanding", -5),
+                                         ("dividend_rate", 0), ("dividend_rate", 0.5), ("dividend_rate", 13)])
+def test_parse_strive_refuses_impossible_sata_terms(field, value):
+    calc = load("strive_calculated.json")
+    calc["preferredStocks"][0][field] = value
+    with pytest.raises(fc.Bad):
+        fc.parse_strive(calc, load("strive_base-data.json"))
 
 
 def test_parse_strategy_reproduces_its_own_figure():
-    s = fc.parse_strategy(load("strategy_bitcoinKpis.json"), None)
+    s = fc.parse_strategy(load("strategy_bitcoinKpis.json"))
     assert s["usd_assets"] == 6_092_000_000
     assert round(strategy_years(s, s["their_btc_price"]), 1) == round(s["published_years"], 1) == 47.2
 
@@ -132,15 +156,49 @@ def test_parse_strategy_refuses_a_figure_it_cannot_reproduce():
     j = load("strategy_bitcoinKpis.json")
     j["results"]["totalYearsOfCoverage"] = 52.0
     with pytest.raises(fc.Bad):
-        fc.parse_strategy(j, None)
+        fc.parse_strategy(j)
+
+
+def test_parse_strategy_rejects_a_tampered_bitcoin_count():
+    # the total reserve alone cannot catch this (usd = reserve - btc x price cancels out);
+    # the published bitcoin years and dollar months each can
+    j = load("strategy_bitcoinKpis.json")
+    j["results"]["btcHoldings"] = "646,000"
+    with pytest.raises(fc.Bad, match="bitcoin years"):
+        fc.parse_strategy(j)
+
+
+def test_parse_strategy_rejects_a_tampered_dollar_reserve():
+    j = load("strategy_bitcoinKpis.json")
+    j["results"]["usdMonthsOfDividends"] = 30.0
+    with pytest.raises(fc.Bad, match="dollar months"):
+        fc.parse_strategy(j)
 
 
 def test_pays_label_reads_the_payment_calendar():
     assert fc.pays_label(["2026-09-15", "2026-09-30"], dt.date(2026, 9, 30)) == "twice a month"
     daily = [(dt.date(2026, 9, 1) + dt.timedelta(days=i)).isoformat() for i in range(26)]
     assert fc.pays_label(daily, TODAY) == "every business day"
+    business = [d for d in daily if dt.date.fromisoformat(d).weekday() < 5]
+    assert fc.pays_label(business, TODAY) == "every business day"
+    assert fc.pays_label(["2026-07-31", "2026-08-31", "2026-09-30"], dt.date(2026, 9, 30)) == "monthly"
     with pytest.raises(fc.Bad):
         fc.pays_label(["2026-01-01"], TODAY)
+
+
+def test_pays_label_short_month_still_reads_twice_a_month():
+    # a 31-day count sees three payments here; the gap between them says twice a month
+    assert fc.pays_label(["2027-01-31", "2027-02-15", "2027-02-28"], dt.date(2027, 2, 28)) == "twice a month"
+
+
+def test_pays_label_refuses_an_unknown_schedule():
+    with pytest.raises(fc.Bad):
+        fc.pays_label(["2026-09-01", "2026-09-08", "2026-09-15", "2026-09-22"], TODAY)  # weekly
+
+
+def test_strc_calendar_reads_twice_a_month_after_its_switch():
+    s = fc.parse_strc(load("strategy_strcKpiData.json"), dt.date(2026, 9, 30))
+    assert s["pays"] == "twice a month"
 
 
 def test_failed_feed_keeps_last_good_block(tmp_path, monkeypatch):

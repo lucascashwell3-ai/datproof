@@ -45,7 +45,8 @@ nav a{color:var(--dim);margin-left:20px;font-size:14px}nav a:hover{color:var(--f
 footer{color:var(--dim);font:11px var(--mono);padding:0 20px 40px;max-width:1000px;margin:0 auto}
 @media(prefers-reduced-motion:reduce){.act{opacity:1;transform:none;transition:none}}
 /* ============ credit family · stress test · next. Every section renders fully visible at
-   rest; the one lift and the flame loop are enhancements, off under reduced motion. ============ */
+   rest; the one lift and the flame loop are enhancements, off under reduced motion.
+   Mono is only for small source/date links; every value and label is in the body face. ============ */
 .sec{padding:128px 0 0}
 .sec h2{font:800 clamp(30px,4vw,46px)/1.06 var(--sans);font-stretch:112%;letter-spacing:-.02em;text-wrap:balance;margin:0;max-width:22ch}
 .sec .lede{font-size:18px;line-height:1.65;color:var(--fg2);max-width:60ch;margin:16px 0 0;text-wrap:pretty}
@@ -56,45 +57,47 @@ footer{color:var(--dim);font:11px var(--mono);padding:0 20px 40px;max-width:1000
 a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--acc);border-radius:3px}
 .num{font-weight:800;font-stretch:112%;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .acc{color:var(--acc)}
-.np{font:400 13px var(--mono);color:var(--dim);letter-spacing:0}
+.np{font-size:14px;font-weight:400;font-stretch:100%;color:var(--fg2);letter-spacing:0}
+.small{font-size:14px;line-height:1.55;color:var(--fg2);margin:0}
 .kv{margin:0}
 .kv>div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:12px 0;border-top:1px solid var(--rule)}
 .kv>div:first-child{border-top:0;padding-top:0}
 .kv dt{color:var(--fg2);font-size:15px;line-height:1.5}
-.kv dt .sub{display:block;font-size:13px;color:var(--fg2);opacity:.8;max-width:36ch}
+.kv dt .sub{display:block;font-size:13px;line-height:1.5;color:var(--fg2);opacity:.85;max-width:38ch;margin-top:2px}
 .kv dd{margin:0;text-align:right;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg)}
-.kv dd .sub{display:block;font:400 12px/1.6 var(--mono);color:var(--dim);margin-top:2px}
+.kv dd .sub{display:block;font-size:13px;font-weight:400;line-height:1.5;color:var(--fg2);margin-top:2px}
+.kv dd .meta{display:block;margin-top:2px}
+.kv dd .per,.issue .per{font-size:15px;font-weight:400;font-stretch:100%;color:var(--fg2);letter-spacing:0}
 
 /* credit family: DCAP is the frame that holds STRC and SATA */
 .frame{margin-top:48px;border:1px solid var(--rule);border-radius:8px;padding:clamp(20px,3.4vw,40px);background:var(--bg)}
-.frame-top{display:flex;flex-wrap:wrap;gap:40px 64px;justify-content:space-between}
-.frame-id{flex:1 1 280px;max-width:42ch}
+.frame-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px 64px}
+.frame-id{min-width:0}
 .frame h3{font:800 clamp(32px,3.6vw,42px)/1 var(--sans);font-stretch:112%;letter-spacing:-.02em;margin:0}
 .frame-id .plain{font-size:18px;line-height:1.55;color:var(--fg);margin:16px 0 4px}
-.facts{display:flex;flex-wrap:wrap;gap:16px 40px;margin:24px 0 0}
+.facts{display:flex;flex-wrap:wrap;gap:16px 32px;margin:24px 0 0}
 .facts>div{display:flex;flex-direction:column;gap:4px}
 .facts dt{color:var(--fg2);font-size:14px}
 .facts dd{margin:0;font-size:22px;line-height:1.2}
-.frame-hold{flex:1 1 320px;max-width:440px}
+.facts dd .meta{display:block;margin-top:4px;font-weight:400;letter-spacing:0;font-stretch:100%}
+.frame-hold{min-width:0}
 .hold-lead{color:var(--fg);font-size:15px;font-weight:600;margin:0 0 12px}
-.frame-hold .meta{margin-top:12px}
-.frame-hold .meta+.meta{margin-top:4px}
+.frame-hold .small{margin-top:12px}
+.frame-hold .meta{margin-top:8px}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
 .issue{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:24px 24px 20px;display:flex;flex-direction:column}
 .issue h4{font:800 26px/1 var(--sans);font-stretch:112%;letter-spacing:-.01em;margin:0}
 .issue .who{color:var(--fg2);font-size:15px;margin:8px 0 20px}
 .issue .kv{flex:1}
 .issue .kv dd.big{font-size:26px;line-height:1.1;color:var(--acc)}
-.issue .kv dd .per{font-size:15px;font-weight:400;font-stretch:100%;color:var(--fg2);letter-spacing:0}
 .issue>.meta{margin-top:16px}
-.boost{display:flex;flex-direction:column;align-items:center}
-.boost .stem{display:block;width:1px;height:40px;background:#2a2f39}
-.rocket{display:block;width:120px;height:auto;overflow:visible}
-.rocket .ln{fill:var(--bg);stroke:rgba(217,220,226,.55);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.boost{display:flex;justify-content:center}
+.rocket{display:block;width:240px;height:auto;overflow:visible}
+.rocket .ln{fill:none;stroke:rgba(217,220,226,.45);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
 .rocket .coin{fill:var(--acc);font-size:13px;font-weight:700;font-family:var(--sans)}
 .rocket .flame{transform-box:fill-box;transform-origin:50% 0}
 .rocket .glow{transform-box:fill-box;transform-origin:50% 50%}
-.held{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:8px 32px;margin:24px 0 0;font-size:17px;color:var(--fg2);text-align:center}
+.held{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:8px 32px;margin:16px 0 0;font-size:17px;color:var(--fg2);text-align:center}
 .held b{font-size:20px;margin-left:4px}
 .held .meta{margin-left:8px}
 @keyframes lift{to{transform:translateY(-10px)}}
@@ -105,7 +108,7 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 .rocket .glow{animation:breathe 2.3s ease-in-out infinite paused}
 #credit.live .flame,#credit.live .glow{animation-play-state:running}
 
-/* stress test */
+/* stress test: slider, answers and the opener share one column and one right edge */
 .dial{margin:48px 0 0}
 .dial label{display:block;font-size:19px;color:var(--fg2)}
 .dial output{display:inline-block;margin-left:6px;font-size:clamp(26px,3vw,34px);line-height:1.1;color:var(--fg)}
@@ -119,29 +122,31 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 .range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--acc)}
 .range:focus-visible::-moz-range-thumb{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--acc)}
 .range:disabled{cursor:default;opacity:.4}
-.ends{display:flex;justify-content:space-between;gap:16px}
+.ends{display:flex;justify-content:space-between;gap:16px;font-size:13px;color:var(--fg2);font-variant-numeric:tabular-nums}
 .answers{display:flex;flex-direction:column;gap:40px;margin:56px 0 0}
-.say{margin:0 0 12px;font-size:clamp(21px,2.5vw,29px);line-height:1.4;color:var(--fg);max-width:40ch}
+.say{margin:0 0 12px;font-size:clamp(21px,2.5vw,29px);line-height:1.4;color:var(--fg);max-width:44ch}
 .say .num{color:var(--fg)}
 .say .yrs{color:var(--acc);font-size:1.3em;line-height:1}
-.ans .meta+.meta{margin-top:2px}
-.how{margin:64px 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);max-width:760px}
+.ans .small{max-width:70ch}
+.ans .small+.small{margin-top:4px}
+.how{margin:64px 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .how summary{display:flex;align-items:center;gap:16px;min-height:56px;padding:8px 0;cursor:pointer;list-style:none;font-size:18px;font-weight:700;color:var(--fg)}
 .how summary::-webkit-details-marker{display:none}
-.how summary::after{content:'+';margin-left:auto;font:400 20px var(--mono);color:var(--fg2)}
+.how summary::after{content:'+';margin-left:auto;font-size:22px;font-weight:400;color:var(--fg2)}
 .how[open] summary::after{content:'\2212'}
 .how-body{padding:8px 0 24px}
-.how h3{font-size:17px;font-weight:700;margin:24px 0 8px}
+.how h3{font-size:17px;font-weight:700;margin:32px 0 8px}
 .how h3:first-child{margin-top:0}
-.formula{color:var(--fg2);font-size:16px;line-height:1.65;margin:0 0 16px;max-width:62ch}
+.formula{color:var(--fg2);font-size:16px;line-height:1.65;margin:0 0 16px;max-width:70ch}
 .how .kv>div{flex-wrap:wrap;row-gap:2px}
+.how .kv dt{flex:1 1 auto}
 .how .kv dd{font-size:16px}
-.how .kv .meta{flex-basis:100%;text-align:left}
+.how .kv>div>.meta,.how .kv>div>.small{flex-basis:100%;text-align:left}
 
-/* next */
-.next-grid{display:flex;flex-direction:column;gap:40px}
+/* next: three equal tiers, centred in the column */
+.next-grid{display:flex;flex-direction:column;gap:48px}
 .wip{margin:16px 0 0;color:var(--fg2);font-size:17px}
-.tiers{display:block;width:100%;max-width:460px;height:auto;overflow:visible}
+.tiers{display:block;width:100%;max-width:480px;height:auto;margin:0 auto;overflow:visible}
 .tiers .box{fill:var(--panel);stroke:#2a2f39;stroke-width:1}
 .tiers .base{stroke:rgba(247,147,26,.6)}
 .tiers text{font-family:var(--sans);font-size:16px;font-weight:500;fill:var(--fg)}
@@ -152,10 +157,9 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
   .sec{padding-top:96px}
   .pair{grid-template-columns:1fr;margin-top:32px}
   .issue{padding:20px 16px 16px}
-  .frame-top{gap:32px}
-  .frame-hold{max-width:none}
+  .frame-top{grid-template-columns:1fr;gap:32px}
   .held{flex-direction:column;align-items:center;gap:8px}
-  .rocket{width:100px}
+  .rocket{width:180px}
   .how .kv dd{font-size:15px}
 }
 @media(max-width:480px){nav{padding:14px 16px}nav a{margin-left:14px}}
@@ -186,7 +190,7 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 </section>
 
 <section class="sec credit" id="credit" aria-labelledby="credit-h">
-<h2 id="credit-h">The digital credit family</h2>
+<h2 id="credit-h">The bitcoin credit family</h2>
 <p class="lede">Digital credit is preferred stock that pays a set yearly dividend, issued by a company that holds bitcoin.</p>
 <div class="lift" id="lift">
 <div class="frame">
@@ -194,7 +198,7 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 <div class="frame-id">
 <h3>DCAP</h3>
 <p class="plain">An ETF, a fund you buy and sell like a stock, that holds both.</p>
-<p class="meta">T-Strive Digital Credit Preferred Income ETF</p>
+<p class="small">T-Strive Digital Credit Preferred Income ETF</p>
 <dl class="facts">
 <div><dt>Net assets</dt><dd class="num" id="dcap-net"></dd></div>
 <div><dt>First trading day</dt><dd class="num" id="dcap-first"></dd></div>
@@ -203,12 +207,11 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 <div class="frame-hold">
 <p class="hold-lead" id="dcap-lead">What it holds, as the fund publishes it</p>
 <dl class="kv">
-<div><dt>STRC, held</dt><dd id="dcap-strc"></dd></div>
-<div><dt>SATA, held</dt><dd id="dcap-sata"></dd></div>
-<div><dt>SATA, through a swap<span class="sub">a contract that pays the fund SATA's return</span></dt><dd id="dcap-swap"></dd></div>
-<div><dt>Cash</dt><dd id="dcap-cash"></dd></div>
+<div><dt>STRC</dt><dd id="dcap-strc"></dd></div>
+<div><dt>SATA<span class="sub" id="dcap-sata-how"></span></dt><dd id="dcap-sata"></dd></div>
+<div><dt>Cash after the swap<span class="sub" id="dcap-cash-how"></span></dt><dd id="dcap-cash"></dd></div>
 </dl>
-<p class="meta" id="dcap-also"></p>
+<p class="small" id="dcap-also"></p>
 <p class="meta" id="dcap-src"></p>
 </div>
 </div>
@@ -217,7 +220,7 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 <h4 id="strc-h">STRC</h4>
 <p class="who">Strategy's digital credit</p>
 <dl class="kv">
-<div><dt>Rate</dt><dd class="num acc big" id="strc-rate"></dd></div>
+<div><dt>Rate</dt><dd class="num big" id="strc-rate"></dd></div>
 <div><dt>Pays</dt><dd id="strc-pays"></dd></div>
 <div><dt>Price</dt><dd id="strc-price"></dd></div>
 <div><dt>Size</dt><dd id="strc-size"></dd></div>
@@ -228,7 +231,7 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 <h4 id="sata-h">SATA</h4>
 <p class="who">Strive's digital credit</p>
 <dl class="kv">
-<div><dt>Rate</dt><dd class="num acc big" id="sata-rate"></dd></div>
+<div><dt>Rate</dt><dd class="num big" id="sata-rate"></dd></div>
 <div><dt>Pays</dt><dd id="sata-pays"></dd></div>
 <div><dt>Price</dt><dd id="sata-price"></dd></div>
 <div><dt>Size</dt><dd id="sata-size"></dd></div>
@@ -237,14 +240,14 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 </article>
 </div>
 </div>
-<div class="boost" aria-hidden="true"><span class="stem"></span>
-<svg class="rocket" viewBox="0 0 80 150" width="120" height="225" focusable="false">
+<div class="boost" aria-hidden="true">
+<svg class="rocket" viewBox="0 3 80 147" width="240" height="441" focusable="false">
 <defs><radialGradient id="rk-glow"><stop offset="0" stop-color="#f7931a" stop-opacity=".62"/><stop offset=".5" stop-color="#f7931a" stop-opacity=".2"/><stop offset="1" stop-color="#f7931a" stop-opacity="0"/></radialGradient></defs>
 <circle class="glow" cx="40" cy="130" r="34" fill="url(#rk-glow)"/>
 <g class="flame"><path d="M31 114.5C31 126 36 134 40 146C44 134 49 126 49 114.5Z" fill="#f7931a"/><path d="M35.5 114.5C35.5 122 38 127 40 134C42 127 44.5 122 44.5 114.5Z" fill="#ffc46b"/></g>
-<path class="ln" d="M22 78L8 100V114L22 104ZM58 78L72 100V114L58 104Z"/>
-<path class="ln" d="M30 104L27 114H53L50 104Z"/>
 <path class="ln" d="M40 3C52 15 58 30 58 46V104H22V46C22 30 28 15 40 3Z"/>
+<path class="ln" d="M22 78L8 100V114L22 104M58 78L72 100V114L58 104"/>
+<path class="ln" d="M30 104L27 114H53L50 104"/>
 <circle class="ln" cx="40" cy="52" r="11"/>
 <text class="coin" x="40" y="56.6" text-anchor="middle">&#x20BF;</text>
 </svg>
@@ -261,28 +264,28 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 <form class="dial" id="dial">
 <label for="btc-range">Bitcoin at <output class="num" id="btc-out" for="btc-range"></output></label>
 <input type="range" class="range" id="btc-range" min="10000" max="100000" step="1000" value="100000">
-<div class="ends meta"><span id="btc-min">$10,000</span><span id="btc-today"></span></div>
+<div class="ends"><span id="btc-min">$10,000</span><span id="btc-today"></span></div>
 </form>
 <div class="answers" aria-live="polite">
 <div class="ans">
 <p class="say" id="say-strive"></p>
-<p class="meta" id="split-strive"></p>
-<p class="meta" id="check-strive"></p>
+<p class="small" id="split-strive"></p>
+<p class="small" id="check-strive"></p>
 </div>
 <div class="ans">
 <p class="say" id="say-strategy"></p>
-<p class="meta" id="split-strategy"></p>
-<p class="meta" id="check-strategy"></p>
+<p class="small" id="split-strategy"></p>
+<p class="small" id="check-strategy"></p>
 </div>
 </div>
 <details class="how">
 <summary>How it's computed</summary>
 <div class="how-body">
 <h3>Strive</h3>
-<p class="formula">Years = (bitcoin held &times; bitcoin price + cash + securities) &divide; one year of SATA dividends. One year of dividends is SATA shares &times; $100 stated amount (each share's face value) &times; the yearly rate.</p>
+<p class="formula">Years = (bitcoin held &times; bitcoin price + cash + securities) &divide; one year of SATA dividends. One year of SATA dividends is SATA shares &times; $100 face value &times; the yearly rate.</p>
 <dl class="kv" id="in-strive"></dl>
 <h3>Strategy</h3>
-<p class="formula">Years = (bitcoin held &times; bitcoin price + USD reserve) &divide; one year of dividends and interest, as Strategy publishes it.</p>
+<p class="formula">Years = (bitcoin held &times; bitcoin price + USD reserve and cash) &divide; one year of dividends and interest, as Strategy publishes them.</p>
 <dl class="kv" id="in-strategy"></dl>
 </div>
 </details>
@@ -308,10 +311,10 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 </div>
 <svg class="tiers" viewBox="0 0 420 262" width="420" height="262" role="img" aria-labelledby="tiers-t">
 <title id="tiers-t">AI agents spend in digital dollars. Spare cash parks in STRC and SATA. Bitcoin sits underneath.</title>
-<rect class="box" x="50.5" y="0.5" width="319" height="63" rx="6"/>
+<rect class="box" x="0.5" y="0.5" width="419" height="63" rx="6"/>
 <text x="210" y="37.5" text-anchor="middle">AI agents spend in digital dollars</text>
 <path class="arw" d="M210 64.5V97M204.5 91.5L210 97L215.5 91.5"/>
-<rect class="box" x="25.5" y="99.5" width="369" height="63" rx="6"/>
+<rect class="box" x="0.5" y="99.5" width="419" height="63" rx="6"/>
 <text x="210" y="136.5" text-anchor="middle">Spare cash parks in STRC and SATA</text>
 <path class="arw" d="M210 163.5V196M204.5 190.5L210 196L215.5 190.5"/>
 <rect class="box base" x="0.5" y="198.5" width="419" height="63" rx="6"/>
@@ -383,111 +386,122 @@ function drawGrid(){
 }
 drawGrid();addEventListener('resize',()=>{clearTimeout(window._t);window._t=setTimeout(drawGrid,120)});
 document.getElementById('g-exp').onclick=()=>{expanded=!expanded;drawGrid()};
-// credit family + stress test: every figure comes from DATA.credit; a missing value reads "— not published"
+// credit family + stress test: every figure comes from DATA.credit; a missing or impossible value reads "— not published".
+// Dates are UTC, one format ("28 Sep"); each number carries its own date.
 (function(){
  const C=D.credit||{},Cov=window.Coverage,NP='<span class="np">— not published</span>';
- const ok=v=>typeof v==='number'&&isFinite(v);
+ const ok=v=>typeof v==='number'&&isFinite(v),pos=v=>ok(v)&&v>0;
  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const when=s=>{if(!s)return null;const d=new Date(s.length<=10?s+'T12:00:00Z':s);return isNaN(d)?null:d};
- const day=s=>{const d=when(s);return d?d.getUTCDate()+' '+MN[d.getUTCMonth()]:null};
+ const day=s=>{const d=when(s);return d?d.getUTCDate()+' '+MN[d.getUTCMonth()]:''};
  const dayY=s=>{const d=when(s);return d?day(s)+' '+d.getUTCFullYear():null};
  const cash=(n,dp=0)=>ok(n)?'$'+n.toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp}):null;
- const big=n=>!ok(n)?null:n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':cash(n);
- const pct=(n,dp=2)=>ok(n)?(n<0?'−':'')+Math.abs(n).toFixed(dp)+'%':null;
+ const big=n=>!ok(n)?null:n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e4?'$'+(n/1e6).toFixed(2)+'M':cash(n);
+ const r2=n=>Math.round(n*100)/100; // weights are shown at 2 decimals, and every sum on screen is of the shown figures
+ const pct=n=>ok(n)?(n<0?'−':'')+Math.abs(n).toFixed(2)+'%':null;
  const count=n=>ok(n)?Math.round(n).toLocaleString('en-US'):null;
  const site=u=>{try{const x=new URL(u);return (x.host.replace(/^www\./,'')+x.pathname).replace(/\/$/,'')}catch(e){return 'source'}};
  const link=(url,text)=>url?`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(text)}</a>`:'';
+ const src=(url,name,date)=>url?link(url,date?name+', '+date:name):'';
  const put=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html==null||html===''?NP:html};
  const opt=(id,html)=>{const el=document.getElementById(id);if(el){el.innerHTML=html||'';el.hidden=!html}};
- const withSub=(v,sub)=>v==null?null:esc(v)+(sub?`<span class="sub">${sub}</span>`:'');
- const dated=(text,date)=>date?text+', '+date:text;
+ const per=s=>`<span class="per">${s}</span>`,sub=s=>`<span class="sub">${s}</span>`,meta=s=>s?`<span class="meta">${s}</span>`:'';
 
- // DCAP: the outer frame. Lines exactly as the fund publishes them, never summed.
+ // DCAP: the outer frame. Each figure is one of the fund's published weights; the two sums are shown, not hidden.
  const d=C.dcap||{},lines=Array.isArray(d.lines)?d.lines:[];
- const shown=[['STRC','held','dcap-strc'],['SATA','held','dcap-sata'],['SATA','swap_receive','dcap-swap'],['Cash','cash','dcap-cash']];
- const find=(lab,kind)=>lines.find(l=>l.label===lab&&l.kind===kind);
- put('dcap-net',withSub(big(d.net_assets_usd)));
+ const used=[['STRC','held'],['SATA','held'],['SATA','swap_receive'],['Cash','cash'],['SATA','swap_pay']];
+ const w=(lab,kind)=>{const l=lines.find(l=>l.label===lab&&l.kind===kind);return l&&ok(l.weight_pct)?r2(l.weight_pct):null};
+ const [strcHeld,sataHeld,sataSwap,cashW,owed]=used.map(([l,k])=>w(l,k));
+ const dcapSrc=src(d.source,site(d.source).split('/')[0],day(d.as_of));
+ put('dcap-net',big(d.net_assets_usd)&&esc(big(d.net_assets_usd))+meta(dcapSrc));
  put('dcap-first',dayY(d.inception));
- shown.forEach(([lab,kind,id])=>{const l=find(lab,kind);put(id,l?pct(l.weight_pct):null)});
  if(d.as_of)document.getElementById('dcap-lead').textContent='What it holds on '+day(d.as_of)+', as the fund publishes it';
- const rest=lines.filter(l=>!shown.some(([lab,kind])=>l.label===lab&&l.kind===kind)&&ok(l.weight_pct));
- const say=l=>l.kind==='swap_pay'?`the ${l.label} swap's other side, which the fund pays, ${pct(l.weight_pct)}`:
-  l.kind==='swap_receive'?`a ${l.label} swap, ${pct(l.weight_pct)}`:`${l.label}, ${pct(l.weight_pct)}`;
+ put('dcap-strc',pct(strcHeld));
+ const sataOK=sataHeld!=null&&sataSwap!=null,cashOK=cashW!=null&&owed!=null&&owed<=0;
+ put('dcap-sata',sataOK?pct(r2(sataHeld+sataSwap)):null);
+ opt('dcap-sata-how',sataOK?`${pct(sataHeld)} held + ${pct(sataSwap)} through a swap, a contract that pays the fund SATA's return`:'');
+ put('dcap-cash',cashOK?pct(r2(cashW+owed)):null);
+ opt('dcap-cash-how',cashOK?`${pct(cashW)} cash − ${pct(-owed)} owed back on the swap`:'');
+ const rest=lines.filter(l=>!used.some(([lab,kind])=>l.label===lab&&l.kind===kind)&&ok(l.weight_pct));
+ const say=l=>(l.kind==='swap_receive'||l.kind==='swap_pay'?`a ${l.label} swap`:l.label)+', '+pct(r2(l.weight_pct));
  opt('dcap-also',rest.length?'Also listed: '+esc(rest.map(say).join('; '))+'.':'');
- put('dcap-src',d.source?link(d.source,dated(site(d.source),d.as_of?'holdings '+day(d.as_of):'')):null);
+ opt('dcap-src',dcapSrc);
 
- // STRC and SATA: the two boxes inside
- const s=C.strc||{},a=C.sata||{};
- put('strc-rate',ok(s.rate_pct)?pct(s.rate_pct)+'<span class="per"> a year</span>':null);
+ // STRC and SATA: the two boxes inside. Same fields, same shape.
+ const s=C.strc||{},a=C.sata||{},sv=C.strive||{},st=C.strategy||{};
+ put('strc-rate',ok(s.rate_pct)&&s.rate_pct>0?pct(s.rate_pct)+per(' a year'):null);
  put('strc-pays',s.pays?esc(s.pays):null);
- put('strc-price',withSub(cash(s.price,2),'vs $100 face value'));
- put('strc-size',withSub(big(s.size_usd),'outstanding'));
- put('strc-src',s.source?link(s.source,dated(site(s.source),s.price_time?'price '+day(s.price_time):'')):null);
- put('sata-rate',ok(a.rate_pct)?pct(a.rate_pct)+'<span class="per"> a year</span>':null);
+ put('strc-price',cash(s.price,2)&&cash(s.price,2)+sub('vs $100 face value'));
+ put('strc-size',big(s.size_usd)&&big(s.size_usd)+per(' outstanding'));
+ opt('strc-src',src(s.source,site(s.source),day(s.price_time)));
+ put('sata-rate',ok(a.rate_pct)&&a.rate_pct>0?pct(a.rate_pct)+per(' a year'):null);
  put('sata-pays',a.pays?esc(a.pays):null);
- put('sata-price',withSub(cash(a.price,2),'vs $100 stated amount'));
- const sv=C.strive||{};
- const shares=ok(a.shares)?(a.shares/1e6).toFixed(2)+'M shares':null;
- put('sata-size',withSub(big(a.size_usd),shares?(sv.filing?link(sv.filing,shares):esc(shares))+' &times; $100 stated amount'+(a.shares_as_of?', '+day(a.shares_as_of):''):''));
- put('sata-src',a.source?link(a.source,dated(site(a.source),a.price_date?'price '+day(a.price_date):'')):null);
+ put('sata-price',cash(a.price,2)&&cash(a.price,2)+sub('vs $100 face value'));
+ put('sata-size',big(a.size_usd)&&big(a.size_usd)+per(' outstanding')+
+  (pos(a.shares)?sub((a.shares/1e6).toFixed(2)+'M shares &times; $100 face value')+meta(src(sv.filing,'8-K',day(a.shares_as_of))):''));
+ opt('sata-src',src(a.source,site(a.source),day(a.price_date)));
 
- // bitcoin underneath the rocket
- const st=C.strategy||{},sf=st.filing||{};
+ // bitcoin underneath the rocket, each count dated by its own source
  put('held-mstr',count(st.btc));
- opt('held-mstr-src',sf.url?link(sf.url,dated('8-K',day(sf.date))):'');
+ opt('held-mstr-src',src(st.source,site(st.source),day(st.their_price_time)));
  put('held-asst',count(sv.btc));
- opt('held-asst-src',sv.filing?link(sv.filing,dated('8-K',sv.as_of?'as of '+day(sv.as_of):'')):'');
+ opt('held-asst-src',src(sv.filing,'8-K',day(sv.btc_as_of||sv.as_of)));
 
  // stress test: one slider, two answers, math from coverage.js
  const range=document.getElementById('btc-range'),out=document.getElementById('btc-out');
  const today=(D.ticker||{}).btc_usd,MIN=10000,STEP=1000;
- const striveOK=!!Cov&&[sv.btc,sv.cash,sv.securities,sv.sata_shares,sv.sata_rate].every(ok);
- const stratOK=!!Cov&&[st.btc,st.usd_assets,st.annual_obligation].every(ok);
+ const striveOK=!!Cov&&[sv.btc,sv.cash,sv.securities].every(ok)&&pos(sv.sata_shares)&&pos(sv.sata_rate)&&sv.sata_rate<0.5;
+ const stratOK=!!Cov&&[st.btc,st.usd_assets].every(ok)&&pos(st.annual_obligation);
  const obligation=striveOK?Cov.striveAnnualDividend(sv.sata_shares,sv.sata_rate):null;
  const yrs=n=>n.toFixed(1)+' years';
- // dollar part and bitcoin part, shown so the pieces add up to the rounded total on screen
- const split=(total,dollars,label)=>{const t=+total.toFixed(1),u=+dollars.toFixed(1);return 'bitcoin '+(t-u).toFixed(1)+' + '+label+' '+u.toFixed(1)+' = '+t.toFixed(1)+' years'};
+ // bitcoin part + dollar part, shown so the pieces add up to the rounded total on screen
+ const split=(total,dollars,label)=>{const t=+total.toFixed(1),u=+dollars.toFixed(1);
+  return `Bitcoin ${(t-u).toFixed(1)} years + ${label} ${u.toFixed(1)} years = ${t.toFixed(1)} years`};
  let top=MIN;
  if(ok(today)&&today>MIN){top=Math.ceil(today/STEP)*STEP;range.min=MIN;range.max=top;range.step=STEP;range.value=top;
   document.getElementById('btc-today').textContent='today '+cash(today)+(D.ticker.as_of?', '+day(D.ticker.as_of):'');}
  else{range.disabled=true;document.getElementById('btc-today').innerHTML=NP}
  const priceAt=v=>v>=top&&ok(today)?today:v; // the top notch is today's exact price
+ function answer(id,splitId,okInputs,years,dollars,label,sentence){
+  const y=okInputs?years():NaN,u=okInputs?dollars():NaN;
+  if(!ok(y)||!ok(u)){put(id,sentence(null));opt(splitId,'');return}
+  put(id,sentence(y));opt(splitId,split(y,u,label));
+ }
  function paint(){
   if(range.disabled){out.innerHTML=NP;put('say-strive',null);put('say-strategy',null);return}
   const v=+range.value,p=priceAt(v),ps=cash(p);
   range.style.setProperty('--f',(v-MIN)/(top-MIN));
   range.setAttribute('aria-valuetext',ps);
   out.textContent=ps;
-  if(striveOK){const y=Cov.striveYears(sv,p),u=Cov.yearsCovered(0,0,sv.cash+sv.securities,obligation);
-   put('say-strive',`At <span class="num">${ps}</span> bitcoin, Strive's bitcoin and cash pay the SATA dividend for <span class="num yrs">${yrs(y)}</span>.`);
-   put('split-strive',split(y,u,'cash and securities'));
-  }else{put('say-strive','Strive: '+NP);opt('split-strive','')}
-  if(stratOK){const y=Cov.strategyYears(st,p),u=Cov.yearsCovered(0,0,st.usd_assets,st.annual_obligation);
-   put('say-strategy',`At <span class="num">${ps}</span> bitcoin, Strategy's bitcoin and dollars pay its dividends and interest for <span class="num yrs">${yrs(y)}</span>.`);
-   put('split-strategy',split(y,u,'USD reserve'));
-  }else{put('say-strategy','Strategy: '+NP);opt('split-strategy','')}
+  const lead=`At <span class="num">${ps}</span> bitcoin, `;
+  answer('say-strive','split-strive',striveOK,()=>Cov.striveYears(sv,p),()=>Cov.yearsCovered(0,0,sv.cash+sv.securities,obligation),'cash and securities',
+   y=>y==null?'Strive: '+NP:lead+`Strive's bitcoin and cash pay the SATA dividend for <span class="num yrs">${yrs(y)}</span>.`);
+  answer('say-strategy','split-strategy',stratOK,()=>Cov.strategyYears(st,p),()=>Cov.yearsCovered(0,0,st.usd_assets,st.annual_obligation),'USD reserve and cash',
+   y=>y==null?'Strategy: '+NP:lead+`Strategy's bitcoin and dollars pay its dividends and interest for <span class="num yrs">${yrs(y)}</span>.`);
  }
  range.addEventListener('input',paint);
  document.getElementById('dial').addEventListener('submit',e=>e.preventDefault());
  paint();
- // each company's own published figure, as a check on the arithmetic
- put('check-strive',sv.source?'Strive publishes this figure on '+link(sv.source,site(sv.source))+' (Total Dividend Coverage); same formula.':null);
- put('check-strategy',ok(st.published_years)&&ok(st.their_btc_price)?
-  'Strategy publishes '+yrs(st.published_years)+' at '+cash(st.their_btc_price)+' ('+link(st.source,dated(site(st.source),day(st.their_price_time)))+').':null);
- // every input, with its source and date
- const row=(label,value,src)=>`<div><dt>${label}</dt><dd>${value==null?NP:esc(value)}</dd>${src?`<p class="meta">${src}</p>`:''}</div>`;
- const svDate=sv.as_of?day(sv.as_of):'',stDate=day(st.their_price_time);
+ // the check: this math at each company's own bitcoin price, beside the figure the company shows
+ const sy=striveOK&&pos(sv.their_btc_price)?Cov.striveYears(sv,sv.their_btc_price):NaN;
+ put('check-strive',ok(sy)?`Check: at Strive's own bitcoin price, ${cash(sv.their_btc_price)} (${day(sv.their_price_date)}), this math gives ${yrs(sy)} — Strive's Total Dividend Coverage on ${link(sv.source,site(sv.source))} uses the same formula and inputs.`:'Check: '+NP);
+ const gy=stratOK&&pos(st.their_btc_price)?Cov.strategyYears(st,st.their_btc_price):NaN;
+ put('check-strategy',ok(gy)&&ok(st.published_years)&&gy.toFixed(1)===st.published_years.toFixed(1)?
+  `Check: at Strategy's own bitcoin price, ${cash(st.their_btc_price)} (${day(st.their_price_time)}), this math gives ${yrs(gy)} — the figure ${link(st.source,site(st.source))} shows.`:'Check: '+NP);
+ // every input, with its source and its own date
+ const row=(label,value,from,note)=>`<div><dt>${label}</dt><dd>${value==null?NP:esc(value)}</dd>${note?`<p class="small">${note}</p>`:''}${from?`<p class="meta">${from}</p>`:''}</div>`;
+ const tr=src(sv.source,site(sv.source),day(sv.cash_as_of)),sg=src(st.source,site(st.source),day(st.their_price_time));
  document.getElementById('in-strive').innerHTML=
-  row('Bitcoin held',count(sv.btc)&&count(sv.btc)+' BTC',sv.filing&&link(sv.filing,dated('8-K',svDate&&'as of '+svDate)))+
-  row('Cash',big(sv.cash),sv.source&&link(sv.source,dated(site(sv.source),svDate)))+
-  row('Securities',big(sv.securities),sv.source&&link(sv.source,dated(site(sv.source),svDate)))+
-  row('SATA shares',count(sv.sata_shares),sv.filing&&link(sv.filing,dated('8-K',svDate&&'as of '+svDate)))+
-  row('Yearly rate',ok(sv.sata_rate)?pct(sv.sata_rate*100,0):null,a.source&&link(a.source,site(a.source)))+
-  row('One year of SATA dividends',big(obligation),ok(obligation)?esc(count(sv.sata_shares)+' shares × $100 × '+pct(sv.sata_rate*100,0)):'');
+  row('Bitcoin held',count(sv.btc)&&count(sv.btc)+' BTC',src(sv.filing,'8-K',day(sv.btc_as_of)))+
+  row('Cash',big(sv.cash),tr)+
+  row('Securities',big(sv.securities),tr)+
+  row('SATA shares',pos(sv.sata_shares)?count(sv.sata_shares):null,src(sv.filing,'8-K',day(sv.as_of)))+
+  row('Yearly rate',pos(sv.sata_rate)&&sv.sata_rate<0.5?pct(sv.sata_rate*100):null,src(sv.source,site(sv.source),day(sv.as_of)))+
+  row('One year of SATA dividends',big(obligation),'',ok(obligation)?esc(count(sv.sata_shares)+' shares × $100 face value × '+pct(sv.sata_rate*100)):'');
  document.getElementById('in-strategy').innerHTML=
-  row('Bitcoin held',count(st.btc)&&count(st.btc)+' BTC',sf.url&&link(sf.url,dated('8-K',day(sf.date))))+
-  row('USD reserve',big(st.usd_assets),st.source&&link(st.source,dated(site(st.source),stDate)))+
-  row('One year of dividends and interest',big(st.annual_obligation),st.source&&link(st.source,dated(site(st.source),stDate)));
+  row('Bitcoin held',count(st.btc)&&count(st.btc)+' BTC',sg)+
+  row('USD reserve and cash',big(st.usd_assets),sg)+
+  row('One year of dividends and interest',pos(st.annual_obligation)?big(st.annual_obligation):null,sg);
 
  // motion: the frame and rocket lift once on first view; the flame only runs while on screen
  const cr=document.getElementById('credit'),lf=document.getElementById('lift'),rk=cr&&cr.querySelector('.rocket');
