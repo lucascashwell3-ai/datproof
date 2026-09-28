@@ -8,10 +8,10 @@
     "credit": "ok"
   },
   "latest_filing": {
-    "mstr": "2026-09-21",
-    "asst": "2026-09-21",
+    "mstr": "2026-09-28",
+    "asst": "2026-09-28",
     "metaplanet": "2026-07-02"
   },
   "degraded": false,
-  "stale_days": 7
+  "stale_days": 0
 }
