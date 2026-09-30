@@ -1,8 +1,8 @@
 {
   "dcap": {
-    "as_of": "2026-09-28",
-    "net_assets_usd": 1001004.0,
-    "nav": 25.0251,
+    "as_of": "2026-09-29",
+    "net_assets_usd": 1003068.0,
+    "nav": 25.0767,
     "shares_outstanding": 40000.0,
     "inception": "2026-09-24",
     "exchange": "Cboe BZX Exchange, Inc.",
@@ -10,49 +10,56 @@
       {
         "label": "STRC",
         "kind": "held",
-        "weight_pct": 45.2219,
-        "market_value_usd": 452688.8,
+        "weight_pct": 45.3399,
+        "market_value_usd": 454790.08,
         "name": "MICROSTRATEGY INC PREFERRED STOCK 9"
       },
       {
         "label": "Cash",
         "kind": "cash",
-        "weight_pct": 44.8387,
-        "market_value_usd": 448852.3,
+        "weight_pct": 44.7505,
+        "market_value_usd": 448877.89,
         "name": "CASH AND CASH EQUIVALENTS"
       },
       {
         "label": "SATA",
         "kind": "swap_receive",
-        "weight_pct": 44.828,
+        "weight_pct": 44.7373,
         "market_value_usd": 448744.87,
         "name": "RECV DCAP TRS SATA EQ"
       },
       {
-        "label": "Microstrategy Inc 8% Pc Perp",
-        "kind": "other",
-        "weight_pct": 4.9778,
-        "market_value_usd": 49829.45,
-        "name": "MICROSTRATEGY INC 8% PC PERP"
+        "label": "STRC",
+        "kind": "swap_receive",
+        "weight_pct": 5.0223,
+        "market_value_usd": 50377.36,
+        "name": "RECV DCAP TRS STRC EQ"
       },
       {
         "label": "SATA",
         "kind": "held",
-        "weight_pct": 4.9554,
+        "weight_pct": 4.9453,
         "market_value_usd": 49604.96,
         "name": "STRIVE INC"
       },
       {
+        "label": "Microstrategy Inc 8% Pc Perp",
+        "kind": "other",
+        "weight_pct": 4.9348,
+        "market_value_usd": 49499.58,
+        "name": "MICROSTRATEGY INC 8% PC PERP"
+      },
+      {
         "label": "STRC",
         "kind": "swap_receive",
-        "weight_pct": 0.016,
-        "market_value_usd": 159.5,
+        "weight_pct": -4.9832,
+        "market_value_usd": -49985.1,
         "name": "RECV DCAP TRS STRC EQ"
       },
       {
         "label": "SATA",
         "kind": "swap_pay",
-        "weight_pct": -44.8377,
+        "weight_pct": -44.7469,
         "market_value_usd": -448842.01,
         "name": "PAYB DCAP TRS SATA EQ"
       }
@@ -62,8 +69,8 @@
   },
   "strc": {
     "rate_pct": 12.0,
-    "price": 99.435,
-    "price_time": "2026-09-29T18:22:00Z",
+    "price": 99.2,
+    "price_time": "2026-09-30T18:12:00Z",
     "size_usd": 9162738300.0,
     "next_pay": "2026-10-15",
     "pays": "twice a month",
@@ -74,10 +81,10 @@
     "btc": 847666.0,
     "usd_assets": 6021000000,
     "annual_obligation": 1603255710.5,
-    "their_btc_price": 83434.56,
-    "their_price_time": "2026-09-29T18:22:21Z",
-    "published_years": 47.8686,
-    "published_btc_years": 44.11313758234076,
+    "their_btc_price": 84014.9,
+    "their_price_time": "2026-09-30T18:12:22Z",
+    "published_years": 48.1755,
+    "published_btc_years": 44.419972283267285,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -88,14 +95,14 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-09-29T18:22:26Z",
+  "fetched_at": "2026-09-30T18:12:42Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 12193180.0,
     "shares_as_of": "2026-09-25",
     "size_usd": 1219318000.0,
-    "price": 99.995,
-    "price_date": "2026-09-29",
+    "price": 100.005,
+    "price_date": "2026-09-30",
     "pays": "every business day",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/aggregates"
@@ -110,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-09-25",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026063653/asst-20260928.htm",
-    "their_btc_price": 83448.31,
-    "their_price_date": "2026-09-29",
+    "their_btc_price": 84013.63,
+    "their_price_date": "2026-09-30",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }
