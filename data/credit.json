@@ -69,8 +69,8 @@
   },
   "strc": {
     "rate_pct": 12.0,
-    "price": 99.4962,
-    "price_time": "2026-10-02T18:06:00Z",
+    "price": 99.41,
+    "price_time": "2026-10-02T20:00:00Z",
     "size_usd": 9162738300.0,
     "next_pay": "2026-10-31",
     "pays": "twice a month",
@@ -81,10 +81,10 @@
     "btc": 847666.0,
     "usd_assets": 6021000000,
     "annual_obligation": 1603255710.5,
-    "their_btc_price": 84798.12,
-    "their_price_time": "2026-10-02T18:06:54Z",
-    "published_years": 48.5896,
-    "published_btc_years": 44.834072766535144,
+    "their_btc_price": 84841.0,
+    "their_price_time": "2026-10-03T16:49:37Z",
+    "published_years": 48.6122,
+    "published_btc_years": 44.8567440833076,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -95,13 +95,13 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-10-02T18:07:09Z",
+  "fetched_at": "2026-10-03T16:49:51Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 12193180.0,
     "shares_as_of": "2026-09-25",
     "size_usd": 1219318000.0,
-    "price": 100.006,
+    "price": 100.01,
     "price_date": "2026-10-02",
     "pays": "every business day",
     "source": "https://strive.com/treasury",
@@ -117,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-09-25",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026063653/asst-20260928.htm",
-    "their_btc_price": 85155.92,
-    "their_price_date": "2026-10-02",
+    "their_btc_price": 84838.0,
+    "their_price_date": "2026-10-03",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }
