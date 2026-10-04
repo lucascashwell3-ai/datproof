@@ -81,10 +81,10 @@
     "btc": 847666.0,
     "usd_assets": 6021000000,
     "annual_obligation": 1603255710.5,
-    "their_btc_price": 84841.0,
-    "their_price_time": "2026-10-03T16:49:37Z",
-    "published_years": 48.6122,
-    "published_btc_years": 44.8567440833076,
+    "their_btc_price": 85358.0,
+    "their_price_time": "2026-10-04T17:07:55Z",
+    "published_years": 48.8856,
+    "published_btc_years": 45.13008995017704,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -95,7 +95,7 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-10-03T16:49:51Z",
+  "fetched_at": "2026-10-04T17:08:14Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 12193180.0,
@@ -117,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-09-25",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026063653/asst-20260928.htm",
-    "their_btc_price": 84838.0,
-    "their_price_date": "2026-10-03",
+    "their_btc_price": 85359.72,
+    "their_price_date": "2026-10-04",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }
