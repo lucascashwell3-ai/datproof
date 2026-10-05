@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-04",
+  "date": "2026-10-05",
   "sources": {
     "mstr": "ok",
     "asst": "ok",
@@ -8,10 +8,10 @@
     "credit": "ok"
   },
   "latest_filing": {
-    "mstr": "2026-09-28",
-    "asst": "2026-09-28",
+    "mstr": "2026-10-05",
+    "asst": "2026-10-05",
     "metaplanet": "2026-07-02"
   },
   "degraded": false,
-  "stale_days": 6
+  "stale_days": 0
 }
