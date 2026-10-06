@@ -1,8 +1,8 @@
 {
   "dcap": {
-    "as_of": "2026-10-02",
-    "net_assets_usd": 1509222.0,
-    "nav": 25.1537,
+    "as_of": "2026-10-05",
+    "net_assets_usd": 1510368.0,
+    "nav": 25.1728,
     "shares_outstanding": 60000.0,
     "inception": "2026-09-24",
     "exchange": "Cboe BZX Exchange, Inc.",
@@ -10,56 +10,56 @@
       {
         "label": "STRC",
         "kind": "held",
-        "weight_pct": 45.2077,
-        "market_value_usd": 681157.32,
+        "weight_pct": 45.2116,
+        "market_value_usd": 681636.96,
         "name": "MICROSTRATEGY INC PREFERRED STOCK 9"
       },
       {
         "label": "Cash",
         "kind": "cash",
-        "weight_pct": 44.8099,
-        "market_value_usd": 675163.74,
+        "weight_pct": 44.7694,
+        "market_value_usd": 674970.6,
         "name": "CASH AND CASH EQUIVALENTS"
       },
       {
         "label": "SATA",
         "kind": "swap_receive",
-        "weight_pct": 40.4758,
+        "weight_pct": 40.4508,
         "market_value_usd": 609860.98,
         "name": "RECV DCAP TRS SATA EQ"
       },
       {
         "label": "Microstrategy Inc 8% Pc Perp",
         "kind": "other",
-        "weight_pct": 5.0353,
-        "market_value_usd": 75868.75,
+        "weight_pct": 5.0718,
+        "market_value_usd": 76465.75,
         "name": "MICROSTRATEGY INC 8% PC PERP"
       },
       {
         "label": "SATA",
         "kind": "held",
-        "weight_pct": 4.9383,
+        "weight_pct": 4.9353,
         "market_value_usd": 74407.44,
         "name": "STRIVE INC"
       },
       {
         "label": "STRC",
         "kind": "swap_receive",
-        "weight_pct": 4.4931,
-        "market_value_usd": 67698.21,
+        "weight_pct": 4.4934,
+        "market_value_usd": 67745.88,
         "name": "RECV DCAP TRS STRC EQ"
       },
       {
         "label": "STRC",
         "kind": "swap_receive",
-        "weight_pct": -4.4755,
+        "weight_pct": -4.4727,
         "market_value_usd": -67433.32,
         "name": "RECV DCAP TRS STRC EQ"
       },
       {
         "label": "SATA",
         "kind": "swap_pay",
-        "weight_pct": -40.4846,
+        "weight_pct": -40.4596,
         "market_value_usd": -609993.88,
         "name": "PAYB DCAP TRS SATA EQ"
       }
@@ -70,7 +70,7 @@
   "strc": {
     "rate_pct": 12.0,
     "price": 99.48,
-    "price_time": "2026-10-05T20:00:00Z",
+    "price_time": "2026-10-06T18:42:00Z",
     "size_usd": 8985358100.0,
     "next_pay": "2026-10-31",
     "pays": "twice a month",
@@ -81,10 +81,10 @@
     "btc": 848000.3,
     "usd_assets": 5711000000,
     "annual_obligation": 1580838586.5,
-    "their_btc_price": 85727.32,
-    "their_price_time": "2026-10-05T21:02:55Z",
-    "published_years": 49.5989,
-    "published_btc_years": 45.986221299891085,
+    "their_btc_price": 85609.0,
+    "their_price_time": "2026-10-06T18:42:38Z",
+    "published_years": 49.5354,
+    "published_btc_years": 45.92275157163871,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -95,14 +95,14 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-10-05T21:03:02Z",
+  "fetched_at": "2026-10-06T18:42:57Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 13498082.0,
     "shares_as_of": "2026-10-02",
     "size_usd": 1349808200.0,
-    "price": 100.01,
-    "price_date": "2026-10-05",
+    "price": 100.005,
+    "price_date": "2026-10-06",
     "pays": "every business day",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/aggregates"
@@ -117,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-10-02",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026064753/asst-20261005.htm",
-    "their_btc_price": 85212.0,
-    "their_price_date": "2026-10-05",
+    "their_btc_price": 85575.87,
+    "their_price_date": "2026-10-06",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }
