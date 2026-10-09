@@ -1,8 +1,8 @@
 {
   "dcap": {
-    "as_of": "2026-10-07",
-    "net_assets_usd": 1501464.0,
-    "nav": 25.0244,
+    "as_of": "2026-10-08",
+    "net_assets_usd": 1497732.0,
+    "nav": 24.9622,
     "shares_outstanding": 60000.0,
     "inception": "2026-09-24",
     "exchange": "Cboe BZX Exchange, Inc.",
@@ -10,56 +10,56 @@
       {
         "label": "STRC",
         "kind": "held",
-        "weight_pct": 45.4665,
-        "market_value_usd": 681294.36,
+        "weight_pct": 50.4182,
+        "market_value_usd": 753532.65,
         "name": "MICROSTRATEGY INC PREFERRED STOCK 9"
-      },
-      {
-        "label": "Cash",
-        "kind": "cash",
-        "weight_pct": 44.8282,
-        "market_value_usd": 671729.38,
-        "name": "CASH AND CASH EQUIVALENTS"
       },
       {
         "label": "SATA",
         "kind": "swap_receive",
-        "weight_pct": 40.4593,
-        "market_value_usd": 606263.16,
+        "weight_pct": 40.3198,
+        "market_value_usd": 602604.36,
         "name": "RECV DCAP TRS SATA EQ"
+      },
+      {
+        "label": "Cash",
+        "kind": "cash",
+        "weight_pct": 36.9721,
+        "market_value_usd": 552571.77,
+        "name": "CASH AND CASH EQUIVALENTS"
       },
       {
         "label": "Microstrategy Inc 8% Pc Perp",
         "kind": "other",
-        "weight_pct": 4.9994,
-        "market_value_usd": 74913.55,
+        "weight_pct": 8.1652,
+        "market_value_usd": 122034.6,
         "name": "MICROSTRATEGY INC 8% PC PERP"
       },
       {
         "label": "SATA",
         "kind": "held",
-        "weight_pct": 4.9363,
-        "market_value_usd": 73968.48,
+        "weight_pct": 4.9193,
+        "market_value_usd": 73522.08,
         "name": "STRIVE INC"
       },
       {
         "label": "STRC",
         "kind": "swap_receive",
-        "weight_pct": 4.5188,
-        "market_value_usd": 67711.83,
+        "weight_pct": 4.5315,
+        "market_value_usd": 67725.45,
         "name": "RECV DCAP TRS STRC EQ"
       },
       {
         "label": "STRC",
         "kind": "swap_receive",
-        "weight_pct": -4.5002,
+        "weight_pct": -4.5119,
         "market_value_usd": -67433.32,
         "name": "RECV DCAP TRS STRC EQ"
       },
       {
         "label": "SATA",
         "kind": "swap_pay",
-        "weight_pct": -40.7082,
+        "weight_pct": -40.8142,
         "market_value_usd": -609993.88,
         "name": "PAYB DCAP TRS SATA EQ"
       }
@@ -69,8 +69,8 @@
   },
   "strc": {
     "rate_pct": 12.0,
-    "price": 99.4199,
-    "price_time": "2026-10-08T19:05:00Z",
+    "price": 99.65,
+    "price_time": "2026-10-09T18:37:00Z",
     "size_usd": 8985358100.0,
     "next_pay": "2026-10-31",
     "pays": "twice a month",
@@ -81,10 +81,10 @@
     "btc": 848000.3,
     "usd_assets": 5711000000,
     "annual_obligation": 1580838586.5,
-    "their_btc_price": 81543.0,
-    "their_price_time": "2026-10-08T19:05:21Z",
-    "published_years": 47.3543,
-    "published_btc_years": 43.74165019339247,
+    "their_btc_price": 82305.99,
+    "their_price_time": "2026-10-09T18:37:54Z",
+    "published_years": 47.7636,
+    "published_btc_years": 44.15093660278453,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -95,14 +95,14 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-10-08T19:05:30Z",
+  "fetched_at": "2026-10-09T18:38:02Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 13498082.0,
     "shares_as_of": "2026-10-02",
     "size_usd": 1349808200.0,
-    "price": 99.045,
-    "price_date": "2026-10-08",
+    "price": 99.085,
+    "price_date": "2026-10-09",
     "pays": "every business day",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/aggregates"
@@ -117,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-10-02",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026064753/asst-20261005.htm",
-    "their_btc_price": 81557.2,
-    "their_price_date": "2026-10-08",
+    "their_btc_price": 82869.63,
+    "their_price_date": "2026-10-09",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }

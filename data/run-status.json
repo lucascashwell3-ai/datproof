@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-08",
+  "date": "2026-10-09",
   "sources": {
     "mstr": "ok",
     "asst": "ok",
@@ -13,5 +13,5 @@
     "metaplanet": "2026-07-02"
   },
   "degraded": false,
-  "stale_days": 3
+  "stale_days": 4
 }
