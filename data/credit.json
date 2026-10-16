@@ -1,8 +1,8 @@
 {
   "dcap": {
-    "as_of": "2026-10-14",
-    "net_assets_usd": 1486212.0,
-    "nav": 24.7702,
+    "as_of": "2026-10-15",
+    "net_assets_usd": 1490544.0,
+    "nav": 24.8424,
     "shares_outstanding": 60000.0,
     "inception": "2026-09-24",
     "exchange": "Cboe BZX Exchange, Inc.",
@@ -10,49 +10,56 @@
       {
         "label": "STRC",
         "kind": "held",
-        "weight_pct": 57.9271,
-        "market_value_usd": 860456.98,
+        "weight_pct": 57.8111,
+        "market_value_usd": 858645.31,
         "name": "MICROSTRATEGY INC PREFERRED STOCK 9"
       },
       {
         "label": "SATA",
         "kind": "swap_receive",
-        "weight_pct": 40.096,
-        "market_value_usd": 595591.66,
+        "weight_pct": 40.1741,
+        "market_value_usd": 596689.3,
         "name": "RECV DCAP TRS SATA EQ"
-      },
-      {
-        "label": "Ishares 0-3 Month Treasur",
-        "kind": "other",
-        "weight_pct": 16.9212,
-        "market_value_usd": 251350.0,
-        "name": "ISHARES 0-3 MONTH TREASUR"
       },
       {
         "label": "Cash",
         "kind": "cash",
-        "weight_pct": 13.2002,
-        "market_value_usd": 196076.93,
+        "weight_pct": 13.2554,
+        "market_value_usd": 196877.38,
         "name": "CASH AND CASH EQUIVALENTS"
+      },
+      {
+        "label": "Ishares 0-3 Month Treasur",
+        "kind": "other",
+        "weight_pct": 11.915,
+        "market_value_usd": 176968.0,
+        "name": "ISHARES 0-3 MONTH TREASUR"
       },
       {
         "label": "Microstrategy Inc 8% Pc Perp",
         "kind": "other",
-        "weight_pct": 8.029,
-        "market_value_usd": 119264.4,
+        "weight_pct": 8.055,
+        "market_value_usd": 119637.0,
         "name": "MICROSTRATEGY INC 8% PC PERP"
+      },
+      {
+        "label": "Microstrategy Inc Perp Pfd",
+        "kind": "other",
+        "weight_pct": 4.9578,
+        "market_value_usd": 73636.0,
+        "name": "MICROSTRATEGY INC PERP PFD"
       },
       {
         "label": "SATA",
         "kind": "held",
-        "weight_pct": 4.892,
-        "market_value_usd": 72666.48,
+        "weight_pct": 4.9015,
+        "market_value_usd": 72800.4,
         "name": "STRIVE INC"
       },
       {
         "label": "SATA",
         "kind": "swap_pay",
-        "weight_pct": -41.0656,
+        "weight_pct": -41.0699,
         "market_value_usd": -609993.88,
         "name": "PAYB DCAP TRS SATA EQ"
       }
@@ -62,10 +69,10 @@
   },
   "strc": {
     "rate_pct": 12.0,
-    "price": 99.47,
-    "price_time": "2026-10-15T17:27:00Z",
+    "price": 98.89,
+    "price_time": "2026-10-16T17:02:00Z",
     "size_usd": 8792143600.0,
-    "next_pay": "2026-10-31",
+    "next_pay": "2026-11-15",
     "pays": "twice a month",
     "source": "https://www.strategy.com/strc",
     "feed": "https://api.strategy.com/btc/strcKpiData"
@@ -74,10 +81,10 @@
     "btc": 848250.0,
     "usd_assets": 5518000000,
     "annual_obligation": 1557187846.5,
-    "their_btc_price": 82303.88,
-    "their_price_time": "2026-10-15T17:27:38Z",
-    "published_years": 48.3771,
-    "published_btc_years": 44.83355451747035,
+    "their_btc_price": 81244.84,
+    "their_price_time": "2026-10-16T17:02:55Z",
+    "published_years": 47.8002,
+    "published_btc_years": 44.25666157419499,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -88,14 +95,14 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-10-15T17:27:43Z",
+  "fetched_at": "2026-10-16T17:03:11Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 14030176.0,
     "shares_as_of": "2026-10-13",
     "size_usd": 1403017600.0,
-    "price": 97.696,
-    "price_date": "2026-10-15",
+    "price": 97.355,
+    "price_date": "2026-10-16",
     "pays": "every business day",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/aggregates"
@@ -110,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-10-13",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026065816/asst-20261014.htm",
-    "their_btc_price": 80810.7,
-    "their_price_date": "2026-10-15",
+    "their_btc_price": 82247.1,
+    "their_price_date": "2026-10-16",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }
