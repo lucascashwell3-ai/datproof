@@ -1,9 +1,9 @@
 {
-  "date": "2026-10-22",
+  "date": "2026-10-23",
   "sources": {
     "mstr": "ok",
     "asst": "ok",
-    "metaplanet": "ok",
+    "metaplanet": "failed",
     "ticker": "ok",
     "credit": "ok"
   },
@@ -12,6 +12,6 @@
     "asst": "2026-10-19",
     "metaplanet": "2026-07-02"
   },
-  "degraded": false,
-  "stale_days": 3
+  "degraded": true,
+  "stale_days": 4
 }
