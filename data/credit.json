@@ -1,8 +1,8 @@
 {
   "dcap": {
-    "as_of": "2026-10-23",
-    "net_assets_usd": 2215458.0,
-    "nav": 24.6162,
+    "as_of": "2026-10-26",
+    "net_assets_usd": 2216808.0,
+    "nav": 24.6312,
     "shares_outstanding": 90000.0,
     "inception": "2026-09-24",
     "exchange": "Cboe BZX Exchange, Inc.",
@@ -10,63 +10,56 @@
       {
         "label": "STRC",
         "kind": "held",
-        "weight_pct": 58.1811,
-        "market_value_usd": 1285817.76,
+        "weight_pct": 58.0249,
+        "market_value_usd": 1283358.97,
         "name": "MICROSTRATEGY INC PREFERRED STOCK 9"
       },
       {
         "label": "SATA",
         "kind": "swap_receive",
-        "weight_pct": 40.5647,
-        "market_value_usd": 896490.92,
+        "weight_pct": 40.6739,
+        "market_value_usd": 899600.56,
         "name": "RECV DCAP TRS SATA EQ"
       },
       {
         "label": "Cash",
         "kind": "cash",
-        "weight_pct": 13.1974,
-        "market_value_usd": 291665.47,
+        "weight_pct": 13.2403,
+        "market_value_usd": 292839.85,
         "name": "CASH AND CASH EQUIVALENTS"
       },
       {
         "label": "Microstrategy Inc 8% Pc Perp",
         "kind": "other",
-        "weight_pct": 10.1198,
-        "market_value_usd": 223651.0,
+        "weight_pct": 10.1644,
+        "market_value_usd": 224809.48,
         "name": "MICROSTRATEGY INC 8% PC PERP"
       },
       {
         "label": "Ishares 0-3 Month Treasur",
         "kind": "other",
-        "weight_pct": 9.205,
-        "market_value_usd": 203433.86,
+        "weight_pct": 9.1988,
+        "market_value_usd": 203454.07,
         "name": "ISHARES 0-3 MONTH TREASUR"
-      },
-      {
-        "label": "Microstrategy Inc Perp Pfd",
-        "kind": "other",
-        "weight_pct": 4.8513,
-        "market_value_usd": 107213.98,
-        "name": "MICROSTRATEGY INC PERP PFD"
       },
       {
         "label": "Strive Inc A 15% Perp Pfd",
         "kind": "other",
-        "weight_pct": 4.3963,
-        "market_value_usd": 97159.88,
+        "weight_pct": 4.9306,
+        "market_value_usd": 109053.0,
         "name": "STRIVE INC A 15% PERP PFD"
       },
       {
-        "label": "SATA",
-        "kind": "held",
-        "weight_pct": 0.5855,
-        "market_value_usd": 12938.64,
-        "name": "STRIVE INC"
+        "label": "Microstrategy Inc Perp Pfd",
+        "kind": "other",
+        "weight_pct": 4.8364,
+        "market_value_usd": 106967.9,
+        "name": "MICROSTRATEGY INC PERP PFD"
       },
       {
         "label": "SATA",
         "kind": "swap_pay",
-        "weight_pct": -41.1012,
+        "weight_pct": -41.0693,
         "market_value_usd": -908346.14,
         "name": "PAYB DCAP TRS SATA EQ"
       }
@@ -76,8 +69,8 @@
   },
   "strc": {
     "rate_pct": 12.0,
-    "price": 99.43,
-    "price_time": "2026-10-26T18:54:00Z",
+    "price": 99.49,
+    "price_time": "2026-10-27T18:24:00Z",
     "size_usd": 8391419700.0,
     "next_pay": "2026-11-15",
     "pays": "twice a month",
@@ -88,10 +81,10 @@
     "btc": 848517.0,
     "usd_assets": 5075000000,
     "annual_obligation": 1509131978.5,
-    "their_btc_price": 79908.2,
-    "their_price_time": "2026-10-26T18:54:38Z",
-    "published_years": 48.2916,
-    "published_btc_years": 44.92878496073827,
+    "their_btc_price": 80552.3,
+    "their_price_time": "2026-10-27T18:24:11Z",
+    "published_years": 48.6538,
+    "published_btc_years": 45.29093340599436,
     "source": "https://www.strategy.com/",
     "feed": "https://api.strategy.com/btc/bitcoinKpis"
   },
@@ -102,14 +95,14 @@
     "strive": "ok",
     "strategy": "ok"
   },
-  "fetched_at": "2026-10-26T18:54:51Z",
+  "fetched_at": "2026-10-27T18:24:18Z",
   "sata": {
     "rate_pct": 13.0,
     "shares": 14030176.0,
     "shares_as_of": "2026-10-23",
     "size_usd": 1403017600.0,
-    "price": 98.43,
-    "price_date": "2026-10-26",
+    "price": 98.54,
+    "price_date": "2026-10-27",
     "pays": "every business day",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/aggregates"
@@ -124,8 +117,8 @@
     "sata_rate": 0.13,
     "as_of": "2026-10-23",
     "filing": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026067141/asst-20261026.htm",
-    "their_btc_price": 79911.9,
-    "their_price_date": "2026-10-26",
+    "their_btc_price": 80080.0,
+    "their_price_date": "2026-10-27",
     "source": "https://strive.com/treasury",
     "feed": "https://strive.com/treasury/api/dashboard/base-data"
   }
