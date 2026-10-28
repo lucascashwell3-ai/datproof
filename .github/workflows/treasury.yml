@@ -1,0 +1,88 @@
+name: Treasury #1 — daily paper run
+
+# Runs after the grid job (12:50 UTC) has refreshed data/credit.json. A day already recorded is
+# skipped, so a rerun or an overlap changes nothing. Branch pushes run in dry-run mode: the full
+# daily run and its checks, nothing committed.
+on:
+  schedule:
+    - cron: "40 13 * * *"
+  push:
+    branches: ["treasury/**"]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run every step and check, commit nothing"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: treasury
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Determine dry-run mode
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ] || [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "DRY_RUN=true" >> "$GITHUB_ENV"
+          else
+            echo "DRY_RUN=false" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install httpx "anthropic==1.12.1" "opentimestamps-client==0.8.0" pytest
+
+      - name: Tests (engine, code check, feeds, daily run)
+        run: python -m pytest tests/test_treasury.py -q
+
+      - name: Daily run
+        id: daily
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set +e
+          if [ "$DRY_RUN" = "true" ]; then python -m treasury.daily --dry-run > run.log 2>&1; else python -m treasury.daily > run.log 2>&1; fi
+          code=$?
+          set -e
+          cat run.log
+          { echo "### Treasury #1"; echo; sed -n '/^{/q;p' run.log; } >> "$GITHUB_STEP_SUMMARY"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+      # The status file is committed even on a failed day, so the record shows why nothing moved.
+      - name: Commit the day
+        if: env.DRY_RUN != 'true' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "datproof-bot"
+          git config user.email "actions@github.com"
+          git add data/treasury/
+          if git diff --cached --quiet; then
+            echo "nothing new — the day was already recorded"
+          else
+            git commit -m "treasury: $(date -u +%F) [skip ci]"
+            ok=0
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then ok=1; break; fi
+              echo "push attempt $i rejected — rebasing on main"
+              git pull --rebase --autostash origin main || true
+              sleep 5
+            done
+            if [ "$ok" != "1" ]; then echo "::error title=treasury push failed::the day was not saved after 3 attempts"; exit 1; fi
+          fi
+
+      - name: Fail loud if the day broke a check
+        if: steps.daily.outputs.code != '0'
+        run: |
+          echo "::error title=Treasury #1 run failed::$(python -c "import json,sys; s=json.load(open('data/treasury/status.json')) if __import__('os').path.exists('data/treasury/status.json') else {}; print('; '.join(s.get('problems', [])) or 'see the run log')")"
+          exit 1
