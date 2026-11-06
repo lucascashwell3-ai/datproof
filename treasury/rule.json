@@ -1,0 +1,26 @@
+{
+  "name": "Treasury #1 rule, version 2",
+  "signed": "2026-10-27",
+  "money": "paper",
+  "start_cash": 100000,
+  "plain": [
+    "Keep 10% in dollars, or 3 months of bills.",
+    "Keep bills under what the dividends pay.",
+    "The rest: 8 parts digital credit (STRC, SATA), 1 part bitcoin.",
+    "No company over half of the digital credit.",
+    "Dividends buy bitcoin dips (10% under its 30-day high).",
+    "Never sell. A move over 5% of the treasury waits for a human yes."
+  ],
+  "settings": {
+    "cash_share": 0.10,
+    "buffer_months": 3,
+    "monthly_spend": 0,
+    "btc_share": 0.1111111111,
+    "btc_cap_extra": 0.10,
+    "max_per_issuer": 0.5,
+    "dip": 0.10,
+    "spare_to": "dips",
+    "approve_over": 0.05,
+    "min_trade": 200
+  }
+}
