@@ -279,3 +279,5 @@ date,ticker,type,instrument,units,usd,btc,btc_avg_usd,period_start,period_end,so
 2026-10-19,MSTR,btc_buy,BTC,,22100000,267,82900,2026-10-12,2026-10-18,https://www.sec.gov/Archives/edgar/data/1050446/000119312526424688/mstr-20261019.htm,
 2026-11-02,MSTR,atm_sale,common,1178552,164000000,,,2026-10-26,2026-11-01,https://www.sec.gov/Archives/edgar/data/1050446/000119312526442707/mstr-20261102.htm,
 2026-11-02,MSTR,btc_buy,BTC,,65500000,811,80846,2026-10-26,2026-11-01,https://www.sec.gov/Archives/edgar/data/1050446/000119312526442707/mstr-20261102.htm,
+2026-11-09,MSTR,atm_sale,common,2051348,283800000,,,2026-11-02,2026-11-08,https://www.sec.gov/Archives/edgar/data/1050446/000119312526452693/mstr-20261109.htm,
+2026-11-09,MSTR,btc_buy,BTC,,81900000,1036,79012,2026-11-02,2026-11-08,https://www.sec.gov/Archives/edgar/data/1050446/000119312526452693/mstr-20261109.htm,
