@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datproof-feed"
+version = "1.0.0"
+description = "Daily facts on where idle cash can sit, with an MCP server for AI agents. Not advice."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+build = ["httpx"]
+
+[project.scripts]
+datproof-mcp = "datproof_feed.server:main"
+
+[tool.setuptools]
+packages = ["datproof_feed"]
