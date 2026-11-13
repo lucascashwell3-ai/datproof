@@ -1,0 +1,269 @@
+{
+  "date": "2026-11-13",
+  "ticker": "STRC",
+  "name": "Strategy Stretch preferred",
+  "issuer": "Strategy",
+  "kind": "preferred",
+  "par_usd": 100,
+  "close_usd": {
+    "value": 99.96,
+    "unit": "usd",
+    "as_of": "2026-11-12",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+    "fetched_at": "2026-11-13T21:40:45Z",
+    "stale": false,
+    "reason": null
+  },
+  "avg_volume_30d": {
+    "value": 1733043.8,
+    "unit": "shares",
+    "as_of": "2026-11-12",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+    "fetched_at": "2026-11-13T21:40:45Z",
+    "stale": false,
+    "reason": null
+  },
+  "volume_rows": 30,
+  "stated_rate_pct": {
+    "value": 12.0,
+    "unit": "pct",
+    "as_of": "2026-11-13",
+    "source": "https://api.strategy.com/btc/strcKpiData",
+    "fetched_at": "2026-11-13T21:40:43Z",
+    "stale": false,
+    "reason": null
+  },
+  "yield_pct": {
+    "value": 12.005,
+    "unit": "pct",
+    "formula": "stated_rate_pct*par_usd/close_usd",
+    "inputs": [
+      "stated_rate_pct",
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "worst_drop_pct": {
+    "value": 25.482,
+    "unit": "pct",
+    "formula": "largest fall from a high close to a later close, over the past year",
+    "inputs": [
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "trading_days": 252,
+  "schedule": "every business day",
+  "next_pay_date": "2026-11-16",
+  "payments": {
+    "paid": 28,
+    "in_a_row": 28,
+    "gaps": [],
+    "last_paid": "2026-11-13"
+  },
+  "cross_check": "ok",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate"
+  ],
+  "dividends": [
+    {
+      "ex": "2025-08-15",
+      "pay": "2025-08-31",
+      "usd": 0.8
+    },
+    {
+      "ex": "2025-09-15",
+      "pay": "2025-09-30",
+      "usd": 0.83333333
+    },
+    {
+      "ex": "2025-10-15",
+      "pay": "2025-10-31",
+      "usd": 0.85416667
+    },
+    {
+      "ex": "2025-11-14",
+      "pay": "2025-11-30",
+      "usd": 0.875
+    },
+    {
+      "ex": "2025-12-15",
+      "pay": "2025-12-31",
+      "usd": 0.89583333
+    },
+    {
+      "ex": "2026-01-15",
+      "pay": "2026-01-31",
+      "usd": 0.91666667
+    },
+    {
+      "ex": "2026-02-13",
+      "pay": "2026-02-28",
+      "usd": 0.9375
+    },
+    {
+      "ex": "2026-03-13",
+      "pay": "2026-03-31",
+      "usd": 0.95833333
+    },
+    {
+      "ex": "2026-04-15",
+      "pay": "2026-04-30",
+      "usd": 0.95833333
+    },
+    {
+      "ex": "2026-05-15",
+      "pay": "2026-05-31",
+      "usd": 0.95833333
+    },
+    {
+      "ex": "2026-06-15",
+      "pay": "2026-06-30",
+      "usd": 0.95833333
+    },
+    {
+      "ex": "2026-06-30",
+      "pay": "2026-07-15",
+      "usd": 0.47916667
+    },
+    {
+      "ex": "2026-07-15",
+      "pay": "2026-07-31",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-07-31",
+      "pay": "2026-08-15",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-08-14",
+      "pay": "2026-08-31",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-08-31",
+      "pay": "2026-09-15",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-09-15",
+      "pay": "2026-09-30",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-09-30",
+      "pay": "2026-10-15",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-10-15",
+      "pay": "2026-10-31",
+      "usd": 0.5
+    },
+    {
+      "ex": "2026-10-30",
+      "pay": "2026-11-02",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-02",
+      "pay": "2026-11-03",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-03",
+      "pay": "2026-11-04",
+      "usd": 0.04
+    },
+    {
+      "ex": "2026-11-04",
+      "pay": "2026-11-05",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-05",
+      "pay": "2026-11-06",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-06",
+      "pay": "2026-11-09",
+      "usd": 0.1
+    },
+    {
+      "ex": "2026-11-09",
+      "pay": "2026-11-10",
+      "usd": 0.04
+    },
+    {
+      "ex": "2026-11-10",
+      "pay": "2026-11-12",
+      "usd": 0.06
+    },
+    {
+      "ex": "2026-11-12",
+      "pay": "2026-11-13",
+      "usd": 0.04
+    },
+    {
+      "ex": "2026-11-13",
+      "pay": "2026-11-16",
+      "usd": 0.1
+    },
+    {
+      "ex": "2026-11-16",
+      "pay": "2026-11-17",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-17",
+      "pay": "2026-11-18",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-18",
+      "pay": "2026-11-19",
+      "usd": 0.04
+    },
+    {
+      "ex": "2026-11-19",
+      "pay": "2026-11-20",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-20",
+      "pay": "2026-11-23",
+      "usd": 0.1
+    },
+    {
+      "ex": "2026-11-23",
+      "pay": "2026-11-24",
+      "usd": 0.03
+    },
+    {
+      "ex": "2026-11-24",
+      "pay": "2026-11-25",
+      "usd": 0.04
+    },
+    {
+      "ex": "2026-11-25",
+      "pay": "2026-11-27",
+      "usd": 0.06
+    },
+    {
+      "ex": "2026-11-27",
+      "pay": "2026-11-30",
+      "usd": 0.1
+    },
+    {
+      "ex": "2026-11-30",
+      "pay": "2026-12-01",
+      "usd": 0.04
+    }
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
+}

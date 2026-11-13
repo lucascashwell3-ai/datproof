@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-13",
+  "ticker": "STRD",
+  "name": "Strategy Stride preferred",
+  "issuer": "Strategy",
+  "kind": "preferred",
+  "par_usd": 100,
+  "close_usd": {
+    "value": 67.5,
+    "unit": "usd",
+    "as_of": "2026-11-12",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+    "fetched_at": "2026-11-13T21:41:12Z",
+    "stale": false,
+    "reason": null
+  },
+  "avg_volume_30d": {
+    "value": 80463.8,
+    "unit": "shares",
+    "as_of": "2026-11-12",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+    "fetched_at": "2026-11-13T21:41:12Z",
+    "stale": false,
+    "reason": null
+  },
+  "volume_rows": 30,
+  "stated_rate_pct": {
+    "value": 10.0,
+    "unit": "pct",
+    "as_of": "2026-11-13",
+    "source": "https://api.strategy.com/btc/strdKpiData",
+    "fetched_at": "2026-11-13T21:41:13Z",
+    "stale": false,
+    "reason": null
+  },
+  "yield_pct": {
+    "value": 14.815,
+    "unit": "pct",
+    "formula": "stated_rate_pct*par_usd/close_usd",
+    "inputs": [
+      "stated_rate_pct",
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "worst_drop_pct": {
+    "value": 38.408,
+    "unit": "pct",
+    "formula": "largest fall from a high close to a later close, over the past year",
+    "inputs": [
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "trading_days": 252,
+  "schedule": "quarterly",
+  "next_pay_date": null,
+  "payments": {
+    "paid": 5,
+    "in_a_row": 5,
+    "gaps": [],
+    "last_paid": "2026-09-30"
+  },
+  "cross_check": "no issuer list",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate"
+  ],
+  "dividends": [
+    {
+      "ex": "2025-09-15",
+      "pay": "2025-09-30",
+      "usd": 3.05555556
+    },
+    {
+      "ex": "2025-12-15",
+      "pay": "2025-12-31",
+      "usd": 2.5
+    },
+    {
+      "ex": "2026-03-13",
+      "pay": "2026-03-31",
+      "usd": 2.5
+    },
+    {
+      "ex": "2026-06-15",
+      "pay": "2026-06-30",
+      "usd": 2.5
+    },
+    {
+      "ex": "2026-09-15",
+      "pay": "2026-09-30",
+      "usd": 2.5
+    }
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
+}

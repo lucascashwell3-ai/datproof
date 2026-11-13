@@ -1,0 +1,145 @@
+{
+  "date": "2026-11-13",
+  "ticker": "SATS",
+  "name": "Strive Series S preferred",
+  "issuer": "Strive",
+  "kind": "preferred",
+  "par_usd": 100,
+  "close_usd": {
+    "value": 96.54,
+    "unit": "usd",
+    "as_of": "2026-11-12",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+    "fetched_at": "2026-11-13T21:40:55Z",
+    "stale": false,
+    "reason": null
+  },
+  "avg_volume_30d": {
+    "value": 374212.5,
+    "unit": "shares",
+    "as_of": "2026-11-12",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+    "fetched_at": "2026-11-13T21:40:55Z",
+    "stale": false,
+    "reason": null
+  },
+  "volume_rows": 20,
+  "stated_rate_pct": {
+    "value": 15.0,
+    "unit": "pct",
+    "as_of": "2026-11-13",
+    "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
+    "fetched_at": "2026-11-13T21:40:55Z",
+    "stale": false,
+    "reason": null
+  },
+  "yield_pct": {
+    "value": 15.538,
+    "unit": "pct",
+    "formula": "stated_rate_pct*par_usd/close_usd",
+    "inputs": [
+      "stated_rate_pct",
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "worst_drop_pct": {
+    "value": 3.581,
+    "unit": "pct",
+    "formula": "largest fall from a high close to a later close, over the past year",
+    "inputs": [
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "trading_days": 20,
+  "schedule": "every business day",
+  "next_pay_date": "2026-11-16",
+  "payments": {
+    "paid": 4,
+    "in_a_row": 4,
+    "gaps": [],
+    "last_paid": "2026-11-13"
+  },
+  "cross_check": "no issuer list",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate",
+    "short_history"
+  ],
+  "dividends": [
+    {
+      "ex": "2026-11-06",
+      "pay": "2026-11-09",
+      "usd": 0.871
+    },
+    {
+      "ex": "2026-11-09",
+      "pay": "2026-11-10",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-10",
+      "pay": "2026-11-12",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-12",
+      "pay": "2026-11-13",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-13",
+      "pay": "2026-11-16",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-16",
+      "pay": "2026-11-17",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-17",
+      "pay": "2026-11-18",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-18",
+      "pay": "2026-11-19",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-19",
+      "pay": "2026-11-20",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-20",
+      "pay": "2026-11-23",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-23",
+      "pay": "2026-11-24",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-24",
+      "pay": "2026-11-25",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-25",
+      "pay": "2026-11-27",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-27",
+      "pay": "2026-11-30",
+      "usd": 0.0658
+    }
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks"
+}
