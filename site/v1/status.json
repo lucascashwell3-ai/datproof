@@ -1,6 +1,6 @@
 {
   "date": "2026-11-13",
-  "built_at": "2026-11-13T21:41:20Z",
+  "built_at": "2026-11-13T22:10:15Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -17,5 +17,5 @@
     "SATA.yield_pct"
   ],
   "snapshot_sha256": "1a1c7f8bdef9b22a4dded128e2a18992d207823df25692fea3ac032baa6c7a60",
-  "stamp": "skipped (stamping off here)"
+  "stamp": "skipped (day file already existed)"
 }
