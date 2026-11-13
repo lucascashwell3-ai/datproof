@@ -1,0 +1,495 @@
+{
+  "date": "2026-11-13",
+  "built_at": "2026-11-13T21:36:33Z",
+  "sources": {
+    "nasdaq": "ok",
+    "strategy": "ok",
+    "strive": "ok",
+    "sec": "ok",
+    "treasury": "ok",
+    "llama": "ok"
+  },
+  "source_errors": {},
+  "problems": [],
+  "instruments": [
+    {
+      "ticker": "STRC",
+      "name": "Strategy Stretch preferred",
+      "issuer": "Strategy",
+      "kind": "preferred",
+      "par_usd": 100,
+      "close_usd": {
+        "value": 99.96,
+        "unit": "usd",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:01Z",
+        "stale": false,
+        "reason": null
+      },
+      "avg_volume_30d": {
+        "value": 1733043.8,
+        "unit": "shares",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:01Z",
+        "stale": false,
+        "reason": null
+      },
+      "volume_rows": 30,
+      "stated_rate_pct": {
+        "value": 12.0,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://api.strategy.com/btc/strcKpiData",
+        "fetched_at": "2026-11-13T21:35:59Z",
+        "stale": false,
+        "reason": null
+      },
+      "yield_pct": {
+        "value": 12.005,
+        "unit": "pct",
+        "formula": "stated_rate_pct*par_usd/close_usd",
+        "inputs": [
+          "stated_rate_pct",
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "worst_drop_pct": {
+        "value": 25.482,
+        "unit": "pct",
+        "formula": "largest fall from a high close to a later close, over the past year",
+        "inputs": [
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "trading_days": 252,
+      "schedule": "every business day",
+      "next_pay_date": "2026-11-16",
+      "payments": {
+        "paid": 28,
+        "in_a_row": 28,
+        "gaps": [],
+        "last_paid": "2026-11-13"
+      },
+      "cross_check": "ok",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate"
+      ],
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
+    },
+    {
+      "ticker": "SATA",
+      "name": "Strive Variable Rate Series A preferred",
+      "issuer": "Strive",
+      "kind": "preferred",
+      "par_usd": 100,
+      "close_usd": {
+        "value": 97.95,
+        "unit": "usd",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:06Z",
+        "stale": false,
+        "reason": null
+      },
+      "avg_volume_30d": {
+        "value": 494708.1,
+        "unit": "shares",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:06Z",
+        "stale": false,
+        "reason": null
+      },
+      "volume_rows": 30,
+      "stated_rate_pct": {
+        "value": 13.0,
+        "unit": "pct",
+        "as_of": "2026-11-06",
+        "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-06&toDate=2026-11-14",
+        "fetched_at": "2026-11-13T21:36:06Z",
+        "stale": true,
+        "reason": null
+      },
+      "yield_pct": {
+        "value": 13.272,
+        "unit": "pct",
+        "formula": "stated_rate_pct*par_usd/close_usd",
+        "inputs": [
+          "stated_rate_pct",
+          "close_usd"
+        ],
+        "stale": true,
+        "reason": null
+      },
+      "worst_drop_pct": {
+        "value": 17.935,
+        "unit": "pct",
+        "formula": "largest fall from a high close to a later close, over the past year",
+        "inputs": [
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "trading_days": 252,
+      "schedule": "every business day",
+      "next_pay_date": "2026-11-16",
+      "payments": {
+        "paid": 111,
+        "in_a_row": 111,
+        "gaps": [],
+        "last_paid": "2026-11-13"
+      },
+      "cross_check": "ok",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate",
+        "stale"
+      ],
+      "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
+    },
+    {
+      "ticker": "SATS",
+      "name": "Strive Series S preferred",
+      "issuer": "Strive",
+      "kind": "preferred",
+      "par_usd": 100,
+      "close_usd": {
+        "value": 96.54,
+        "unit": "usd",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:09Z",
+        "stale": false,
+        "reason": null
+      },
+      "avg_volume_30d": {
+        "value": 374212.5,
+        "unit": "shares",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:09Z",
+        "stale": false,
+        "reason": null
+      },
+      "volume_rows": 20,
+      "stated_rate_pct": {
+        "value": 15.0,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
+        "fetched_at": "2026-11-13T21:36:10Z",
+        "stale": false,
+        "reason": null
+      },
+      "yield_pct": {
+        "value": 15.538,
+        "unit": "pct",
+        "formula": "stated_rate_pct*par_usd/close_usd",
+        "inputs": [
+          "stated_rate_pct",
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "worst_drop_pct": {
+        "value": 3.581,
+        "unit": "pct",
+        "formula": "largest fall from a high close to a later close, over the past year",
+        "inputs": [
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "trading_days": 20,
+      "schedule": "every business day",
+      "next_pay_date": "2026-11-16",
+      "payments": {
+        "paid": 4,
+        "in_a_row": 4,
+        "gaps": [],
+        "last_paid": "2026-11-13"
+      },
+      "cross_check": "no issuer list",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate",
+        "short_history"
+      ],
+      "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks"
+    },
+    {
+      "ticker": "STRF",
+      "name": "Strategy Strife preferred",
+      "issuer": "Strategy",
+      "kind": "preferred",
+      "par_usd": 100,
+      "close_usd": {
+        "value": 101.81,
+        "unit": "usd",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:16Z",
+        "stale": false,
+        "reason": null
+      },
+      "avg_volume_30d": {
+        "value": 48630.2,
+        "unit": "shares",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:16Z",
+        "stale": false,
+        "reason": null
+      },
+      "volume_rows": 30,
+      "stated_rate_pct": {
+        "value": 10.0,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://api.strategy.com/btc/strfKpiData",
+        "fetched_at": "2026-11-13T21:36:16Z",
+        "stale": false,
+        "reason": null
+      },
+      "yield_pct": {
+        "value": 9.822,
+        "unit": "pct",
+        "formula": "stated_rate_pct*par_usd/close_usd",
+        "inputs": [
+          "stated_rate_pct",
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "worst_drop_pct": {
+        "value": 23.833,
+        "unit": "pct",
+        "formula": "largest fall from a high close to a later close, over the past year",
+        "inputs": [
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "trading_days": 252,
+      "schedule": "quarterly",
+      "next_pay_date": null,
+      "payments": {
+        "paid": 6,
+        "in_a_row": 6,
+        "gaps": [],
+        "last_paid": "2026-09-30"
+      },
+      "cross_check": "no issuer list",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate"
+      ],
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
+    },
+    {
+      "ticker": "STRK",
+      "name": "Strategy Strike preferred",
+      "issuer": "Strategy",
+      "kind": "preferred",
+      "par_usd": 100,
+      "close_usd": {
+        "value": 67.15,
+        "unit": "usd",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:21Z",
+        "stale": false,
+        "reason": null
+      },
+      "avg_volume_30d": {
+        "value": 70916.1,
+        "unit": "shares",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:21Z",
+        "stale": false,
+        "reason": null
+      },
+      "volume_rows": 30,
+      "stated_rate_pct": {
+        "value": 8.0,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://api.strategy.com/btc/strkKpiData",
+        "fetched_at": "2026-11-13T21:36:21Z",
+        "stale": false,
+        "reason": null
+      },
+      "yield_pct": {
+        "value": 11.914,
+        "unit": "pct",
+        "formula": "stated_rate_pct*par_usd/close_usd",
+        "inputs": [
+          "stated_rate_pct",
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "worst_drop_pct": {
+        "value": 41.407,
+        "unit": "pct",
+        "formula": "largest fall from a high close to a later close, over the past year",
+        "inputs": [
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "trading_days": 252,
+      "schedule": "quarterly",
+      "next_pay_date": null,
+      "payments": {
+        "paid": 7,
+        "in_a_row": 7,
+        "gaps": [],
+        "last_paid": "2026-09-30"
+      },
+      "cross_check": "no issuer list",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate"
+      ],
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
+    },
+    {
+      "ticker": "STRD",
+      "name": "Strategy Stride preferred",
+      "issuer": "Strategy",
+      "kind": "preferred",
+      "par_usd": 100,
+      "close_usd": {
+        "value": 67.5,
+        "unit": "usd",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:27Z",
+        "stale": false,
+        "reason": null
+      },
+      "avg_volume_30d": {
+        "value": 80463.8,
+        "unit": "shares",
+        "as_of": "2026-11-12",
+        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+        "fetched_at": "2026-11-13T21:36:27Z",
+        "stale": false,
+        "reason": null
+      },
+      "volume_rows": 30,
+      "stated_rate_pct": {
+        "value": 10.0,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://api.strategy.com/btc/strdKpiData",
+        "fetched_at": "2026-11-13T21:36:27Z",
+        "stale": false,
+        "reason": null
+      },
+      "yield_pct": {
+        "value": 14.815,
+        "unit": "pct",
+        "formula": "stated_rate_pct*par_usd/close_usd",
+        "inputs": [
+          "stated_rate_pct",
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "worst_drop_pct": {
+        "value": 38.408,
+        "unit": "pct",
+        "formula": "largest fall from a high close to a later close, over the past year",
+        "inputs": [
+          "close_usd"
+        ],
+        "stale": false,
+        "reason": null
+      },
+      "trading_days": 252,
+      "schedule": "quarterly",
+      "next_pay_date": null,
+      "payments": {
+        "paid": 5,
+        "in_a_row": 5,
+        "gaps": [],
+        "last_paid": "2026-09-30"
+      },
+      "cross_check": "no issuer list",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate"
+      ],
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "tbill_4w",
+      "kind": "tbill",
+      "name": "4-week US Treasury bill",
+      "flags": [],
+      "yield_pct": {
+        "value": 4.02,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_bill_rates&field_tdr_date_value=2026&page&_format=csv",
+        "fetched_at": "2026-11-13T21:36:31Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "mmf_vmfxx",
+      "kind": "money_market",
+      "name": "Vanguard Federal Money Market (VMFXX)",
+      "flags": [
+        "not_bank_insured"
+      ],
+      "yield_pct": {
+        "value": 3.8766,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
+        "fetched_at": "2026-11-13T21:36:32Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "usdc_aave_v3",
+      "kind": "usdc_lending",
+      "name": "USDC lending on Aave v3 (Ethereum)",
+      "flags": [
+        "smart_contract_risk"
+      ],
+      "yield_pct": {
+        "value": 6.6235,
+        "unit": "pct",
+        "as_of": "2026-11-13",
+        "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501",
+        "fetched_at": "2026-11-13T21:36:33Z",
+        "stale": false,
+        "reason": null
+      }
+    }
+  ]
+}

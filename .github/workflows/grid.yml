@@ -34,6 +34,7 @@ jobs:
     # regardless of the DRY_RUN checks below. Only the deploy job (main-only) needs it.
     outputs:
       dry_run: ${{ steps.dry-run.outputs.dry_run }}
+      feed_code: ${{ steps.feed.outputs.feed_code }}
     steps:
       - uses: actions/checkout@v4
 
@@ -53,7 +54,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install httpx requests beautifulsoup4 lxml pypdf
+      - run: pip install httpx requests beautifulsoup4 lxml pypdf pytest "opentimestamps-client==0.8.0"
 
       # Each puller is idempotent and keeps last-good data on failure. A failed pull must not
       # blank the site, so failures here are logged, not fatal — but the exit code is kept so
@@ -80,6 +81,18 @@ jobs:
           credit=$(python -c "import json;s=json.load(open('data/credit.json')).get('status',{});print('failed' if 'failed' in s.values() else 'ok')")
           [ "$credit" = ok ] || echo "::warning::credit feed degraded: $(python -c "import json;print(json.load(open('data/credit.json'))['status'])")"
           echo "credit=$credit" >> "$GITHUB_ENV"
+      # Idle-cash feed (/v1/ files): tests first, then the build. A failure here never stops
+      # this job or the site deploy; the feed-check job below turns the run red instead.
+      # A dry run builds into a temp folder and never stamps.
+      - name: Idle-cash feed (tests + /v1/ build)
+        id: feed
+        run: |
+          flag=""
+          [ "$DRY_RUN" = "true" ] && flag="--dry-run"
+          code=0
+          python -m pytest tests/test_feed_*.py -q && python -m datproof_feed.build $flag || code=$?
+          [ "$code" = 0 ] || echo "::warning::idle-cash feed failed (exit $code); last published /v1/ files stay up"
+          echo "feed_code=$code" >> "$GITHUB_OUTPUT"
       - name: Build site
         run: python scripts/build_grid_site.py
       - name: Source status + freshness
@@ -98,7 +111,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html
+          git add data/ data/run-status.json site/index.html site/v1
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else
@@ -117,6 +130,20 @@ jobs:
         run: |
           git status --short data/ site/
           echo "DRY RUN — pulls + build + checks passed, nothing committed or deployed" >> "$GITHUB_STEP_SUMMARY"
+
+  # Red run when the idle-cash feed failed, without holding back the site deploy.
+  feed-check:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Idle-cash feed result
+        run: |
+          code="${{ needs.build.outputs.feed_code }}"
+          if [ "$code" != "0" ]; then
+            echo "::error title=Idle-cash feed failed::feed step exit code ${code:-missing}; see the build job log"
+            exit 1
+          fi
+          echo "idle-cash feed ok"
 
   deploy:
     needs: build

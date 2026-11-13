@@ -25,6 +25,34 @@ share sales and the digital credit instruments (STRC, SATA) that raise the cash.
   gone stale — so a source that fails quietly (old behavior: keep last data, stay green,
   nobody notices) now shows up instead of hiding.
 
+## Where can idle cash sit?
+
+A free daily data feed for AI agents and the people who run them. It lists the Bitcoin
+treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside three benchmarks (the
+4-week Treasury bill, a government money market fund, USDC lending on Aave), each with its
+yield, its worst past-year price fall, its payment record and risk flags. Every number names
+its source and date; a number that could not be fetched is empty, with the reason.
+
+- **Files** (rebuilt each day): `https://lucascashwell3-ai.github.io/datproof/v1/` +
+  `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `method.json` (every
+  formula and flag in plain words), `status.json`, and the dated `days/<date>.json`.
+- **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
+  and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
+  returns each option's yield and estimated income next to its flags, plus the benchmarks.
+
+### Use it
+
+```bash
+# 1. Run the tool server for any MCP client (or, from a clone: python3 -m datproof_feed.server)
+uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+
+# 2. Optional: add the Claude Code skill that walks through the questions
+cp -r skills/park-idle-cash ~/.claude/skills/
+```
+
+It never holds or moves money, places no orders, and is not advice: facts and arithmetic
+only.
+
 ## Run it locally
 
 ```bash

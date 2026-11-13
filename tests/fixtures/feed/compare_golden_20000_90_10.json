@@ -1,0 +1,99 @@
+{
+  "as_of": "2026-11-13",
+  "inputs": {
+    "amount_usd": 20000,
+    "days": 90,
+    "max_drop_pct": 10,
+    "kinds": [
+      "money_market",
+      "preferred",
+      "tbill",
+      "usdc_lending"
+    ]
+  },
+  "options": [
+    {
+      "ticker": "SATS",
+      "name": "Strive Series S preferred",
+      "kind": "preferred",
+      "yield_pct": 15.538,
+      "est_income_usd": 766.26,
+      "worst_drop_pct": 3.581,
+      "close_usd": 96.54,
+      "par_usd": 100,
+      "stated_rate_pct": 15.0,
+      "schedule": "every business day",
+      "next_pay_date": "2026-11-16",
+      "flags": [
+        "price_moves",
+        "issuer_sets_rate",
+        "short_history"
+      ],
+      "as_of": "2026-11-12",
+      "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
+      "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "tbill_4w",
+      "kind": "tbill",
+      "name": "4-week US Treasury bill",
+      "yield_pct": 4.02,
+      "est_income_usd": 198.25,
+      "holdable": true,
+      "flags": [],
+      "as_of": "2026-11-13",
+      "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_bill_rates&field_tdr_date_value=2026&page&_format=csv"
+    },
+    {
+      "id": "mmf_vmfxx",
+      "kind": "money_market",
+      "name": "Vanguard Federal Money Market (VMFXX)",
+      "yield_pct": 3.877,
+      "est_income_usd": 191.19,
+      "holdable": true,
+      "flags": [
+        "not_bank_insured"
+      ],
+      "as_of": "2026-11-13",
+      "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds"
+    },
+    {
+      "id": "usdc_aave_v3",
+      "kind": "usdc_lending",
+      "name": "USDC lending on Aave v3 (Ethereum)",
+      "yield_pct": 6.623,
+      "est_income_usd": 326.61,
+      "holdable": true,
+      "flags": [
+        "smart_contract_risk"
+      ],
+      "as_of": "2026-11-13",
+      "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501"
+    }
+  ],
+  "excluded": [
+    {
+      "ticker": "SATA",
+      "reason": "worst drop 17.93% is more than 10%"
+    },
+    {
+      "ticker": "STRC",
+      "reason": "worst drop 25.48% is more than 10%"
+    },
+    {
+      "ticker": "STRD",
+      "reason": "worst drop 38.41% is more than 10%"
+    },
+    {
+      "ticker": "STRF",
+      "reason": "worst drop 23.83% is more than 10%"
+    },
+    {
+      "ticker": "STRK",
+      "reason": "worst drop 41.41% is more than 10%"
+    }
+  ],
+  "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds."
+}
