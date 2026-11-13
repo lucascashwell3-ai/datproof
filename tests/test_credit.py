@@ -201,6 +201,15 @@ def test_strc_calendar_reads_twice_a_month_after_its_switch():
     assert s["pays"] == "twice a month"
 
 
+def test_parse_strc_skips_a_row_with_no_pay_date():
+    # Strategy's list carries placeholder rows ("—") for a period with no payment.
+    j = load("strategy_strcKpiData.json")
+    j[0]["dividendHistory"].append({"period": "Oct 2026 #2", "recordDate": "2026-09-26",
+                                    "payDate": "\u2014", "cashAmount": "\u2014"})
+    s = fc.parse_strc(j, TODAY)
+    assert s["pays"] == "twice a month"
+
+
 def test_failed_feed_keeps_last_good_block(tmp_path, monkeypatch):
     out = tmp_path / "credit.json"
     good = {"strc": {"rate_pct": 12.0, "marker": "last good"}}

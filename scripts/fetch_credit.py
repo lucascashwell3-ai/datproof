@@ -113,7 +113,7 @@ def parse_strc(j: list, today: dt.date) -> dict:
     hist = s.get("dividendHistory") or []
     return {"rate_pct": rate, "price": price, "price_time": s["timeStampUtc"] + "Z",
             "size_usd": num(s["notional"]), "next_pay": s.get("nextPayoutDate"),
-            "pays": pays_label([h["payDate"] for h in hist], today),
+            "pays": pays_label([h["payDate"] for h in hist if str(h.get("payDate", "")).startswith("20")], today),
             "source": STRC_PAGE, "feed": STRC_FEED}
 
 
