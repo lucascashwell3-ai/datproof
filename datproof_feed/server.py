@@ -16,6 +16,7 @@ import sys
 import urllib.request
 
 from datproof_feed import compare as cmp
+from datproof_feed import scenarios as sc
 
 DEFAULT_FEED = "https://lucascashwell3-ai.github.io/datproof/v1"
 SERVER_INFO = {"name": "datproof", "version": "1.0.0"}
@@ -46,6 +47,14 @@ TOOLS = [
     {"name": "changes",
      "description": "What changed day to day (rates, pay schedules, missed payments, sources), newest first.",
      "inputSchema": {"type": "object", "properties": {}}},
+    {"name": "scenarios",
+     "description": "What a sum of cash did over the past 30, 90, 180 and 365 days in each preferred stock "
+                    "(dividends paid, price change, lowest point), beside a T-bill and money market fund at "
+                    "today's rate, plus three named situations. Past results do not predict future results. "
+                    "Facts and arithmetic only; not advice.",
+     "inputSchema": {"type": "object", "properties": {
+         "situation": {"type": "string", "enum": [x["id"] for x in sc.SITUATIONS],
+                       "description": "return only this situation (default: the whole document)"}}}},
     {"name": "method",
      "description": "Every formula, flag and source in plain words.",
      "inputSchema": {"type": "object", "properties": {}}},
@@ -87,6 +96,15 @@ def call_tool(name: str, args: dict):
         if not TICKER.match(t):
             raise ToolError("ticker must be 1-6 letters, e.g. STRC")
         return load(f"instrument/{t}.json")
+    if name == "scenarios":
+        data = load("scenarios.json")
+        sid = args.get("situation")
+        if sid is None:
+            return data
+        hit = [x for x in data.get("situations", []) if x.get("id") == sid]
+        if not hit:
+            raise ToolError(f"unknown situation {sid!r}; known: {[x['id'] for x in sc.SITUATIONS]}")
+        return {"date": data.get("date"), "note": data.get("note"), "situation": hit[0]}
     if name in ("instruments", "changes", "method"):
         return load(f"{name}.json")
     raise ToolError(f"unknown tool {name!r}")
