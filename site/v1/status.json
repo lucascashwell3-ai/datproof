@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-13",
-  "built_at": "2026-11-13T22:10:15Z",
+  "date": "2026-11-14",
+  "built_at": "2026-11-14T18:34:57Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -16,6 +16,6 @@
     "SATA.stated_rate_pct",
     "SATA.yield_pct"
   ],
-  "snapshot_sha256": "1a1c7f8bdef9b22a4dded128e2a18992d207823df25692fea3ac032baa6c7a60",
-  "stamp": "skipped (day file already existed)"
+  "snapshot_sha256": "fa163be17764589b702a0bf6ab33b580cff9c00e758a2daf31ff09b28c4709d2",
+  "stamp": "stamped; 0 earlier stamp(s) confirmed in bitcoin"
 }

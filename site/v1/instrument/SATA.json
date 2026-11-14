@@ -1,25 +1,25 @@
 {
-  "date": "2026-11-13",
+  "date": "2026-11-14",
   "ticker": "SATA",
   "name": "Strive Variable Rate Series A preferred",
   "issuer": "Strive",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 97.95,
+    "value": 97.73,
     "unit": "usd",
-    "as_of": "2026-11-12",
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-    "fetched_at": "2026-11-13T21:40:51Z",
+    "as_of": "2026-11-13",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T18:34:27Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 494708.1,
+    "value": 485176.8,
     "unit": "shares",
-    "as_of": "2026-11-12",
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-    "fetched_at": "2026-11-13T21:40:51Z",
+    "as_of": "2026-11-13",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T18:34:27Z",
     "stale": false,
     "reason": null
   },
@@ -28,13 +28,13 @@
     "value": 13.0,
     "unit": "pct",
     "as_of": "2026-11-06",
-    "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-06&toDate=2026-11-14",
-    "fetched_at": "2026-11-13T21:40:51Z",
+    "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-07&toDate=2026-11-15",
+    "fetched_at": "2026-11-14T18:34:27Z",
     "stale": true,
     "reason": null
   },
   "yield_pct": {
-    "value": 13.272,
+    "value": 13.302,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [

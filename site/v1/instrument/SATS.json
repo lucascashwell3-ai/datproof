@@ -1,40 +1,40 @@
 {
-  "date": "2026-11-13",
+  "date": "2026-11-14",
   "ticker": "SATS",
   "name": "Strive Series S preferred",
   "issuer": "Strive",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 96.54,
+    "value": 96.915,
     "unit": "usd",
-    "as_of": "2026-11-12",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-    "fetched_at": "2026-11-13T21:40:55Z",
+    "as_of": "2026-11-13",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T18:34:33Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 374212.5,
+    "value": 366525.0,
     "unit": "shares",
-    "as_of": "2026-11-12",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-    "fetched_at": "2026-11-13T21:40:55Z",
+    "as_of": "2026-11-13",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T18:34:33Z",
     "stale": false,
     "reason": null
   },
-  "volume_rows": 20,
+  "volume_rows": 21,
   "stated_rate_pct": {
     "value": 15.0,
     "unit": "pct",
-    "as_of": "2026-11-13",
+    "as_of": "2026-11-14",
     "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-    "fetched_at": "2026-11-13T21:40:55Z",
+    "fetched_at": "2026-11-14T18:34:33Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 15.538,
+    "value": 15.477,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -54,7 +54,7 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 20,
+  "trading_days": 21,
   "schedule": "every business day",
   "next_pay_date": "2026-11-16",
   "payments": {

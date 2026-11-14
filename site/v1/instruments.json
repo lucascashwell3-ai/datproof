@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-13",
-  "built_at": "2026-11-13T21:41:20Z",
+  "date": "2026-11-14",
+  "built_at": "2026-11-14T18:34:57Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -19,20 +19,20 @@
       "kind": "preferred",
       "par_usd": 100,
       "close_usd": {
-        "value": 99.96,
+        "value": 99.91,
         "unit": "usd",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:40:45Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:23Z",
         "stale": false,
         "reason": null
       },
       "avg_volume_30d": {
-        "value": 1733043.8,
+        "value": 1736935.2,
         "unit": "shares",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:40:45Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:23Z",
         "stale": false,
         "reason": null
       },
@@ -42,12 +42,12 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strcKpiData",
-        "fetched_at": "2026-11-13T21:40:43Z",
+        "fetched_at": "2026-11-14T18:34:21Z",
         "stale": false,
         "reason": null
       },
       "yield_pct": {
-        "value": 12.005,
+        "value": 12.011,
         "unit": "pct",
         "formula": "stated_rate_pct*par_usd/close_usd",
         "inputs": [
@@ -90,20 +90,20 @@
       "kind": "preferred",
       "par_usd": 100,
       "close_usd": {
-        "value": 97.95,
+        "value": 97.73,
         "unit": "usd",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:40:51Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:27Z",
         "stale": false,
         "reason": null
       },
       "avg_volume_30d": {
-        "value": 494708.1,
+        "value": 485176.8,
         "unit": "shares",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:40:51Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:27Z",
         "stale": false,
         "reason": null
       },
@@ -112,13 +112,13 @@
         "value": 13.0,
         "unit": "pct",
         "as_of": "2026-11-06",
-        "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-06&toDate=2026-11-14",
-        "fetched_at": "2026-11-13T21:40:51Z",
+        "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-07&toDate=2026-11-15",
+        "fetched_at": "2026-11-14T18:34:27Z",
         "stale": true,
         "reason": null
       },
       "yield_pct": {
-        "value": 13.272,
+        "value": 13.302,
         "unit": "pct",
         "formula": "stated_rate_pct*par_usd/close_usd",
         "inputs": [
@@ -162,35 +162,35 @@
       "kind": "preferred",
       "par_usd": 100,
       "close_usd": {
-        "value": 96.54,
+        "value": 96.915,
         "unit": "usd",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:40:55Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:33Z",
         "stale": false,
         "reason": null
       },
       "avg_volume_30d": {
-        "value": 374212.5,
+        "value": 366525.0,
         "unit": "shares",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:40:55Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:33Z",
         "stale": false,
         "reason": null
       },
-      "volume_rows": 20,
+      "volume_rows": 21,
       "stated_rate_pct": {
         "value": 15.0,
         "unit": "pct",
-        "as_of": "2026-11-13",
+        "as_of": "2026-11-14",
         "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-        "fetched_at": "2026-11-13T21:40:55Z",
+        "fetched_at": "2026-11-14T18:34:33Z",
         "stale": false,
         "reason": null
       },
       "yield_pct": {
-        "value": 15.538,
+        "value": 15.477,
         "unit": "pct",
         "formula": "stated_rate_pct*par_usd/close_usd",
         "inputs": [
@@ -210,7 +210,7 @@
         "stale": false,
         "reason": null
       },
-      "trading_days": 20,
+      "trading_days": 21,
       "schedule": "every business day",
       "next_pay_date": "2026-11-16",
       "payments": {
@@ -234,20 +234,20 @@
       "kind": "preferred",
       "par_usd": 100,
       "close_usd": {
-        "value": 101.81,
+        "value": 100.35,
         "unit": "usd",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:41:00Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:36Z",
         "stale": false,
         "reason": null
       },
       "avg_volume_30d": {
-        "value": 48630.2,
+        "value": 50294.7,
         "unit": "shares",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:41:00Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:36Z",
         "stale": false,
         "reason": null
       },
@@ -257,12 +257,12 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strfKpiData",
-        "fetched_at": "2026-11-13T21:41:01Z",
+        "fetched_at": "2026-11-14T18:34:36Z",
         "stale": false,
         "reason": null
       },
       "yield_pct": {
-        "value": 9.822,
+        "value": 9.965,
         "unit": "pct",
         "formula": "stated_rate_pct*par_usd/close_usd",
         "inputs": [
@@ -305,20 +305,20 @@
       "kind": "preferred",
       "par_usd": 100,
       "close_usd": {
-        "value": 67.15,
+        "value": 66.16,
         "unit": "usd",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:41:06Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:43Z",
         "stale": false,
         "reason": null
       },
       "avg_volume_30d": {
-        "value": 70916.1,
+        "value": 72103.5,
         "unit": "shares",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:41:06Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:43Z",
         "stale": false,
         "reason": null
       },
@@ -328,12 +328,12 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strkKpiData",
-        "fetched_at": "2026-11-13T21:41:07Z",
+        "fetched_at": "2026-11-14T18:34:43Z",
         "stale": false,
         "reason": null
       },
       "yield_pct": {
-        "value": 11.914,
+        "value": 12.092,
         "unit": "pct",
         "formula": "stated_rate_pct*par_usd/close_usd",
         "inputs": [
@@ -376,20 +376,20 @@
       "kind": "preferred",
       "par_usd": 100,
       "close_usd": {
-        "value": 67.5,
+        "value": 66.65,
         "unit": "usd",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:41:12Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:49Z",
         "stale": false,
         "reason": null
       },
       "avg_volume_30d": {
-        "value": 80463.8,
+        "value": 82253.6,
         "unit": "shares",
-        "as_of": "2026-11-12",
-        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-12&todate=2026-11-13&limit=400",
-        "fetched_at": "2026-11-13T21:41:12Z",
+        "as_of": "2026-11-13",
+        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+        "fetched_at": "2026-11-14T18:34:49Z",
         "stale": false,
         "reason": null
       },
@@ -399,12 +399,12 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strdKpiData",
-        "fetched_at": "2026-11-13T21:41:13Z",
+        "fetched_at": "2026-11-14T18:34:49Z",
         "stale": false,
         "reason": null
       },
       "yield_pct": {
-        "value": 14.815,
+        "value": 15.004,
         "unit": "pct",
         "formula": "stated_rate_pct*par_usd/close_usd",
         "inputs": [
@@ -452,7 +452,7 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_bill_rates&field_tdr_date_value=2026&page&_format=csv",
-        "fetched_at": "2026-11-13T21:41:16Z",
+        "fetched_at": "2026-11-14T18:34:52Z",
         "stale": false,
         "reason": null
       }
@@ -465,11 +465,11 @@
         "not_bank_insured"
       ],
       "yield_pct": {
-        "value": 3.8766,
+        "value": 3.8792,
         "unit": "pct",
-        "as_of": "2026-11-13",
+        "as_of": "2026-11-14",
         "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
-        "fetched_at": "2026-11-13T21:41:20Z",
+        "fetched_at": "2026-11-14T18:34:56Z",
         "stale": false,
         "reason": null
       }
@@ -482,11 +482,11 @@
         "smart_contract_risk"
       ],
       "yield_pct": {
-        "value": 6.6235,
+        "value": 3.7976,
         "unit": "pct",
-        "as_of": "2026-11-13",
+        "as_of": "2026-11-14",
         "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501",
-        "fetched_at": "2026-11-13T21:41:20Z",
+        "fetched_at": "2026-11-14T18:34:57Z",
         "stale": false,
         "reason": null
       }
