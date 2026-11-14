@@ -58,7 +58,7 @@
       "skipped window": "a window is skipped, with the reason, when the instrument's daily closes do not reach back to the window's start"
     },
     "situations": "each situation runs the compare function with its amount and days, every kind the feed knows and no drop limit, so every option with a yield appears with its worst drop beside it and the benchmarks always included; then the look-back for the same amount and days",
-    "coverage": "Issuer coverage (years of dividends covered at a bitcoin price) needs each issuer's bitcoin holdings and a bitcoin price. Neither is among this feed's sources, so coverage is left out rather than estimated.",
+    "coverage": "Issuer coverage is not recomputed here. instruments.json carries each issuer's own published figures (coverage block), passed through as published.",
     "limits": [
       "Past results do not predict future results.",
       "A preferred stock's price can fall below its $100 par, so the cash back can be less than the cash put in.",

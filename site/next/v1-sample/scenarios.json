@@ -960,8 +960,8 @@
             "id": "usdc_aave_v3",
             "kind": "usdc_lending",
             "name": "USDC lending on Aave v3 (Ethereum)",
-            "yield_pct": 3.791,
-            "est_income_usd": 93.48,
+            "yield_pct": 3.857,
+            "est_income_usd": 95.1,
             "holdable": true,
             "flags": [
               "smart_contract_risk"
@@ -1348,8 +1348,8 @@
             "id": "usdc_aave_v3",
             "kind": "usdc_lending",
             "name": "USDC lending on Aave v3 (Ethereum)",
-            "yield_pct": 3.791,
-            "est_income_usd": 4673.84,
+            "yield_pct": 3.857,
+            "est_income_usd": 4755.21,
             "holdable": true,
             "flags": [
               "smart_contract_risk"
@@ -1736,8 +1736,8 @@
             "id": "usdc_aave_v3",
             "kind": "usdc_lending",
             "name": "USDC lending on Aave v3 (Ethereum)",
-            "yield_pct": 3.791,
-            "est_income_usd": 3791.0,
+            "yield_pct": 3.857,
+            "est_income_usd": 3857.0,
             "holdable": true,
             "flags": [
               "smart_contract_risk"
@@ -1948,6 +1948,6 @@
   ],
   "coverage": {
     "included": false,
-    "reason": "Issuer coverage (years of dividends covered at a bitcoin price) needs each issuer's bitcoin holdings and a bitcoin price. Neither is among this feed's sources, so coverage is left out rather than estimated."
+    "reason": "Issuer coverage is not recomputed here. instruments.json carries each issuer's own published figures (coverage block), passed through as published."
   }
 }
