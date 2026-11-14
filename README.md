@@ -34,11 +34,16 @@ yield, its worst past-year price fall, its payment record and risk flags. Every 
 its source and date; a number that could not be fetched is empty, with the reason.
 
 - **Files** (rebuilt each day): `https://lucascashwell3-ai.github.io/datproof/v1/` +
-  `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `method.json` (every
-  formula and flag in plain words), `status.json`, and the dated `days/<date>.json`.
+  `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `scenarios.json`,
+  `method.json` (every formula and flag in plain words), `status.json`, and the dated
+  `days/<date>.json`.
 - **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
   and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
   returns each option's yield and estimated income next to its flags, plus the benchmarks.
+- **Scenarios** show what $10,000 did over the past 30, 90, 180 and 365 days in each
+  preferred stock (dividends paid, price change, lowest point and its date), beside the T-bill
+  and money market fund at today's rate, plus three named situations. Past results do not
+  predict future results.
 
 ### Use it
 
