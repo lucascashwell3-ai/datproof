@@ -1,0 +1,33 @@
+# DATproof
+
+> A free daily data feed on where idle US-dollar cash can sit: six bitcoin-backed preferred
+> stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside a 4-week US Treasury bill, a government
+> money market fund (VMFXX) and USDC lending on Aave v3. Yield and risk side by side. Every
+> number carries its source address and the date it is true for. Facts and arithmetic, not
+> advice. Nothing here holds, moves or trades money.
+
+## Files (rebuilt each day, plain JSON)
+
+- https://lucascashwell3-ai.github.io/datproof/v1/instruments.json : today's snapshot. Each preferred stock: close, stated rate, yield on the $100 par, worst drop in the past year, payments in a row, pay schedule, flags. Each benchmark: yield.
+- https://lucascashwell3-ai.github.io/datproof/v1/instrument/<TICKER>.json : one preferred stock, with its dividends.
+- https://lucascashwell3-ai.github.io/datproof/v1/scenarios.json : what $10,000 did over the past 30, 90, 180 and 365 days in each preferred stock (dividends, price change, lowest point and its date), beside the benchmarks at today's rate.
+- https://lucascashwell3-ai.github.io/datproof/v1/changes.json : what changed day to day, newest first.
+- https://lucascashwell3-ai.github.io/datproof/v1/method.json : every formula, flag and source in plain words.
+- https://lucascashwell3-ai.github.io/datproof/v1/status.json : when the feed was last built.
+- https://lucascashwell3-ai.github.io/datproof/v1/days/<YYYY-MM-DD>.json : the dated snapshot for a day.
+
+## Tool server (MCP, stdio)
+
+    uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+
+Tools:
+- compare(amount_usd, days, max_drop_pct, kinds): today's options for a sum of cash, sorted by yield, with estimated income at today's yield, flags, what was left out and why, and the benchmarks.
+- scenarios(situation?): the look-back numbers above.
+- instruments(), instrument(ticker), changes(), method().
+
+## Rules for reading the numbers
+
+- A preferred stock's price moves every day and can fall below its $100 par. The issuer sets the dividend rate and can lower or skip it.
+- Estimated income is simple interest at today's yield, before tax and fees, ignoring price changes.
+- A number that could not be read is null, with the reason next to it. Nothing is filled in by hand.
+- Past results do not predict future results.
