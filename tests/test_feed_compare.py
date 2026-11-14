@@ -173,7 +173,9 @@ def test_publish_writes_the_files_and_does_not_repeat_a_day(tmp_path):
     assert all("dividends" not in i for i in lean["instruments"])
     one = json.loads((tmp_path / "instrument" / "STRC.json").read_text())
     assert one["dividends"] and one["date"] == "2026-11-13"
-    assert json.loads((tmp_path / "method.json").read_text()) == METHOD
+    from datproof_feed import scenarios
+    assert json.loads((tmp_path / "method.json").read_text()) == {**METHOD, "scenarios": scenarios.METHOD}
+    assert json.loads((tmp_path / "scenarios.json").read_text())["date"] == "2026-11-13"
     changes = json.loads((tmp_path / "changes.json").read_text())
     assert changes == [{"date": "2026-11-13", "ticker": "STRC", "field": "schedule",
                         "from": "twice a month", "to": "every business day"}]

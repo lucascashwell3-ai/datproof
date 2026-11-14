@@ -1,9 +1,11 @@
 """Write the public /v1/ files from a day's snapshot.
 
-    instruments.json          the snapshot without the dividend lists
-    instrument/<TICKER>.json  one instrument, with its dividends
+    instruments.json          the snapshot without the dividend lists and daily closes
+    instrument/<TICKER>.json  one instrument, with its dividends and daily closes
     changes.json              what changed day to day, newest first, 90 entries at most
-    method.json               every formula, flag and source in plain words (from compare.METHOD)
+    method.json               every formula, flag and source in plain words (from compare.METHOD
+                              and scenarios.METHOD)
+    scenarios.json            past windows and three named situations (from scenarios.build)
 
 status.json and days/<date>.json are written by build.py.
 """
@@ -12,6 +14,7 @@ from __future__ import annotations
 import json
 import pathlib
 
+from datproof_feed import scenarios
 from datproof_feed.compare import METHOD
 
 MAX_CHANGES = 90
@@ -58,12 +61,13 @@ def diff(prev: dict | None, cur: dict) -> list[dict]:
 
 
 def publish(snap: dict, out, prev: dict | None) -> None:
-    """Write instruments.json, instrument/<T>.json, changes.json and method.json under `out`.
+    """Write instruments.json, instrument/<T>.json, changes.json, method.json and scenarios.json
+    under `out`.
     Re-running for the same day replaces that day's change entries instead of adding them twice."""
     out = pathlib.Path(out)
     (out / "instrument").mkdir(parents=True, exist_ok=True)
 
-    lean = {**snap, "instruments": [{k: v for k, v in i.items() if k != "dividends"}
+    lean = {**snap, "instruments": [{k: v for k, v in i.items() if k not in ("dividends", "closes")}
                                     for i in snap.get("instruments", [])]}
     (out / "instruments.json").write_text(_dump(lean))
     for ins in snap.get("instruments", []):
@@ -74,7 +78,8 @@ def publish(snap: dict, out, prev: dict | None) -> None:
     older = [c for c in older if c.get("date") != snap["date"]]
     (out / "changes.json").write_text(_dump((diff(prev, snap) + older)[:MAX_CHANGES]))
 
-    (out / "method.json").write_text(_dump(METHOD))
+    (out / "method.json").write_text(_dump({**METHOD, "scenarios": scenarios.METHOD}))
+    (out / "scenarios.json").write_text(_dump(scenarios.build(snap)))
 
 
 def previous_day(days_dir, date: str) -> dict | None:
