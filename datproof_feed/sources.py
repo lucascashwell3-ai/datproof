@@ -362,6 +362,10 @@ def gather(today: dt.date, fetch=_get) -> dict:
         inst["worst_drop_pct"] = derived(wd, "pct", "largest fall from a high close to a later close, over the past year",
                                          ["close_usd"], {"close_usd": close})
         inst["trading_days"] = len(rows)
+        if rows:
+            # Daily closes, oldest first, for the look-back arithmetic in scenarios.py.
+            inst["closes"] = {"source": hist_url, "fetched_at": at, "from": d0,
+                              "rows": [[d.isoformat(), c] for d, c, _ in reversed(rows)]}
 
         divs_url = NASDAQ_DIVS.format(sym=sym)
         divs: list = []
