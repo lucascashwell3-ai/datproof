@@ -31,9 +31,8 @@ NOTE = ("Facts and arithmetic from past prices and paid dividends. Past results 
         "sets the dividend rate and can lower or skip it. Benchmarks use today's rate for the whole "
         "window. Not advice.")
 
-COVERAGE_LEFT_OUT = ("Issuer coverage (years of dividends covered at a bitcoin price) needs each "
-                     "issuer's bitcoin holdings and a bitcoin price. Neither is among this feed's "
-                     "sources, so coverage is left out rather than estimated.")
+COVERAGE_LEFT_OUT = ("Issuer coverage is not recomputed here. instruments.json carries each issuer's "
+                     "own published figures (coverage block), passed through as published.")
 
 METHOD = {
     "what": "What a sum of cash did over the past 30, 90, 180 and 365 days in each preferred stock, "

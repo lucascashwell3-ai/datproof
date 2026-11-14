@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
-build = ["httpx"]
+build = ["httpx", "requests", "beautifulsoup4"]
 
 [project.scripts]
 datproof-mcp = "datproof_feed.server:main"
