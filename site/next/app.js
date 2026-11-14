@@ -1,4 +1,4 @@
-/* DATproof home page. Reads the daily feed at runtime; facts and arithmetic only. */
+/* DATproof home page. Every number comes from the daily feed at load time; none is typed into the page. */
 (function () {
   "use strict";
 
@@ -105,181 +105,262 @@
 
   // ---- page ----
   var $ = function (s) { return document.querySelector(s); };
-  var FLAG_TEXT = {
-    price_moves: "price moves daily", issuer_sets_rate: "issuer sets the rate", short_history: "short price history",
-    thin_trading: "thin trading for this amount", payment_gap: "missed a payment", no_payment_in_window: "no payment due in these days",
-    stale: "a number is stale", not_bank_insured: "not FDIC insured", smart_contract_risk: "smart-contract risk"
-  };
-  var BENCH = {
-    tbill_4w: ["T-bill", "4 weeks · US Treasury"],
-    mmf_vmfxx: ["VMFXX", "Money market fund · Vanguard"],
-    usdc_aave_v3: ["USDC lending", "Aave v3 on Ethereum"]
-  };
-  var SCHEDULE = { "every business day": "daily", "twice a month": "twice a month", monthly: "monthly", quarterly: "quarterly" };
+  var LEAD = ["STRC", "SATA", "SATS"];
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var MINUS = "−";
+  var MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var SVGNS = "http://www.w3.org/2000/svg";
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function day(iso, year) { if (!iso) return "—"; var p = iso.split("-"); return +p[2] + " " + MONTHS[+p[1] - 1] + (year ? " " + p[0] : ""); }
-  function num(x, d) { return Math.abs(x).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }); }
-  function usd(x, d) { return (x < 0 ? MINUS : "") + "$" + num(x, d || 0); }
-  function signed(x, d) { return (x > 0 ? "+" : x < 0 ? MINUS : "") + "$" + num(x, d || 0); }
-  function pctTxt(x, d) { return x === null || x === undefined ? "—" : num(x, d === undefined ? 2 : d) + "%"; }
-  function host(u) { try { return new URL(u).host.replace(/^www\./, ""); } catch (e) { return u || "—"; } }
-  function shortName(ins) { return (ins.name || "").replace(new RegExp("^" + (ins.issuer || "") + "\\s+"), ""); }
-  function link(u, label) { return u ? '<a href="' + esc(u) + '" rel="noopener">' + esc(label || host(u)) + "</a>" : "—"; }
-
-  function load(base) {
-    return Promise.all(["instruments.json", "scenarios.json"].map(function (f) {
-      return fetch(base + f, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(f + " " + r.status); return r.json(); });
-    }));
+  function day(iso) { if (!iso) return ""; var p = iso.slice(0, 10).split("-"); return +p[2] + " " + MONTHS[+p[1] - 1] + " " + p[0]; }
+  function monthName(iso) { var p = iso.split("-"); return MONTHS_LONG[+p[1] - 1]; }
+  function n(x, d) { return x.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function usd(x, d) { return "$" + n(x, d || 0); }
+  function f1(x) { return n(x, 1); }
+  function host(u) { try { return new URL(u).host.replace(/^www\./, ""); } catch (e) { return u || ""; } }
+  function has(x) { return v(x) !== null; }
+  function el(tag, attrs, text) {
+    var e = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    return e;
   }
 
-  var feed, scen, current = 365;
+  var feed, scen, closes = {}, AMOUNT = 10000;
 
-  // section 2
-  function renderToday() {
-    var rows = feed.instruments.map(function (i) { return { t: "i", y: v(i.yield_pct), d: i }; })
-      .concat(feed.benchmarks.map(function (b) { return { t: "b", y: v(b.yield_pct), d: b }; }));
-    rows.sort(function (a, b) { return (b.y === null ? -1 : b.y) - (a.y === null ? -1 : a.y); });
-    var maxDrop = 50;
-    var html = rows.map(function (r) {
-      var d = r.d;
-      if (r.t === "b") {
-        var lab = BENCH[d.id] || [d.name, d.kind];
-        var risk = benchmarkFlags(d).map(function (f) { return FLAG_TEXT[f] || f; }).join(" · ");
-        return '<tr class="bench"><td class="nm"><b>' + esc(lab[0]) + "</b><span>" + esc(lab[1]) + '</span></td><td class="n y">' +
-          pctTxt(r.y) + '</td><td class="n dim">—</td><td class="n dim">—</td><td class="brisk"><span class="mut">' + (risk ? esc(risk) : "no daily price") + "</span></td></tr>";
-      }
-      var close = v(d.close_usd), par = d.par_usd || 100, wd = v(d.worst_drop_pct);
-      var diff = close === null ? null : close - par;
-      var pay = d.payments || {}, sched = SCHEDULE[d.schedule] || d.schedule || "";
-      var short = (d.trading_days || 0) < SHORT_HISTORY_DAYS ? '<span class="mut">' + d.trading_days + " days of prices</span>" : "";
-      var yTitle = r.y === null && d.yield_pct && d.yield_pct.reason ? ' title="' + esc(d.yield_pct.reason) + '"' : "";
-      return '<tr><td class="nm"><b>' + esc(d.ticker) + "</b><span><i class=\"nmn\">" + esc(shortName(d)) + " · </i>" + esc(d.issuer) + "</span></td>" +
-        '<td class="n y"' + yTitle + ">" + pctTxt(r.y) + "</td>" +
-        '<td class="n">' + (close === null ? "—" : "$" + num(close, 2)) + '<span class="mut">' +
-          (diff === null ? "" : (diff >= 0 ? "+" : MINUS) + num(diff, 2) + " vs par") + "</span></td>" +
-        '<td class="n">' + (pay.in_a_row == null ? "—" : pay.in_a_row) + '<span class="mut">' + esc(sched) + "</span></td>" +
-        '<td><div class="drop"><span class="v">' + (wd === null ? "—" : MINUS + num(wd, 1) + "%") + "</span>" +
-          '<span class="track" aria-hidden="true"><i style="width:' + (wd === null ? 0 : Math.min(100, wd / maxDrop * 100)) + '%"></i></span>' + short + "</div></td></tr>";
-    }).join("");
-    $("#t-today tbody").innerHTML = html;
+  function bench(id) { return (feed.benchmarks || []).filter(function (b) { return b.id === id; })[0]; }
+  function inst(t) { return (feed.instruments || []).filter(function (i) { return i.ticker === t; })[0]; }
+  function lead() { return LEAD.map(inst).filter(function (i) { return i && has(i.yield_pct); }); }
+  function inflation() { var x = feed.inflation_yoy_pct; return x && has(x) ? x : null; }
+  function year() { return (scen.lookback || []).filter(function (l) { return l.days === 365; })[0]; }
 
-    var s = feed.instruments.map(function (i) {
-      return "<b>" + esc(i.ticker) + "</b><span>price " + link(i.close_usd.source) +
-        " (" + day(i.close_usd.as_of, true) + "), rate " + link(i.stated_rate_pct.source, host(i.stated_rate_pct.source)) +
-        (i.stated_rate_pct.as_of ? " (" + day(i.stated_rate_pct.as_of, true) + (i.stated_rate_pct.stale ? ", stale" : "") + ")" : "") +
-        ", dividends " + link(i.dividends_source, host(i.dividends_source)) + "</span>";
-    }).concat(feed.benchmarks.map(function (b) {
-      return "<b>" + esc((BENCH[b.id] || [b.id])[0]) + "</b><span>yield " + link(b.yield_pct.source, host(b.yield_pct.source)) +
-        " (" + day(b.yield_pct.as_of, true) + ")</span>";
-    }));
-    $("#src-today div").innerHTML = s.join("");
-  }
-
-  // section 3
-  function parse(el) { var t = el.value.replace(/[$,%\s]/g, ""); return t === "" ? NaN : Number(t); }
-  function renderTry() {
-    var a = parse($("#in-amount")), d = parse($("#in-days")), m = parse($("#in-drop"));
-    var bad = [];
-    $("#in-amount").parentNode.classList.toggle("bad", !(a > 0)); if (!(a > 0)) bad.push("an amount above $0");
-    $("#in-days").parentNode.classList.toggle("bad", !(Number.isInteger(d) && d > 0)); if (!(Number.isInteger(d) && d > 0)) bad.push("whole days above 0");
-    $("#in-drop").parentNode.classList.toggle("bad", !(m >= 0)); if (!(m >= 0)) bad.push("a drop of 0% or more");
-    if (bad.length) {
-      $("#answer").innerHTML = '<span class="err">Enter ' + bad.join(", ") + ".</span>";
-      $("#t-try tbody").innerHTML = ""; $("#out").innerHTML = ""; return;
+  // ---------- 1. first screen ----------
+  function renderHero() {
+    var tb = bench("tbill_4w"), inf = inflation(), dc = lead();
+    if (tb && has(tb.yield_pct)) $("#hl-bill").textContent = "T-bills pay " + f1(v(tb.yield_pct)) + "%.";
+    if (inf) { var hi = $("#hl-inf"); hi.textContent = "Inflation takes " + f1(v(inf)) + "%."; hi.hidden = false; }
+    if (dc.length) {
+      var ys = dc.map(function (i) { return Math.round(v(i.yield_pct)); });
+      var lo = Math.min.apply(null, ys), hiY = Math.max.apply(null, ys);
+      $("#hl-dc").textContent = "Digital credit pays " + (lo === hiY ? lo : lo + "\u00a0to\u00a0" + hiY) + "%.";
     }
-    var r = compare(feed, a, d, m, KINDS);
-    var n = r.options.length, total = feed.instruments.length;
-    $("#answer").innerHTML = "<b>" + n + " of " + total + "</b> preferred stocks had a worst drop of " + g(m) + "% or less in the past year. " +
-      "At today's rates, " + usd(a, a % 1 ? 2 : 0) + " for " + d + (d === 1 ? " day" : " days") + " would earn:";
-    var rows = r.options.map(function (o) {
-      return '<tr><td class="nm"><b>' + esc(o.ticker) + "</b><span>" + esc(shortName(feed.instruments.find(function (i) { return i.ticker === o.ticker; }))) + '</span></td><td class="n">' +
-        pctTxt(o.yield_pct) + '</td><td class="n earn">' + usd(o.est_income_usd, 2) + '</td><td class="n">' + MINUS + num(o.worst_drop_pct, 1) + "%</td>" +
-        '<td class="notes">' + o.flags.map(function (f) { return esc(FLAG_TEXT[f] || f); }).join(" · ") + "</td></tr>";
-    });
-    if (!n) rows.push('<tr><td colspan="5" class="skip">None of the six fit this limit. The benchmarks are below.</td></tr>');
-    rows.push('<tr class="gap"><td colspan="5">Benchmarks, always shown</td></tr>');
-    r.benchmarks.forEach(function (b) {
-      var lab = BENCH[b.id] || [b.name];
-      rows.push('<tr class="bench"><td class="nm"><b>' + esc(lab[0]) + "</b><span>" + esc(lab[1] || "") + '</span></td><td class="n">' + pctTxt(b.yield_pct) +
-        '</td><td class="n">' + (b.est_income_usd === null ? "—" : usd(b.est_income_usd, 2)) + '</td><td class="n dim">—</td><td class="notes">' +
-        b.flags.map(function (f) { return esc(FLAG_TEXT[f] || f); }).join(" · ") + "</td></tr>");
-    });
-    $("#t-try tbody").innerHTML = rows.join("");
-    $("#out").innerHTML = r.excluded.length
-      ? "<h3>Left out</h3><ul>" + r.excluded.map(function (e) { return "<li><b>" + esc(e.ticker) + "</b>" + esc(e.reason) + "</li>"; }).join("") + "</ul>"
-      : "";
+    var px = dc.map(function (i) { return i.close_usd.as_of; }).sort().pop();
+    $("#asof").textContent = "Data for " + day(feed.date) + (px ? " · prices at the " + day(px) + " close" : "") +
+      (inf ? " · inflation is US CPI, " + monthName(inf.month) + " " + inf.month.slice(0, 4) + " vs a year earlier" : "");
   }
 
-  // section 4
-  function strip(row, scale) {
-    var W = 240, mid = 96, k = (W - mid - 4) / scale;  // more room on the right for income
-    var x = function (val) { return Math.max(2, Math.min(W - 2, mid + val * k)); };
-    var inc = row.dividends_usd || 0, px = row.price_change_usd || 0, low = row.lowest ? row.lowest.below_start_usd : 0;
-    var px0 = Math.min(x(0), x(px)), pxW = Math.abs(x(px) - x(0));
-    return '<div class="strip"><svg viewBox="0 0 ' + W + ' 22" preserveAspectRatio="none" aria-hidden="true">' +
-      '<line x1="' + mid + '" y1="0" x2="' + mid + '" y2="22" stroke="var(--rule-2)" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
-      '<rect x="' + mid + '" y="4" width="' + (x(inc) - mid) + '" height="5" rx="1" fill="var(--accent)"/>' +
-      '<rect x="' + px0 + '" y="13" width="' + Math.max(pxW, 0.5) + '" height="5" rx="1" fill="var(--bar)"/>' +
-      (low ? '<line x1="' + x(-low) + '" y1="15.5" x2="' + mid + '" y2="15.5" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>' : "") +
-      "</svg>" + (low ? '<span class="dot" style="left:' + (x(-low) / W * 100) + '%"></span>' : "") + "</div>";
+  function earnRows() {
+    var rows = [], y = year(), tb = bench("tbill_4w"), mm = bench("mmf_vmfxx");
+    if (tb && has(tb.yield_pct)) rows.push({ name: "T-bill", note: "4-week, at today's rate", usd: AMOUNT * v(tb.yield_pct) / 100 });
+    if (mm && has(mm.yield_pct)) rows.push({ name: "Money market", note: "Vanguard VMFXX, at today's rate", usd: AMOUNT * v(mm.yield_pct) / 100 });
+    lead().forEach(function (i) {
+      var past = y && y.instruments.filter(function (r) { return r.ticker === i.ticker; })[0];
+      if (past && !past.skipped && past.dividends_usd > 0)
+        rows.push({ name: i.ticker, note: "dividends paid, past year", usd: past.dividends_usd, dc: true });
+      else rows.push({ name: i.ticker, note: "at today's rate", usd: AMOUNT * v(i.yield_pct) / 100, dc: true });
+    });
+    return rows;
   }
 
-  function renderPast() {
-    var w = scen.lookback.find(function (l) { return l.days === current; }) || scen.lookback[scen.lookback.length - 1];
-    var live = w.instruments.filter(function (i) { return !i.skipped; });
-    var scale = 1;
-    live.forEach(function (i) {
-      scale = Math.max(scale, i.dividends_usd || 0, Math.abs(i.price_change_usd || 0), i.lowest ? i.lowest.below_start_usd : 0);
-    });
-    var html = w.instruments.map(function (i) {
-      var ins = feed.instruments.find(function (f) { return f.ticker === i.ticker; }) || {};
-      var name = '<td class="nm"><b>' + esc(i.ticker) + "</b><span>" + esc(shortName({ name: i.name, issuer: ins.issuer })) + "</span></td>";
-      if (i.skipped) {
-        var m = /start (\d{4}-\d{2}-\d{2})/.exec(i.reason || "");
-        return "<tr>" + name + '<td colspan="5" class="skip" title="' + esc(i.reason) + '">Not enough history for ' + w.days + " days" +
-          (m ? ": prices start " + day(m[1], true) : "") + ".</td></tr>";
+  function drawEarn(first) {
+    var box = $("#earn-chart"), rows = earnRows(), inf = inflation();
+    var W = Math.max(280, box.clientWidth), narrow = W < 620;
+    var L = narrow ? 0 : 210, top = inf ? 34 : 6, rh = narrow ? 62 : 54, bh = narrow ? 18 : 24;
+    var H = top + rows.length * rh;
+    var max = Math.max.apply(null, rows.map(function (r) { return r.usd; }));
+    var room = narrow ? 64 : 78;
+    function x(u) { return L + (u / max) * (W - L - room); }
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
+    var infUsd = inf ? AMOUNT * v(inf) / 100 : null;
+    rows.forEach(function (r, i) {
+      var y0 = top + i * rh, by = narrow ? y0 + 30 : y0 + (rh - bh) / 2;
+      if (narrow) {
+        var t = el("text", { x: 0, y: y0 + 18 });
+        t.appendChild(el("tspan", { class: "c-name" }, r.name));
+        t.appendChild(el("tspan", { class: "c-note", dx: 8 }, r.note));
+        svg.appendChild(t);
+      } else {
+        svg.appendChild(el("text", { x: 0, y: by + bh / 2 - 2, class: "c-name" }, r.name));
+        svg.appendChild(el("text", { x: 0, y: by + bh / 2 + 14, class: "c-note" }, r.note));
       }
-      return "<tr>" + name +
-        '<td class="n">' + signed(i.dividends_usd) + '<span class="mut">' + i.dividends_paid + " paid</span></td>" +
-        '<td class="n' + (i.price_change_usd < 0 ? " neg" : "") + '">' + signed(i.price_change_usd) + "</td>" +
-        '<td class="n"><b>' + signed(i.total_usd) + '</b><span class="mut">' + (i.total_pct > 0 ? "+" : i.total_pct < 0 ? MINUS : "") + num(i.total_pct, 1) + "%</span></td>" +
-        '<td class="n">' + (i.lowest ? usd(-i.lowest.below_start_usd) + '<span class="mut">' + day(i.lowest.date, true) + "</span>" : "—") + "</td>" +
-        '<td class="viz-cell">' + strip(i, scale) + "</td></tr>";
-    }).join("");
-    html += '<tr class="gap"><td colspan="6">Benchmarks, at today\'s rate for the whole window</td></tr>';
-    html += w.benchmarks.map(function (b) {
-      var lab = BENCH[b.id] || [b.name, ""];
-      return '<tr class="bench"><td class="nm"><b>' + esc(lab[0]) + "</b><span>" + esc(lab[1]) + '</span></td>' +
-        '<td class="n">' + signed(b.total_usd) + '<span class="mut">interest</span></td><td class="n dim">—</td>' +
-        '<td class="n">' + signed(b.total_usd) + '<span class="mut">+' + num(b.total_pct, 1) + '%</span></td><td class="n dim">—</td>' +
-        '<td><span class="mut">no daily history</span></td></tr>';
-    }).join("");
-    $("#t-past tbody").innerHTML = html;
-    $("#src-past div").innerHTML = live.map(function (i) {
-      return "<b>" + esc(i.ticker) + "</b><span>closes " + day(i.start_date, true) + " to " + day(i.end_date, true) + ", " +
-        link(i.source, host(i.source)) + "; dividends " + link(i.dividends_source, host(i.dividends_source)) + "</span>";
-    }).join("") + '<b>Note</b><span>' + esc(scen.note) + "</span>";
+      svg.appendChild(el("rect", { x: L, y: by, width: Math.max(2, x(r.usd) - L), height: bh, rx: 2, class: "c-bar" + (r.dc ? " dc" : "") }));
+      svg.appendChild(el("text", { x: x(r.usd) + 10, y: by + bh / 2 + 5, class: "c-val" + (r.dc ? " dc" : "") }, usd(r.usd)));
+    });
+    if (infUsd !== null) {
+      var xi = x(infUsd);
+      if (narrow) rows.forEach(function (r, i) {
+        var by = top + i * rh + 30;
+        svg.appendChild(el("line", { x1: xi, x2: xi, y1: by - 6, y2: by + bh + 6, class: "c-inf" }));
+      });
+      else svg.appendChild(el("line", { x1: xi, x2: xi, y1: top - 10, y2: H - 4, class: "c-inf" }));
+      svg.appendChild(el("text", { x: xi - 6, y: top - 18, class: "c-inf-t", "text-anchor": narrow ? "start" : "end" }, "Inflation takes " + usd(infUsd)));
+      if (narrow) svg.lastChild.setAttribute("x", Math.max(0, xi - 40));
+    }
+    box.innerHTML = "";
+    box.appendChild(svg);
+    box.setAttribute("aria-label", "What $10,000 earns in a year: " + rows.map(function (r) { return r.name + " " + usd(r.usd) + " (" + r.note + ")"; }).join("; ") +
+      (infUsd !== null ? ". Inflation takes " + usd(infUsd) + "." : "."));
+    if (first) box.classList.add("draw");
   }
 
-  function renderSeg() {
-    var seg = $("#seg");
-    seg.innerHTML = scen.lookback.map(function (l) {
-      return '<button type="button" role="radio" aria-checked="' + (l.days === current) + '" data-d="' + l.days + '">' + l.days + " days</button>";
+  // ---------- 2. the three ----------
+  function renderPanels() {
+    var tb = bench("tbill_4w"), tbY = tb && has(tb.yield_pct) ? v(tb.yield_pct) : null;
+    $("#panels").innerHTML = lead().map(function (i) {
+      var y = v(i.yield_pct), pay = i.payments || {}, close = v(i.close_usd);
+      var times = tbY ? '<p class="p-x">' + n(y / tbY, 1) + " times a T-bill</p>" : "";
+      var row = pay.in_a_row ? n(pay.in_a_row, 0) + ((pay.gaps || []).length ? "" : ", none missed") : "";
+      return '<article class="panel">' +
+        '<div class="p-head"><h3 class="p-tk">' + esc(i.ticker) + '</h3><span class="p-iss">' + esc(i.issuer) + "</span></div>" +
+        '<p class="p-yield">' + f1(y) + "%</p>" + times +
+        '<dl class="p-facts">' +
+        "<dt>Price today</dt><dd>" + (close !== null ? usd(close, 2) : "") + ' <span class="p-iss">of $' + n(i.par_usd, 0) + "</span></dd>" +
+        "<dt>Pays</dt><dd>" + (i.schedule === "every business day" ? "Every business day" : esc(i.schedule || "")) + "</dd>" +
+        "<dt>Dividends in a row</dt><dd>" + row + "</dd>" +
+        "</dl></article>";
     }).join("");
-    seg.onclick = function (e) {
-      var b = e.target.closest("button"); if (!b) return;
-      current = +b.dataset.d; renderSeg(); renderPast();
-      seg.querySelector('[aria-checked="true"]').focus();
-    };
-    seg.onkeydown = function (e) {
-      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-      var ds = scen.lookback.map(function (l) { return l.days; }), i = ds.indexOf(current);
-      current = ds[(i + (e.key === "ArrowRight" ? 1 : ds.length - 1)) % ds.length];
-      renderSeg(); renderPast(); seg.querySelector('[aria-checked="true"]').focus(); e.preventDefault();
-    };
+    var rest = (feed.instruments || []).filter(function (i) { return LEAD.indexOf(i.ticker) < 0 && has(i.yield_pct); });
+    $("#longer").innerHTML = rest.length ? '<span class="lg-t">Also in the feed: the longer-term preferreds. Fixed rate, paid quarterly, they trade further from $100.</span>' +
+      rest.map(function (i) { return "<span><b>" + esc(i.ticker) + "</b> " + f1(v(i.yield_pct)) + "% · " + usd(v(i.close_usd), 2) + "</span>"; }).join("") : "";
+  }
+
+  // ---------- 3. paid through every dip ----------
+  function drawPaid() {
+    var wrap = $("#paid-charts"), out = [];
+    ["STRC", "SATA"].forEach(function (t) {
+      var i = inst(t), c = closes[t];
+      if (!i || !c || !c.rows || c.rows.length < 20) return;
+      out.push({ i: i, rows: c.rows, divs: (c.dividends || []) });
+    });
+    if (!out.length) { $("#paid").hidden = true; return; }
+    if (!wrap.children.length) {
+      wrap.innerHTML = out.map(function (o) {
+        return '<div class="pc"><h3>' + esc(o.i.ticker) + '</h3><div class="chart" role="img"></div><p></p></div>';
+      }).join("");
+    }
+    out.forEach(function (o, k) {
+      var node = wrap.children[k], box = node.querySelector(".chart");
+      var rows = o.rows, d0 = rows[0][0], d1 = rows[rows.length - 1][0];
+      var paid = o.divs.filter(function (d) { return d.pay >= d0 && d.pay <= feed.date && d.usd > 0; });
+      var vals = rows.map(function (r) { return r[1]; });
+      var lowV = Math.min.apply(null, vals), highV = Math.max.apply(null, vals);
+      var lo = Math.floor((lowV - 3) / 10) * 10, hi = Math.max(105, Math.ceil((highV + 2) / 5) * 5);
+      var W = Math.max(280, box.clientWidth), H = W < 420 ? 220 : 260;
+      var ml = 44, mr = 62, mt = 10, lane = 22, mb = 26;
+      var ph = H - mt - lane - mb - 16;
+      var t0 = Date.parse(d0), t1 = Date.parse(d1);
+      function X(iso) { return ml + (Date.parse(iso) - t0) / (t1 - t0) * (W - ml - mr); }
+      function Y(p) { return mt + (hi - p) / (hi - lo) * ph; }
+      var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
+      for (var p = lo; p <= hi; p += 10) {
+        if (p === 100) continue;
+        svg.appendChild(el("line", { x1: ml, x2: W - mr, y1: Y(p), y2: Y(p), class: "c-grid" }));
+        svg.appendChild(el("text", { x: ml - 8, y: Y(p) + 4, "text-anchor": "end", class: "c-tick" }, "$" + p));
+      }
+      svg.appendChild(el("line", { x1: ml, x2: W - mr, y1: Y(100), y2: Y(100), class: "c-par" }));
+      svg.appendChild(el("text", { x: ml - 8, y: Y(100) + 4, "text-anchor": "end", class: "c-par-t" }, "$100"));
+      var dpath = rows.map(function (r, j) { return (j ? "L" : "M") + X(r[0]).toFixed(1) + " " + Y(r[1]).toFixed(1); }).join("");
+      svg.appendChild(el("path", { d: dpath, class: "c-line" }));
+      var last = rows[rows.length - 1];
+      svg.appendChild(el("circle", { cx: X(last[0]), cy: Y(last[1]), r: 4, class: "c-dot" }));
+      svg.appendChild(el("text", { x: X(last[0]) + 9, y: Y(last[1]) - 2, class: "c-end" }, usd(last[1], 2)));
+      svg.appendChild(el("text", { x: X(last[0]) + 9, y: Y(last[1]) + 13, class: "c-tick" }, "today"));
+      var laneY = mt + ph + 14;
+      svg.appendChild(el("text", { x: ml - 8, y: laneY + lane / 2 + 4, "text-anchor": "end", class: "c-tick paid-t" }, "Paid"));
+      paid.forEach(function (d) {
+        var xx = X(d.pay < d1 ? d.pay : d1);
+        svg.appendChild(el("line", { x1: xx, x2: xx, y1: laneY, y2: laneY + lane, class: "c-div" }));
+      });
+      // month labels: every third month
+      var start = new Date(t0), m = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 1));
+      for (var q = 0; m.getTime() <= t1; q++, m.setUTCMonth(m.getUTCMonth() + 1)) {
+        if (q % 3) continue;
+        var iso = m.toISOString().slice(0, 10);
+        svg.appendChild(el("text", { x: X(iso), y: H - 6, "text-anchor": "middle", class: "c-tick" },
+          MONTHS[m.getUTCMonth()] + (m.getUTCMonth() === 0 ? " " + m.getUTCFullYear() : "")));
+      }
+      box.innerHTML = ""; box.appendChild(svg);
+      var lowRow = rows.filter(function (r) { return r[1] === lowV; })[0];
+      var none = !((o.i.payments || {}).gaps || []).length;
+      var near = Math.abs(last[1] - 100) <= 3;
+      box.setAttribute("aria-label", o.i.ticker + " price over the past year with " + paid.length + " dividends paid. Lowest close " + usd(lowV, 2) + " in " + monthName(lowRow[0]) + ", " + usd(last[1], 2) + " today.");
+      node.querySelector("p").innerHTML = (none ? "Every dividend paid: <b>" + paid.length + " of " + paid.length + "</b> in the past year" : "<b>" + paid.length + "</b> dividends paid in the past year") +
+        ", through a dip in " + monthName(lowRow[0]) + ". <b>" + usd(last[1], 2) + "</b> today" + (near ? ", back near $100." : ".");
+    });
+  }
+
+  // ---------- 4. backed by bitcoin ----------
+  function renderBacked() {
+    var cov = feed.coverage && feed.coverage.issuers;
+    if (!cov || !cov.length) { $("#backed").hidden = true; return; }
+    var html = cov.map(function (c) {
+      var yrs = c.years_of_dividends_covered, btc = c.btc_held, res = c.dividend_reserve_months;
+      var big, what, two = "", srcs = [yrs, btc, res].filter(has);
+      if (!srcs.length) return "";
+      if (has(yrs)) {
+        big = n(v(yrs), 1) + "<small>years</small>";
+        what = "of dividends and interest covered by its bitcoin and cash. " + esc(c.issuer) + "'s own figure.";
+        if (has(btc)) two = "<b>" + n(v(btc), 0) + "</b> bitcoin held";
+      } else if (has(btc)) {
+        big = n(v(btc), 0) + "<small>bitcoin</small>";
+        what = "held by " + esc(c.issuer) + ", by its own count.";
+        if (has(res)) two = "<b>" + n(v(res), 0) + " months</b> of dividends set aside in cash, " + esc(c.issuer) + "'s own figure";
+      } else return "";
+      var s = srcs[0];
+      return '<div class="bk"><h3 class="bk-iss">' + esc(c.issuer) + '</h3><p class="bk-big">' + big + '</p><p class="bk-what">' + what + "</p>" +
+        (two ? '<p class="bk-two">' + two + "</p>" : "") +
+        '<p class="bk-src"><a href="' + esc(s.source) + '" rel="noopener">' + esc(host(s.source)) + "</a>, as of " + day(s.as_of) + "</p></div>";
+    }).join("");
+    if (!html) { $("#backed").hidden = true; return; }
+    $("#backed-grid").innerHTML = html;
+  }
+
+  // ---------- 5. your numbers ----------
+  function parseNum(s) { var x = Number(String(s).replace(/[$,\s]/g, "")); return isFinite(x) ? x : NaN; }
+  function renderYours() {
+    var amount = parseNum($("#in-amount").value), days = parseNum($("#in-days").value), out = $("#yours-out");
+    if (!(amount > 0) || !(days > 0) || Math.floor(days) !== days) {
+      out.innerHTML = '<p class="fine">Enter an amount above $0 and a whole number of days.</p>'; return;
+    }
+    var res = compare(feed, amount, days, 100, KINDS.slice());
+    var rows = [], inf = inflation();
+    var tb = res.benchmarks.filter(function (b) { return b.id === "tbill_4w"; })[0];
+    if (inf) rows.push({ name: "Inflation takes", note: "US CPI, past year", y: v(inf), cls: "inf" });
+    if (tb && tb.yield_pct !== null) rows.push({ name: "T-bill", note: "4-week", y: tb.yield_pct, usd: tb.est_income_usd });
+    LEAD.forEach(function (t) {
+      var o = res.options.filter(function (r) { return r.ticker === t; })[0];
+      if (o) rows.push({ name: t, note: f1(o.yield_pct) + "% today", y: o.yield_pct, usd: o.est_income_usd, cls: "dc" });
+    });
+    rows.forEach(function (r) { if (r.usd === undefined) r.usd = round(amount * r.y / 100 * days / 365, 2); r.perDay = amount * r.y / 100 / 365; });
+    var max = Math.max.apply(null, rows.map(function (r) { return r.usd; }));
+    var big = amount * Math.max.apply(null, rows.map(function (r) { return r.y; })) / 100 / 365 >= 100;
+    var label = days === 365 ? "In a year" : "In " + n(days, 0) + " days";
+    out.innerHTML = '<div class="y-head"><span></span><span></span><span>' + label + "</span></div>" +
+      rows.map(function (r) {
+        return '<div class="y-row ' + (r.cls || "") + '"><span class="y-name">' + esc(r.name) + "<small>" + esc(r.note) + "</small></span>" +
+          '<span class="y-track"><i style="width:' + Math.max(1, r.usd / max * 100).toFixed(2) + '%"></i></span>' +
+          '<span class="y-n">' + usd(r.usd, r.usd >= 100 ? 0 : 2) + '<small class="y-d">' + usd(r.perDay, big ? 0 : 2) + " a day</small></span></div>";
+      }).join("");
+  }
+
+  // ---------- 7. sources ----------
+  function renderSources() {
+    var items = [];
+    function add2(label, x) { if (x && x.source) items.push([label, x.source, x.as_of]); }
+    feed.benchmarks.forEach(function (b) { add2(b.name, b.yield_pct); });
+    if (feed.inflation_yoy_pct) add2("US CPI-U, all items (" + (feed.inflation_yoy_pct.month || "") + " vs " + (feed.inflation_yoy_pct.year_ago_month || "") + ")", feed.inflation_yoy_pct);
+    feed.instruments.forEach(function (i) {
+      add2(i.ticker + " closing price", i.close_usd);
+      add2(i.ticker + " dividend rate", i.stated_rate_pct);
+    });
+    LEAD.forEach(function (t) { var i = inst(t); if (i && i.dividends_source) items.push([t + " dividends paid", i.dividends_source, feed.date]); });
+    ((feed.coverage || {}).issuers || []).forEach(function (c) {
+      add2(c.issuer + " years of dividends covered", c.years_of_dividends_covered);
+      add2(c.issuer + " bitcoin held", c.btc_held);
+      add2(c.issuer + " dividend reserve", c.dividend_reserve_months);
+    });
+    $("#sources-list").innerHTML = "<ul>" + items.map(function (s) {
+      return "<li>" + esc(s[0]) + ': <a href="' + esc(s[1]) + '" rel="noopener">' + esc(host(s[1])) + "</a>" + (s[2] ? ", " + day(s[2]) : "") + "</li>";
+    }).join("") + '<li>Method for every number: <a href="../v1/method.json">method.json</a></li></ul>';
   }
 
   function copy() {
@@ -296,17 +377,32 @@
     }, blocked);
   }
 
-  function start(data) {
-    feed = data[0]; scen = data[1];
-    var px = feed.instruments.map(function (i) { return i.close_usd && i.close_usd.as_of; }).filter(Boolean).sort().pop();
-    $("#date").innerHTML = "Data for <b>" + day(feed.date, true) + "</b>" + (px && px !== feed.date ? " · closing prices from " + day(px, true) : "");
-    renderToday(); renderTry(); renderSeg(); renderPast();
-    ["#in-amount", "#in-days", "#in-drop"].forEach(function (s) { $(s).addEventListener("input", renderTry); });
-    $("#f-try").addEventListener("submit", function (e) { e.preventDefault(); });
+  function getJSON(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); }
+  function load(base) {
+    return Promise.all([getJSON(base + "instruments.json"), getJSON(base + "scenarios.json")].concat(
+      ["STRC", "SATA"].map(function (t) { return getJSON(base + "instrument/" + t + ".json").catch(function () { return null; }); })
+    )).then(function (d) {
+      // A feed built before inflation, coverage and daily closes were added cannot draw this page.
+      if (!("inflation_yoy_pct" in d[0]) || !d[2] || !d[2].closes) throw new Error("older feed format");
+      return d;
+    });
+  }
+
+  function start(d) {
+    feed = d[0]; scen = d[1];
+    [d[2], d[3]].forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
+    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderBacked(); renderYours(); renderSources();
+    ["#in-amount", "#in-days"].forEach(function (s) { $(s).addEventListener("input", renderYours); });
+    $("#f-yours").addEventListener("submit", function (e) { e.preventDefault(); });
+    var w = window.innerWidth, t;
+    window.addEventListener("resize", function () {
+      if (window.innerWidth === w) return; w = window.innerWidth;
+      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); }, 120);
+    });
   }
 
   $("#copy").addEventListener("click", copy);
   load("../v1/").catch(function () { return load("./v1-sample/"); }).then(start).catch(function (e) {
-    $("#date").innerHTML = '<span class="err">The feed did not load (' + esc(e.message) + "). Try again later, or read the JSON files directly.</span>";
+    $("#asof").innerHTML = '<span class="err">The feed did not load (' + esc(e.message) + "). Read the JSON files directly.</span>";
   });
 })();

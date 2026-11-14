@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DATproof</title>
-<meta name="description" content="A free daily feed of yield and risk for six bitcoin-backed preferred stocks, beside a T-bill, a money market fund and USDC lending. Every number sourced and dated.">
+<meta name="description" content="Idle cash in T-bills barely beats inflation. Digital credit, bitcoin-backed preferred stock, pays three to four times more, every day. DATproof is the free data feed that lets an AI agent see it.">
+<meta name="color-scheme" content="dark light">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,106 +13,81 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="wrap top">
-  <nav class="bar" aria-label="Site">
-    <a href="#today">Today</a><a href="#try">Try your numbers</a><a href="#past">Past year</a><a href="#agents">For agents</a>
-  </nav>
-  <h1>DATproof</h1>
-  <p class="lede">A free daily feed of yield and risk for six bitcoin-backed preferred stocks, beside a T-bill, a money market fund and USDC lending.</p>
-  <p class="date" id="date">Loading today's data…</p>
+<header class="wrap bar">
+  <a class="mark" href="./">DATproof</a>
+  <a class="bar-link" href="#agent">For agents</a>
 </header>
 
-<main class="wrap">
-  <section id="today" aria-labelledby="h-today">
-    <div class="head">
-      <h2 id="h-today">Today</h2>
-      <p>Sorted by yield. Risk sits in the same row.</p>
-    </div>
-    <div class="scroll"><table class="grid" id="t-today">
-      <thead><tr>
-        <th scope="col">Name</th>
-        <th scope="col" class="n">Yield today</th>
-        <th scope="col" class="n">Price <span class="sub">vs $100 par</span></th>
-        <th scope="col" class="n">Paid in a row</th>
-        <th scope="col" class="risk">Worst drop <span class="sub">past year</span></th>
-      </tr></thead>
-      <tbody></tbody>
-    </table></div>
-    <details class="src" id="src-today"><summary>Sources</summary><div></div></details>
+<main>
+  <section class="wrap hero" aria-labelledby="h-hero">
+    <h1 id="h-hero" class="hero-h">
+      <span class="l l-bill" id="hl-bill">T-bills pay —.</span>
+      <span class="l l-inf" id="hl-inf" hidden></span>
+      <span class="l l-dc" id="hl-dc">Digital credit pays more.</span>
+    </h1>
+    <p class="hero-sub">DATproof is the free data feed that lets your AI agent see that, and choose it.</p>
+
+    <figure class="earn" aria-labelledby="earn-cap">
+      <figcaption id="earn-cap" class="earn-cap"><span id="earn-title">What $10,000 of idle cash earns in a year</span></figcaption>
+      <div class="chart" id="earn-chart" role="img" aria-label="Loading chart"></div>
+    </figure>
+
+    <p class="hero-act"><a class="btn" href="#agent">Give it to your agent</a><span class="asof" id="asof"></span></p>
   </section>
 
-  <section id="try" aria-labelledby="h-try">
-    <div class="head">
-      <h2 id="h-try">Try your numbers</h2>
-      <p>The same rules the feed's compare tool uses. Income assumes today's yield holds.</p>
-    </div>
-    <form class="inputs" id="f-try" novalidate>
-      <label>Amount
-        <span class="field"><span class="affix">$</span><input id="in-amount" inputmode="decimal" value="10,000" autocomplete="off"></span>
-      </label>
-      <label>Days
-        <span class="field"><input id="in-days" inputmode="numeric" value="90" autocomplete="off"><span class="affix">days</span></span>
-      </label>
-      <label>Biggest drop you can live with
-        <span class="field"><input id="in-drop" inputmode="decimal" value="30" autocomplete="off"><span class="affix">%</span></span>
-      </label>
+  <section class="wrap block" id="three" aria-labelledby="h-three">
+    <h2 id="h-three">Three built to hold $100</h2>
+    <p class="sub">Each is issued at $100, trades near $100, and pays a dividend every business day.</p>
+    <div class="panels" id="panels"></div>
+    <div class="longer" id="longer"></div>
+  </section>
+
+  <section class="wrap block" id="paid" aria-labelledby="h-paid">
+    <h2 id="h-paid">Every dividend paid, through every dip</h2>
+    <p class="sub">Price over the past year. Each orange mark along the bottom is one dividend paid.</p>
+    <div class="paid" id="paid-charts"></div>
+  </section>
+
+  <section class="wrap block" id="backed" aria-labelledby="h-backed">
+    <h2 id="h-backed">Backed by bitcoin</h2>
+    <p class="sub">Each issuer holds bitcoin and cash behind its dividends. Their own figures, as they publish them.</p>
+    <div class="backed" id="backed-grid"></div>
+  </section>
+
+  <section class="wrap block" id="yours" aria-labelledby="h-yours">
+    <h2 id="h-yours">Your numbers</h2>
+    <form class="yours-form" id="f-yours" novalidate>
+      <label>Amount <span class="field"><span class="pre">$</span><input id="in-amount" type="text" inputmode="decimal" value="10,000" autocomplete="off" spellcheck="false"></span></label>
+      <label>Days <span class="field"><input id="in-days" type="text" inputmode="numeric" value="365" autocomplete="off" spellcheck="false"></span></label>
     </form>
-    <p class="answer" id="answer" aria-live="polite"></p>
-    <div class="scroll"><table class="grid" id="t-try">
-      <thead><tr>
-        <th scope="col">Name</th>
-        <th scope="col" class="n">Yield</th>
-        <th scope="col" class="n">Would earn</th>
-        <th scope="col" class="n">Worst drop</th>
-        <th scope="col">Notes</th>
-      </tr></thead>
-      <tbody></tbody>
-    </table></div>
-    <div class="out" id="out"></div>
+    <div class="yours" id="yours-out" aria-live="polite"></div>
+    <p class="fine" id="yours-note">At today's rates, simple interest, before tax. Prices move and issuers set the rates.</p>
   </section>
 
-  <section id="past" aria-labelledby="h-past">
-    <div class="head">
-      <h2 id="h-past">The past year, on $10,000</h2>
-      <p>What each stock paid, how its price moved, and its lowest point. Past results do not predict future results.</p>
-    </div>
-    <div class="seg" role="radiogroup" aria-label="Window" id="seg"></div>
-    <div class="scroll"><table class="grid" id="t-past">
-      <thead><tr>
-        <th scope="col">Name</th>
-        <th scope="col" class="n">Dividends</th>
-        <th scope="col" class="n">Price change</th>
-        <th scope="col" class="n">Total</th>
-        <th scope="col" class="n">Lowest point</th>
-        <th scope="col" class="viz"><span class="key"><i class="k-inc"></i>Dividends <i class="k-px"></i>Price <i class="k-low"></i>Lowest</span></th>
-      </tr></thead>
-      <tbody></tbody>
-    </table></div>
-    <details class="src" id="src-past"><summary>Sources</summary><div></div></details>
-  </section>
-
-  <section id="agents" aria-labelledby="h-agents">
-    <div class="head">
-      <h2 id="h-agents">For agents</h2>
-      <p>Run the tool server in any MCP client. Tools: compare, scenarios, instruments, instrument, changes, method.</p>
-    </div>
-    <div class="cmd">
+  <section class="wrap block" id="agent" aria-labelledby="h-agent">
+    <h2 id="h-agent">Give it to your agent</h2>
+    <ol class="steps">
+      <li><span class="n">1</span><span class="st">Your agent has idle cash.</span></li>
+      <li><span class="n">2</span><span class="st">It asks DATproof.</span></li>
+      <li><span class="n">3</span><span class="st">It shows you digital credit next to a T-bill. You approve.</span></li>
+    </ol>
+    <div class="install">
       <code id="cmd">uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp</code>
-      <button type="button" id="copy">Copy</button>
+      <button type="button" class="btn" id="copy">Copy</button>
     </div>
     <p class="copy-msg" id="copy-msg" aria-live="polite"></p>
-    <ul class="plain">
-      <li><a href="../v1/instruments.json">JSON feed</a> <span>instruments.json, rebuilt each day</span></li>
-      <li><a href="../v1/scenarios.json">Look-back numbers</a> <span>scenarios.json</span></li>
-      <li><a href="../llms.txt">llms.txt</a> <span>a short plain-text guide for agents</span></li>
-    </ul>
+    <p class="links"><a href="../v1/instruments.json">The JSON feed</a><a href="../llms.txt">/llms.txt</a><a href="https://github.com/lucascashwell3-ai/datproof" rel="noopener">Source code</a></p>
   </section>
 </main>
 
 <footer class="wrap foot">
-  <p><a href="../v1/method.json">Method</a> · Sources: Nasdaq, Strategy, Strive, SEC filings, US Treasury, DefiLlama.</p>
-  <p>Facts and arithmetic, not advice.</p>
+  <details class="sources">
+    <summary>Sources</summary>
+    <div id="sources-list"><p>Loading…</p></div>
+  </details>
+  <p>Every number is sourced and dated. Prices move and issuers set the rates. This is data, not personal advice.</p>
 </footer>
+
 <script src="app.js"></script>
 </body>
 </html>
