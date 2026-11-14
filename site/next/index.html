@@ -1,82 +1,135 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-type="a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DATproof</title>
-<meta name="description" content="Idle cash in T-bills barely beats inflation. Digital credit, bitcoin-backed preferred stock, pays three to four times more, every day. DATproof is the free data feed that lets an AI agent see it.">
+<title>DATproof: earn more on your trading agent's idle cash</title>
+<meta name="description" content="Your trading agent's idle cash can earn daily dividends from bitcoin-backed preferred stocks. DATproof is the free data connection that shows your agent the live numbers.">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<script>
+  /* Type option: ?type=a|b|c, else the visitor's last pick, else A. Loads only that option's fonts. */
+  (function () {
+    var FONTS = {
+      a: "family=Archivo:wdth,wght@62..125,400..800",
+      b: "family=Geist:wght@400..700&family=Geist+Mono:wght@400..600",
+      c: "family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400..700"
+    };
+    var t = null;
+    try { t = new URLSearchParams(location.search).get("type"); } catch (e) {}
+    if (!FONTS[t]) { try { t = localStorage.getItem("dp-type"); } catch (e) {} }
+    if (!FONTS[t]) t = "a";
+    try { localStorage.setItem("dp-type", t); } catch (e) {}
+    document.documentElement.setAttribute("data-type", t);
+    var l = document.createElement("link");
+    l.rel = "stylesheet"; l.id = "fonts";
+    l.href = "https://fonts.googleapis.com/css2?" + FONTS[t] + "&display=swap";
+    document.head.appendChild(l);
+    window.DP_FONTS = FONTS;
+  })();
+</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="wrap bar">
   <a class="mark" href="./">DATproof</a>
-  <a class="bar-link" href="#agent">For agents</a>
+  <a class="bar-link" href="#agent">Connect your agent</a>
 </header>
 
 <main>
   <section class="wrap hero" aria-labelledby="h-hero">
-    <h1 id="h-hero" class="hero-h">
-      <span class="l l-bill" id="hl-bill">T-bills pay —.</span>
-      <span class="l l-inf" id="hl-inf" hidden></span>
-      <span class="l l-dc" id="hl-dc">Digital credit pays more.</span>
-    </h1>
-    <p class="hero-sub">DATproof is the free data feed that lets your AI agent see that, and choose it.</p>
+    <h1 id="h-hero" class="hero-h">Earn <span class="hl-dc" id="hl-range">more</span> between trades.</h1>
+    <p class="hero-sub">Your trading agent sits in cash while it waits for a setup. DATproof gives it the live numbers to put that cash into daily-paying digital credit.</p>
 
     <figure class="earn" aria-labelledby="earn-cap">
-      <figcaption id="earn-cap" class="earn-cap"><span id="earn-title">What $10,000 of idle cash earns in a year</span></figcaption>
+      <figcaption id="earn-cap" class="earn-cap">Annual income on $10,000 of idle cash</figcaption>
       <div class="chart" id="earn-chart" role="img" aria-label="Loading chart"></div>
+      <p class="earn-foot num" id="earn-foot"></p>
     </figure>
 
-    <p class="hero-act"><a class="btn" href="#agent">Give it to your agent</a><span class="asof" id="asof"></span></p>
+    <p class="hero-act"><a class="btn" href="#agent">Connect your agent</a><span class="asof" id="asof"></span></p>
   </section>
 
   <section class="wrap block" id="three" aria-labelledby="h-three">
-    <h2 id="h-three">Three built to hold $100</h2>
-    <p class="sub">Each is issued at $100, trades near $100, and pays a dividend every business day.</p>
+    <h2 id="h-three">Income every business day</h2>
+    <p class="sub">Three preferred stocks backed by bitcoin. Each pays a dividend every business day.</p>
     <div class="panels" id="panels"></div>
     <div class="longer" id="longer"></div>
   </section>
 
   <section class="wrap block" id="paid" aria-labelledby="h-paid">
-    <h2 id="h-paid">Every dividend paid, through every dip</h2>
-    <p class="sub">Price over the past year. Each orange mark along the bottom is one dividend paid.</p>
+    <h2 id="h-paid">Liquid and steady</h2>
+    <p class="sub" id="paid-sub">Sell any trading day.</p>
     <div class="paid" id="paid-charts"></div>
+  </section>
+
+  <section class="wrap block" id="lift" aria-labelledby="h-lift">
+    <h2 id="h-lift">Better risk-adjusted returns</h2>
+    <p class="sub">Yield on idle cash lifts the whole account's return without adding a single trade.</p>
+    <div class="lift" id="lift-out"></div>
   </section>
 
   <section class="wrap block" id="backed" aria-labelledby="h-backed">
     <h2 id="h-backed">Backed by bitcoin</h2>
-    <p class="sub">Each issuer holds bitcoin and cash behind its dividends. Their own figures, as they publish them.</p>
+    <p class="sub">The issuers hold bitcoin and cash behind every dividend.</p>
     <div class="backed" id="backed-grid"></div>
   </section>
 
-  <section class="wrap block" id="yours" aria-labelledby="h-yours">
-    <h2 id="h-yours">Your numbers</h2>
-    <form class="yours-form" id="f-yours" novalidate>
-      <label>Amount <span class="field"><span class="pre">$</span><input id="in-amount" type="text" inputmode="decimal" value="10,000" autocomplete="off" spellcheck="false"></span></label>
-      <label>Days <span class="field"><input id="in-days" type="text" inputmode="numeric" value="365" autocomplete="off" spellcheck="false"></span></label>
+  <section class="wrap block" id="calc" aria-labelledby="h-calc">
+    <h2 id="h-calc">Estimate your income</h2>
+    <form class="calc-in" id="f-calc" novalidate>
+      <label for="in-amount" class="calc-l">Idle cash</label>
+      <span class="field"><span class="pre">$</span><input id="in-amount" class="num" type="text" inputmode="decimal" value="10,000" autocomplete="off" spellcheck="false"></span>
+      <input id="in-slide" class="slide" type="range" min="1000" max="250000" step="1000" value="10000" aria-label="Idle cash">
     </form>
-    <div class="yours" id="yours-out" aria-live="polite"></div>
-    <p class="fine" id="yours-note">At today's rates, simple interest, before tax. Prices move and issuers set the rates.</p>
+    <div class="calc-out" id="calc-out" aria-live="polite"></div>
+    <p class="fine" id="calc-note"></p>
   </section>
 
   <section class="wrap block" id="agent" aria-labelledby="h-agent">
-    <h2 id="h-agent">Give it to your agent</h2>
-    <ol class="steps">
-      <li><span class="n">1</span><span class="st">Your agent has idle cash.</span></li>
-      <li><span class="n">2</span><span class="st">It asks DATproof.</span></li>
-      <li><span class="n">3</span><span class="st">It shows you digital credit next to a T-bill. You approve.</span></li>
-    </ol>
-    <div class="install">
-      <code id="cmd">uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp</code>
-      <button type="button" class="btn" id="copy">Copy</button>
+    <h2 id="h-agent">Connect your agent</h2>
+    <p class="sub">One line of setup. Your agent reads DATproof; trades still go through your own broker, with your approval.</p>
+
+    <div class="talk">
+      <div class="chat" id="chat" aria-label="Example conversation">
+        <p class="msg me">I have $8,000 sitting idle for about three months. What are my options?</p>
+        <div class="msg bot" id="chat-bot"><p>Loading today's numbers…</p></div>
+      </div>
+      <p class="chat-tag" id="chat-tag">Example from today's data</p>
     </div>
-    <p class="copy-msg" id="copy-msg" aria-live="polite"></p>
-    <p class="links"><a href="../v1/instruments.json">The JSON feed</a><a href="../llms.txt">/llms.txt</a><a href="https://github.com/lucascashwell3-ai/datproof" rel="noopener">Source code</a></p>
+
+    <div class="setup">
+      <div class="tabs" role="tablist" aria-label="Setup">
+        <button type="button" role="tab" id="tab-code" aria-controls="pane-code" aria-selected="true">Claude Code</button>
+        <button type="button" role="tab" id="tab-json" aria-controls="pane-json" aria-selected="false" tabindex="-1">Claude Desktop, Cursor and other MCP apps</button>
+        <button type="button" role="tab" id="tab-data" aria-controls="pane-data" aria-selected="false" tabindex="-1">Just the data</button>
+      </div>
+      <div class="pane" role="tabpanel" id="pane-code" aria-labelledby="tab-code">
+        <pre class="code"><code>claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp</code></pre>
+        <button type="button" class="btn copy">Copy</button>
+      </div>
+      <div class="pane" role="tabpanel" id="pane-json" aria-labelledby="tab-json" hidden>
+        <pre class="code"><code>{
+  "mcpServers": {
+    "datproof": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/lucascashwell3-ai/datproof", "datproof-mcp"]
+    }
+  }
+}</code></pre>
+        <button type="button" class="btn copy">Copy</button>
+      </div>
+      <div class="pane" role="tabpanel" id="pane-data" aria-labelledby="tab-data" hidden>
+        <pre class="code"><code>https://lucascashwell3-ai.github.io/datproof/v1/instruments.json
+https://lucascashwell3-ai.github.io/datproof/llms.txt</code></pre>
+        <button type="button" class="btn copy">Copy</button>
+      </div>
+      <p class="copy-msg" id="copy-msg" aria-live="polite"></p>
+      <p class="broker">Running your agent on Robinhood or Alpaca? Add DATproof alongside your broker connection.</p>
+      <p class="links"><a href="../v1/instruments.json">The JSON feed</a><a href="../llms.txt">/llms.txt</a><a href="https://github.com/lucascashwell3-ai/datproof" rel="noopener">Source code</a></p>
+    </div>
   </section>
 </main>
 
@@ -87,6 +140,10 @@
   </details>
   <p>Every number is sourced and dated. Prices move and issuers set the rates. This is data, not personal advice.</p>
 </footer>
+
+<div class="typesw" role="group" aria-label="Type option">
+  <button type="button" data-t="a">A</button><button type="button" data-t="b">B</button><button type="button" data-t="c">C</button>
+</div>
 
 <script src="app.js"></script>
 </body>

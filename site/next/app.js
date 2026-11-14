@@ -105,10 +105,12 @@
 
   // ---- page ----
   var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var LEAD = ["STRC", "SATA", "SATS"];
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   var SVGNS = "http://www.w3.org/2000/svg";
+  var CASH_SHARE = 0.6;  // the example account in "Better risk-adjusted returns"
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function day(iso) { if (!iso) return ""; var p = iso.slice(0, 10).split("-"); return +p[2] + " " + MONTHS[+p[1] - 1] + " " + p[0]; }
@@ -132,17 +134,22 @@
   function lead() { return LEAD.map(inst).filter(function (i) { return i && has(i.yield_pct); }); }
   function inflation() { var x = feed.inflation_yoy_pct; return x && has(x) ? x : null; }
   function year() { return (scen.lookback || []).filter(function (l) { return l.days === 365; })[0]; }
+  function tbillY() { var tb = bench("tbill_4w"); return tb && has(tb.yield_pct) ? v(tb.yield_pct) : null; }
+  function avgY() { var d = lead(); return d.length ? d.reduce(function (s, i) { return s + v(i.yield_pct); }, 0) / d.length : null; }
+  function leadNames() { var t = lead().map(function (i) { return i.ticker; }); return t.length > 1 ? t.slice(0, -1).join(", ") + " and " + t[t.length - 1] : t.join(""); }
 
   // ---------- 1. first screen ----------
   function renderHero() {
-    var tb = bench("tbill_4w"), inf = inflation(), dc = lead();
-    if (tb && has(tb.yield_pct)) $("#hl-bill").textContent = "T-bills pay " + f1(v(tb.yield_pct)) + "%.";
-    if (inf) { var hi = $("#hl-inf"); hi.textContent = "Inflation takes " + f1(v(inf)) + "%."; hi.hidden = false; }
+    var tb = tbillY(), inf = inflation(), dc = lead();
     if (dc.length) {
       var ys = dc.map(function (i) { return Math.round(v(i.yield_pct)); });
-      var lo = Math.min.apply(null, ys), hiY = Math.max.apply(null, ys);
-      $("#hl-dc").textContent = "Digital credit pays " + (lo === hiY ? lo : lo + "\u00a0to\u00a0" + hiY) + "%.";
+      var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+      $("#hl-range").textContent = (lo === hi ? lo : lo + "–" + hi) + "%";
     }
+    var foot = [];
+    if (tb !== null) foot.push("T-bills pay " + f1(tb) + "%.");
+    if (inf) foot.push("Inflation runs " + f1(v(inf)) + "%.");
+    $("#earn-foot").textContent = foot.join(" ");
     var px = dc.map(function (i) { return i.close_usd.as_of; }).sort().pop();
     $("#asof").textContent = "Data for " + day(feed.date) + (px ? " · prices at the " + day(px) + " close" : "") +
       (inf ? " · inflation is US CPI, " + monthName(inf.month) + " " + inf.month.slice(0, 4) + " vs a year earlier" : "");
@@ -192,38 +199,39 @@
         svg.appendChild(el("line", { x1: xi, x2: xi, y1: by - 6, y2: by + bh + 6, class: "c-inf" }));
       });
       else svg.appendChild(el("line", { x1: xi, x2: xi, y1: top - 10, y2: H - 4, class: "c-inf" }));
-      svg.appendChild(el("text", { x: xi - 6, y: top - 18, class: "c-inf-t", "text-anchor": narrow ? "start" : "end" }, "Inflation takes " + usd(infUsd)));
+      svg.appendChild(el("text", { x: xi - 6, y: top - 18, class: "c-inf-t", "text-anchor": narrow ? "start" : "end" }, "Inflation: " + usd(infUsd)));
       if (narrow) svg.lastChild.setAttribute("x", Math.max(0, xi - 40));
     }
     box.innerHTML = "";
     box.appendChild(svg);
-    box.setAttribute("aria-label", "What $10,000 earns in a year: " + rows.map(function (r) { return r.name + " " + usd(r.usd) + " (" + r.note + ")"; }).join("; ") +
-      (infUsd !== null ? ". Inflation takes " + usd(infUsd) + "." : "."));
+    box.setAttribute("aria-label", "Annual income on $10,000 of idle cash: " + rows.map(function (r) { return r.name + " " + usd(r.usd) + " (" + r.note + ")"; }).join("; ") +
+      (infUsd !== null ? ". Inflation: " + usd(infUsd) + "." : "."));
     if (first) box.classList.add("draw");
   }
 
   // ---------- 2. the three ----------
   function renderPanels() {
-    var tb = bench("tbill_4w"), tbY = tb && has(tb.yield_pct) ? v(tb.yield_pct) : null;
+    var tbY = tbillY();
     $("#panels").innerHTML = lead().map(function (i) {
       var y = v(i.yield_pct), pay = i.payments || {}, close = v(i.close_usd);
-      var times = tbY ? '<p class="p-x">' + n(y / tbY, 1) + " times a T-bill</p>" : "";
-      var row = pay.in_a_row ? n(pay.in_a_row, 0) + ((pay.gaps || []).length ? "" : ", none missed") : "";
+      var times = tbY ? '<p class="p-x"><span class="num">' + n(y / tbY, 1) + "×</span> a T-bill</p>" : "";
+      var facts = [];
+      facts.push(i.schedule === "every business day" ? "Pays every business day" : "Pays " + esc(i.schedule || ""));
+      if (pay.in_a_row) facts.push('<b class="num">' + n(pay.in_a_row, 0) + "</b> dividends in a row");
+      if (close !== null) facts.push('Price today <b class="num">' + usd(close, 2) + "</b>");
       return '<article class="panel">' +
         '<div class="p-head"><h3 class="p-tk">' + esc(i.ticker) + '</h3><span class="p-iss">' + esc(i.issuer) + "</span></div>" +
-        '<p class="p-yield">' + f1(y) + "%</p>" + times +
-        '<dl class="p-facts">' +
-        "<dt>Price today</dt><dd>" + (close !== null ? usd(close, 2) : "") + ' <span class="p-iss">of $' + n(i.par_usd, 0) + "</span></dd>" +
-        "<dt>Pays</dt><dd>" + (i.schedule === "every business day" ? "Every business day" : esc(i.schedule || "")) + "</dd>" +
-        "<dt>Dividends in a row</dt><dd>" + row + "</dd>" +
-        "</dl></article>";
+        '<p class="p-yield num">' + f1(y) + "%</p>" + times +
+        '<ul class="p-facts">' + facts.map(function (f) { return "<li>" + f + "</li>"; }).join("") + "</ul></article>";
     }).join("");
     var rest = (feed.instruments || []).filter(function (i) { return LEAD.indexOf(i.ticker) < 0 && has(i.yield_pct); });
-    $("#longer").innerHTML = rest.length ? '<span class="lg-t">Also in the feed: the longer-term preferreds. Fixed rate, paid quarterly, they trade further from $100.</span>' +
-      rest.map(function (i) { return "<span><b>" + esc(i.ticker) + "</b> " + f1(v(i.yield_pct)) + "% · " + usd(v(i.close_usd), 2) + "</span>"; }).join("") : "";
+    $("#longer").innerHTML = rest.length ? '<span class="lg-t">Also covered: longer-term preferreds, paid quarterly.</span>' +
+      rest.map(function (i) { return '<span><b>' + esc(i.ticker) + '</b> <span class="num">' + f1(v(i.yield_pct)) + "% · " + usd(v(i.close_usd), 2) + "</span></span>"; }).join("") : "";
   }
 
-  // ---------- 3. paid through every dip ----------
+  // ---------- 3. liquid and steady ----------
+  function nearShare(rows) { return rows.filter(function (r) { return Math.abs(r[1] - 100) <= 5; }).length / rows.length; }
+
   function drawPaid() {
     var wrap = $("#paid-charts"), out = [];
     ["STRC", "SATA"].forEach(function (t) {
@@ -232,6 +240,9 @@
       out.push({ i: i, rows: c.rows, divs: (c.dividends || []) });
     });
     if (!out.length) { $("#paid").hidden = true; return; }
+    var first = out[0];
+    $("#paid-sub").textContent = "Sell any trading day. " + first.i.ticker + " closed within $5 of $100 on " +
+      Math.round(nearShare(first.rows) * 100) + "% of trading days over the past year.";
     if (!wrap.children.length) {
       wrap.innerHTML = out.map(function (o) {
         return '<div class="pc"><h3>' + esc(o.i.ticker) + '</h3><div class="chart" role="img"></div><p></p></div>';
@@ -251,6 +262,7 @@
       function X(iso) { return ml + (Date.parse(iso) - t0) / (t1 - t0) * (W - ml - mr); }
       function Y(p) { return mt + (hi - p) / (hi - lo) * ph; }
       var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
+      svg.appendChild(el("rect", { x: ml, y: Y(105), width: W - ml - mr, height: Y(95) - Y(105), class: "c-band" }));
       for (var p = lo; p <= hi; p += 10) {
         if (p === 100) continue;
         svg.appendChild(el("line", { x1: ml, x2: W - mr, y1: Y(p), y2: Y(p), class: "c-grid" }));
@@ -270,7 +282,6 @@
         var xx = X(d.pay < d1 ? d.pay : d1);
         svg.appendChild(el("line", { x1: xx, x2: xx, y1: laneY, y2: laneY + lane, class: "c-div" }));
       });
-      // month labels: every third month
       var start = new Date(t0), m = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 1));
       for (var q = 0; m.getTime() <= t1; q++, m.setUTCMonth(m.getUTCMonth() + 1)) {
         if (q % 3) continue;
@@ -279,16 +290,32 @@
           MONTHS[m.getUTCMonth()] + (m.getUTCMonth() === 0 ? " " + m.getUTCFullYear() : "")));
       }
       box.innerHTML = ""; box.appendChild(svg);
-      var lowRow = rows.filter(function (r) { return r[1] === lowV; })[0];
       var none = !((o.i.payments || {}).gaps || []).length;
-      var near = Math.abs(last[1] - 100) <= 3;
-      box.setAttribute("aria-label", o.i.ticker + " price over the past year with " + paid.length + " dividends paid. Lowest close " + usd(lowV, 2) + " in " + monthName(lowRow[0]) + ", " + usd(last[1], 2) + " today.");
-      node.querySelector("p").innerHTML = (none ? "Every dividend paid: <b>" + paid.length + " of " + paid.length + "</b> in the past year" : "<b>" + paid.length + "</b> dividends paid in the past year") +
-        ", through a dip in " + monthName(lowRow[0]) + ". <b>" + usd(last[1], 2) + "</b> today" + (near ? ", back near $100." : ".");
+      var share = Math.round(nearShare(rows) * 100);
+      box.setAttribute("aria-label", o.i.ticker + " closing price over the past year, with " + paid.length + " dividends paid. Within $5 of $100 on " + share + "% of days. " + usd(last[1], 2) + " today.");
+      node.querySelector("p").innerHTML = "Within $5 of $100 on <b>" + share + "%</b> of days. " +
+        (none ? "<b>" + paid.length + "</b> of <b>" + paid.length + "</b> dividends paid." : "<b>" + paid.length + "</b> dividends paid.");
     });
   }
 
-  // ---------- 4. backed by bitcoin ----------
+  // ---------- 4. better risk-adjusted returns ----------
+  function renderLift() {
+    var a = avgY();
+    if (a === null) { $("#lift").hidden = true; return; }
+    var cash = AMOUNT * CASH_SHARE, trade = AMOUNT - cash, extra = cash * a / 100;
+    var tw = (1 - CASH_SHARE) * 100, cw = CASH_SHARE * 100;
+    function bar(label, dc) {
+      return '<div class="lf-row' + (dc ? " dc" : "") + '"><p class="lf-name">' + label + "</p>" +
+        '<div class="lf-bar"><span class="lf-seg trade" style="width:' + tw + '%"><span>Trading ' + usd(trade) + "</span></span>" +
+        '<span class="lf-seg cash" style="width:' + cw + '%"><span>Idle cash ' + usd(cash) + "</span></span></div>" +
+        '<p class="lf-n num">' + (dc ? "+" + usd(extra) + "<small>a year</small>" : "$0<small>a year</small>") + "</p></div>";
+    }
+    $("#lift-out").innerHTML = bar("Cash at 0%", false) + bar("Cash in digital credit", true) +
+      '<p class="fine">Example: a ' + usd(AMOUNT) + " account that sits " + Math.round(cw) + "% in cash on average. Extra income from the idle part only, at " +
+      f1(a) + "%, today's average yield of " + leadNames() + ". That adds about " + f1(extra / AMOUNT * 100) + " points to the whole account's yearly return. Simple interest, before tax.</p>";
+  }
+
+  // ---------- 5. backed by bitcoin ----------
   function renderBacked() {
     var cov = feed.coverage && feed.coverage.issuers;
     if (!cov || !cov.length) { $("#backed").hidden = true; return; }
@@ -299,14 +326,14 @@
       if (has(yrs)) {
         big = n(v(yrs), 1) + "<small>years</small>";
         what = "of dividends and interest covered by its bitcoin and cash. " + esc(c.issuer) + "'s own figure.";
-        if (has(btc)) two = "<b>" + n(v(btc), 0) + "</b> bitcoin held";
+        if (has(btc)) two = '<b class="num">' + n(v(btc), 0) + "</b> bitcoin held";
       } else if (has(btc)) {
         big = n(v(btc), 0) + "<small>bitcoin</small>";
         what = "held by " + esc(c.issuer) + ", by its own count.";
-        if (has(res)) two = "<b>" + n(v(res), 0) + " months</b> of dividends set aside in cash, " + esc(c.issuer) + "'s own figure";
+        if (has(res)) two = '<b class="num">' + n(v(res), 0) + " months</b> of dividends set aside in cash, " + esc(c.issuer) + "'s own figure";
       } else return "";
       var s = srcs[0];
-      return '<div class="bk"><h3 class="bk-iss">' + esc(c.issuer) + '</h3><p class="bk-big">' + big + '</p><p class="bk-what">' + what + "</p>" +
+      return '<div class="bk"><h3 class="bk-iss">' + esc(c.issuer) + '</h3><p class="bk-big num">' + big + '</p><p class="bk-what">' + what + "</p>" +
         (two ? '<p class="bk-two">' + two + "</p>" : "") +
         '<p class="bk-src"><a href="' + esc(s.source) + '" rel="noopener">' + esc(host(s.source)) + "</a>, as of " + day(s.as_of) + "</p></div>";
     }).join("");
@@ -314,35 +341,51 @@
     $("#backed-grid").innerHTML = html;
   }
 
-  // ---------- 5. your numbers ----------
+  // ---------- 6. calculator ----------
   function parseNum(s) { var x = Number(String(s).replace(/[$,\s]/g, "")); return isFinite(x) ? x : NaN; }
-  function renderYours() {
-    var amount = parseNum($("#in-amount").value), days = parseNum($("#in-days").value), out = $("#yours-out");
-    if (!(amount > 0) || !(days > 0) || Math.floor(days) !== days) {
-      out.innerHTML = '<p class="fine">Enter an amount above $0 and a whole number of days.</p>'; return;
+  function money(x) { return x >= 100 ? usd(x) : usd(x, 2); }
+  function renderCalc() {
+    var amount = parseNum($("#in-amount").value), out = $("#calc-out"), a = avgY(), tb = tbillY();
+    if (!(amount > 0)) { out.innerHTML = '<p class="fine">Enter an amount above $0.</p>'; return; }
+    if (a === null) { out.innerHTML = ""; return; }
+    function trio(y, cls, label) {
+      var yr = amount * y / 100;
+      return '<div class="co ' + cls + '"><p class="co-l">' + label + ' <span class="num">' + f1(y) + "%</span></p>" +
+        '<dl class="co-n"><div><dt>Per day</dt><dd class="num">' + money(yr / 365) + "</dd></div>" +
+        '<div><dt>Per month</dt><dd class="num">' + money(yr / 12) + "</dd></div>" +
+        '<div><dt>Per year</dt><dd class="num">' + money(yr) + "</dd></div></dl></div>";
     }
-    var res = compare(feed, amount, days, 100, KINDS.slice());
-    var rows = [], inf = inflation();
-    var tb = res.benchmarks.filter(function (b) { return b.id === "tbill_4w"; })[0];
-    if (inf) rows.push({ name: "Inflation takes", note: "US CPI, past year", y: v(inf), cls: "inf" });
-    if (tb && tb.yield_pct !== null) rows.push({ name: "T-bill", note: "4-week", y: tb.yield_pct, usd: tb.est_income_usd });
-    LEAD.forEach(function (t) {
-      var o = res.options.filter(function (r) { return r.ticker === t; })[0];
-      if (o) rows.push({ name: t, note: f1(o.yield_pct) + "% today", y: o.yield_pct, usd: o.est_income_usd, cls: "dc" });
-    });
-    rows.forEach(function (r) { if (r.usd === undefined) r.usd = round(amount * r.y / 100 * days / 365, 2); r.perDay = amount * r.y / 100 / 365; });
-    var max = Math.max.apply(null, rows.map(function (r) { return r.usd; }));
-    var big = amount * Math.max.apply(null, rows.map(function (r) { return r.y; })) / 100 / 365 >= 100;
-    var label = days === 365 ? "In a year" : "In " + n(days, 0) + " days";
-    out.innerHTML = '<div class="y-head"><span></span><span></span><span>' + label + "</span></div>" +
-      rows.map(function (r) {
-        return '<div class="y-row ' + (r.cls || "") + '"><span class="y-name">' + esc(r.name) + "<small>" + esc(r.note) + "</small></span>" +
-          '<span class="y-track"><i style="width:' + Math.max(1, r.usd / max * 100).toFixed(2) + '%"></i></span>' +
-          '<span class="y-n">' + usd(r.usd, r.usd >= 100 ? 0 : 2) + '<small class="y-d">' + usd(r.perDay, big ? 0 : 2) + " a day</small></span></div>";
-      }).join("");
+    out.innerHTML = trio(a, "dc", "Digital credit") + (tb !== null ? trio(tb, "tb", "T-bill") : "");
+    $("#calc-note").textContent = "Digital credit uses " + f1(a) + "%, the average of today's yields on " + leadNames() +
+      ". T-bill is the 4-week rate. At today's rates, simple interest, before tax. Prices move and issuers set the rates.";
+  }
+  function fromSlide() { $("#in-amount").value = n(+$("#in-slide").value, 0); renderCalc(); }
+  function fromInput() {
+    var x = parseNum($("#in-amount").value);
+    if (x > 0) $("#in-slide").value = Math.min(250000, Math.max(1000, x));
+    renderCalc();
   }
 
-  // ---------- 7. sources ----------
+  // ---------- 7. example exchange, from the compare tool ----------
+  function renderChat() {
+    var res = compare(feed, 8000, 90, 30, ["money_market", "preferred", "tbill"]);
+    var rows = res.options.filter(function (o) { return LEAD.indexOf(o.ticker) >= 0; });
+    var tb = res.benchmarks.filter(function (b) { return b.id === "tbill_4w"; })[0];
+    if (!rows.length) { $(".talk").hidden = true; return; }
+    var newer = rows.filter(function (o) { return o.flags.indexOf("short_history") >= 0; }).map(function (o) { return o.ticker; });
+    function line(name, y, inc, dc) {
+      return '<li class="' + (dc ? "dc" : "") + '"><span>' + esc(name) + '</span><span class="num">' + f1(y) + '%</span><span class="num">' + usd(inc) + "</span></li>";
+    }
+    $("#chat-bot").innerHTML = "<p>Over 90 days at today's rates, before tax:</p>" +
+      '<ul class="ans">' + rows.map(function (o) { return line(o.ticker, o.yield_pct, o.est_income_usd, true); }).join("") +
+      (tb && tb.yield_pct !== null ? line("4-week T-bill", tb.yield_pct, tb.est_income_usd, false) : "") + "</ul>" +
+      "<p>All three pay a dividend every business day and trade every market day. Prices move and the issuers set the rates" +
+      (newer.length ? "; " + newer.join(" and ") + (newer.length > 1 ? " are" : " is") + " newer, with a short record" : "") +
+      ". Tell me which, if any, and I'll set up the order for your approval.</p>";
+    $("#chat-tag").textContent = "Example from today's data, " + day(res.as_of);
+  }
+
+  // ---------- 8. sources ----------
   function renderSources() {
     var items = [];
     function add2(label, x) { if (x && x.source) items.push([label, x.source, x.as_of]); }
@@ -363,18 +406,58 @@
     }).join("") + '<li>Method for every number: <a href="../v1/method.json">method.json</a></li></ul>';
   }
 
-  function copy() {
-    var text = $("#cmd").textContent, msg = $("#copy-msg"), btn = $("#copy");
-    function blocked() {
-      var r = document.createRange(); r.selectNodeContents($("#cmd"));
-      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-      msg.textContent = "This browser blocked copying. The command is selected: press Ctrl+C or Cmd+C.";
-    }
-    if (!navigator.clipboard || !window.isSecureContext) return blocked();
-    navigator.clipboard.writeText(text).then(function () {
-      btn.textContent = "Copied"; msg.textContent = "";
-      setTimeout(function () { btn.textContent = "Copy"; }, 1800);
-    }, blocked);
+  // ---------- setup tabs and copy ----------
+  function selectTab(tab, focus) {
+    $$('[role="tab"]').forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      $("#" + t.getAttribute("aria-controls")).hidden = !on;
+    });
+    $("#copy-msg").textContent = "";
+    if (focus) tab.focus();
+  }
+  function initTabs() {
+    var tabs = $$('[role="tab"]');
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { selectTab(t, false); });
+      t.addEventListener("keydown", function (e) {
+        var k = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (k) { e.preventDefault(); selectTab(tabs[(i + k + tabs.length) % tabs.length], true); }
+      });
+    });
+    $$(".pane .copy").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var code = btn.parentNode.querySelector("code"), msg = $("#copy-msg");
+        function blocked() {
+          var r = document.createRange(); r.selectNodeContents(code);
+          var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+          msg.textContent = "This browser blocked copying. The text is selected: press Ctrl+C or Cmd+C.";
+        }
+        if (!navigator.clipboard || !window.isSecureContext) return blocked();
+        navigator.clipboard.writeText(code.textContent).then(function () {
+          btn.textContent = "Copied"; msg.textContent = "";
+          setTimeout(function () { btn.textContent = "Copy"; }, 1800);
+        }, blocked);
+      });
+    });
+  }
+
+  // ---------- type option switch ----------
+  function initTypeSwitch() {
+    var cur = document.documentElement.getAttribute("data-type");
+    $$(".typesw button").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-t") === cur ? "true" : "false");
+      b.addEventListener("click", function () {
+        var t = b.getAttribute("data-t");
+        try { localStorage.setItem("dp-type", t); } catch (e) {}
+        try { var u = new URL(location.href); u.searchParams.set("type", t); history.replaceState(null, "", u); } catch (e) {}
+        document.documentElement.setAttribute("data-type", t);
+        var f = $("#fonts"); if (f && window.DP_FONTS) f.href = "https://fonts.googleapis.com/css2?" + window.DP_FONTS[t] + "&display=swap";
+        $$(".typesw button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        if (feed) setTimeout(function () { drawEarn(false); drawPaid(); }, 300);
+      });
+    });
   }
 
   function getJSON(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); }
@@ -391,9 +474,10 @@
   function start(d) {
     feed = d[0]; scen = d[1];
     [d[2], d[3]].forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
-    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderBacked(); renderYours(); renderSources();
-    ["#in-amount", "#in-days"].forEach(function (s) { $(s).addEventListener("input", renderYours); });
-    $("#f-yours").addEventListener("submit", function (e) { e.preventDefault(); });
+    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderLift(); renderBacked(); renderCalc(); renderChat(); renderSources();
+    $("#in-amount").addEventListener("input", fromInput);
+    $("#in-slide").addEventListener("input", fromSlide);
+    $("#f-calc").addEventListener("submit", function (e) { e.preventDefault(); });
     var w = window.innerWidth, t;
     window.addEventListener("resize", function () {
       if (window.innerWidth === w) return; w = window.innerWidth;
@@ -401,7 +485,7 @@
     });
   }
 
-  $("#copy").addEventListener("click", copy);
+  initTabs(); initTypeSwitch();
   load("../v1/").catch(function () { return load("./v1-sample/"); }).then(start).catch(function (e) {
     $("#asof").innerHTML = '<span class="err">The feed did not load (' + esc(e.message) + "). Read the JSON files directly.</span>";
   });
