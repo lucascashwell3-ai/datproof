@@ -129,9 +129,11 @@
 
   var feed, scen, closes = {}, AMOUNT = 10000;
 
-  // ---------- dithered shading: 4x4 ordered (Bayer) dots, 2px cells, flat colour only ----------
-  // Level k (1-16) turns on the cells whose threshold is below k, so every level contains the one under it
-  // and a run of bands at rising levels reads as a 1-bit gradient. Green and blue only; orange stays flat.
+  // ---------- dithered shading ----------
+  // One ink system for green and blue: an 8x8 ordered (Bayer) dot pattern thresholded against a continuous
+  // tone, so every cell picks its own level (64 of them) and nothing steps in visible blocks.
+  // Dots mean digital credit; T-bills and cash stay flat grey. Orange stays flat.
+  // Canvas draws it; without canvas the static SVG patterns below are the fallback.
   var BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5], CELL = 2;
   function dithered() { return document.documentElement.getAttribute("data-color") !== "orange"; }
   function ditherDefs(svg, id, cls) {
@@ -145,27 +147,21 @@
     }
     svg.appendChild(defs);
   }
-  // Backdrop behind the first screen: dots thin out from the top-right corner.
-  function drawHeroDither() {
-    var old = $(".dz-hero"); if (old) old.parentNode.removeChild(old);
-    if (!dithered()) return;
-    var W = document.documentElement.clientWidth, R = Math.round(Math.min(W * 0.55, 780)), N = 12;
+  // Static fallbacks (no canvas): banded SVG versions of the backdrop, the section edge and the bars.
+  function svgHeroDither(W) {
+    var R = Math.round(Math.min(W * 0.55, 780)), N = 12;
     var svg = el("svg", { class: "dz dz-hero", width: W, height: R, viewBox: "0 0 " + W + " " + R, "aria-hidden": "true", focusable: "false" });
     ditherDefs(svg, "dzh", "dz-ink");
     for (var b = 0; b < N; b++) svg.appendChild(el("circle", { cx: W, cy: 0, r: Math.round(R * (1 - b / N)), fill: "url(#dzh" + (1 + Math.round(b * 9 / (N - 1))) + ")" }));
-    document.body.insertBefore(svg, document.body.firstChild);
+    return svg;
   }
-  // Top edge of "Connect your agent": a dot horizon that fades down into the section.
-  function drawEdgeDither() {
-    var sec = $("#agent"), old = sec.querySelector(".dz-edge"); if (old) sec.removeChild(old);
-    if (!dithered()) return;
-    var W = document.documentElement.clientWidth, H = 48, rows = 12;
+  function svgEdgeDither(W) {
+    var H = 48, rows = 12;
     var svg = el("svg", { class: "dz dz-edge", width: W, height: H, viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", "aria-hidden": "true", focusable: "false" });
     ditherDefs(svg, "dze", "dz-ink");
     for (var r = 0; r < rows; r++) svg.appendChild(el("rect", { x: 0, y: r * H / rows, width: W, height: H / rows, fill: "url(#dze" + Math.max(1, Math.round(10 - r * 10 / rows)) + ")" }));
-    sec.insertBefore(svg, sec.firstChild);
+    return svg;
   }
-  // A digital-credit bar: dots fill in from sparse at the left to solid at the value end.
   function ditherBar(x0, y, w, h) {
     var g = el("g", { class: "c-bar dc dz-bar" }), LV = [2, 4, 8, 12, 16], N = LV.length;
     for (var s = 0; s < N; s++) {
@@ -173,6 +169,301 @@
       g.appendChild(el("rect", { x: a, y: y, width: b - a, height: h, fill: "url(#dzc" + LV[s] + ")" }));
     }
     return g;
+  }
+
+  var DZ = (function () {
+    var probe = document.createElement("canvas"), ok = false;
+    try { ok = !!(probe.getContext && probe.getContext("2d") && window.ImageData && window.Uint32Array); } catch (e) {}
+    var mq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    function still() { return !!(mq && mq.matches); }
+
+    // 8x8 Bayer thresholds in (0, 1), built from the 2x2 rule M' = [[4M, 4M+2], [4M+3, 4M+1]].
+    var M = [0], s = 1;
+    while (s < 8) {
+      var nm = [];
+      for (var y = 0; y < s * 2; y++) for (var x = 0; x < s * 2; x++) {
+        var b = M[(y % s) * s + (x % s)] * 4;
+        nm[y * s * 2 + x] = b + [0, 2, 3, 1][(y >= s ? 2 : 0) + (x >= s ? 1 : 0)];
+      }
+      M = nm; s *= 2;
+    }
+    var TH = new Float32Array(64);
+    for (var q = 0; q < 64; q++) TH[q] = (M[q] + 0.5) / 64;
+    // Near empty and near solid the ordered pattern reads as a lattice (a visible edge). There, and only
+    // there, each cell's threshold leans toward a fixed per-cell random value so the fringe scatters.
+    var JT = new Float32Array(4096);
+    function th(cx, cy, v, J) {
+      var t = TH[(cy & 7) * 8 + (cx & 7)], f = v > 1 ? v - 1 : v, m = f < 0.5 ? f : 1 - f;
+      if (m >= 0.32) return t;
+      var k = m / 0.32, j = J * (1 - k * k * (3 - 2 * k));
+      return t + (JT[(cy & 63) * 64 + (cx & 63)] - t) * j;
+    }
+
+    // Cell size: a whole number of device pixels (crisp), about 1.5 CSS px on retina and 2 px at 1x.
+    function grid() {
+      var d = Math.min(window.devicePixelRatio || 1, 3);
+      var dev = d >= 1.75 ? Math.round(1.5 * d) : Math.max(1, Math.round(2 * d));
+      return { dpr: d, dev: dev, css: dev / d };
+    }
+
+    // CSS colour -> packed RGBA (little-endian ImageData word). Canvas resolves oklch for us.
+    var pc = document.createElement("canvas"); pc.width = pc.height = 1;
+    var px = ok ? pc.getContext("2d", { willReadFrequently: true }) : null;
+    function rgba(css) {
+      px.clearRect(0, 0, 1, 1); px.fillStyle = "rgba(0,0,0,0)"; px.fillStyle = css; px.fillRect(0, 0, 1, 1);
+      var d = px.getImageData(0, 0, 1, 1).data; return [d[0], d[1], d[2], d[3]];
+    }
+    function pack(c) { return ((c[3] << 24) | (c[2] << 16) | (c[1] << 8) | c[0]) >>> 0; }
+    function mix(a, b, t) { return [0, 1, 2, 3].map(function (i) { return Math.round(a[i] + (b[i] - a[i]) * t); }); }
+    function inks() {
+      var cs = getComputedStyle(document.documentElement);
+      var dz = rgba(cs.getPropertyValue("--dither").trim()), ac = rgba(cs.getPropertyValue("--accent").trim());
+      return { dim: pack(dz), mid: pack(mix(dz, ac, 0.38)), acc: pack(ac) };
+    }
+
+    // Smooth value noise, two octaves moving in different directions so the field changes shape, not position.
+    function hash(i, j) {
+      var h = Math.imul(i, 374761393) ^ Math.imul(j, 668265263);
+      h = Math.imul(h ^ (h >>> 13), 1274126177);
+      return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+    }
+    function vn(x, y) {
+      var i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+      var ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy);
+      var a = hash(i, j), b = hash(i + 1, j), c = hash(i, j + 1), d = hash(i + 1, j + 1);
+      return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
+    }
+    // Each octave is turned off the screen axes so the noise lattice never lines up into straight seams.
+    function weather(x, y, t, sc) {
+      var a = (0.866 * x + 0.5 * y) / sc, b = (-0.5 * x + 0.866 * y) / sc;
+      var c = (0.643 * x - 0.766 * y) / (sc * 0.55), d = (0.766 * x + 0.643 * y) / (sc * 0.55);
+      return 0.62 * vn(a + t * 0.034, b - t * 0.013) + 0.38 * vn(c - t * 0.05 + 5.2, d + t * 0.021 + 1.3);
+    }
+    for (var jq = 0; jq < 4096; jq++) JT[jq] = hash(jq & 63, (jq >> 6) + 977);
+    function sm(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+
+    // ---- live fields: canvas at one pixel per cell, scaled up pixel-exact by CSS ----
+    var layers = [], raf = 0, STEP = 1000 / 15, T0 = 0;
+    var io = window.IntersectionObserver ? new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.target._dz) e.target._dz.on = e.isIntersecting; });
+      wake();
+    }) : null;
+    function tick(now) {
+      raf = 0;
+      if (document.hidden || still()) return;
+      if (!T0) T0 = now;
+      var any = false;
+      layers.forEach(function (L) {
+        if (!L.on || !L.cv.isConnected) return;
+        any = true;
+        if (now - L.last >= STEP) { L.last = now; paintField(L, (now - T0) / 1000 + 40); }
+      });
+      if (any) raf = requestAnimationFrame(tick);
+    }
+    function wake() { if (!raf && !document.hidden && !still()) raf = requestAnimationFrame(tick); }
+    document.addEventListener("visibilitychange", wake);
+    if (mq && mq.addEventListener) mq.addEventListener("change", function () { layers.forEach(function (L) { paintField(L, 40); }); wake(); });
+
+    function paintField(L, t) {
+      var cw = L.cw, ch = L.ch, K = 4, gw = Math.ceil(cw / K) + 2, gh = Math.ceil(ch / K) + 2, c = L.cell;
+      if (!L.g || L.g.length !== gw * gh) L.g = new Float32Array(gw * gh);
+      var g = L.g, buf = L.buf, i1 = L.ink.dim, i2 = L.ink.mid;
+      for (var gy = 0; gy < gh; gy++) for (var gx = 0; gx < gw; gx++) g[gy * gw + gx] = L.field(gx * K * c, gy * K * c, t);
+      for (var y = 0; y < ch; y++) {
+        var gy0 = (y / K) | 0, fy = (y - gy0 * K) / K, r0 = gy0 * gw, r1 = r0 + gw, row = y * cw;
+        for (var x = 0; x < cw; x++) {
+          var gx0 = (x / K) | 0, fx = (x - gx0 * K) / K;
+          var a = g[r0 + gx0], b = g[r0 + gx0 + 1], cc = g[r1 + gx0], d = g[r1 + gx0 + 1];
+          var v = (a + (b - a) * fx) * (1 - fy) + (cc + (d - cc) * fx) * fy;
+          if (v <= 0.0005) { buf[row + x] = 0; continue; }
+          var t = th(x, y, v, 0.72);
+          buf[row + x] = v - 1 > t ? i2 : v > t ? i1 : 0;
+        }
+      }
+      L.ctx.putImageData(L.img, 0, 0);
+    }
+    function field(cls, cssW, cssH, fn, place) {
+      var G = grid(), cw = Math.max(1, Math.ceil(cssW / G.css)), ch = Math.max(1, Math.ceil(cssH / G.css));
+      var cv = document.createElement("canvas");
+      cv.className = "dz dz-cv " + cls; cv.setAttribute("aria-hidden", "true");
+      cv.width = cw; cv.height = ch;
+      cv.style.width = cw * G.css + "px"; cv.style.height = ch * G.css + "px";
+      var ctx = cv.getContext("2d"), img = ctx.createImageData(cw, ch);
+      var L = { cv: cv, ctx: ctx, img: img, buf: new Uint32Array(img.data.buffer), cw: cw, ch: ch, cell: G.css, field: fn, ink: inks(), on: !io, last: 0 };
+      cv._dz = L;
+      place(cv);
+      paintField(L, 40);
+      layers = layers.filter(function (x) { return x.cv.isConnected; });
+      layers.push(L);
+      if (io) io.observe(cv);
+      wake();
+      return cv;
+    }
+
+    // Backdrop behind the first screen: a tone that falls off from beyond the top-right corner, never
+    // reaching the headline or the chart, broken up by slow weather.
+    function hero(W) {
+      var phone = W < 640, R = phone ? W * 0.78 : Math.min(W * 0.6, 900);
+      var cx = W + R * (phone ? 0.2 : 0.06), cy = -R * (phone ? 0.24 : 0.1), left = Math.max(0, Math.floor(cx - R)), H = Math.ceil(cy + R);
+      return field("dz-hero", W - left, H, function (x, y, t) {
+        var X = x + left, dx = (X - cx) / R, dy = (y - cy) / R, d = Math.sqrt(dx * dx + dy * dy);
+        if (d >= 1) return 0;
+        var base = Math.pow(1 - sm(0.04, 1, d), 1.5), w = weather(X, y, t, 260);
+        return base * (0.3 + 1.05 * w);
+      }, function (cv) { cv.style.left = left + "px"; document.body.insertBefore(cv, document.body.firstChild); });
+    }
+    // Section edge: a soft band of dots, no straight line on either side, thinning at the screen edges.
+    function edge(sec, W) {
+      var H = 88;
+      return field("dz-edge", W, H, function (x, y, t) {
+        var h = y / H, w = weather(x, y * 2, t * 0.8, 230), w2 = weather(x + 900, 40, t * 0.5, 420);
+        var c = 0.28 + 0.3 * w2, sp = 0.1 + 0.16 * w, z = (h - c) / sp;
+        var prof = Math.exp(-z * z) * sm(0, 0.18, h) * (1 - sm(0.8, 1, h));
+        var ends = sm(0, 0.2, x / W) * sm(0, 0.2, 1 - x / W);
+        return prof * ends * (0.06 + 0.78 * w * w);
+      }, function (cv) { sec.insertBefore(cv, sec.firstChild); });
+    }
+
+    // ---- figure ink: device-pixel canvas behind a chart, dots snapped to one shared grid ----
+    function sheet(host, cssW, cssH, cls) {
+      var G = grid(), cv = host.querySelector(":scope > canvas.dz-ov");
+      if (!cv) { cv = document.createElement("canvas"); cv.className = "dz dz-ov " + (cls || ""); cv.setAttribute("aria-hidden", "true"); host.insertBefore(cv, host.firstChild); }
+      var w = Math.max(1, Math.round(cssW * G.dpr)), h = Math.max(1, Math.round(cssH * G.dpr));
+      if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+      cv.style.width = cssW + "px"; cv.style.height = cssH + "px";
+      var ctx = cv.getContext("2d"), img = ctx.createImageData(w, h);
+      host.classList.add("dz-host");
+      return { cv: cv, ctx: ctx, img: img, buf: new Uint32Array(img.data.buffer), w: w, h: h, G: G, ink: inks() };
+    }
+    // Fill a CSS-px rectangle with dots; tone(xCss, yCss) is read once per cell. Two inks: dim then bright.
+    function fill(S, x0, y0, x1, y1, tone, lo, hi, J) {
+      if (J === undefined) J = 0.3;
+      var G = S.G, dev = G.dev, dpr = G.dpr, buf = S.buf, W = S.w;
+      var X0 = Math.max(0, Math.round(x0 * dpr)), X1 = Math.min(W, Math.round(x1 * dpr));
+      var Y0 = Math.max(0, Math.round(y0 * dpr)), Y1 = Math.min(S.h, Math.round(y1 * dpr));
+      for (var cy = (Y0 / dev) | 0; cy * dev < Y1; cy++) {
+        var py0 = Math.max(Y0, cy * dev), py1 = Math.min(Y1, cy * dev + dev), ty = (cy + 0.5) * G.css;
+        for (var cx = (X0 / dev) | 0; cx * dev < X1; cx++) {
+          var v = tone((cx + 0.5) * G.css, ty), t = v > 0.0005 ? th(cx, cy, v, J) : 2;
+          var c = v - 1 > t ? hi : v > t ? lo : 0;
+          if (!c) continue;
+          var px0 = Math.max(X0, cx * dev), px1 = Math.min(X1, cx * dev + dev);
+          for (var py = py0; py < py1; py++) for (var p = py * W + px0, e = py * W + px1; p < e; p++) buf[p] = c;
+        }
+      }
+    }
+    function done(S) { S.ctx.putImageData(S.img, 0, 0); }
+
+    // Income bars: sparse dots at the start, solid at the value. Grows and resolves once on first view.
+    function bars(box, W, H, list, animate) {
+      var S = sheet(box, W, H);
+      function frame(p) {
+        S.buf.fill(0);
+        list.forEach(function (r, k) {
+          var e = Math.min(1, Math.max(0, (p - k * 0.07) / 0.86));
+          var grow = 1 - Math.pow(1 - e, 4), res = e * e * (3 - 2 * e);
+          var w = Math.max(2, r.w * (0.015 + 0.985 * grow)), x0 = r.x;
+          fill(S, x0, r.y, x0 + w, r.y + r.h, function (x) {
+            var u = (x - x0) / w, base = 0.2 + 0.8 * Math.pow(sm(0, 0.94, u), 1.5);
+            return base * (0.16 + 0.84 * res);
+          }, S.ink.acc, S.ink.acc);
+        });
+        done(S);
+      }
+      box.classList.add("dz-live");
+      if (!animate || still() || document.hidden) { frame(1); return; }
+      var t0 = 0, fin = false, D = 1500;
+      function finish() { if (!fin) { fin = true; frame(1); } }
+      function step(now) {
+        if (fin || !S.cv.isConnected) return;
+        if (document.hidden) return finish();
+        if (!t0) t0 = now;
+        var p = Math.min(1, (now - t0) / D);
+        frame(p);
+        if (p < 1) requestAnimationFrame(step); else fin = true;
+      }
+      frame(1);  // fully drawn until the moment actually starts
+      function go() { requestAnimationFrame(function (now) { if (!fin) { frame(0); requestAnimationFrame(step); } }); setTimeout(finish, D + 2500); }
+      var r0 = box.getBoundingClientRect();
+      if (r0.top < window.innerHeight && r0.bottom > 0) return go();
+      if (!io) return;
+      var o = new IntersectionObserver(function (es) {
+        if (es.some(function (e) { return e.intersectionRatio > 0.35; })) { o.disconnect(); go(); }
+      }, { threshold: [0.35] });
+      o.observe(box);
+    }
+    // Area under a price line: dense just under the line, thinning to nothing well above the floor.
+    function area(box, W, H, pts, floor) {
+      var S = sheet(box, W, H), n = pts.length, x0 = pts[0][0], x1 = pts[n - 1][0], j = 0;
+      var colY = new Float32Array(Math.ceil(W) + 2);
+      for (var cx = 0; cx < colY.length; cx++) {
+        while (j < n - 2 && pts[j + 1][0] < cx) j++;
+        var a = pts[j], b = pts[j + 1], u = b[0] === a[0] ? 0 : (cx - a[0]) / (b[0] - a[0]);
+        colY[cx] = a[1] + (b[1] - a[1]) * Math.min(1, Math.max(0, u));
+      }
+      var top = Math.min.apply(null, pts.map(function (p) { return p[1]; }));
+      fill(S, x0, top, x1, floor, function (x, y) {
+        var ly = colY[Math.max(0, Math.min(colY.length - 1, Math.round(x)))], dd = y - ly - 1.5;
+        if (dd < 0) return 0;
+        var depth = Math.max(36, (floor - ly) * 0.8);
+        var ends = sm(0, 18, x - x0) * sm(0, 18, x1 - x);
+        return 0.78 * Math.pow(1 - sm(0, depth, dd), 1.8) * ends;
+      }, S.ink.dim, S.ink.dim, 0.6);
+      done(S);
+    }
+    // Strip fill (risk figure, estimator): from sparse at the left to solid by `solidFrom` (0-1).
+    function strip(host, solidFrom) {
+      var W = host.clientWidth, H = host.clientHeight;
+      if (!W || !H) return;
+      var S = sheet(host, W, H);
+      fill(S, 0, 0, W, H, function (x) { return 0.2 + 0.8 * Math.pow(sm(0, solidFrom * W, x), 1.5); }, S.ink.acc, S.ink.acc);
+      done(S);
+      host.classList.add("dz-live");
+    }
+    function clear(host) {
+      var cv = host && host.querySelector(":scope > canvas.dz-ov");
+      if (cv) host.removeChild(cv);
+      if (host) host.classList.remove("dz-live", "dz-host");
+    }
+    return { ok: ok, still: still, hero: hero, edge: edge, bars: bars, area: area, strip: strip, clear: clear };
+  })();
+
+  // Backdrop behind the first screen.
+  function drawHeroDither() {
+    $$(".dz-hero").forEach(function (o) { o.parentNode.removeChild(o); });
+    if (!dithered()) return;
+    var W = document.documentElement.clientWidth;
+    if (DZ.ok) DZ.hero(W);
+    else document.body.insertBefore(svgHeroDither(W), document.body.firstChild);
+  }
+  // Soft dot horizons at the top of "Estimate your income" and "Connect your agent".
+  function drawEdgeDither() {
+    ["#calc", "#agent"].forEach(function (id) {
+      var sec = $(id); if (!sec) return;
+      var old = sec.querySelector(".dz-edge"); if (old) sec.removeChild(old);
+      if (!dithered()) return;
+      var W = document.documentElement.clientWidth;
+      if (DZ.ok) DZ.edge(sec, W);
+      else if (id === "#agent") sec.insertBefore(svgEdgeDither(W), sec.firstChild);
+    });
+  }
+  // Risk figure: the idle cash that earns is drawn in dots, solid where its label sits.
+  function inkLift() {
+    var seg = $(".lf-row.dc .lf-seg.cash");
+    if (!seg) return;
+    if (!DZ.ok || !dithered()) return DZ.clear(seg);
+    seg.classList.add("dz-live");  // label moves to the solid end before measuring
+    var lab = seg.firstElementChild, W = seg.clientWidth, lw = lab ? lab.offsetWidth + 24 : 0;
+    DZ.strip(seg, Math.max(0.35, Math.min(0.92, (W - lw) / W)));
+  }
+  // Estimator: a dotted rule over the digital-credit result, a flat grey one over the T-bill result.
+  function inkCalc() {
+    $$("#calc-out .co").forEach(function (co) {
+      var rule = co.querySelector(".co-ink");
+      if (!rule) { rule = document.createElement("div"); rule.className = "co-ink"; rule.setAttribute("aria-hidden", "true"); co.insertBefore(rule, co.firstChild); }
+      if (co.classList.contains("dc") && DZ.ok && dithered()) DZ.strip(rule, 0.9);
+      else DZ.clear(rule);
+    });
   }
 
   function bench(id) { return (feed.benchmarks || []).filter(function (b) { return b.id === id; })[0]; }
@@ -223,7 +514,7 @@
     var room = narrow ? 64 : 78;
     function x(u) { return L + (u / max) * (W - L - room); }
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
-    var infUsd = inf ? AMOUNT * v(inf) / 100 : null, dz = dithered();
+    var infUsd = inf ? AMOUNT * v(inf) / 100 : null, dz = dithered(), inkBars = [];
     if (dz) ditherDefs(svg, "dzc", "dz-acc");
     rows.forEach(function (r, i) {
       var y0 = top + i * rh, by = narrow ? y0 + 30 : y0 + (rh - bh) / 2;
@@ -236,7 +527,7 @@
         svg.appendChild(el("text", { x: 0, y: by + bh / 2 - 2, class: "c-name" }, r.name));
         svg.appendChild(el("text", { x: 0, y: by + bh / 2 + 14, class: "c-note" }, r.note));
       }
-      if (r.dc && dz) svg.appendChild(ditherBar(L, by, Math.max(2, x(r.usd) - L), bh));
+      if (r.dc && dz) { svg.appendChild(ditherBar(L, by, Math.max(2, x(r.usd) - L), bh)); inkBars.push({ x: L, y: by, w: Math.max(2, x(r.usd) - L), h: bh }); }
       else svg.appendChild(el("rect", { x: L, y: by, width: Math.max(2, x(r.usd) - L), height: bh, rx: 2, class: "c-bar" + (r.dc ? " dc" : "") }));
       svg.appendChild(el("text", { x: x(r.usd) + 10, y: by + bh / 2 + 5, class: "c-val" + (r.dc ? " dc" : "") }, usd(r.usd)));
     });
@@ -250,8 +541,11 @@
       svg.appendChild(el("text", { x: xi - 6, y: top - 18, class: "c-inf-t", "text-anchor": narrow ? "start" : "end" }, "Inflation: " + usd(infUsd)));
       if (narrow) svg.lastChild.setAttribute("x", Math.max(0, xi - 40));
     }
+    var keep = box.querySelector(":scope > canvas.dz-ov");
     box.innerHTML = "";
+    if (keep) box.appendChild(keep);
     box.appendChild(svg);
+    if (DZ.ok && inkBars.length) DZ.bars(box, W, H, inkBars, first); else DZ.clear(box);
     box.setAttribute("aria-label", "Annual income on $10,000 of idle cash: " + rows.map(function (r) { return r.name + " " + usd(r.usd) + " (" + r.note + ")"; }).join("; ") +
       (infUsd !== null ? ". Inflation: " + usd(infUsd) + "." : "."));
     if (first) box.classList.add("draw");
@@ -337,7 +631,9 @@
         svg.appendChild(el("text", { x: X(iso), y: H - 6, "text-anchor": "middle", class: "c-tick" },
           MONTHS[m.getUTCMonth()] + (m.getUTCMonth() === 0 ? " " + m.getUTCFullYear() : "")));
       }
-      box.innerHTML = ""; box.appendChild(svg);
+      var keep = box.querySelector(":scope > canvas.dz-ov");
+      box.innerHTML = ""; if (keep) box.appendChild(keep); box.appendChild(svg);
+      if (DZ.ok && dithered()) DZ.area(box, W, H, rows.map(function (r) { return [X(r[0]), Y(r[1])]; }), mt + ph); else DZ.clear(box);
       var none = !((o.i.payments || {}).gaps || []).length;
       var share = Math.round(nearShare(rows) * 100);
       box.setAttribute("aria-label", o.i.ticker + " closing price over the past year, with " + paid.length + " dividends paid. Within $5 of $100 on " + share + "% of days. " + usd(last[1], 2) + " today.");
@@ -361,6 +657,7 @@
     $("#lift-out").innerHTML = bar("Cash at 0%", false) + bar("Cash in digital credit", true) +
       '<p class="fine">Example: a ' + usd(AMOUNT) + " account that sits " + Math.round(cw) + "% in cash on average. Extra income from the idle part only, at " +
       f1(a) + "%, today's average yield of " + leadNames() + ". That adds about " + f1(extra / AMOUNT * 100) + " points to the whole account's yearly return. Simple interest, before tax.</p>";
+    inkLift();
   }
 
   // ---------- 5. backed by bitcoin ----------
@@ -404,6 +701,7 @@
         '<div><dt>Per year</dt><dd class="num">' + money(yr) + "</dd></div></dl></div>";
     }
     out.innerHTML = trio(a, "dc", "Digital credit") + (tb !== null ? trio(tb, "tb", "T-bill") : "");
+    inkCalc();
     $("#calc-note").textContent = "Digital credit uses " + f1(a) + "%, the average of today's yields on " + leadNames() +
       ". T-bill is the 4-week rate. At today's rates, simple interest, before tax. Prices move and issuers set the rates.";
   }
@@ -520,7 +818,7 @@
         document.documentElement.setAttribute("data-color", c);
         $$(".colorsw button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
         drawHeroDither(); drawEdgeDither();
-        if (feed) drawEarn(false);
+        if (feed) { drawEarn(false); drawPaid(); inkLift(); inkCalc(); }
       });
     });
   }
@@ -546,7 +844,7 @@
     var w = window.innerWidth, t;
     window.addEventListener("resize", function () {
       if (window.innerWidth === w) return; w = window.innerWidth;
-      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); drawHeroDither(); drawEdgeDither(); }, 120);
+      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); drawHeroDither(); drawEdgeDither(); inkLift(); inkCalc(); }, 120);
     });
   }
 
