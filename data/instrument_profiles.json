@@ -1,0 +1,149 @@
+{
+  "note": "What each instrument is built for, from the issuer's own filings only. Each fact cites the filing and the exact words it rests on. built_for follows only from rate_type, issuer_aims_price_near_100 and pay_schedule. A fact that could not be sourced is null with the reason. date is the document's own date, or its EDGAR filing date. quote is the exact wording; \"...\" marks words left out between two quoted parts. Facts only. Not advice.",
+  "read_on": "2026-11-14",
+  "instruments": {
+    "STRC": {
+      "issuer": "Strategy",
+      "rate_type": {
+        "value": "variable",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+        "date": "2025-07-24",
+        "quote": "The STRC Stock will accumulate cumulative dividends, which we refer to as “regular dividends,” at a variable rate per annum"
+      },
+      "issuer_aims_price_near_100": {
+        "value": true,
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+        "date": "2025-07-24",
+        "quote": "in our sole and absolute discretion, is to adjust the regular dividend rate in such a manner as we believe will maintain STRC Stock’s trading price at or close to its stated amount of $100 per share."
+      },
+      "pay_schedule": {
+        "value": "every business day",
+        "source": "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm",
+        "date": "2026-10-15",
+        "quote": "declared daily cash dividends on STRC for each calendar day ... Each daily dividend is payable on the business day immediately following its Record Date",
+        "condition": "The filing makes the daily schedule subject to the Daily Dividend Amendments being approved by stockholders at a special meeting."
+      },
+      "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100."
+    },
+    "SATA": {
+      "issuer": "Strive",
+      "rate_type": {
+        "value": "variable",
+        "source": "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+        "date": "2026-01-22",
+        "quote": "The SATA Stock accumulates cumulative dividends, which we refer to as “regular dividends,” at a variable rate per annum, calculated in the manner described below, on the stated amount thereof"
+      },
+      "issuer_aims_price_near_100": {
+        "value": true,
+        "source": "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+        "date": "2026-01-22",
+        "quote": "Our current intention, which is subject to change in our sole and absolute discretion, is to adjust the regular dividend rate in such a manner as we believe will maintain SATA Stock’s trading price within its stated long-term range of $95 and $105 per share."
+      },
+      "pay_schedule": {
+        "value": "every business day",
+        "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026034804/asst-20260514.htm",
+        "date": "2026-05-14",
+        "quote": "the frequency of regular dividend payments on SATA Stock shall be changed from a monthly basis to a per-Business Day ... Daily dividends will begin on June 16, 2026 and be paid if and when declared by the board of directors of the Company."
+      },
+      "built_for": "A variable rate the issuer says it adjusts to keep the price between $95 and $105, paid every business day: built for income with a price meant to stay near $100."
+    },
+    "SATS": {
+      "issuer": "Strive",
+      "rate_type": {
+        "value": "fixed",
+        "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026066608/asst-20261021.htm",
+        "date": "2026-10-21",
+        "quote": "The SATS Stock accrues cumulative dividends at a fixed rate of 15.00% per annum on the $100.00 stated amount per share,"
+      },
+      "issuer_aims_price_near_100": {
+        "value": false,
+        "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm",
+        "date": "2026-10-16",
+        "quote": "at a rate per annum equal to 15.00% on the stated amount thereof",
+        "basis": "The prospectus supplement sets one rate, 15.00% per annum, and states no aim to adjust the rate or to keep the price near $100. The issuer's filings read here do not use the words 'target trading range'; press reports that SATS has none are not used as a source."
+      },
+      "pay_schedule": {
+        "value": "every business day",
+        "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm",
+        "date": "2026-10-16",
+        "quote": "Each business day (as such term is defined in \"Description of SATS Stock\"), beginning on November 9, 2026,"
+      },
+      "offer_price_usd": {
+        "value": 90,
+        "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000095010326015690/dp255095_ex9901.htm",
+        "date": "2026-10-15",
+        "quote": "at a public offering price of $90 per share."
+      },
+      "built_for": "A fixed 15.00% rate on the $100 stated amount, with no stated aim to keep the price near $100, paid every business day: built for steady income, with the price free to move."
+    },
+    "STRF": {
+      "issuer": "Strategy",
+      "rate_type": {
+        "value": "fixed",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+        "date": "2025-03-21",
+        "quote": "at a rate per annum equal to 10.00% on the stated amount thereof"
+      },
+      "issuer_aims_price_near_100": {
+        "value": false,
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+        "date": "2025-03-21",
+        "quote": "10.00% Series A Perpetual Strife Preferred Stock",
+        "basis": "The security is named for one rate, 10.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100."
+      },
+      "pay_schedule": {
+        "value": "quarterly",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+        "date": "2025-03-21",
+        "quote": "quarterly in arrears on March 31, June 30, September 30 and December 31 of each year, beginning on June 30, 2025."
+      },
+      "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move."
+    },
+    "STRK": {
+      "issuer": "Strategy",
+      "rate_type": {
+        "value": "fixed",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm",
+        "date": "2025-02-03",
+        "quote": "at a rate per annum equal to 8.00% on the liquidation preference thereof"
+      },
+      "issuer_aims_price_near_100": {
+        "value": false,
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm",
+        "date": "2025-02-03",
+        "quote": "8.00% Series A Perpetual Strike Preferred Stock",
+        "basis": "The security is named for one rate, 8.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100."
+      },
+      "pay_schedule": {
+        "value": "quarterly",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm",
+        "date": "2025-02-03",
+        "quote": "quarterly in arrears on March 31, June 30, September 30 and December 31 of each year"
+      },
+      "built_for": "A fixed 8.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move."
+    },
+    "STRD": {
+      "issuer": "Strategy",
+      "rate_type": {
+        "value": "fixed",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm",
+        "date": "2025-06-06",
+        "quote": "at a rate per annum equal to 10.00% on the stated amount thereof"
+      },
+      "issuer_aims_price_near_100": {
+        "value": false,
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm",
+        "date": "2025-06-06",
+        "quote": "10.00% Series A Perpetual Stride Preferred Stock",
+        "basis": "The security is named for one rate, 10.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100."
+      },
+      "pay_schedule": {
+        "value": "quarterly",
+        "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm",
+        "date": "2025-06-06",
+        "quote": "payable quarterly in arrears on March 31, June 30, September 30 and December 31 of each year"
+      },
+      "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move."
+    }
+  }
+}

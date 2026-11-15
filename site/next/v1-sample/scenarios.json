@@ -806,54 +806,42 @@
         },
         "options": [
           {
-            "ticker": "SATS",
-            "name": "Strive Series S preferred",
-            "kind": "preferred",
-            "yield_pct": 15.477,
-            "est_income_usd": 381.62,
-            "worst_drop_pct": 3.581,
-            "close_usd": 96.915,
-            "par_usd": 100,
-            "stated_rate_pct": 15.0,
-            "schedule": "every business day",
-            "next_pay_date": "2026-11-16",
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "short_history"
-            ],
-            "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
-          },
-          {
-            "ticker": "STRD",
-            "name": "Strategy Stride preferred",
-            "kind": "preferred",
-            "yield_pct": 15.004,
-            "est_income_usd": 369.96,
-            "worst_drop_pct": 38.408,
-            "close_usd": 66.65,
-            "par_usd": 100,
-            "stated_rate_pct": 10.0,
-            "schedule": "quarterly",
-            "next_pay_date": null,
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "no_payment_in_window"
-            ],
-            "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strdKpiData"
-          },
-          {
             "ticker": "SATA",
             "name": "Strive Variable Rate Series A preferred",
             "kind": "preferred",
             "yield_pct": 13.302,
             "est_income_usd": 327.99,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 17.935,
+            "hold_odds": {
+              "days": 90,
+              "holds": 188,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-08-14",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 0.991,
+              "beat_tbill": 166,
+              "beat_tbill_pct": 88.3,
+              "lost": 12,
+              "lost_pct": 6.4,
+              "median_pct": 4.92,
+              "worst_pct": -11.53,
+              "worst_bought": "2026-03-27"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "variable",
+              "issuer_aims_price_near_100": true,
+              "pay_schedule": "every business day",
+              "built_for": "A variable rate the issuer says it adjusts to keep the price between $95 and $105, paid every business day: built for income with a price meant to stay near $100.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+                "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026034804/asst-20260514.htm"
+              ]
+            },
             "close_usd": 97.73,
             "par_usd": 100,
             "stated_rate_pct": 13.0,
@@ -869,33 +857,42 @@
             "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-07&toDate=2026-11-15"
           },
           {
-            "ticker": "STRK",
-            "name": "Strategy Strike preferred",
-            "kind": "preferred",
-            "yield_pct": 12.092,
-            "est_income_usd": 298.16,
-            "worst_drop_pct": 41.407,
-            "close_usd": 66.16,
-            "par_usd": 100,
-            "stated_rate_pct": 8.0,
-            "schedule": "quarterly",
-            "next_pay_date": null,
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "no_payment_in_window"
-            ],
-            "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strkKpiData"
-          },
-          {
             "ticker": "STRC",
             "name": "Strategy Stretch preferred",
             "kind": "preferred",
             "yield_pct": 12.011,
             "est_income_usd": 296.16,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 25.482,
+            "hold_odds": {
+              "days": 90,
+              "holds": 188,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-08-14",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 0.991,
+              "beat_tbill": 128,
+              "beat_tbill_pct": 68.1,
+              "lost": 57,
+              "lost_pct": 30.3,
+              "median_pct": 3.27,
+              "worst_pct": -22.53,
+              "worst_bought": "2026-03-30"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "variable",
+              "issuer_aims_price_near_100": true,
+              "pay_schedule": "every business day",
+              "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+                "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm"
+              ]
+            },
             "close_usd": 99.91,
             "par_usd": 100,
             "stated_rate_pct": 12.0,
@@ -910,12 +907,90 @@
             "rate_source": "https://api.strategy.com/btc/strcKpiData"
           },
           {
+            "ticker": "STRD",
+            "name": "Strategy Stride preferred",
+            "kind": "preferred",
+            "yield_pct": 15.004,
+            "est_income_usd": 369.96,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
+            "worst_drop_pct": 38.408,
+            "hold_odds": {
+              "days": 90,
+              "holds": 188,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-08-14",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 0.991,
+              "beat_tbill": 104,
+              "beat_tbill_pct": 55.3,
+              "lost": 73,
+              "lost_pct": 38.8,
+              "median_pct": 2.39,
+              "worst_pct": -28.39,
+              "worst_bought": "2026-03-27"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm"
+              ]
+            },
+            "close_usd": 66.65,
+            "par_usd": 100,
+            "stated_rate_pct": 10.0,
+            "schedule": "quarterly",
+            "next_pay_date": null,
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate"
+            ],
+            "as_of": "2026-11-13",
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strdKpiData"
+          },
+          {
             "ticker": "STRF",
             "name": "Strategy Strife preferred",
             "kind": "preferred",
             "yield_pct": 9.965,
             "est_income_usd": 245.71,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
             "worst_drop_pct": 23.833,
+            "hold_odds": {
+              "days": 90,
+              "holds": 188,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-08-14",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 0.991,
+              "beat_tbill": 96,
+              "beat_tbill_pct": 51.1,
+              "lost": 86,
+              "lost_pct": 45.7,
+              "median_pct": 1.19,
+              "worst_pct": -8.46,
+              "worst_bought": "2026-03-30"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
+              ]
+            },
             "close_usd": 100.35,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
@@ -923,13 +998,105 @@
             "next_pay_date": null,
             "flags": [
               "price_moves",
-              "issuer_sets_rate",
-              "no_payment_in_window"
+              "issuer_sets_rate"
             ],
             "as_of": "2026-11-13",
             "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
             "rate_source": "https://api.strategy.com/btc/strfKpiData"
+          },
+          {
+            "ticker": "STRK",
+            "name": "Strategy Strike preferred",
+            "kind": "preferred",
+            "yield_pct": 12.092,
+            "est_income_usd": 298.16,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
+            "worst_drop_pct": 41.407,
+            "hold_odds": {
+              "days": 90,
+              "holds": 188,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-08-14",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 0.991,
+              "beat_tbill": 68,
+              "beat_tbill_pct": 36.2,
+              "lost": 116,
+              "lost_pct": 61.7,
+              "median_pct": -5.01,
+              "worst_pct": -25.82,
+              "worst_bought": "2026-03-27"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 8.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm"
+              ]
+            },
+            "close_usd": 66.16,
+            "par_usd": 100,
+            "stated_rate_pct": 8.0,
+            "schedule": "quarterly",
+            "next_pay_date": null,
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate"
+            ],
+            "as_of": "2026-11-13",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strkKpiData"
+          },
+          {
+            "ticker": "SATS",
+            "name": "Strive Series S preferred",
+            "kind": "preferred",
+            "yield_pct": 15.477,
+            "est_income_usd": 381.62,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
+            "worst_drop_pct": 3.581,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 0 past holds of 90 days fit in 21 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "every business day",
+              "built_for": "A fixed 15.00% rate on the $100 stated amount, with no stated aim to keep the price near $100, paid every business day: built for steady income, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026066608/asst-20261021.htm",
+                "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm"
+              ]
+            },
+            "close_usd": 96.915,
+            "par_usd": 100,
+            "stated_rate_pct": 15.0,
+            "schedule": "every business day",
+            "next_pay_date": "2026-11-16",
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate",
+              "short_history",
+              "no_hold_odds"
+            ],
+            "as_of": "2026-11-13",
+            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
           }
+        ],
+        "summary": [
+          "SATA, 90-day holds over the past year: beat a T-bill 88% of the time, lost money 6% of the time, middle result +4.92%, worst -11.53%.",
+          "STRC, 90-day holds over the past year: beat a T-bill 68% of the time, lost money 30% of the time, middle result +3.27%, worst -22.53%.",
+          "STRD, 90-day holds over the past year: beat a T-bill 55% of the time, lost money 39% of the time, middle result +2.39%, worst -28.39%.",
+          "STRF, 90-day holds over the past year: beat a T-bill 51% of the time, lost money 46% of the time, middle result +1.19%, worst -8.46%.",
+          "STRK, 90-day holds over the past year: beat a T-bill 36% of the time, lost money 62% of the time, middle result -5.01%, worst -25.82%."
         ],
         "benchmarks": [
           {
@@ -971,7 +1138,8 @@
           }
         ],
         "excluded": [],
-        "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds."
+        "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds.",
+        "hold_odds_note": "Hold odds are how past holds of the same length turned out, from daily closes and paid dividends. Past results do not predict future results."
       },
       "past": {
         "days": 90,
@@ -1191,55 +1359,42 @@
         },
         "options": [
           {
-            "ticker": "SATS",
-            "name": "Strive Series S preferred",
-            "kind": "preferred",
-            "yield_pct": 15.477,
-            "est_income_usd": 19081.23,
-            "worst_drop_pct": 3.581,
-            "close_usd": 96.915,
-            "par_usd": 100,
-            "stated_rate_pct": 15.0,
-            "schedule": "every business day",
-            "next_pay_date": "2026-11-16",
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "short_history"
-            ],
-            "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
-          },
-          {
-            "ticker": "STRD",
-            "name": "Strategy Stride preferred",
-            "kind": "preferred",
-            "yield_pct": 15.004,
-            "est_income_usd": 18498.08,
-            "worst_drop_pct": 38.408,
-            "close_usd": 66.65,
-            "par_usd": 100,
-            "stated_rate_pct": 10.0,
-            "schedule": "quarterly",
-            "next_pay_date": null,
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
-            ],
-            "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strdKpiData"
-          },
-          {
             "ticker": "SATA",
             "name": "Strive Variable Rate Series A preferred",
             "kind": "preferred",
             "yield_pct": 13.302,
             "est_income_usd": 16399.73,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 17.935,
+            "hold_odds": {
+              "days": 180,
+              "holds": 126,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-05-15",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 1.982,
+              "beat_tbill": 120,
+              "beat_tbill_pct": 95.2,
+              "lost": 2,
+              "lost_pct": 1.6,
+              "median_pct": 9.06,
+              "worst_pct": -0.47,
+              "worst_bought": "2025-12-30"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "variable",
+              "issuer_aims_price_near_100": true,
+              "pay_schedule": "every business day",
+              "built_for": "A variable rate the issuer says it adjusts to keep the price between $95 and $105, paid every business day: built for income with a price meant to stay near $100.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+                "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026034804/asst-20260514.htm"
+              ]
+            },
             "close_usd": 97.73,
             "par_usd": 100,
             "stated_rate_pct": 13.0,
@@ -1255,26 +1410,54 @@
             "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-07&toDate=2026-11-15"
           },
           {
-            "ticker": "STRK",
-            "name": "Strategy Strike preferred",
+            "ticker": "STRF",
+            "name": "Strategy Strife preferred",
             "kind": "preferred",
-            "yield_pct": 12.092,
-            "est_income_usd": 14907.95,
-            "worst_drop_pct": 41.407,
-            "close_usd": 66.16,
+            "yield_pct": 9.965,
+            "est_income_usd": 12285.62,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
+            "worst_drop_pct": 23.833,
+            "hold_odds": {
+              "days": 180,
+              "holds": 126,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-05-15",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 1.982,
+              "beat_tbill": 78,
+              "beat_tbill_pct": 61.9,
+              "lost": 36,
+              "lost_pct": 28.6,
+              "median_pct": 4.91,
+              "worst_pct": -13.65,
+              "worst_bought": "2025-12-29"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
+              ]
+            },
+            "close_usd": 100.35,
             "par_usd": 100,
-            "stated_rate_pct": 8.0,
+            "stated_rate_pct": 10.0,
             "schedule": "quarterly",
             "next_pay_date": null,
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
+              "thin_trading"
             ],
             "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strkKpiData"
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strfKpiData"
           },
           {
             "ticker": "STRC",
@@ -1282,7 +1465,37 @@
             "kind": "preferred",
             "yield_pct": 12.011,
             "est_income_usd": 14808.08,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 25.482,
+            "hold_odds": {
+              "days": 180,
+              "holds": 126,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-05-15",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 1.982,
+              "beat_tbill": 80,
+              "beat_tbill_pct": 63.5,
+              "lost": 32,
+              "lost_pct": 25.4,
+              "median_pct": 3.59,
+              "worst_pct": -18.92,
+              "worst_bought": "2025-12-30"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "variable",
+              "issuer_aims_price_near_100": true,
+              "pay_schedule": "every business day",
+              "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+                "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm"
+              ]
+            },
             "close_usd": 99.91,
             "par_usd": 100,
             "stated_rate_pct": 12.0,
@@ -1297,13 +1510,42 @@
             "rate_source": "https://api.strategy.com/btc/strcKpiData"
           },
           {
-            "ticker": "STRF",
-            "name": "Strategy Strife preferred",
+            "ticker": "STRD",
+            "name": "Strategy Stride preferred",
             "kind": "preferred",
-            "yield_pct": 9.965,
-            "est_income_usd": 12285.62,
-            "worst_drop_pct": 23.833,
-            "close_usd": 100.35,
+            "yield_pct": 15.004,
+            "est_income_usd": 18498.08,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
+            "worst_drop_pct": 38.408,
+            "hold_odds": {
+              "days": 180,
+              "holds": 126,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-05-15",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 1.982,
+              "beat_tbill": 36,
+              "beat_tbill_pct": 28.6,
+              "lost": 81,
+              "lost_pct": 64.3,
+              "median_pct": -2.55,
+              "worst_pct": -24.01,
+              "worst_bought": "2025-12-30"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm"
+              ]
+            },
+            "close_usd": 66.65,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
             "schedule": "quarterly",
@@ -1311,13 +1553,106 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
+              "thin_trading"
             ],
             "as_of": "2026-11-13",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strfKpiData"
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strdKpiData"
+          },
+          {
+            "ticker": "STRK",
+            "name": "Strategy Strike preferred",
+            "kind": "preferred",
+            "yield_pct": 12.092,
+            "est_income_usd": 14907.95,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
+            "worst_drop_pct": 41.407,
+            "hold_odds": {
+              "days": 180,
+              "holds": 126,
+              "bought_from": "2025-11-13",
+              "bought_to": "2026-05-15",
+              "closes_from": "2025-11-13",
+              "tbill_pct": 4.02,
+              "tbill_hold_pct": 1.982,
+              "beat_tbill": 25,
+              "beat_tbill_pct": 19.8,
+              "lost": 97,
+              "lost_pct": 77.0,
+              "median_pct": -6.71,
+              "worst_pct": -29.21,
+              "worst_bought": "2025-12-29"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 8.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm"
+              ]
+            },
+            "close_usd": 66.16,
+            "par_usd": 100,
+            "stated_rate_pct": 8.0,
+            "schedule": "quarterly",
+            "next_pay_date": null,
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate",
+              "thin_trading"
+            ],
+            "as_of": "2026-11-13",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strkKpiData"
+          },
+          {
+            "ticker": "SATS",
+            "name": "Strive Series S preferred",
+            "kind": "preferred",
+            "yield_pct": 15.477,
+            "est_income_usd": 19081.23,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
+            "worst_drop_pct": 3.581,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 0 past holds of 180 days fit in 21 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "every business day",
+              "built_for": "A fixed 15.00% rate on the $100 stated amount, with no stated aim to keep the price near $100, paid every business day: built for steady income, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026066608/asst-20261021.htm",
+                "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm"
+              ]
+            },
+            "close_usd": 96.915,
+            "par_usd": 100,
+            "stated_rate_pct": 15.0,
+            "schedule": "every business day",
+            "next_pay_date": "2026-11-16",
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate",
+              "short_history",
+              "no_hold_odds"
+            ],
+            "as_of": "2026-11-13",
+            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+            "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
           }
+        ],
+        "summary": [
+          "SATA, 180-day holds over the past year: beat a T-bill 95% of the time, lost money 2% of the time, middle result +9.06%, worst -0.47%.",
+          "STRF, 180-day holds over the past year: beat a T-bill 62% of the time, lost money 29% of the time, middle result +4.91%, worst -13.65%.",
+          "STRC, 180-day holds over the past year: beat a T-bill 63% of the time, lost money 25% of the time, middle result +3.59%, worst -18.92%.",
+          "STRD, 180-day holds over the past year: beat a T-bill 29% of the time, lost money 64% of the time, middle result -2.55%, worst -24.01%.",
+          "STRK, 180-day holds over the past year: beat a T-bill 20% of the time, lost money 77% of the time, middle result -6.71%, worst -29.21%."
         ],
         "benchmarks": [
           {
@@ -1359,7 +1694,8 @@
           }
         ],
         "excluded": [],
-        "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds."
+        "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds.",
+        "hold_odds_note": "Hold odds are how past holds of the same length turned out, from daily closes and paid dividends. Past results do not predict future results."
       },
       "past": {
         "days": 180,
@@ -1584,7 +1920,22 @@
             "kind": "preferred",
             "yield_pct": 15.477,
             "est_income_usd": 15477.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 3.581,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 0 past holds of 365 days fit in 21 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "every business day",
+              "built_for": "A fixed 15.00% rate on the $100 stated amount, with no stated aim to keep the price near $100, paid every business day: built for steady income, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026066608/asst-20261021.htm",
+                "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm"
+              ]
+            },
             "close_usd": 96.915,
             "par_usd": 100,
             "stated_rate_pct": 15.0,
@@ -1593,7 +1944,8 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "short_history"
+              "short_history",
+              "no_hold_odds"
             ],
             "as_of": "2026-11-13",
             "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
@@ -1605,7 +1957,21 @@
             "kind": "preferred",
             "yield_pct": 15.004,
             "est_income_usd": 15004.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
             "worst_drop_pct": 38.408,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm"
+              ]
+            },
             "close_usd": 66.65,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
@@ -1614,8 +1980,8 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
+              "no_hold_odds",
+              "thin_trading"
             ],
             "as_of": "2026-11-13",
             "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
@@ -1627,7 +1993,22 @@
             "kind": "preferred",
             "yield_pct": 13.302,
             "est_income_usd": 13302.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 17.935,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "variable",
+              "issuer_aims_price_near_100": true,
+              "pay_schedule": "every business day",
+              "built_for": "A variable rate the issuer says it adjusts to keep the price between $95 and $105, paid every business day: built for income with a price meant to stay near $100.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+                "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026034804/asst-20260514.htm"
+              ]
+            },
             "close_usd": 97.73,
             "par_usd": 100,
             "stated_rate_pct": 13.0,
@@ -1636,6 +2017,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "no_hold_odds",
               "stale"
             ],
             "as_of": "2026-11-13",
@@ -1648,7 +2030,21 @@
             "kind": "preferred",
             "yield_pct": 12.092,
             "est_income_usd": 12092.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
             "worst_drop_pct": 41.407,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 8.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm"
+              ]
+            },
             "close_usd": 66.16,
             "par_usd": 100,
             "stated_rate_pct": 8.0,
@@ -1657,8 +2053,8 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
+              "no_hold_odds",
+              "thin_trading"
             ],
             "as_of": "2026-11-13",
             "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
@@ -1670,7 +2066,22 @@
             "kind": "preferred",
             "yield_pct": 12.011,
             "est_income_usd": 12011.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-11-16",
             "worst_drop_pct": 25.482,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "variable",
+              "issuer_aims_price_near_100": true,
+              "pay_schedule": "every business day",
+              "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+                "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm"
+              ]
+            },
             "close_usd": 99.91,
             "par_usd": 100,
             "stated_rate_pct": 12.0,
@@ -1678,7 +2089,8 @@
             "next_pay_date": "2026-11-16",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "no_hold_odds"
             ],
             "as_of": "2026-11-13",
             "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
@@ -1690,7 +2102,21 @@
             "kind": "preferred",
             "yield_pct": 9.965,
             "est_income_usd": 9965.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "next pay date 2026-12-31 projected from the quarterly schedule (last paid 2026-09-30)",
             "worst_drop_pct": 23.833,
+            "hold_odds": null,
+            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
+              ]
+            },
             "close_usd": 100.35,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
@@ -1699,14 +2125,15 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
+              "no_hold_odds",
+              "thin_trading"
             ],
             "as_of": "2026-11-13",
             "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
             "rate_source": "https://api.strategy.com/btc/strfKpiData"
           }
         ],
+        "summary": [],
         "benchmarks": [
           {
             "id": "tbill_4w",
@@ -1747,7 +2174,8 @@
           }
         ],
         "excluded": [],
-        "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds."
+        "note": "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its $100 par and its issuer sets the rate; income figures assume today's yield holds.",
+        "hold_odds_note": "Hold odds are how past holds of the same length turned out, from daily closes and paid dividends. Past results do not predict future results."
       },
       "past": {
         "days": 365,

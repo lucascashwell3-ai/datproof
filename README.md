@@ -39,7 +39,12 @@ its source and date; a number that could not be fetched is empty, with the reaso
   `days/<date>.json`.
 - **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
   and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
-  returns each option's yield and estimated income next to its flags, plus the benchmarks.
+  returns each option's hold odds for exactly those days (how past holds of that length turned
+  out: share that beat a T-bill, share that lost money, middle and worst result), what it is
+  built for (rate type, whether the issuer aims to keep the price near $100, pay schedule, each
+  sourced to the issuer's filing in `data/instrument_profiles.json`), its yield and estimated
+  income (0 with the reason when no payment lands inside the days) next to its flags, a short
+  quotable summary, plus the benchmarks.
 - **Scenarios** show what $10,000 did over the past 30, 90, 180 and 365 days in each
   preferred stock (dividends paid, price change, lowest point and its date), beside the T-bill
   and money market fund at today's rate, plus three named situations. Past results do not

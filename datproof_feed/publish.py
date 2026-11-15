@@ -1,7 +1,8 @@
 """Write the public /v1/ files from a day's snapshot.
 
-    instruments.json          the snapshot without the dividend lists and daily closes
-    instrument/<TICKER>.json  one instrument, with its dividends and daily closes
+    instruments.json          the snapshot without the dividend lists and daily closes, plus each
+                              instrument's hold odds for 7, 30, 90, 180 and 365 days
+    instrument/<TICKER>.json  one instrument, with its dividends, daily closes and hold odds
     changes.json              what changed day to day, newest first, 90 entries at most
     method.json               every formula, flag and source in plain words (from compare.METHOD
                               and scenarios.METHOD)
@@ -15,7 +16,7 @@ import json
 import pathlib
 
 from datproof_feed import scenarios
-from datproof_feed.compare import METHOD
+from datproof_feed.compare import METHOD, _tbill_pct, hold_odds_table
 
 MAX_CHANGES = 90
 
@@ -67,10 +68,12 @@ def publish(snap: dict, out, prev: dict | None) -> None:
     out = pathlib.Path(out)
     (out / "instrument").mkdir(parents=True, exist_ok=True)
 
+    tbill = _tbill_pct(snap)
+    full = [{**i, "hold_odds": hold_odds_table(i, tbill)} for i in snap.get("instruments", [])]
     lean = {**snap, "instruments": [{k: v for k, v in i.items() if k not in ("dividends", "closes")}
-                                    for i in snap.get("instruments", [])]}
+                                    for i in full]}
     (out / "instruments.json").write_text(_dump(lean))
-    for ins in snap.get("instruments", []):
+    for ins in full:
         (out / "instrument" / f"{ins['ticker']}.json").write_text(_dump({"date": snap["date"], **ins}))
 
     path = out / "changes.json"

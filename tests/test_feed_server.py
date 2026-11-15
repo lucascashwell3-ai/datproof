@@ -46,7 +46,11 @@ def test_initialize_list_and_call_compare_over_stdio(feed_dir):
     assert names == ["compare", "instrument", "instruments", "changes", "scenarios", "method"]
     res = replies[2]["result"]
     assert res["isError"] is False
-    assert json.loads(res["content"][0]["text"]) == compare(SNAP, 20000, 90, 10, ["preferred", "tbill"])
+    published = json.loads((feed_dir / "instruments.json").read_text())
+    for ins in published["instruments"]:  # the server merges each instrument's closes and dividends
+        one = json.loads((feed_dir / "instrument" / f"{ins['ticker']}.json").read_text())
+        ins.update({k: one[k] for k in ("closes", "dividends") if k in one})
+    assert json.loads(res["content"][0]["text"]) == compare(published, 20000, 90, 10, ["preferred", "tbill"])
 
 
 def test_other_tools_ping_and_errors(feed_dir):

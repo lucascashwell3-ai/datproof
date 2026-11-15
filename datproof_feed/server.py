@@ -26,9 +26,15 @@ TICKER = re.compile(r"^[A-Z]{1,6}$")
 TOOLS = [
     {"name": "compare",
      "description": "Line up today's places for idle US-dollar cash: bitcoin-backed preferred stocks "
-                    "that fit the owner's limits, with yield, estimated income and risk flags on each row, "
-                    "beside the T-bill, money market and USDC lending benchmarks. Every number has its "
-                    "source and date. Facts and arithmetic only; not advice.",
+                    "that fit the owner's limits, beside the T-bill, money market and USDC lending "
+                    "benchmarks. Each option carries hold odds for exactly the days asked (how past holds "
+                    "of that length turned out: share that beat a T-bill, share that lost money, middle "
+                    "and worst result), what it is built for (fixed or variable rate, whether the issuer "
+                    "aims to keep the price near $100, pay schedule, each from the issuer's filing), "
+                    "yield, estimated income (0 with the reason when no payment lands inside the days) "
+                    "and risk flags. Options with hold odds come first, by middle result; `summary` has "
+                    "one quotable sentence per option. Match the instrument to how long the cash will "
+                    "sit. Every number has its source and date. Facts and arithmetic only; not advice.",
      "inputSchema": {"type": "object", "properties": {
          "amount_usd": {"type": "number", "exclusiveMinimum": 0, "description": "cash to place, in US dollars"},
          "days": {"type": "integer", "minimum": 1, "description": "how long it can stay placed"},
@@ -83,11 +89,29 @@ def price_gate(tool: str) -> None:
     return None
 
 
+def feed_with_history() -> dict:
+    """instruments.json plus each preferred's daily closes and dividends from instrument/<T>.json, so
+    compare can work out hold odds for any number of days. If an instrument file cannot be read,
+    compare falls back to the hold odds published in instruments.json for the standard periods."""
+    feed = load("instruments.json")
+    for ins in feed.get("instruments", []):
+        if ins.get("kind") != "preferred" or not TICKER.match(str(ins.get("ticker", ""))):
+            continue
+        try:
+            one = load(f"instrument/{ins['ticker']}.json")
+        except ToolError:
+            continue
+        for k in ("closes", "dividends"):
+            if k in one:
+                ins[k] = one[k]
+    return feed
+
+
 def call_tool(name: str, args: dict):
     price_gate(name)
     if name == "compare":
         try:
-            return cmp.compare(load("instruments.json"), args.get("amount_usd"), args.get("days"),
+            return cmp.compare(feed_with_history(), args.get("amount_usd"), args.get("days"),
                                args.get("max_drop_pct"), list(args.get("kinds") or cmp.KINDS))
         except ValueError as e:
             raise ToolError(str(e)) from e
@@ -123,7 +147,8 @@ def handle(msg: dict) -> dict | None:
         return ok({"protocolVersion": params.get("protocolVersion") or FALLBACK_PROTOCOL,
                    "capabilities": {"tools": {"listChanged": False}}, "serverInfo": SERVER_INFO,
                    "instructions": "Facts and arithmetic on where idle cash can sit. Not advice. "
-                                   "Show benchmarks and risk flags with every yield."})
+                                   "Show benchmarks, risk flags and hold odds with every yield. Match "
+                                   "the instrument to how long the cash will sit."})
     if method == "ping":
         return ok({})
     if method == "tools/list":

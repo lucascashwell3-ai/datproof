@@ -55,6 +55,20 @@
     "reason": null
   },
   "trading_days": 252,
+  "schedule": "quarterly",
+  "next_pay_date": null,
+  "payments": {
+    "paid": 6,
+    "in_a_row": 6,
+    "gaps": [],
+    "last_paid": "2026-09-30"
+  },
+  "cross_check": "no issuer list",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate"
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks",
   "closes": {
     "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
     "fetched_at": "2026-11-14T21:43:40Z",
@@ -1070,19 +1084,6 @@
       ]
     ]
   },
-  "schedule": "quarterly",
-  "next_pay_date": null,
-  "payments": {
-    "paid": 6,
-    "in_a_row": 6,
-    "gaps": [],
-    "last_paid": "2026-09-30"
-  },
-  "cross_check": "no issuer list",
-  "flags": [
-    "price_moves",
-    "issuer_sets_rate"
-  ],
   "dividends": [
     {
       "ex": "2025-06-13",
@@ -1115,5 +1116,103 @@
       "usd": 2.5
     }
   ],
-  "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
+  "profile": {
+    "issuer": "Strategy",
+    "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+    "rate_type": {
+      "value": "fixed",
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+      "date": "2025-03-21",
+      "quote": "at a rate per annum equal to 10.00% on the stated amount thereof",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "issuer_aims_price_near_100": {
+      "value": false,
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+      "date": "2025-03-21",
+      "quote": "10.00% Series A Perpetual Strife Preferred Stock",
+      "basis": "The security is named for one rate, 10.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "pay_schedule": {
+      "value": "quarterly",
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+      "date": "2025-03-21",
+      "quote": "quarterly in arrears on March 31, June 30, September 30 and December 31 of each year, beginning on June 30, 2025.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    }
+  },
+  "hold_odds": {
+    "7": {
+      "days": 7,
+      "holds": 247,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-11-06",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.077,
+      "beat_tbill": 126,
+      "beat_tbill_pct": 51.0,
+      "lost": 112,
+      "lost_pct": 45.3,
+      "median_pct": 0.08,
+      "worst_pct": -10.09,
+      "worst_bought": "2025-11-13"
+    },
+    "30": {
+      "days": 30,
+      "holds": 230,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-10-14",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.33,
+      "beat_tbill": 117,
+      "beat_tbill_pct": 50.9,
+      "lost": 102,
+      "lost_pct": 44.3,
+      "median_pct": 0.53,
+      "worst_pct": -14.21,
+      "worst_bought": "2026-05-27"
+    },
+    "90": {
+      "days": 90,
+      "holds": 188,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-08-14",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.991,
+      "beat_tbill": 96,
+      "beat_tbill_pct": 51.1,
+      "lost": 86,
+      "lost_pct": 45.7,
+      "median_pct": 1.19,
+      "worst_pct": -8.46,
+      "worst_bought": "2026-03-30"
+    },
+    "180": {
+      "days": 180,
+      "holds": 126,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-05-15",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 1.982,
+      "beat_tbill": 78,
+      "beat_tbill_pct": 61.9,
+      "lost": 36,
+      "lost_pct": 28.6,
+      "median_pct": 4.91,
+      "worst_pct": -13.65,
+      "worst_bought": "2025-12-29"
+    },
+    "365": {
+      "days": 365,
+      "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+    }
+  }
 }

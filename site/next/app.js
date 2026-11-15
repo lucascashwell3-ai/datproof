@@ -4,11 +4,14 @@
 
   // ---- compare: a port of datproof_feed/compare.py. Keep the two in step. ----
   var KINDS = ["preferred", "tbill", "money_market", "usdc_lending"];
-  var FLAG_ORDER = ["price_moves", "issuer_sets_rate", "short_history", "thin_trading", "payment_gap",
-    "no_payment_in_window", "stale", "not_bank_insured", "smart_contract_risk"];
+  var FLAG_ORDER = ["price_moves", "issuer_sets_rate", "short_history", "no_hold_odds", "thin_trading",
+    "payment_gap", "no_payment_in_window", "stale", "not_bank_insured", "smart_contract_risk"];
   var SHORT_HISTORY_DAYS = 90, THIN_TRADING_SHARE = 0.01;
+  var MIN_HOLDS = 60, PAST_YEAR_DAYS = 360, PROJECT_MONTHS = { monthly: 1, quarterly: 3 };
   var NOTE = "Facts and arithmetic only. Not advice. A preferred stock's price can fall below its " +
     "$100 par and its issuer sets the rate; income figures assume today's yield holds.";
+  var HOLD_NOTE = "Hold odds are how past holds of the same length turned out, from daily closes and paid " +
+    "dividends. Past results do not predict future results.";
 
   function isObj(x) { return x !== null && typeof x === "object" && !Array.isArray(x); }
   function v(x) { return isObj(x) ? (x.value === undefined ? null : x.value) : (x === undefined ? null : x); }
@@ -36,6 +39,94 @@
     if (bad.length) throw new Error("unknown kinds " + bad.join(", "));
   }
 
+  function daysBetween(a, b) { return Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 864e5); }
+  function addMonths(iso, n) {
+    var p = iso.split("-").map(Number), t = p[1] - 1 + n, y = p[0] + Math.floor(t / 12), m = t - 12 * Math.floor(t / 12) + 1;
+    var last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    var monthEnd = addDays(iso, 1).slice(5, 7) !== iso.slice(5, 7);
+    var d = monthEnd ? last : Math.min(p[2], last);
+    return y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
+  }
+  function payInHold(ins, asOf, days) {
+    var end = addDays(asOf, days), nxt = ins.next_pay_date;
+    if (nxt) return [nxt <= end, "declared next pay date " + nxt];
+    var sched = ins.schedule, last = (ins.payments || {}).last_paid;
+    if (PROJECT_MONTHS.hasOwnProperty(sched) && last) {
+      var d = last;
+      while (d <= asOf) d = addMonths(d, PROJECT_MONTHS[sched]);
+      return [d <= end, "next pay date " + d + " projected from the " + sched + " schedule (last paid " + last + ")"];
+    }
+    return [false, "no declared or projected pay date"];
+  }
+  function share(k, n) { return Math.floor((2000 * k + n) / (2 * n)) / 10; }
+  function whole(k, n) { return Math.floor((200 * k + n) / (2 * n)); }
+  function median(xs) {
+    var s = xs.slice().sort(function (a, b) { return a - b; }), m = Math.floor(s.length / 2);
+    return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  }
+  function holds(ins, days) {
+    var rows = ((ins.closes || {}).rows || []).map(function (r) { return [String(r[0]).slice(0, 10), Number(r[1])]; });
+    var divs = (ins.dividends || []).map(function (x) { return [x.ex, Number(x.usd)]; });
+    if (!rows.length) return [];
+    var last = rows[rows.length - 1][0], out = [], j = 0;
+    for (var i = 0; i < rows.length; i++) {
+      var d0 = rows[i][0], c0 = rows[i][1], end = addDays(d0, days);
+      if (end > last) break;
+      j = Math.max(j, i);
+      while (j + 1 < rows.length && rows[j + 1][0] <= end) j++;
+      var dv = divs.reduce(function (s, x) { return x[0] > d0 && x[0] <= end ? s + x[1] : s; }, 0);
+      out.push([(rows[j][1] - c0 + dv) / c0 * 100, d0]);
+    }
+    return out;
+  }
+  function holdOdds(ins, days, tb) {
+    var rows = (ins.closes || {}).rows || [];
+    if (!rows.length) return [null, "no daily closes in this feed file"];
+    var hs = holds(ins, days), n = hs.length;
+    if (n < MIN_HOLDS) return [null, "not enough history: " + n + " past holds of " + days + " days fit in " + rows.length +
+      " trading days of closes; " + MIN_HOLDS + " are needed"];
+    var worst = hs[0];
+    hs.forEach(function (h) { if (h[0] < worst[0]) worst = h; });
+    var res = hs.map(function (h) { return h[0]; });
+    var hurdle = tb === null ? null : tb * days / 365;
+    var beat = hurdle === null ? null : res.filter(function (r) { return r > hurdle; }).length;
+    var lost = res.filter(function (r) { return r < 0; }).length;
+    return [{ days: days, holds: n, bought_from: hs[0][1], bought_to: hs[n - 1][1],
+      closes_from: String(rows[0][0]).slice(0, 10),
+      tbill_pct: tb, tbill_hold_pct: hurdle === null ? null : round(hurdle, 3),
+      beat_tbill: beat, beat_tbill_pct: beat === null ? null : share(beat, n),
+      lost: lost, lost_pct: share(lost, n),
+      median_pct: round(median(res), 2), worst_pct: round(worst[0], 2), worst_bought: worst[1] }, null];
+  }
+  function tbillPct(feed) {
+    var b = (feed.benchmarks || []).filter(function (x) { return x.id === "tbill_4w"; })[0];
+    return b ? v(b.yield_pct) : null;
+  }
+  function oddsFor(ins, days, tb) {
+    if (((ins.closes || {}).rows || []).length) return holdOdds(ins, days, tb);
+    var pub = (ins.hold_odds || {})[String(days)];
+    if (pub !== undefined && pub !== null) return pub.reason ? [null, pub.reason] : [pub, null];
+    return [null, "no daily closes in this feed file; instrument/<TICKER>.json carries them"];
+  }
+  function signed(x) { return (x >= 0 ? "+" : "-") + Math.abs(x).toFixed(2) + "%"; }
+  function summaryLine(ticker, o, asOf) {
+    var span = daysBetween(o.closes_from, asOf) >= PAST_YEAR_DAYS ? "over the past year" : "since " + o.closes_from;
+    var beat = o.beat_tbill === null ? "beat a T-bill: unknown (no T-bill rate today)" :
+      "beat a T-bill " + whole(o.beat_tbill, o.holds) + "% of the time";
+    return ticker + ", " + o.days + "-day holds " + span + ": " + beat + ", lost money " + whole(o.lost, o.holds) +
+      "% of the time, middle result " + signed(o.median_pct) + ", worst " + signed(o.worst_pct) + ".";
+  }
+  function profile(ins) {
+    var p = ins.profile;
+    if (!isObj(p)) return null;
+    var facts = ["rate_type", "issuer_aims_price_near_100", "pay_schedule"], out = {}, srcs = [];
+    facts.forEach(function (f) { out[f] = v(p[f]); });
+    out.built_for = p.built_for === undefined ? null : p.built_for;
+    facts.forEach(function (f) { var u = src(p[f]); if (u && srcs.indexOf(u) < 0) srcs.push(u); });
+    out.sources = srcs;
+    return out;
+  }
+
   function instrumentFlags(ins, amount, days, asOf) {
     var flags = (ins.flags || []).slice();
     if (ins.kind === "preferred") { add(flags, "price_moves"); add(flags, "issuer_sets_rate"); }
@@ -43,8 +134,7 @@
     var vol = v(ins.avg_volume_30d), close = v(ins.close_usd);
     if (vol === null || close === null || amount > THIN_TRADING_SHARE * vol * close) add(flags, "thin_trading");
     if (((ins.payments || {}).gaps || []).length) add(flags, "payment_gap");
-    var nxt = ins.next_pay_date;
-    if (!nxt || nxt > addDays(asOf, days)) add(flags, "no_payment_in_window");
+    if (!payInHold(ins, asOf, days)[0]) add(flags, "no_payment_in_window");
     if (stale(ins.close_usd, ins.stated_rate_pct, ins.yield_pct, ins.worst_drop_pct, ins.avg_volume_30d)) add(flags, "stale");
     return order(flags);
   }
@@ -70,24 +160,35 @@
   function compare(feed, amount, days, maxDrop, kinds) {
     kinds = kinds.filter(function (k, i, a) { return a.indexOf(k) === i; }).sort();
     check(amount, days, maxDrop, kinds);
-    var asOf = feed.date, options = [], excluded = [];
+    var asOf = feed.date, options = [], excluded = [], tb = tbillPct(feed);
     (feed.instruments || []).forEach(function (ins) {
       var reason = excludedReason(ins, kinds, maxDrop);
       if (reason) { excluded.push({ ticker: ins.ticker, reason: reason }); return; }
       var y = round(v(ins.yield_pct), 3), close = ins.close_usd || {}, rate = ins.stated_rate_pct || {};
+      var ph = payInHold(ins, asOf, days), od = oddsFor(ins, days, tb);
+      var flags = instrumentFlags(ins, amount, days, asOf);
+      if (od[0] === null) flags = order(flags.concat(["no_hold_odds"]));
       options.push({
         ticker: ins.ticker, name: ins.name === undefined ? null : ins.name, kind: ins.kind,
-        yield_pct: y, est_income_usd: income(amount, y, days),
+        yield_pct: y, est_income_usd: ph[0] ? income(amount, y, days) : 0,
+        est_income_reason: ph[0] ? null : "no payment lands inside the " + days + " days: " + ph[1],
+        pay_in_hold: ph[0], pay_in_hold_basis: ph[1],
         worst_drop_pct: round(v(ins.worst_drop_pct), 3),
+        hold_odds: od[0], hold_odds_reason: od[1], profile: profile(ins),
         close_usd: v(close), par_usd: ins.par_usd === undefined ? null : ins.par_usd, stated_rate_pct: v(rate),
         schedule: ins.schedule === undefined ? null : ins.schedule,
         next_pay_date: ins.next_pay_date === undefined ? null : ins.next_pay_date,
-        flags: instrumentFlags(ins, amount, days, asOf),
+        flags: flags,
         as_of: close.as_of === undefined ? null : close.as_of, source: src(close), rate_source: src(rate)
       });
     });
-    options.sort(function (a, b) { return b.yield_pct - a.yield_pct || (a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0); });
-    excluded.sort(function (a, b) { return a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0; });
+    function tick(a, b) { return a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0; }
+    options.sort(function (a, b) {
+      if (!!a.hold_odds !== !!b.hold_odds) return a.hold_odds ? -1 : 1;
+      if (a.hold_odds) return b.hold_odds.median_pct - a.hold_odds.median_pct || tick(a, b);
+      return b.yield_pct - a.yield_pct || tick(a, b);
+    });
+    excluded.sort(tick);
     var benchmarks = (feed.benchmarks || []).map(function (b) {
       var yv = b.yield_pct || {}, y = v(yv) === null ? null : round(v(yv), 3);
       var row = { id: b.id, kind: b.kind, name: b.name === undefined ? null : b.name, yield_pct: y,
@@ -96,8 +197,9 @@
       if (y === null) row.reason = yv.reason === undefined ? null : yv.reason;
       return row;
     });
+    var summary = options.filter(function (o) { return o.hold_odds; }).map(function (o) { return summaryLine(o.ticker, o.hold_odds, asOf); });
     return { as_of: feed.date, inputs: { amount_usd: amount, days: days, max_drop_pct: maxDrop, kinds: kinds },
-      options: options, benchmarks: benchmarks, excluded: excluded, note: NOTE };
+      options: options, summary: summary, benchmarks: benchmarks, excluded: excluded, note: NOTE, hold_odds_note: HOLD_NOTE };
   }
 
   var api = { compare: compare, KINDS: KINDS };

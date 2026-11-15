@@ -82,7 +82,106 @@
         "price_moves",
         "issuer_sets_rate"
       ],
-      "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks",
+      "profile": {
+        "issuer": "Strategy",
+        "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100.",
+        "rate_type": {
+          "value": "variable",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+          "date": "2025-07-24",
+          "quote": "The STRC Stock will accumulate cumulative dividends, which we refer to as “regular dividends,” at a variable rate per annum",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "issuer_aims_price_near_100": {
+          "value": true,
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+          "date": "2025-07-24",
+          "quote": "in our sole and absolute discretion, is to adjust the regular dividend rate in such a manner as we believe will maintain STRC Stock’s trading price at or close to its stated amount of $100 per share.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "pay_schedule": {
+          "value": "every business day",
+          "source": "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm",
+          "date": "2026-10-15",
+          "quote": "declared daily cash dividends on STRC for each calendar day ... Each daily dividend is payable on the business day immediately following its Record Date",
+          "condition": "The filing makes the daily schedule subject to the Daily Dividend Amendments being approved by stockholders at a special meeting.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        }
+      },
+      "hold_odds": {
+        "7": {
+          "days": 7,
+          "holds": 247,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-11-06",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.077,
+          "beat_tbill": 154,
+          "beat_tbill_pct": 62.3,
+          "lost": 60,
+          "lost_pct": 24.3,
+          "median_pct": 0.28,
+          "worst_pct": -14.56,
+          "worst_bought": "2026-06-18"
+        },
+        "30": {
+          "days": 30,
+          "holds": 230,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-10-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.33,
+          "beat_tbill": 179,
+          "beat_tbill_pct": 77.8,
+          "lost": 40,
+          "lost_pct": 17.4,
+          "median_pct": 1.16,
+          "worst_pct": -23.84,
+          "worst_bought": "2026-05-27"
+        },
+        "90": {
+          "days": 90,
+          "holds": 188,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-08-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.991,
+          "beat_tbill": 128,
+          "beat_tbill_pct": 68.1,
+          "lost": 57,
+          "lost_pct": 30.3,
+          "median_pct": 3.27,
+          "worst_pct": -22.53,
+          "worst_bought": "2026-03-30"
+        },
+        "180": {
+          "days": 180,
+          "holds": 126,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-05-15",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 1.982,
+          "beat_tbill": 80,
+          "beat_tbill_pct": 63.5,
+          "lost": 32,
+          "lost_pct": 25.4,
+          "median_pct": 3.59,
+          "worst_pct": -18.92,
+          "worst_bought": "2025-12-30"
+        },
+        "365": {
+          "days": 365,
+          "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+        }
+      }
     },
     {
       "ticker": "SATA",
@@ -154,7 +253,105 @@
         "issuer_sets_rate",
         "stale"
       ],
-      "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
+      "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks",
+      "profile": {
+        "issuer": "Strive",
+        "built_for": "A variable rate the issuer says it adjusts to keep the price between $95 and $105, paid every business day: built for income with a price meant to stay near $100.",
+        "rate_type": {
+          "value": "variable",
+          "source": "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+          "date": "2026-01-22",
+          "quote": "The SATA Stock accumulates cumulative dividends, which we refer to as “regular dividends,” at a variable rate per annum, calculated in the manner described below, on the stated amount thereof",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "issuer_aims_price_near_100": {
+          "value": true,
+          "source": "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+          "date": "2026-01-22",
+          "quote": "Our current intention, which is subject to change in our sole and absolute discretion, is to adjust the regular dividend rate in such a manner as we believe will maintain SATA Stock’s trading price within its stated long-term range of $95 and $105 per share.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "pay_schedule": {
+          "value": "every business day",
+          "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026034804/asst-20260514.htm",
+          "date": "2026-05-14",
+          "quote": "the frequency of regular dividend payments on SATA Stock shall be changed from a monthly basis to a per-Business Day ... Daily dividends will begin on June 16, 2026 and be paid if and when declared by the board of directors of the Company.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        }
+      },
+      "hold_odds": {
+        "7": {
+          "days": 7,
+          "holds": 247,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-11-06",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.077,
+          "beat_tbill": 163,
+          "beat_tbill_pct": 66.0,
+          "lost": 74,
+          "lost_pct": 30.0,
+          "median_pct": 0.37,
+          "worst_pct": -14.29,
+          "worst_bought": "2026-06-18"
+        },
+        "30": {
+          "days": 30,
+          "holds": 230,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-10-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.33,
+          "beat_tbill": 163,
+          "beat_tbill_pct": 70.9,
+          "lost": 59,
+          "lost_pct": 25.7,
+          "median_pct": 1.55,
+          "worst_pct": -14.96,
+          "worst_bought": "2026-05-26"
+        },
+        "90": {
+          "days": 90,
+          "holds": 188,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-08-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.991,
+          "beat_tbill": 166,
+          "beat_tbill_pct": 88.3,
+          "lost": 12,
+          "lost_pct": 6.4,
+          "median_pct": 4.92,
+          "worst_pct": -11.53,
+          "worst_bought": "2026-03-27"
+        },
+        "180": {
+          "days": 180,
+          "holds": 126,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-05-15",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 1.982,
+          "beat_tbill": 120,
+          "beat_tbill_pct": 95.2,
+          "lost": 2,
+          "lost_pct": 1.6,
+          "median_pct": 9.06,
+          "worst_pct": -0.47,
+          "worst_bought": "2025-12-30"
+        },
+        "365": {
+          "days": 365,
+          "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+        }
+      }
     },
     {
       "ticker": "SATS",
@@ -226,7 +423,66 @@
         "issuer_sets_rate",
         "short_history"
       ],
-      "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks"
+      "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks",
+      "profile": {
+        "issuer": "Strive",
+        "built_for": "A fixed 15.00% rate on the $100 stated amount, with no stated aim to keep the price near $100, paid every business day: built for steady income, with the price free to move.",
+        "rate_type": {
+          "value": "fixed",
+          "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026066608/asst-20261021.htm",
+          "date": "2026-10-21",
+          "quote": "The SATS Stock accrues cumulative dividends at a fixed rate of 15.00% per annum on the $100.00 stated amount per share,",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "issuer_aims_price_near_100": {
+          "value": false,
+          "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm",
+          "date": "2026-10-16",
+          "quote": "at a rate per annum equal to 15.00% on the stated amount thereof",
+          "basis": "The prospectus supplement sets one rate, 15.00% per annum, and states no aim to adjust the rate or to keep the price near $100. The issuer's filings read here do not use the words 'target trading range'; press reports that SATS has none are not used as a source.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "pay_schedule": {
+          "value": "every business day",
+          "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm",
+          "date": "2026-10-16",
+          "quote": "Each business day (as such term is defined in \"Description of SATS Stock\"), beginning on November 9, 2026,",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "offer_price_usd": {
+          "value": 90,
+          "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000095010326015690/dp255095_ex9901.htm",
+          "date": "2026-10-15",
+          "quote": "at a public offering price of $90 per share.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        }
+      },
+      "hold_odds": {
+        "7": {
+          "days": 7,
+          "reason": "not enough history: 16 past holds of 7 days fit in 21 trading days of closes; 60 are needed"
+        },
+        "30": {
+          "days": 30,
+          "reason": "not enough history: 0 past holds of 30 days fit in 21 trading days of closes; 60 are needed"
+        },
+        "90": {
+          "days": 90,
+          "reason": "not enough history: 0 past holds of 90 days fit in 21 trading days of closes; 60 are needed"
+        },
+        "180": {
+          "days": 180,
+          "reason": "not enough history: 0 past holds of 180 days fit in 21 trading days of closes; 60 are needed"
+        },
+        "365": {
+          "days": 365,
+          "reason": "not enough history: 0 past holds of 365 days fit in 21 trading days of closes; 60 are needed"
+        }
+      }
     },
     {
       "ticker": "STRF",
@@ -297,7 +553,106 @@
         "price_moves",
         "issuer_sets_rate"
       ],
-      "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks",
+      "profile": {
+        "issuer": "Strategy",
+        "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+        "rate_type": {
+          "value": "fixed",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+          "date": "2025-03-21",
+          "quote": "at a rate per annum equal to 10.00% on the stated amount thereof",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "issuer_aims_price_near_100": {
+          "value": false,
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+          "date": "2025-03-21",
+          "quote": "10.00% Series A Perpetual Strife Preferred Stock",
+          "basis": "The security is named for one rate, 10.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "pay_schedule": {
+          "value": "quarterly",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm",
+          "date": "2025-03-21",
+          "quote": "quarterly in arrears on March 31, June 30, September 30 and December 31 of each year, beginning on June 30, 2025.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        }
+      },
+      "hold_odds": {
+        "7": {
+          "days": 7,
+          "holds": 247,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-11-06",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.077,
+          "beat_tbill": 126,
+          "beat_tbill_pct": 51.0,
+          "lost": 112,
+          "lost_pct": 45.3,
+          "median_pct": 0.08,
+          "worst_pct": -10.09,
+          "worst_bought": "2025-11-13"
+        },
+        "30": {
+          "days": 30,
+          "holds": 230,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-10-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.33,
+          "beat_tbill": 117,
+          "beat_tbill_pct": 50.9,
+          "lost": 102,
+          "lost_pct": 44.3,
+          "median_pct": 0.53,
+          "worst_pct": -14.21,
+          "worst_bought": "2026-05-27"
+        },
+        "90": {
+          "days": 90,
+          "holds": 188,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-08-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.991,
+          "beat_tbill": 96,
+          "beat_tbill_pct": 51.1,
+          "lost": 86,
+          "lost_pct": 45.7,
+          "median_pct": 1.19,
+          "worst_pct": -8.46,
+          "worst_bought": "2026-03-30"
+        },
+        "180": {
+          "days": 180,
+          "holds": 126,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-05-15",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 1.982,
+          "beat_tbill": 78,
+          "beat_tbill_pct": 61.9,
+          "lost": 36,
+          "lost_pct": 28.6,
+          "median_pct": 4.91,
+          "worst_pct": -13.65,
+          "worst_bought": "2025-12-29"
+        },
+        "365": {
+          "days": 365,
+          "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+        }
+      }
     },
     {
       "ticker": "STRK",
@@ -368,7 +723,106 @@
         "price_moves",
         "issuer_sets_rate"
       ],
-      "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks",
+      "profile": {
+        "issuer": "Strategy",
+        "built_for": "A fixed 8.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+        "rate_type": {
+          "value": "fixed",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm",
+          "date": "2025-02-03",
+          "quote": "at a rate per annum equal to 8.00% on the liquidation preference thereof",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "issuer_aims_price_near_100": {
+          "value": false,
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm",
+          "date": "2025-02-03",
+          "quote": "8.00% Series A Perpetual Strike Preferred Stock",
+          "basis": "The security is named for one rate, 8.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "pay_schedule": {
+          "value": "quarterly",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525018819/d863145d424b5.htm",
+          "date": "2025-02-03",
+          "quote": "quarterly in arrears on March 31, June 30, September 30 and December 31 of each year",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        }
+      },
+      "hold_odds": {
+        "7": {
+          "days": 7,
+          "holds": 247,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-11-06",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.077,
+          "beat_tbill": 118,
+          "beat_tbill_pct": 47.8,
+          "lost": 125,
+          "lost_pct": 50.6,
+          "median_pct": -0.07,
+          "worst_pct": -14.55,
+          "worst_bought": "2026-06-18"
+        },
+        "30": {
+          "days": 30,
+          "holds": 230,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-10-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.33,
+          "beat_tbill": 114,
+          "beat_tbill_pct": 49.6,
+          "lost": 113,
+          "lost_pct": 49.1,
+          "median_pct": 0.21,
+          "worst_pct": -27.29,
+          "worst_bought": "2026-05-26"
+        },
+        "90": {
+          "days": 90,
+          "holds": 188,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-08-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.991,
+          "beat_tbill": 68,
+          "beat_tbill_pct": 36.2,
+          "lost": 116,
+          "lost_pct": 61.7,
+          "median_pct": -5.01,
+          "worst_pct": -25.82,
+          "worst_bought": "2026-03-27"
+        },
+        "180": {
+          "days": 180,
+          "holds": 126,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-05-15",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 1.982,
+          "beat_tbill": 25,
+          "beat_tbill_pct": 19.8,
+          "lost": 97,
+          "lost_pct": 77.0,
+          "median_pct": -6.71,
+          "worst_pct": -29.21,
+          "worst_bought": "2025-12-29"
+        },
+        "365": {
+          "days": 365,
+          "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+        }
+      }
     },
     {
       "ticker": "STRD",
@@ -439,7 +893,106 @@
         "price_moves",
         "issuer_sets_rate"
       ],
-      "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
+      "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks",
+      "profile": {
+        "issuer": "Strategy",
+        "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+        "rate_type": {
+          "value": "fixed",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm",
+          "date": "2025-06-06",
+          "quote": "at a rate per annum equal to 10.00% on the stated amount thereof",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "issuer_aims_price_near_100": {
+          "value": false,
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm",
+          "date": "2025-06-06",
+          "quote": "10.00% Series A Perpetual Stride Preferred Stock",
+          "basis": "The security is named for one rate, 10.00% per annum, and the filing states no aim to adjust the rate or to keep the price near $100.",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        },
+        "pay_schedule": {
+          "value": "quarterly",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm",
+          "date": "2025-06-06",
+          "quote": "payable quarterly in arrears on March 31, June 30, September 30 and December 31 of each year",
+          "fetched_at": "2026-11-14",
+          "reason": null
+        }
+      },
+      "hold_odds": {
+        "7": {
+          "days": 7,
+          "holds": 247,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-11-06",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.077,
+          "beat_tbill": 128,
+          "beat_tbill_pct": 51.8,
+          "lost": 117,
+          "lost_pct": 47.4,
+          "median_pct": 0.18,
+          "worst_pct": -19.61,
+          "worst_bought": "2026-06-18"
+        },
+        "30": {
+          "days": 30,
+          "holds": 230,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-10-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.33,
+          "beat_tbill": 107,
+          "beat_tbill_pct": 46.5,
+          "lost": 119,
+          "lost_pct": 51.7,
+          "median_pct": -0.38,
+          "worst_pct": -28.47,
+          "worst_bought": "2026-05-26"
+        },
+        "90": {
+          "days": 90,
+          "holds": 188,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-08-14",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 0.991,
+          "beat_tbill": 104,
+          "beat_tbill_pct": 55.3,
+          "lost": 73,
+          "lost_pct": 38.8,
+          "median_pct": 2.39,
+          "worst_pct": -28.39,
+          "worst_bought": "2026-03-27"
+        },
+        "180": {
+          "days": 180,
+          "holds": 126,
+          "bought_from": "2025-11-13",
+          "bought_to": "2026-05-15",
+          "closes_from": "2025-11-13",
+          "tbill_pct": 4.02,
+          "tbill_hold_pct": 1.982,
+          "beat_tbill": 36,
+          "beat_tbill_pct": 28.6,
+          "lost": 81,
+          "lost_pct": 64.3,
+          "median_pct": -2.55,
+          "worst_pct": -24.01,
+          "worst_bought": "2025-12-30"
+        },
+        "365": {
+          "days": 365,
+          "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+        }
+      }
     }
   ],
   "benchmarks": [

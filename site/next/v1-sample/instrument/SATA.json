@@ -55,6 +55,21 @@
     "reason": null
   },
   "trading_days": 252,
+  "schedule": "every business day",
+  "next_pay_date": "2026-11-16",
+  "payments": {
+    "paid": 111,
+    "in_a_row": 111,
+    "gaps": [],
+    "last_paid": "2026-11-13"
+  },
+  "cross_check": "ok",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate",
+    "stale"
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks",
   "closes": {
     "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
     "fetched_at": "2026-11-14T21:43:30Z",
@@ -1070,20 +1085,6 @@
       ]
     ]
   },
-  "schedule": "every business day",
-  "next_pay_date": "2026-11-16",
-  "payments": {
-    "paid": 111,
-    "in_a_row": 111,
-    "gaps": [],
-    "last_paid": "2026-11-13"
-  },
-  "cross_check": "ok",
-  "flags": [
-    "price_moves",
-    "issuer_sets_rate",
-    "stale"
-  ],
   "dividends": [
     {
       "ex": "2025-12-01",
@@ -1691,5 +1692,102 @@
       "usd": 0.0571
     }
   ],
-  "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
+  "profile": {
+    "issuer": "Strive",
+    "built_for": "A variable rate the issuer says it adjusts to keep the price between $95 and $105, paid every business day: built for income with a price meant to stay near $100.",
+    "rate_type": {
+      "value": "variable",
+      "source": "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+      "date": "2026-01-22",
+      "quote": "The SATA Stock accumulates cumulative dividends, which we refer to as “regular dividends,” at a variable rate per annum, calculated in the manner described below, on the stated amount thereof",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "issuer_aims_price_near_100": {
+      "value": true,
+      "source": "https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm",
+      "date": "2026-01-22",
+      "quote": "Our current intention, which is subject to change in our sole and absolute discretion, is to adjust the regular dividend rate in such a manner as we believe will maintain SATA Stock’s trading price within its stated long-term range of $95 and $105 per share.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "pay_schedule": {
+      "value": "every business day",
+      "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026034804/asst-20260514.htm",
+      "date": "2026-05-14",
+      "quote": "the frequency of regular dividend payments on SATA Stock shall be changed from a monthly basis to a per-Business Day ... Daily dividends will begin on June 16, 2026 and be paid if and when declared by the board of directors of the Company.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    }
+  },
+  "hold_odds": {
+    "7": {
+      "days": 7,
+      "holds": 247,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-11-06",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.077,
+      "beat_tbill": 163,
+      "beat_tbill_pct": 66.0,
+      "lost": 74,
+      "lost_pct": 30.0,
+      "median_pct": 0.37,
+      "worst_pct": -14.29,
+      "worst_bought": "2026-06-18"
+    },
+    "30": {
+      "days": 30,
+      "holds": 230,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-10-14",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.33,
+      "beat_tbill": 163,
+      "beat_tbill_pct": 70.9,
+      "lost": 59,
+      "lost_pct": 25.7,
+      "median_pct": 1.55,
+      "worst_pct": -14.96,
+      "worst_bought": "2026-05-26"
+    },
+    "90": {
+      "days": 90,
+      "holds": 188,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-08-14",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.991,
+      "beat_tbill": 166,
+      "beat_tbill_pct": 88.3,
+      "lost": 12,
+      "lost_pct": 6.4,
+      "median_pct": 4.92,
+      "worst_pct": -11.53,
+      "worst_bought": "2026-03-27"
+    },
+    "180": {
+      "days": 180,
+      "holds": 126,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-05-15",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 1.982,
+      "beat_tbill": 120,
+      "beat_tbill_pct": 95.2,
+      "lost": 2,
+      "lost_pct": 1.6,
+      "median_pct": 9.06,
+      "worst_pct": -0.47,
+      "worst_bought": "2025-12-30"
+    },
+    "365": {
+      "days": 365,
+      "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+    }
+  }
 }

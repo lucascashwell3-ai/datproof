@@ -55,6 +55,20 @@
     "reason": null
   },
   "trading_days": 252,
+  "schedule": "every business day",
+  "next_pay_date": "2026-11-16",
+  "payments": {
+    "paid": 28,
+    "in_a_row": 28,
+    "gaps": [],
+    "last_paid": "2026-11-13"
+  },
+  "cross_check": "ok",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate"
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks",
   "closes": {
     "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
     "fetched_at": "2026-11-14T21:43:26Z",
@@ -1070,19 +1084,6 @@
       ]
     ]
   },
-  "schedule": "every business day",
-  "next_pay_date": "2026-11-16",
-  "payments": {
-    "paid": 28,
-    "in_a_row": 28,
-    "gaps": [],
-    "last_paid": "2026-11-13"
-  },
-  "cross_check": "ok",
-  "flags": [
-    "price_moves",
-    "issuer_sets_rate"
-  ],
   "dividends": [
     {
       "ex": "2025-08-15",
@@ -1280,5 +1281,103 @@
       "usd": 0.04
     }
   ],
-  "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
+  "profile": {
+    "issuer": "Strategy",
+    "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100.",
+    "rate_type": {
+      "value": "variable",
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+      "date": "2025-07-24",
+      "quote": "The STRC Stock will accumulate cumulative dividends, which we refer to as “regular dividends,” at a variable rate per annum",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "issuer_aims_price_near_100": {
+      "value": true,
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm",
+      "date": "2025-07-24",
+      "quote": "in our sole and absolute discretion, is to adjust the regular dividend rate in such a manner as we believe will maintain STRC Stock’s trading price at or close to its stated amount of $100 per share.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "pay_schedule": {
+      "value": "every business day",
+      "source": "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm",
+      "date": "2026-10-15",
+      "quote": "declared daily cash dividends on STRC for each calendar day ... Each daily dividend is payable on the business day immediately following its Record Date",
+      "condition": "The filing makes the daily schedule subject to the Daily Dividend Amendments being approved by stockholders at a special meeting.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    }
+  },
+  "hold_odds": {
+    "7": {
+      "days": 7,
+      "holds": 247,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-11-06",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.077,
+      "beat_tbill": 154,
+      "beat_tbill_pct": 62.3,
+      "lost": 60,
+      "lost_pct": 24.3,
+      "median_pct": 0.28,
+      "worst_pct": -14.56,
+      "worst_bought": "2026-06-18"
+    },
+    "30": {
+      "days": 30,
+      "holds": 230,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-10-14",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.33,
+      "beat_tbill": 179,
+      "beat_tbill_pct": 77.8,
+      "lost": 40,
+      "lost_pct": 17.4,
+      "median_pct": 1.16,
+      "worst_pct": -23.84,
+      "worst_bought": "2026-05-27"
+    },
+    "90": {
+      "days": 90,
+      "holds": 188,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-08-14",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 0.991,
+      "beat_tbill": 128,
+      "beat_tbill_pct": 68.1,
+      "lost": 57,
+      "lost_pct": 30.3,
+      "median_pct": 3.27,
+      "worst_pct": -22.53,
+      "worst_bought": "2026-03-30"
+    },
+    "180": {
+      "days": 180,
+      "holds": 126,
+      "bought_from": "2025-11-13",
+      "bought_to": "2026-05-15",
+      "closes_from": "2025-11-13",
+      "tbill_pct": 4.02,
+      "tbill_hold_pct": 1.982,
+      "beat_tbill": 80,
+      "beat_tbill_pct": 63.5,
+      "lost": 32,
+      "lost_pct": 25.4,
+      "median_pct": 3.59,
+      "worst_pct": -18.92,
+      "worst_bought": "2025-12-30"
+    },
+    "365": {
+      "days": 365,
+      "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+    }
+  }
 }

@@ -1,8 +1,12 @@
 """Line up today's options for a sum of idle cash: facts and arithmetic only.
 
 `compare` is pure: no clock, no network. The same feed and the same inputs always give the
-same answer. It never ranks anything as better; it sorts by yield and puts the risk facts on
+same answer. It never ranks anything as better. Options with hold odds for the asked period come
+first, by their middle past result; the rest follow in yield order, flagged. The risk facts sit on
 the same row, with the benchmarks beside them.
+
+Hold odds: buy at each daily close, hold `days` calendar days, sell at the last close on or before
+the end; result = price change plus dividends whose ex-date falls inside the hold.
 """
 from __future__ import annotations
 
@@ -13,8 +17,16 @@ KINDS = ("preferred", "tbill", "money_market", "usdc_lending")
 NOTE = ("Facts and arithmetic only. Not advice. A preferred stock's price can fall below its "
         "$100 par and its issuer sets the rate; income figures assume today's yield holds.")
 
-FLAG_ORDER = ("price_moves", "issuer_sets_rate", "short_history", "thin_trading", "payment_gap",
-              "no_payment_in_window", "stale", "not_bank_insured", "smart_contract_risk")
+HOLD_NOTE = ("Hold odds are how past holds of the same length turned out, from daily closes and paid "
+             "dividends. Past results do not predict future results.")
+
+FLAG_ORDER = ("price_moves", "issuer_sets_rate", "short_history", "no_hold_odds", "thin_trading",
+              "payment_gap", "no_payment_in_window", "stale", "not_bank_insured", "smart_contract_risk")
+
+HOLD_PERIODS = (7, 30, 90, 180, 365)
+MIN_HOLDS = 60
+PAST_YEAR_DAYS = 360  # closes reaching back this far are described as "the past year"
+PROJECT_MONTHS = {"monthly": 1, "quarterly": 3}
 
 SHORT_HISTORY_DAYS = 90
 THIN_TRADING_SHARE = 0.01
@@ -41,7 +53,20 @@ METHOD = {
                     "missing payment longer than the usual spacing (35 days, or 100 for quarterly payers, "
                     "or 4 days once a security pays daily)",
         "est_income_usd": "round(amount_usd * yield_pct / 100 * days / 365, 2): simple interest at "
-                          "today's yield, before tax and fees, ignoring any change in price",
+                          "today's yield, before tax and fees, ignoring any change in price. It is 0, with "
+                          "est_income_reason, when no payment lands inside the days (see pay_in_hold)",
+        "pay_in_hold": "true when the declared next pay date falls within the days. With no declared date, "
+                       "a monthly or quarterly payer's next pay date is projected from its last pay date by "
+                       "its schedule (pay_in_hold_basis says which)",
+        "hold_odds": f"from the daily closes and dividends in the feed: start at each day's close, hold the "
+                     f"asked number of calendar days, end at the last close on or before the last day. "
+                     f"Result = (end close - start close + dividends with an ex-date after the start day "
+                     f"and on or before the last day) / start close * 100. holds = how many such holds fit in the closes; "
+                     f"beat_tbill_pct = share of holds whose result is above the 4-week T-bill at today's "
+                     f"rate over the same days (tbill_pct * days / 365); lost_pct = share below 0; "
+                     f"median_pct = the middle result; worst_pct = the lowest, with its start day (worst_bought). "
+                     f"Shares are rounded half up to one decimal. Fewer than {MIN_HOLDS} holds gives null "
+                     f"with the reason. Past results do not predict future results",
     },
     "compare": {
         "inputs": {"amount_usd": "the cash to place, in US dollars",
@@ -49,7 +74,16 @@ METHOD = {
                    "max_drop_pct": "the biggest past-year price fall the owner will accept",
                    "kinds": "what the account can hold: " + ", ".join(KINDS)},
         "options": "instruments whose kind is in kinds, whose yield is known, and whose worst drop is "
-                   "at or under max_drop_pct; sorted by yield, highest first, then by ticker",
+                   "at or under max_drop_pct. Options with hold odds for exactly these days come first, by "
+                   "median_pct, highest first, then by ticker; options without hold odds follow, flagged "
+                   "no_hold_odds, by yield, highest first, then by ticker",
+        "hold_odds": "worked out for exactly the asked days from the daily closes. instruments.json also "
+                     "carries them for " + ", ".join(map(str, HOLD_PERIODS)) + " days",
+        "profile": "what each instrument is built for: rate type, whether the issuer states it adjusts "
+                   "the rate to keep the price near $100, the stated pay schedule, and a one-line "
+                   "statement that follows from those facts. Each fact cites the issuer's own filing "
+                   "and the exact words, in data/instrument_profiles.json and instruments.json",
+        "summary": "one plain sentence per option with hold odds, in option order, that can be quoted",
         "excluded": "every other instrument, with the plain reason it was left out",
         "benchmarks": "always returned; holdable says whether the account can hold that kind",
     },
@@ -59,10 +93,12 @@ METHOD = {
         "issuer_sets_rate": "the issuer sets the dividend rate and can lower or skip it",
         "short_history": f"fewer than {SHORT_HISTORY_DAYS} trading days of prices, so the worst drop "
                          "covers a short time",
+        "no_hold_odds": f"fewer than {MIN_HOLDS} past holds of this length fit in the daily closes, so "
+                        "there is no record of how holds this long turned out",
         "thin_trading": f"the amount is more than {THIN_TRADING_SHARE:.0%} of an average day's trading "
                         "(avg_volume_30d * close), or volume is unknown",
         "payment_gap": "a payment was missed within the counted history",
-        "no_payment_in_window": "no known pay date falls within the chosen days",
+        "no_payment_in_window": "no declared or projected pay date falls within the chosen days",
         "stale": f"a number behind this row is more than {STALE_DAYS} days old",
         "not_bank_insured": "a money market fund: not a bank deposit and not insured by the FDIC",
         "smart_contract_risk": "lending on a blockchain protocol: a software fault or hack can lose "
@@ -124,6 +160,150 @@ def _check(amount_usd, days, max_drop_pct, kinds) -> None:
         raise ValueError(f"unknown kinds {bad}; known kinds are {list(KINDS)}")
 
 
+def _add_months(d: dt.date, n: int) -> dt.date:
+    """Same day n months later; a month-end date stays a month-end date."""
+    y, m = divmod(d.month - 1 + n, 12)
+    y, m = d.year + y, m + 1
+    last = (dt.date(y + (m == 12), m % 12 + 1, 1) - dt.timedelta(days=1)).day
+    month_end = (d + dt.timedelta(days=1)).month != d.month
+    return dt.date(y, m, last if month_end else min(d.day, last))
+
+
+def pay_in_hold(ins: dict, as_of: dt.date, days: int) -> tuple[bool, str]:
+    """Does a payment land within `days`? The declared next pay date if there is one; otherwise a
+    monthly or quarterly payer's next date projected from its last pay date."""
+    end = as_of + dt.timedelta(days=days)
+    nxt = ins.get("next_pay_date")
+    if nxt:
+        return dt.date.fromisoformat(nxt) <= end, f"declared next pay date {nxt}"
+    sched = ins.get("schedule")
+    last = (ins.get("payments") or {}).get("last_paid")
+    if sched in PROJECT_MONTHS and last:
+        d = dt.date.fromisoformat(last)
+        while d <= as_of:
+            d = _add_months(d, PROJECT_MONTHS[sched])
+        return d <= end, f"next pay date {d.isoformat()} projected from the {sched} schedule (last paid {last})"
+    return False, "no declared or projected pay date"
+
+
+def _share(k: int, n: int) -> float:
+    """k of n as a percent, rounded half up to one decimal, in whole-number arithmetic."""
+    return ((2000 * k + n) // (2 * n)) / 10
+
+
+def _whole(k: int, n: int) -> int:
+    return (200 * k + n) // (2 * n)
+
+
+def _median(xs: list[float]) -> float:
+    s = sorted(xs)
+    m = len(s) // 2
+    return s[m] if len(s) % 2 else (s[m - 1] + s[m]) / 2
+
+
+def holds(ins: dict, days: int) -> list[tuple[float, str]]:
+    """(result_pct, buy_date) for every buy close whose hold of `days` calendar days ends on or before
+    the newest close."""
+    rows = [(str(d)[:10], float(c)) for d, c in (ins.get("closes") or {}).get("rows") or []]
+    divs = [(x["ex"], float(x["usd"])) for x in ins.get("dividends") or []]
+    if not rows:
+        return []
+    last, out, j = rows[-1][0], [], 0
+    for i, (d0, c0) in enumerate(rows):
+        end = (dt.date.fromisoformat(d0) + dt.timedelta(days=days)).isoformat()
+        if end > last:
+            break
+        j = max(j, i)
+        while j + 1 < len(rows) and rows[j + 1][0] <= end:
+            j += 1
+        dv = sum(u for e, u in divs if d0 < e <= end)
+        out.append(((rows[j][1] - c0 + dv) / c0 * 100, d0))
+    return out
+
+
+def hold_odds(ins: dict, days: int, tbill_pct) -> tuple[dict | None, str | None]:
+    """How past holds of `days` turned out, or (None, reason)."""
+    rows = (ins.get("closes") or {}).get("rows") or []
+    if not rows:
+        return None, "no daily closes in this feed file"
+    hs = holds(ins, days)
+    n = len(hs)
+    if n < MIN_HOLDS:
+        return None, (f"not enough history: {n} past holds of {days} days fit in {len(rows)} trading days "
+                      f"of closes; {MIN_HOLDS} are needed")
+    worst = hs[0]
+    for h in hs:
+        if h[0] < worst[0]:
+            worst = h
+    res = [r for r, _ in hs]
+    hurdle = None if tbill_pct is None else tbill_pct * days / 365
+    beat = None if hurdle is None else sum(1 for r in res if r > hurdle)
+    lost = sum(1 for r in res if r < 0)
+    return {"days": days, "holds": n, "bought_from": hs[0][1], "bought_to": hs[-1][1],
+            "closes_from": str(rows[0][0])[:10],
+            "tbill_pct": tbill_pct, "tbill_hold_pct": None if hurdle is None else round(hurdle, 3),
+            "beat_tbill": beat, "beat_tbill_pct": None if beat is None else _share(beat, n),
+            "lost": lost, "lost_pct": _share(lost, n),
+            "median_pct": round(_median(res), 2), "worst_pct": round(worst[0], 2),
+            "worst_bought": worst[1]}, None
+
+
+def _tbill_pct(feed: dict):
+    for b in feed.get("benchmarks", []):
+        if b.get("id") == "tbill_4w":
+            return _v(b.get("yield_pct"))
+    return None
+
+
+def hold_odds_table(ins: dict, tbill_pct) -> dict:
+    """Hold odds for each of HOLD_PERIODS, as published in instruments.json."""
+    out = {}
+    for d in HOLD_PERIODS:
+        odds, reason = hold_odds(ins, d, tbill_pct)
+        out[str(d)] = odds if odds is not None else {"days": d, "reason": reason}
+    return out
+
+
+def _odds_for(ins: dict, days: int, tbill_pct) -> tuple[dict | None, str | None]:
+    if (ins.get("closes") or {}).get("rows"):
+        return hold_odds(ins, days, tbill_pct)
+    pub = (ins.get("hold_odds") or {}).get(str(days))
+    if pub is not None:
+        return (None, pub["reason"]) if pub.get("reason") else (pub, None)
+    return None, "no daily closes in this feed file; instrument/<TICKER>.json carries them"
+
+
+def _signed(x: float) -> str:
+    return ("+" if x >= 0 else "-") + f"{abs(x):.2f}%"
+
+
+def summary_line(ticker: str, odds: dict, as_of: dt.date) -> str:
+    since = dt.date.fromisoformat(odds["closes_from"])
+    span = ("over the past year" if (as_of - since).days >= PAST_YEAR_DAYS
+            else f"since {odds['closes_from']}")
+    n = odds["holds"]
+    beat = ("beat a T-bill: unknown (no T-bill rate today)" if odds["beat_tbill"] is None
+            else f"beat a T-bill {_whole(odds['beat_tbill'], n)}% of the time")
+    return (f"{ticker}, {odds['days']}-day holds {span}: {beat}, lost money {_whole(odds['lost'], n)}% of "
+            f"the time, middle result {_signed(odds['median_pct'])}, worst {_signed(odds['worst_pct'])}.")
+
+
+def _profile(ins: dict):
+    p = ins.get("profile")
+    if not isinstance(p, dict):
+        return None
+    facts = ("rate_type", "issuer_aims_price_near_100", "pay_schedule")
+    out = {f: _v(p.get(f)) for f in facts}
+    out["built_for"] = p.get("built_for")
+    srcs = []
+    for f in facts:
+        u = _src(p.get(f))
+        if u and u not in srcs:
+            srcs.append(u)
+    out["sources"] = srcs
+    return out
+
+
 def instrument_flags(ins: dict, amount_usd: float, days: int, as_of: dt.date) -> list[str]:
     flags = set(ins.get("flags") or [])
     if ins.get("kind") == "preferred":
@@ -135,8 +315,7 @@ def instrument_flags(ins: dict, amount_usd: float, days: int, as_of: dt.date) ->
         flags.add("thin_trading")
     if (ins.get("payments") or {}).get("gaps"):
         flags.add("payment_gap")
-    nxt = ins.get("next_pay_date")
-    if nxt is None or dt.date.fromisoformat(nxt) > as_of + dt.timedelta(days=days):
+    if not pay_in_hold(ins, as_of, days)[0]:
         flags.add("no_payment_in_window")
     if _stale(ins.get("close_usd"), ins.get("stated_rate_pct"), ins.get("yield_pct"),
               ins.get("worst_drop_pct"), ins.get("avg_volume_30d")):
@@ -173,6 +352,7 @@ def compare(feed: dict, amount_usd: float, days: int, max_drop_pct: float, kinds
     kinds = sorted(set(kinds))
     _check(amount_usd, days, max_drop_pct, kinds)
     as_of = dt.date.fromisoformat(feed["date"])
+    tbill = _tbill_pct(feed)
 
     options, excluded = [], []
     for ins in feed.get("instruments", []):
@@ -183,16 +363,25 @@ def compare(feed: dict, amount_usd: float, days: int, max_drop_pct: float, kinds
         y = round(_v(ins["yield_pct"]), 3)
         close = ins.get("close_usd") or {}
         rate = ins.get("stated_rate_pct") or {}
+        pays, basis = pay_in_hold(ins, as_of, days)
+        odds, why = _odds_for(ins, days, tbill)
+        flags = instrument_flags(ins, amount_usd, days, as_of)
+        if odds is None:
+            flags = _order(flags + ["no_hold_odds"])
         options.append({
             "ticker": ins["ticker"], "name": ins.get("name"), "kind": ins["kind"],
-            "yield_pct": y, "est_income_usd": _income(amount_usd, y, days),
+            "yield_pct": y, "est_income_usd": _income(amount_usd, y, days) if pays else 0,
+            "est_income_reason": None if pays else f"no payment lands inside the {days} days: {basis}",
+            "pay_in_hold": pays, "pay_in_hold_basis": basis,
             "worst_drop_pct": round(_v(ins["worst_drop_pct"]), 3),
+            "hold_odds": odds, "hold_odds_reason": why, "profile": _profile(ins),
             "close_usd": _v(close), "par_usd": ins.get("par_usd"), "stated_rate_pct": _v(rate),
             "schedule": ins.get("schedule"), "next_pay_date": ins.get("next_pay_date"),
-            "flags": instrument_flags(ins, amount_usd, days, as_of),
+            "flags": flags,
             "as_of": close.get("as_of"), "source": _src(close), "rate_source": _src(rate),
         })
-    options.sort(key=lambda o: (-o["yield_pct"], o["ticker"]))
+    options.sort(key=lambda o: (0, -o["hold_odds"]["median_pct"], o["ticker"]) if o["hold_odds"]
+                 else (1, -o["yield_pct"], o["ticker"]))
     excluded.sort(key=lambda e: e["ticker"])
 
     benchmarks = []
@@ -206,7 +395,9 @@ def compare(feed: dict, amount_usd: float, days: int, max_drop_pct: float, kinds
             row["reason"] = yv.get("reason")
         benchmarks.append(row)
 
+    summary = [summary_line(o["ticker"], o["hold_odds"], as_of) for o in options if o["hold_odds"]]
     return {"as_of": feed["date"],
             "inputs": {"amount_usd": amount_usd, "days": days, "max_drop_pct": max_drop_pct,
                        "kinds": kinds},
-            "options": options, "benchmarks": benchmarks, "excluded": excluded, "note": NOTE}
+            "options": options, "summary": summary, "benchmarks": benchmarks, "excluded": excluded,
+            "note": NOTE, "hold_odds_note": HOLD_NOTE}

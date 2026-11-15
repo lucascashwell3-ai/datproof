@@ -54,6 +54,8 @@ BILLS_CSV = ("https://home.treasury.gov/resource-center/data-chart-center/intere
 USDC_POOL = "aa70268e-4b52-42bf-a116-608b370f9501"  # Aave v3, USDC, Ethereum
 LLAMA_CHART = f"https://yields.llama.fi/chart/{USDC_POOL}"
 BLS_CPI = "https://api.bls.gov/publicAPI/v1/timeseries/data/CUUR0000SA0"  # CPI-U, all items, US city average
+PROFILES_FILE = "data/instrument_profiles.json"  # issuer-sourced facts on what each instrument is built for
+PROFILE_FACTS = ("rate_type", "issuer_aims_price_near_100", "pay_schedule", "offer_price_usd")
 CREDIT_FILE = "data/credit.json"  # issuers' own published figures, written by scripts/fetch_credit.py
 INFLATION_STALE_DAYS = 75  # CPI comes out monthly, about two weeks after the month ends
 
@@ -383,7 +385,39 @@ def _err(e: Exception) -> str:
     return f"{type(e).__name__}: {e}"[:300]
 
 
-def gather(today: dt.date, fetch=_get, credit_path=None) -> dict:
+def load_profiles(path) -> tuple[dict, str | None]:
+    """{ticker: profile} from the sourced profiles file, and an error if it could not be read."""
+    import json as _json
+    import pathlib as _pl
+    try:
+        doc = _json.loads(_pl.Path(path).read_text())
+        return doc, None
+    except Exception as e:  # noqa: BLE001
+        return {}, _err(e)
+
+
+def profile_for(sym: str, doc: dict, err: str | None) -> dict:
+    """One instrument's profile, each fact carrying its filing, the exact words and the day it was read.
+    A missing fact is null with the reason; never filled in."""
+    at = str(doc.get("read_on") or "") or _now()
+    p = (doc.get("instruments") or {}).get(sym)
+    out: dict = {"issuer": (p or {}).get("issuer"), "built_for": (p or {}).get("built_for")}
+    for f in PROFILE_FACTS:
+        fact = (p or {}).get(f)
+        if f == "offer_price_usd" and p is not None and fact is None:
+            continue  # only stated where the issuer sold below the stated amount
+        if err or not isinstance(fact, dict) or not fact.get("source") or not fact.get("quote"):
+            reason = err or (fact or {}).get("reason") or f"{sym}.{f} not sourced in {PROFILES_FILE}"
+            out[f] = {"value": None, "source": (fact or {}).get("source") or PROFILES_FILE,
+                      "fetched_at": at, "reason": reason}
+            continue
+        out[f] = {**fact, "fetched_at": at, "reason": None}
+    if out["built_for"] is None:
+        out["built_for_reason"] = err or f"{sym} has no built_for line in {PROFILES_FILE}"
+    return out
+
+
+def gather(today: dt.date, fetch=_get, credit_path=None, profiles_path=None) -> dict:
     """Fetch every source and return the day's snapshot. Never raises for a source failure."""
     errors: dict[str, list[str]] = {k: [] for k in ("nasdaq", "strategy", "strive", "sec", "treasury", "llama", "bls")}
     problems: list[str] = []
@@ -418,6 +452,9 @@ def gather(today: dt.date, fetch=_get, credit_path=None) -> dict:
         issuer_divs["SATA"] = parse_strive_dividends(payload)
     except Exception as e:  # noqa: BLE001
         errors["strive"].append(f"SATA dividend list: {_err(e)}")
+
+    import pathlib as _pl0
+    profiles, profiles_err = load_profiles(profiles_path or _pl0.Path(__file__).resolve().parents[1] / PROFILES_FILE)
 
     instruments = []
     for sym in TICKERS:
@@ -475,6 +512,7 @@ def gather(today: dt.date, fetch=_get, credit_path=None) -> dict:
         if any(isinstance(v, dict) and v.get("stale") for v in inst.values()):
             flags.append("stale")
         inst["flags"] = flags
+        inst["profile"] = profile_for(sym, profiles, profiles_err)
         inst["dividends"] = [{"ex": ex.isoformat(), "pay": pay.isoformat(), "usd": amt} for ex, pay, amt in divs]
         if divs:
             inst["dividends_source"] = divs_url
