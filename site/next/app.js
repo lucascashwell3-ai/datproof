@@ -412,7 +412,7 @@
         if (d >= 1) return 0;
         var base = Math.pow(1 - sm(0.04, 1, d), 1.5), w = weather(X, y, t, 260);
         return base * (0.3 + 1.05 * w);
-      }, function (cv) { cv.style.left = left + "px"; document.body.insertBefore(cv, document.body.firstChild); });
+      }, function (cv) { cv.style.left = "auto"; cv.style.right = "0"; document.body.insertBefore(cv, document.body.firstChild); });  // pinned right: the canvas rounds up to whole cells and must not widen the page
     }
     // Section edge: a soft band of dots, no straight line on either side, thinning at the screen edges.
     function edge(sec, W) {
