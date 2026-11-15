@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-14",
+  "date": "2026-11-15",
   "ticker": "STRK",
   "name": "Strategy Strike preferred",
   "issuer": "Strategy",
@@ -9,8 +9,8 @@
     "value": 66.16,
     "unit": "usd",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-    "fetched_at": "2026-11-14T18:34:43Z",
+    "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+    "fetched_at": "2026-11-15T19:11:47Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 72103.5,
     "unit": "shares",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-    "fetched_at": "2026-11-14T18:34:43Z",
+    "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+    "fetched_at": "2026-11-15T19:11:47Z",
     "stale": false,
     "reason": null
   },
@@ -29,7 +29,7 @@
     "unit": "pct",
     "as_of": "2026-11-13",
     "source": "https://api.strategy.com/btc/strkKpiData",
-    "fetched_at": "2026-11-14T18:34:43Z",
+    "fetched_at": "2026-11-15T19:11:47Z",
     "stale": false,
     "reason": null
   },
@@ -54,7 +54,7 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 252,
+  "trading_days": 251,
   "schedule": "quarterly",
   "next_pay_date": null,
   "payments": {

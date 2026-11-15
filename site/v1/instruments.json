@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-14",
-  "built_at": "2026-11-14T18:34:57Z",
+  "date": "2026-11-15",
+  "built_at": "2026-11-15T19:11:59Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -22,8 +22,8 @@
         "value": 99.91,
         "unit": "usd",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:23Z",
+        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:26Z",
         "stale": false,
         "reason": null
       },
@@ -31,8 +31,8 @@
         "value": 1736935.2,
         "unit": "shares",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:23Z",
+        "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:26Z",
         "stale": false,
         "reason": null
       },
@@ -42,7 +42,7 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strcKpiData",
-        "fetched_at": "2026-11-14T18:34:21Z",
+        "fetched_at": "2026-11-15T19:11:23Z",
         "stale": false,
         "reason": null
       },
@@ -67,7 +67,7 @@
         "stale": false,
         "reason": null
       },
-      "trading_days": 252,
+      "trading_days": 251,
       "schedule": "every business day",
       "next_pay_date": "2026-11-16",
       "payments": {
@@ -93,8 +93,8 @@
         "value": 97.73,
         "unit": "usd",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:27Z",
+        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:32Z",
         "stale": false,
         "reason": null
       },
@@ -102,8 +102,8 @@
         "value": 485176.8,
         "unit": "shares",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:27Z",
+        "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:32Z",
         "stale": false,
         "reason": null
       },
@@ -112,8 +112,8 @@
         "value": 13.0,
         "unit": "pct",
         "as_of": "2026-11-06",
-        "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-07&toDate=2026-11-15",
-        "fetched_at": "2026-11-14T18:34:27Z",
+        "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-08&toDate=2026-11-16",
+        "fetched_at": "2026-11-15T19:11:32Z",
         "stale": true,
         "reason": null
       },
@@ -138,7 +138,7 @@
         "stale": false,
         "reason": null
       },
-      "trading_days": 252,
+      "trading_days": 251,
       "schedule": "every business day",
       "next_pay_date": "2026-11-16",
       "payments": {
@@ -165,8 +165,8 @@
         "value": 96.915,
         "unit": "usd",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:33Z",
+        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:37Z",
         "stale": false,
         "reason": null
       },
@@ -174,8 +174,8 @@
         "value": 366525.0,
         "unit": "shares",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:33Z",
+        "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:37Z",
         "stale": false,
         "reason": null
       },
@@ -183,9 +183,9 @@
       "stated_rate_pct": {
         "value": 15.0,
         "unit": "pct",
-        "as_of": "2026-11-14",
+        "as_of": "2026-11-15",
         "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-        "fetched_at": "2026-11-14T18:34:33Z",
+        "fetched_at": "2026-11-15T19:11:38Z",
         "stale": false,
         "reason": null
       },
@@ -237,8 +237,8 @@
         "value": 100.35,
         "unit": "usd",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:36Z",
+        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:41Z",
         "stale": false,
         "reason": null
       },
@@ -246,8 +246,8 @@
         "value": 50294.7,
         "unit": "shares",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:36Z",
+        "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:41Z",
         "stale": false,
         "reason": null
       },
@@ -257,7 +257,7 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strfKpiData",
-        "fetched_at": "2026-11-14T18:34:36Z",
+        "fetched_at": "2026-11-15T19:11:41Z",
         "stale": false,
         "reason": null
       },
@@ -282,7 +282,7 @@
         "stale": false,
         "reason": null
       },
-      "trading_days": 252,
+      "trading_days": 251,
       "schedule": "quarterly",
       "next_pay_date": null,
       "payments": {
@@ -308,8 +308,8 @@
         "value": 66.16,
         "unit": "usd",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:43Z",
+        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:47Z",
         "stale": false,
         "reason": null
       },
@@ -317,8 +317,8 @@
         "value": 72103.5,
         "unit": "shares",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:43Z",
+        "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:47Z",
         "stale": false,
         "reason": null
       },
@@ -328,7 +328,7 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strkKpiData",
-        "fetched_at": "2026-11-14T18:34:43Z",
+        "fetched_at": "2026-11-15T19:11:47Z",
         "stale": false,
         "reason": null
       },
@@ -353,7 +353,7 @@
         "stale": false,
         "reason": null
       },
-      "trading_days": 252,
+      "trading_days": 251,
       "schedule": "quarterly",
       "next_pay_date": null,
       "payments": {
@@ -379,8 +379,8 @@
         "value": 66.65,
         "unit": "usd",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:49Z",
+        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:54Z",
         "stale": false,
         "reason": null
       },
@@ -388,8 +388,8 @@
         "value": 82253.6,
         "unit": "shares",
         "as_of": "2026-11-13",
-        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
-        "fetched_at": "2026-11-14T18:34:49Z",
+        "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
+        "fetched_at": "2026-11-15T19:11:54Z",
         "stale": false,
         "reason": null
       },
@@ -399,7 +399,7 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://api.strategy.com/btc/strdKpiData",
-        "fetched_at": "2026-11-14T18:34:49Z",
+        "fetched_at": "2026-11-15T19:11:54Z",
         "stale": false,
         "reason": null
       },
@@ -424,7 +424,7 @@
         "stale": false,
         "reason": null
       },
-      "trading_days": 252,
+      "trading_days": 251,
       "schedule": "quarterly",
       "next_pay_date": null,
       "payments": {
@@ -452,7 +452,7 @@
         "unit": "pct",
         "as_of": "2026-11-13",
         "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_bill_rates&field_tdr_date_value=2026&page&_format=csv",
-        "fetched_at": "2026-11-14T18:34:52Z",
+        "fetched_at": "2026-11-15T19:11:55Z",
         "stale": false,
         "reason": null
       }
@@ -467,9 +467,9 @@
       "yield_pct": {
         "value": 3.8792,
         "unit": "pct",
-        "as_of": "2026-11-14",
+        "as_of": "2026-11-15",
         "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
-        "fetched_at": "2026-11-14T18:34:56Z",
+        "fetched_at": "2026-11-15T19:11:59Z",
         "stale": false,
         "reason": null
       }
@@ -482,11 +482,11 @@
         "smart_contract_risk"
       ],
       "yield_pct": {
-        "value": 3.7976,
+        "value": 4.0904,
         "unit": "pct",
-        "as_of": "2026-11-14",
+        "as_of": "2026-11-15",
         "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501",
-        "fetched_at": "2026-11-14T18:34:57Z",
+        "fetched_at": "2026-11-15T19:11:59Z",
         "stale": false,
         "reason": null
       }
