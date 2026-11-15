@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-type="a">
+<html lang="en" data-type="a" data-color="green">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -28,6 +28,13 @@
     l.href = "https://fonts.googleapis.com/css2?" + FONTS[t] + "&display=swap";
     document.head.appendChild(l);
     window.DP_FONTS = FONTS;
+    /* Colour option: ?color=green|blue|orange, else the visitor's last pick, else green. */
+    var COLORS = { green: 1, blue: 1, orange: 1 }, c = null;
+    try { c = new URLSearchParams(location.search).get("color"); } catch (e) {}
+    if (!COLORS[c]) { try { c = localStorage.getItem("dp-color"); } catch (e) {} }
+    if (!COLORS[c]) c = "green";
+    try { localStorage.setItem("dp-color", c); } catch (e) {}
+    document.documentElement.setAttribute("data-color", c);
   })();
 </script>
 <link rel="stylesheet" href="styles.css">
@@ -143,6 +150,9 @@ https://lucascashwell3-ai.github.io/datproof/llms.txt</code></pre>
 
 <div class="typesw" role="group" aria-label="Type option">
   <button type="button" data-t="a">A</button><button type="button" data-t="b">B</button><button type="button" data-t="c">C</button>
+</div>
+<div class="colorsw" role="group" aria-label="Colour option">
+  <button type="button" data-c="green" aria-label="Green"><span></span></button><button type="button" data-c="blue" aria-label="Blue"><span></span></button><button type="button" data-c="orange" aria-label="Orange"><span></span></button>
 </div>
 
 <script src="app.js"></script>

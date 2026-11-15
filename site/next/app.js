@@ -129,6 +129,52 @@
 
   var feed, scen, closes = {}, AMOUNT = 10000;
 
+  // ---------- dithered shading: 4x4 ordered (Bayer) dots, 2px cells, flat colour only ----------
+  // Level k (1-16) turns on the cells whose threshold is below k, so every level contains the one under it
+  // and a run of bands at rising levels reads as a 1-bit gradient. Green and blue only; orange stays flat.
+  var BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5], CELL = 2;
+  function dithered() { return document.documentElement.getAttribute("data-color") !== "orange"; }
+  function ditherDefs(svg, id, cls) {
+    var defs = el("defs", {});
+    for (var k = 1; k <= 16; k++) {
+      var d = "";
+      for (var i = 0; i < 16; i++) if (BAYER[i] < k) d += "M" + (i % 4) * CELL + " " + Math.floor(i / 4) * CELL + "h" + CELL + "v" + CELL + "h-" + CELL + "z";
+      var p = el("pattern", { id: id + k, width: 4 * CELL, height: 4 * CELL, patternUnits: "userSpaceOnUse" });
+      p.appendChild(el("path", { d: d, class: cls }));
+      defs.appendChild(p);
+    }
+    svg.appendChild(defs);
+  }
+  // Backdrop behind the first screen: dots thin out from the top-right corner.
+  function drawHeroDither() {
+    var old = $(".dz-hero"); if (old) old.parentNode.removeChild(old);
+    if (!dithered()) return;
+    var W = document.documentElement.clientWidth, R = Math.round(Math.min(W * 0.55, 780)), N = 12;
+    var svg = el("svg", { class: "dz dz-hero", width: W, height: R, viewBox: "0 0 " + W + " " + R, "aria-hidden": "true", focusable: "false" });
+    ditherDefs(svg, "dzh", "dz-ink");
+    for (var b = 0; b < N; b++) svg.appendChild(el("circle", { cx: W, cy: 0, r: Math.round(R * (1 - b / N)), fill: "url(#dzh" + (1 + Math.round(b * 9 / (N - 1))) + ")" }));
+    document.body.insertBefore(svg, document.body.firstChild);
+  }
+  // Top edge of "Connect your agent": a dot horizon that fades down into the section.
+  function drawEdgeDither() {
+    var sec = $("#agent"), old = sec.querySelector(".dz-edge"); if (old) sec.removeChild(old);
+    if (!dithered()) return;
+    var W = document.documentElement.clientWidth, H = 48, rows = 12;
+    var svg = el("svg", { class: "dz dz-edge", width: W, height: H, viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", "aria-hidden": "true", focusable: "false" });
+    ditherDefs(svg, "dze", "dz-ink");
+    for (var r = 0; r < rows; r++) svg.appendChild(el("rect", { x: 0, y: r * H / rows, width: W, height: H / rows, fill: "url(#dze" + Math.max(1, Math.round(10 - r * 10 / rows)) + ")" }));
+    sec.insertBefore(svg, sec.firstChild);
+  }
+  // A digital-credit bar: dots fill in from sparse at the left to solid at the value end.
+  function ditherBar(x0, y, w, h) {
+    var g = el("g", { class: "c-bar dc dz-bar" }), LV = [2, 4, 8, 12, 16], N = LV.length;
+    for (var s = 0; s < N; s++) {
+      var a = Math.round(x0 + w * s / N), b = Math.round(x0 + w * (s + 1) / N);
+      g.appendChild(el("rect", { x: a, y: y, width: b - a, height: h, fill: "url(#dzc" + LV[s] + ")" }));
+    }
+    return g;
+  }
+
   function bench(id) { return (feed.benchmarks || []).filter(function (b) { return b.id === id; })[0]; }
   function inst(t) { return (feed.instruments || []).filter(function (i) { return i.ticker === t; })[0]; }
   function lead() { return LEAD.map(inst).filter(function (i) { return i && has(i.yield_pct); }); }
@@ -177,7 +223,8 @@
     var room = narrow ? 64 : 78;
     function x(u) { return L + (u / max) * (W - L - room); }
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
-    var infUsd = inf ? AMOUNT * v(inf) / 100 : null;
+    var infUsd = inf ? AMOUNT * v(inf) / 100 : null, dz = dithered();
+    if (dz) ditherDefs(svg, "dzc", "dz-acc");
     rows.forEach(function (r, i) {
       var y0 = top + i * rh, by = narrow ? y0 + 30 : y0 + (rh - bh) / 2;
       if (narrow) {
@@ -189,7 +236,8 @@
         svg.appendChild(el("text", { x: 0, y: by + bh / 2 - 2, class: "c-name" }, r.name));
         svg.appendChild(el("text", { x: 0, y: by + bh / 2 + 14, class: "c-note" }, r.note));
       }
-      svg.appendChild(el("rect", { x: L, y: by, width: Math.max(2, x(r.usd) - L), height: bh, rx: 2, class: "c-bar" + (r.dc ? " dc" : "") }));
+      if (r.dc && dz) svg.appendChild(ditherBar(L, by, Math.max(2, x(r.usd) - L), bh));
+      else svg.appendChild(el("rect", { x: L, y: by, width: Math.max(2, x(r.usd) - L), height: bh, rx: 2, class: "c-bar" + (r.dc ? " dc" : "") }));
       svg.appendChild(el("text", { x: x(r.usd) + 10, y: by + bh / 2 + 5, class: "c-val" + (r.dc ? " dc" : "") }, usd(r.usd)));
     });
     if (infUsd !== null) {
@@ -460,6 +508,23 @@
     });
   }
 
+  // ---------- colour option switch ----------
+  function initColorSwitch() {
+    var cur = document.documentElement.getAttribute("data-color");
+    $$(".colorsw button").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-c") === cur ? "true" : "false");
+      b.addEventListener("click", function () {
+        var c = b.getAttribute("data-c");
+        try { localStorage.setItem("dp-color", c); } catch (e) {}
+        try { var u = new URL(location.href); u.searchParams.set("color", c); history.replaceState(null, "", u); } catch (e) {}
+        document.documentElement.setAttribute("data-color", c);
+        $$(".colorsw button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        drawHeroDither(); drawEdgeDither();
+        if (feed) drawEarn(false);
+      });
+    });
+  }
+
   function getJSON(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); }
   function load(base) {
     return Promise.all([getJSON(base + "instruments.json"), getJSON(base + "scenarios.json")].concat(
@@ -481,11 +546,11 @@
     var w = window.innerWidth, t;
     window.addEventListener("resize", function () {
       if (window.innerWidth === w) return; w = window.innerWidth;
-      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); }, 120);
+      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); drawHeroDither(); drawEdgeDither(); }, 120);
     });
   }
 
-  initTabs(); initTypeSwitch();
+  initTabs(); initTypeSwitch(); initColorSwitch(); drawHeroDither(); drawEdgeDither();
   load("../v1/").catch(function () { return load("./v1-sample/"); }).then(start).catch(function (e) {
     $("#asof").innerHTML = '<span class="err">The feed did not load (' + esc(e.message) + "). Read the JSON files directly.</span>";
   });

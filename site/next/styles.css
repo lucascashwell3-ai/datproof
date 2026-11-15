@@ -67,6 +67,44 @@
   --tk-wt: 400;
 }
 
+/* Colour options, set on <html data-color="green|blue|orange">. Orange uses the base tokens above.
+   Each option retints every neutral toward its own hue; --dither is the dot colour for the dithered backdrops. */
+:root { --dither: transparent; --hover-mix: white; }
+/* Green: income ticking up on a trading screen. */
+:root[data-color="green"] {
+  --bg: oklch(0.155 0.014 162);
+  --bg-2: oklch(0.195 0.016 162);
+  --line: oklch(0.275 0.018 162);
+  --line-2: oklch(0.365 0.022 160);
+  --ink: oklch(0.965 0.008 155);
+  --ink-2: oklch(0.8 0.014 158);
+  --ink-3: oklch(0.69 0.016 158);
+  --quiet: oklch(0.47 0.006 160);
+  --accent: oklch(0.8 0.2 148);
+  --accent-ink: oklch(0.85 0.18 148);
+  --accent-wash: oklch(0.8 0.2 148 / 0.1);
+  --on-accent: oklch(0.2 0.05 158);
+  --focus: oklch(0.8 0.2 148 / 0.55);
+  --dither: oklch(0.36 0.1 150);
+}
+/* Blue: cold instrument light, not a bank's navy. */
+:root[data-color="blue"] {
+  --bg: oklch(0.15 0.018 252);
+  --bg-2: oklch(0.19 0.02 252);
+  --line: oklch(0.275 0.022 250);
+  --line-2: oklch(0.365 0.026 248);
+  --ink: oklch(0.965 0.008 235);
+  --ink-2: oklch(0.8 0.016 240);
+  --ink-3: oklch(0.69 0.02 242);
+  --quiet: oklch(0.47 0.008 248);
+  --accent: oklch(0.83 0.12 222);
+  --accent-ink: oklch(0.86 0.11 222);
+  --accent-wash: oklch(0.83 0.12 222 / 0.1);
+  --on-accent: oklch(0.18 0.04 248);
+  --focus: oklch(0.83 0.12 222 / 0.55);
+  --dither: oklch(0.36 0.075 232);
+}
+
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --bg: oklch(0.99 0 0);
@@ -90,6 +128,32 @@
   --ink: oklch(0.19 0.004 70); --ink-2: oklch(0.38 0.005 70); --ink-3: oklch(0.48 0.005 70); --quiet: oklch(0.77 0.004 70);
   --accent: oklch(0.72 0.17 58); --accent-ink: oklch(0.55 0.16 50); --accent-wash: oklch(0.72 0.17 58 / 0.12);
   --on-accent: oklch(0.16 0.02 60); --focus: oklch(0.6 0.16 55 / 0.5); color-scheme: light;
+}
+@media (prefers-color-scheme: light) {
+  :root[data-color="green"]:not([data-theme="dark"]) {
+    --bg: oklch(0.99 0.004 155); --bg-2: oklch(0.965 0.008 155); --line: oklch(0.9 0.01 155); --line-2: oklch(0.8 0.014 155);
+    --ink: oklch(0.2 0.02 160); --ink-2: oklch(0.38 0.02 160); --ink-3: oklch(0.48 0.018 160); --quiet: oklch(0.77 0.006 160);
+    --accent: oklch(0.52 0.15 150); --accent-ink: oklch(0.47 0.13 152); --accent-wash: oklch(0.52 0.15 150 / 0.12);
+    --on-accent: oklch(0.99 0.01 150); --focus: oklch(0.55 0.15 150 / 0.5); --hover-mix: black; --dither: oklch(0.9 0.06 150);
+  }
+  :root[data-color="blue"]:not([data-theme="dark"]) {
+    --bg: oklch(0.99 0.004 240); --bg-2: oklch(0.965 0.008 240); --line: oklch(0.9 0.01 240); --line-2: oklch(0.8 0.014 240);
+    --ink: oklch(0.2 0.025 250); --ink-2: oklch(0.38 0.025 250); --ink-3: oklch(0.48 0.022 250); --quiet: oklch(0.77 0.008 248);
+    --accent: oklch(0.52 0.12 238); --accent-ink: oklch(0.47 0.11 238); --accent-wash: oklch(0.52 0.12 238 / 0.12);
+    --on-accent: oklch(0.99 0.01 235); --focus: oklch(0.55 0.12 235 / 0.5); --hover-mix: black; --dither: oklch(0.91 0.04 232);
+  }
+}
+:root[data-theme="light"][data-color="green"] {
+  --bg: oklch(0.99 0.004 155); --bg-2: oklch(0.965 0.008 155); --line: oklch(0.9 0.01 155); --line-2: oklch(0.8 0.014 155);
+  --ink: oklch(0.2 0.02 160); --ink-2: oklch(0.38 0.02 160); --ink-3: oklch(0.48 0.018 160); --quiet: oklch(0.77 0.006 160);
+  --accent: oklch(0.52 0.15 150); --accent-ink: oklch(0.47 0.13 152); --accent-wash: oklch(0.52 0.15 150 / 0.12);
+  --on-accent: oklch(0.99 0.01 150); --focus: oklch(0.55 0.15 150 / 0.5); --hover-mix: black; --dither: oklch(0.9 0.06 150);
+}
+:root[data-theme="light"][data-color="blue"] {
+  --bg: oklch(0.99 0.004 240); --bg-2: oklch(0.965 0.008 240); --line: oklch(0.9 0.01 240); --line-2: oklch(0.8 0.014 240);
+  --ink: oklch(0.2 0.025 250); --ink-2: oklch(0.38 0.025 250); --ink-3: oklch(0.48 0.022 250); --quiet: oklch(0.77 0.008 248);
+  --accent: oklch(0.52 0.12 238); --accent-ink: oklch(0.47 0.11 238); --accent-wash: oklch(0.52 0.12 238 / 0.12);
+  --on-accent: oklch(0.99 0.01 235); --focus: oklch(0.55 0.12 235 / 0.5); --hover-mix: black; --dither: oklch(0.91 0.04 232);
 }
 @media (min-width: 40rem) { :root { --gut: 2rem; } }
 
@@ -159,7 +223,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   border: 0; border-radius: 8px; cursor: pointer; text-decoration: none;
   transition: background-color 140ms cubic-bezier(0.25, 1, 0.5, 1), transform 140ms cubic-bezier(0.25, 1, 0.5, 1);
 }
-@media (hover: hover) and (pointer: fine) { .btn:hover { background: color-mix(in oklab, var(--accent) 86%, white); } }
+@media (hover: hover) and (pointer: fine) { .btn:hover { background: color-mix(in oklab, var(--accent) 86%, var(--hover-mix)); } }
 .btn:active { transform: scale(0.97); }
 
 /* chart text (SVG) */
@@ -327,6 +391,25 @@ h3 { font-family: var(--f-disp); }
 .typesw:hover, .typesw:focus-within { opacity: 1; }
 .typesw button { font: 600 0.6875rem/1 system-ui, sans-serif; color: var(--ink-3); background: none; border: 0; border-radius: 5px; width: 1.625rem; height: 1.625rem; cursor: pointer; }
 .typesw button[aria-pressed="true"] { background: var(--line-2); color: var(--ink); }
+
+/* colour option switch */
+.colorsw { position: fixed; left: 0.75rem; bottom: 3.125rem; z-index: 10; display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--line); opacity: 0.7; transition: opacity 140ms ease-out; }
+.colorsw:hover, .colorsw:focus-within { opacity: 1; }
+.colorsw button { display: grid; place-items: center; background: none; border: 0; border-radius: 5px; width: 1.625rem; height: 1.625rem; padding: 0; cursor: pointer; }
+.colorsw button span { width: 0.75rem; height: 0.75rem; border-radius: 3px; }
+.colorsw [data-c="green"] span { background: oklch(0.8 0.2 148); }
+.colorsw [data-c="blue"] span { background: oklch(0.83 0.12 222); }
+.colorsw [data-c="orange"] span { background: oklch(0.76 0.165 62); }
+.colorsw button[aria-pressed="true"] { background: var(--line-2); }
+
+/* dithered shading: 1-bit ordered (Bayer) dot patterns drawn as SVG in app.js. Green and blue only. */
+.dz { display: block; pointer-events: none; shape-rendering: crispEdges; }
+.dz-ink { fill: var(--dither); }
+.dz-acc { fill: var(--accent); }
+.dz-hero { position: absolute; top: 0; left: 0; width: 100%; z-index: -1; }
+.dz-edge { position: absolute; top: clamp(1rem, 2.5vw, 2rem); left: calc(50% - 50vw); width: 100vw; height: 3rem; }
+#agent { position: relative; }
+:root[data-color="orange"] .dz { display: none; }
 
 @media (max-width: 40rem) {
   .lf-row { grid-template-columns: 1fr auto; }
