@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-16",
   "ticker": "STRC",
   "name": "Strategy Stretch preferred",
   "issuer": "Strategy",
@@ -9,8 +9,8 @@
     "value": 99.91,
     "unit": "usd",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
-    "fetched_at": "2026-11-15T19:11:26Z",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
+    "fetched_at": "2026-11-16T22:39:26Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 1736935.2,
     "unit": "shares",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
-    "fetched_at": "2026-11-15T19:11:26Z",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
+    "fetched_at": "2026-11-16T22:39:26Z",
     "stale": false,
     "reason": null
   },
@@ -27,9 +27,9 @@
   "stated_rate_pct": {
     "value": 12.0,
     "unit": "pct",
-    "as_of": "2026-11-13",
+    "as_of": "2026-11-16",
     "source": "https://api.strategy.com/btc/strcKpiData",
-    "fetched_at": "2026-11-15T19:11:23Z",
+    "fetched_at": "2026-11-16T22:39:23Z",
     "stale": false,
     "reason": null
   },
@@ -54,14 +54,14 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 251,
+  "trading_days": 250,
   "schedule": "every business day",
-  "next_pay_date": "2026-11-16",
+  "next_pay_date": "2026-11-17",
   "payments": {
-    "paid": 28,
-    "in_a_row": 28,
+    "paid": 29,
+    "in_a_row": 29,
     "gaps": [],
-    "last_paid": "2026-11-13"
+    "last_paid": "2026-11-16"
   },
   "cross_check": "ok",
   "flags": [

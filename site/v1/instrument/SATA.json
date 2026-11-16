@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-16",
   "ticker": "SATA",
   "name": "Strive Variable Rate Series A preferred",
   "issuer": "Strive",
@@ -9,8 +9,8 @@
     "value": 97.73,
     "unit": "usd",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
-    "fetched_at": "2026-11-15T19:11:32Z",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
+    "fetched_at": "2026-11-16T22:39:32Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 485176.8,
     "unit": "shares",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
-    "fetched_at": "2026-11-15T19:11:32Z",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
+    "fetched_at": "2026-11-16T22:39:32Z",
     "stale": false,
     "reason": null
   },
@@ -27,10 +27,10 @@
   "stated_rate_pct": {
     "value": 13.0,
     "unit": "pct",
-    "as_of": "2026-11-06",
-    "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-08&toDate=2026-11-16",
-    "fetched_at": "2026-11-15T19:11:32Z",
-    "stale": true,
+    "as_of": "2026-11-13",
+    "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-09&toDate=2026-11-17",
+    "fetched_at": "2026-11-16T22:39:32Z",
+    "stale": false,
     "reason": null
   },
   "yield_pct": {
@@ -41,7 +41,7 @@
       "stated_rate_pct",
       "close_usd"
     ],
-    "stale": true,
+    "stale": false,
     "reason": null
   },
   "worst_drop_pct": {
@@ -54,20 +54,19 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 251,
+  "trading_days": 250,
   "schedule": "every business day",
-  "next_pay_date": "2026-11-16",
+  "next_pay_date": "2026-11-17",
   "payments": {
-    "paid": 111,
-    "in_a_row": 111,
+    "paid": 112,
+    "in_a_row": 112,
     "gaps": [],
-    "last_paid": "2026-11-13"
+    "last_paid": "2026-11-16"
   },
   "cross_check": "ok",
   "flags": [
     "price_moves",
-    "issuer_sets_rate",
-    "stale"
+    "issuer_sets_rate"
   ],
   "dividends": [
     {

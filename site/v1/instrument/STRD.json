@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-16",
   "ticker": "STRD",
   "name": "Strategy Stride preferred",
   "issuer": "Strategy",
@@ -9,8 +9,8 @@
     "value": 66.65,
     "unit": "usd",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
-    "fetched_at": "2026-11-15T19:11:54Z",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
+    "fetched_at": "2026-11-16T22:39:51Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 82253.6,
     "unit": "shares",
     "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-14&todate=2026-11-15&limit=400",
-    "fetched_at": "2026-11-15T19:11:54Z",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
+    "fetched_at": "2026-11-16T22:39:51Z",
     "stale": false,
     "reason": null
   },
@@ -27,9 +27,9 @@
   "stated_rate_pct": {
     "value": 10.0,
     "unit": "pct",
-    "as_of": "2026-11-13",
+    "as_of": "2026-11-16",
     "source": "https://api.strategy.com/btc/strdKpiData",
-    "fetched_at": "2026-11-15T19:11:54Z",
+    "fetched_at": "2026-11-16T22:39:51Z",
     "stale": false,
     "reason": null
   },
@@ -54,7 +54,7 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 251,
+  "trading_days": 250,
   "schedule": "quarterly",
   "next_pay_date": null,
   "payments": {
