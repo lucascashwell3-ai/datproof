@@ -1,25 +1,25 @@
 {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "ticker": "STRC",
   "name": "Strategy Stretch preferred",
   "issuer": "Strategy",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 99.91,
+    "value": 99.12,
     "unit": "usd",
-    "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
-    "fetched_at": "2026-11-16T22:39:26Z",
+    "as_of": "2026-11-16",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-16&todate=2026-11-17&limit=400",
+    "fetched_at": "2026-11-17T21:26:02Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 1736935.2,
+    "value": 1779871.5,
     "unit": "shares",
-    "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
-    "fetched_at": "2026-11-16T22:39:26Z",
+    "as_of": "2026-11-16",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-16&todate=2026-11-17&limit=400",
+    "fetched_at": "2026-11-17T21:26:02Z",
     "stale": false,
     "reason": null
   },
@@ -27,14 +27,14 @@
   "stated_rate_pct": {
     "value": 12.0,
     "unit": "pct",
-    "as_of": "2026-11-16",
+    "as_of": "2026-11-17",
     "source": "https://api.strategy.com/btc/strcKpiData",
-    "fetched_at": "2026-11-16T22:39:23Z",
+    "fetched_at": "2026-11-17T21:26:00Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 12.011,
+    "value": 12.107,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -54,14 +54,14 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 250,
+  "trading_days": 251,
   "schedule": "every business day",
-  "next_pay_date": "2026-11-17",
+  "next_pay_date": "2026-11-18",
   "payments": {
-    "paid": 29,
-    "in_a_row": 29,
+    "paid": 30,
+    "in_a_row": 30,
     "gaps": [],
-    "last_paid": "2026-11-16"
+    "last_paid": "2026-11-17"
   },
   "cross_check": "ok",
   "flags": [

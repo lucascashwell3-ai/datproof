@@ -1,40 +1,40 @@
 {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "ticker": "SATS",
   "name": "Strive Series S preferred",
   "issuer": "Strive",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 96.915,
+    "value": 94.35,
     "unit": "usd",
-    "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
-    "fetched_at": "2026-11-16T22:39:36Z",
+    "as_of": "2026-11-16",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-16&todate=2026-11-17&limit=400",
+    "fetched_at": "2026-11-17T21:26:12Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 366525.0,
+    "value": 357985.0,
     "unit": "shares",
-    "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
-    "fetched_at": "2026-11-16T22:39:36Z",
+    "as_of": "2026-11-16",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-16&todate=2026-11-17&limit=400",
+    "fetched_at": "2026-11-17T21:26:12Z",
     "stale": false,
     "reason": null
   },
-  "volume_rows": 21,
+  "volume_rows": 22,
   "stated_rate_pct": {
     "value": 15.0,
     "unit": "pct",
-    "as_of": "2026-11-16",
+    "as_of": "2026-11-17",
     "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-    "fetched_at": "2026-11-16T22:39:36Z",
+    "fetched_at": "2026-11-17T21:26:13Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 15.477,
+    "value": 15.898,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -54,14 +54,14 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 21,
+  "trading_days": 22,
   "schedule": "every business day",
-  "next_pay_date": "2026-11-17",
+  "next_pay_date": "2026-11-18",
   "payments": {
-    "paid": 5,
-    "in_a_row": 5,
+    "paid": 6,
+    "in_a_row": 6,
     "gaps": [],
-    "last_paid": "2026-11-16"
+    "last_paid": "2026-11-17"
   },
   "cross_check": "no issuer list",
   "flags": [

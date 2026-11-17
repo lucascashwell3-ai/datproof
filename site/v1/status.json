@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-16",
-  "built_at": "2026-11-16T22:39:56Z",
+  "date": "2026-11-17",
+  "built_at": "2026-11-17T21:26:33Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -13,6 +13,6 @@
   "problems": [],
   "nulls": [],
   "stale": [],
-  "snapshot_sha256": "61f3033d1adef15c4db4340c9ea89ad5f10af803c501357ad9704fc3b233ec1f",
-  "stamp": "stamped; 2 earlier stamp(s) confirmed in bitcoin"
+  "snapshot_sha256": "9f5a8e6f908c37c42a933c764056b241e5001bb82512b2ccb3319ff627791624",
+  "stamp": "stamped; 3 earlier stamp(s) confirmed in bitcoin"
 }

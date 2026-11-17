@@ -1,25 +1,25 @@
 {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "ticker": "STRF",
   "name": "Strategy Strife preferred",
   "issuer": "Strategy",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 100.35,
+    "value": 99.96,
     "unit": "usd",
-    "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
-    "fetched_at": "2026-11-16T22:39:39Z",
+    "as_of": "2026-11-16",
+    "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-16&todate=2026-11-17&limit=400",
+    "fetched_at": "2026-11-17T21:26:18Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 50294.7,
+    "value": 52682.6,
     "unit": "shares",
-    "as_of": "2026-11-13",
-    "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-15&todate=2026-11-16&limit=400",
-    "fetched_at": "2026-11-16T22:39:39Z",
+    "as_of": "2026-11-16",
+    "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-16&todate=2026-11-17&limit=400",
+    "fetched_at": "2026-11-17T21:26:18Z",
     "stale": false,
     "reason": null
   },
@@ -27,14 +27,14 @@
   "stated_rate_pct": {
     "value": 10.0,
     "unit": "pct",
-    "as_of": "2026-11-16",
+    "as_of": "2026-11-17",
     "source": "https://api.strategy.com/btc/strfKpiData",
-    "fetched_at": "2026-11-16T22:39:39Z",
+    "fetched_at": "2026-11-17T21:26:18Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 9.965,
+    "value": 10.004,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -54,9 +54,9 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 250,
+  "trading_days": 251,
   "schedule": "quarterly",
-  "next_pay_date": null,
+  "next_pay_date": "2026-12-31",
   "payments": {
     "paid": 6,
     "in_a_row": 6,
@@ -97,6 +97,11 @@
     {
       "ex": "2026-09-15",
       "pay": "2026-09-30",
+      "usd": 2.5
+    },
+    {
+      "ex": "2026-12-15",
+      "pay": "2026-12-31",
       "usd": 2.5
     }
   ],
