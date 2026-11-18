@@ -1,5 +1,5 @@
 /* DATproof home. Dark first; light follows the system or data-theme. One accent: bitcoin orange.
-   Three type options set on <html data-type="a|b|c">; every type decision reads from the tokens below. */
+   Three type options set on <html data-type="a|b|c"> (C is the default); every type decision reads from the tokens below. */
 :root {
   --bg: oklch(0.155 0.004 70);
   --bg-2: oklch(0.195 0.004 70);
@@ -53,34 +53,19 @@
   --tk-wt: 500;
 }
 
-/* C: editorial. Instrument Serif headlines, Inter text and tabular numbers. */
+/* C: editorial. Gambetta headlines, Inter text and tabular numbers. */
 :root[data-type="c"] {
   --f-text: "Inter", system-ui, sans-serif;
-  --f-disp: "Instrument Serif", Georgia, serif;
+  --f-disp: "Gambetta", Georgia, serif;
   --f-num: "Inter", system-ui, sans-serif;
-  --d-wt: 400; --d-str: 100%; --d-trk: -0.015em; --d-lh: 0.98; --d-style: normal;
-  --h2-wt: 400; --h2-trk: -0.01em; --h2-lh: 1.02;
+  --d-wt: 300; --d-str: 100%; --d-trk: -0.03em; --d-lh: 1.02; --d-style: normal;
+  --h2-wt: 300; --h2-trk: -0.022em; --h2-lh: 1.08;
   --n-wt: 300; --n-str: 100%; --n-trk: -0.045em;
-  --t-hero: clamp(3rem, 1.4rem + 6.2vw, 6rem);
-  --t-xl: clamp(2.25rem, 1.5rem + 2.4vw, 3.5rem);
+  --t-hero: clamp(2.625rem, 1.3rem + 5.2vw, 5.125rem);
+  --t-xl: clamp(2rem, 1.4rem + 2vw, 3rem);
   --t-big: clamp(2.75rem, 2rem + 2.6vw, 4rem);
   --tk-wt: 400;
 }
-
-/* Headline serif candidates for type C, set on <html data-serif="1|2|3">. 0 keeps Instrument Serif.
-   These faces run wider than Instrument Serif, so the display sizes step down to hold the same line breaks. */
-:root[data-type="c"]:not([data-serif="0"]) {
-  --t-hero: clamp(2.625rem, 1.3rem + 5.2vw, 5.125rem);
-  --t-xl: clamp(2rem, 1.4rem + 2vw, 3rem);
-  --d-lh: 1.02; --h2-lh: 1.08;
-}
-/* 1 Gambetta: soft, pen-drawn. */
-:root[data-type="c"][data-serif="1"] { --f-disp: "Gambetta", Georgia, serif; --d-wt: 300; --h2-wt: 300; --d-trk: -0.03em; --h2-trk: -0.022em; }
-/* 2 Boska: thin and sharp, high contrast. */
-:root[data-type="c"][data-serif="2"] { --f-disp: "Boska", Georgia, serif; --d-wt: 300; --h2-wt: 400; --d-trk: -0.02em; --h2-trk: -0.015em; --t-hero: clamp(2.75rem, 1.3rem + 5.6vw, 5.5rem); }
-/* 3 Zodiak: wide and sturdy, bank-statement plain. */
-:root[data-type="c"][data-serif="3"] { --f-disp: "Zodiak", Georgia, serif; --d-wt: 400; --h2-wt: 400; --d-trk: -0.025em; --h2-trk: -0.018em; --t-hero: clamp(2.5rem, 1.2rem + 4.6vw, 4.5rem); --t-xl: clamp(1.875rem, 1.3rem + 1.8vw, 2.75rem); }
-:root[data-type="c"][data-serif="2"] :is(.hero-h, h2, h3) { font-variant-numeric: lining-nums; }
 
 /* Colour options, set on <html data-color="green|blue|orange">. Orange uses the base tokens above.
    Each option retints every neutral toward its own hue; --dither is the dot colour for the dithered backdrops. */
@@ -426,6 +411,8 @@ h3 { font-family: var(--f-disp); }
 .dz-hero { position: absolute; top: 0; left: 0; z-index: -1; }
 svg.dz-hero { width: 100%; }
 .dz-edge { position: absolute; top: clamp(1rem, 2.5vw, 2rem); left: calc(50% - 50vw); }
+/* The full-width dot strips round up to whole cells and use 100vw; clip so they can never add a sideways scroll. */
+body { overflow-x: clip; }
 svg.dz-edge { width: 100vw; height: 3rem; }
 #agent, #calc { position: relative; }
 .dz-host { position: relative; }

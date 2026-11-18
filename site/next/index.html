@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-type="a" data-color="green">
+<html lang="en" data-type="c" data-color="green">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,18 +9,21 @@
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=gambetta@300,301,400,401&display=swap">
 <script>
-  /* Type option: ?type=a|b|c, else the visitor's last pick, else A. Loads only that option's fonts. */
+  /* Type option: ?type=a|b|c, else the visitor's last pick, else C. Loads only that option's fonts.
+     C's headline face (Gambetta) comes from the Fontshare link below; its files download only when used. */
   (function () {
     var FONTS = {
       a: "family=Archivo:wdth,wght@62..125,400..800",
       b: "family=Geist:wght@400..700&family=Geist+Mono:wght@400..600",
-      c: "family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400..700"
+      c: "family=Inter:opsz,wght@14..32,400..700"
     };
     var t = null;
     try { t = new URLSearchParams(location.search).get("type"); } catch (e) {}
     if (!FONTS[t]) { try { t = localStorage.getItem("dp-type"); } catch (e) {} }
-    if (!FONTS[t]) t = "a";
+    if (!FONTS[t]) t = "c";
     try { localStorage.setItem("dp-type", t); } catch (e) {}
     document.documentElement.setAttribute("data-type", t);
     var l = document.createElement("link");
@@ -28,19 +31,6 @@
     l.href = "https://fonts.googleapis.com/css2?" + FONTS[t] + "&display=swap";
     document.head.appendChild(l);
     window.DP_FONTS = FONTS;
-    /* Headline serif for type C: ?serif=0..3, else the visitor's last pick, else 0 (Instrument Serif). */
-    var SERIFS = { "1": "gambetta", "2": "boska", "3": "zodiak" }, s = null;
-    try { s = new URLSearchParams(location.search).get("serif"); } catch (e) {}
-    if (s !== "0" && !SERIFS[s]) { try { s = localStorage.getItem("dp-serif"); } catch (e) {} }
-    if (!SERIFS[s]) s = "0";
-    try { localStorage.setItem("dp-serif", s); } catch (e) {}
-    document.documentElement.setAttribute("data-serif", s);
-    if (SERIFS[s]) {
-      var l2 = document.createElement("link");
-      l2.rel = "stylesheet";
-      l2.href = "https://api.fontshare.com/v2/css?f[]=" + SERIFS[s] + "@300,301,400,401&display=swap";
-      document.head.appendChild(l2);
-    }
     /* Colour option: ?color=green|blue|orange, else the visitor's last pick, else green. */
     var COLORS = { green: 1, blue: 1, orange: 1 }, c = null;
     try { c = new URLSearchParams(location.search).get("color"); } catch (e) {}
@@ -50,7 +40,7 @@
     document.documentElement.setAttribute("data-color", c);
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261117">
+<link rel="stylesheet" href="styles.css?v=20261117c">
 </head>
 <body>
 <header class="wrap bar">
@@ -168,6 +158,6 @@ https://lucascashwell3-ai.github.io/datproof/llms.txt</code></pre>
   <button type="button" data-c="green" aria-label="Green"><span></span></button><button type="button" data-c="blue" aria-label="Blue"><span></span></button><button type="button" data-c="orange" aria-label="Orange"><span></span></button>
 </div>
 
-<script src="app.js?v=20261117"></script>
+<script src="app.js?v=20261117c"></script>
 </body>
 </html>
