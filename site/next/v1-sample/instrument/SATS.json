@@ -1,0 +1,295 @@
+{
+  "date": "2026-11-14",
+  "ticker": "SATS",
+  "name": "Strive Series S preferred",
+  "issuer": "Strive",
+  "kind": "preferred",
+  "par_usd": 100,
+  "close_usd": {
+    "value": 96.915,
+    "unit": "usd",
+    "as_of": "2026-11-13",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T21:43:35Z",
+    "stale": false,
+    "reason": null
+  },
+  "avg_volume_30d": {
+    "value": 366525.0,
+    "unit": "shares",
+    "as_of": "2026-11-13",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T21:43:35Z",
+    "stale": false,
+    "reason": null
+  },
+  "volume_rows": 21,
+  "stated_rate_pct": {
+    "value": 15.0,
+    "unit": "pct",
+    "as_of": "2026-11-14",
+    "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
+    "fetched_at": "2026-11-14T21:43:36Z",
+    "stale": false,
+    "reason": null
+  },
+  "yield_pct": {
+    "value": 15.477,
+    "unit": "pct",
+    "formula": "stated_rate_pct*par_usd/close_usd",
+    "inputs": [
+      "stated_rate_pct",
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "worst_drop_pct": {
+    "value": 3.581,
+    "unit": "pct",
+    "formula": "largest fall from a high close to a later close, over the past year",
+    "inputs": [
+      "close_usd"
+    ],
+    "stale": false,
+    "reason": null
+  },
+  "trading_days": 21,
+  "schedule": "every business day",
+  "next_pay_date": "2026-11-16",
+  "payments": {
+    "paid": 4,
+    "in_a_row": 4,
+    "gaps": [],
+    "last_paid": "2026-11-13"
+  },
+  "cross_check": "no issuer list",
+  "flags": [
+    "price_moves",
+    "issuer_sets_rate",
+    "short_history"
+  ],
+  "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks",
+  "closes": {
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-13&todate=2026-11-14&limit=400",
+    "fetched_at": "2026-11-14T21:43:35Z",
+    "from": "2025-11-13",
+    "rows": [
+      [
+        "2026-10-16",
+        90.2
+      ],
+      [
+        "2026-10-19",
+        92.0
+      ],
+      [
+        "2026-10-20",
+        94.61
+      ],
+      [
+        "2026-10-21",
+        95.5
+      ],
+      [
+        "2026-10-22",
+        94.6
+      ],
+      [
+        "2026-10-23",
+        94.8827
+      ],
+      [
+        "2026-10-26",
+        94.5
+      ],
+      [
+        "2026-10-27",
+        94.6
+      ],
+      [
+        "2026-10-28",
+        94.89
+      ],
+      [
+        "2026-10-29",
+        95.2
+      ],
+      [
+        "2026-10-30",
+        93.25
+      ],
+      [
+        "2026-11-02",
+        92.08
+      ],
+      [
+        "2026-11-03",
+        92.85
+      ],
+      [
+        "2026-11-04",
+        95.01
+      ],
+      [
+        "2026-11-05",
+        94.61
+      ],
+      [
+        "2026-11-06",
+        94.27
+      ],
+      [
+        "2026-11-09",
+        95.5
+      ],
+      [
+        "2026-11-10",
+        95.49
+      ],
+      [
+        "2026-11-11",
+        96.39
+      ],
+      [
+        "2026-11-12",
+        96.54
+      ],
+      [
+        "2026-11-13",
+        96.915
+      ]
+    ]
+  },
+  "dividends": [
+    {
+      "ex": "2026-11-06",
+      "pay": "2026-11-09",
+      "usd": 0.871
+    },
+    {
+      "ex": "2026-11-09",
+      "pay": "2026-11-10",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-10",
+      "pay": "2026-11-12",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-12",
+      "pay": "2026-11-13",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-13",
+      "pay": "2026-11-16",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-16",
+      "pay": "2026-11-17",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-17",
+      "pay": "2026-11-18",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-18",
+      "pay": "2026-11-19",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-19",
+      "pay": "2026-11-20",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-20",
+      "pay": "2026-11-23",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-23",
+      "pay": "2026-11-24",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-24",
+      "pay": "2026-11-25",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-25",
+      "pay": "2026-11-27",
+      "usd": 0.0658
+    },
+    {
+      "ex": "2026-11-27",
+      "pay": "2026-11-30",
+      "usd": 0.0658
+    }
+  ],
+  "profile": {
+    "issuer": "Strive",
+    "built_for": "A fixed 15.00% rate on the $100 stated amount, with no stated aim to keep the price near $100, paid every business day: built for steady income, with the price free to move.",
+    "rate_type": {
+      "value": "fixed",
+      "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026066608/asst-20261021.htm",
+      "date": "2026-10-21",
+      "quote": "The SATS Stock accrues cumulative dividends at a fixed rate of 15.00% per annum on the $100.00 stated amount per share,",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "issuer_aims_price_near_100": {
+      "value": false,
+      "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm",
+      "date": "2026-10-16",
+      "quote": "at a rate per annum equal to 15.00% on the stated amount thereof",
+      "basis": "The prospectus supplement sets one rate, 15.00% per annum, and states no aim to adjust the rate or to keep the price near $100. The issuer's filings read here do not use the words 'target trading range'; press reports that SATS has none are not used as a source.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "pay_schedule": {
+      "value": "every business day",
+      "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015734/dp255138_424b5.htm",
+      "date": "2026-10-16",
+      "quote": "Each business day (as such term is defined in \"Description of SATS Stock\"), beginning on November 9, 2026,",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    },
+    "offer_price_usd": {
+      "value": 90,
+      "source": "https://www.sec.gov/Archives/edgar/data/0001920406/000095010326015690/dp255095_ex9901.htm",
+      "date": "2026-10-15",
+      "quote": "at a public offering price of $90 per share.",
+      "fetched_at": "2026-11-14",
+      "reason": null
+    }
+  },
+  "hold_odds": {
+    "7": {
+      "days": 7,
+      "reason": "not enough history: 16 past holds of 7 days fit in 21 trading days of closes; 60 are needed"
+    },
+    "30": {
+      "days": 30,
+      "reason": "not enough history: 0 past holds of 30 days fit in 21 trading days of closes; 60 are needed"
+    },
+    "90": {
+      "days": 90,
+      "reason": "not enough history: 0 past holds of 90 days fit in 21 trading days of closes; 60 are needed"
+    },
+    "180": {
+      "days": 180,
+      "reason": "not enough history: 0 past holds of 180 days fit in 21 trading days of closes; 60 are needed"
+    },
+    "365": {
+      "days": 365,
+      "reason": "not enough history: 0 past holds of 365 days fit in 21 trading days of closes; 60 are needed"
+    }
+  }
+}

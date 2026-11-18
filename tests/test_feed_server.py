@@ -43,10 +43,14 @@ def test_initialize_list_and_call_compare_over_stdio(feed_dir):
     assert replies[0]["result"]["protocolVersion"] == "2025-03-26"
     assert replies[0]["result"]["serverInfo"]["name"] == "datproof"
     names = [t["name"] for t in replies[1]["result"]["tools"]]
-    assert names == ["compare", "instrument", "instruments", "changes", "method"]
+    assert names == ["compare", "instrument", "instruments", "changes", "scenarios", "method"]
     res = replies[2]["result"]
     assert res["isError"] is False
-    assert json.loads(res["content"][0]["text"]) == compare(SNAP, 20000, 90, 10, ["preferred", "tbill"])
+    published = json.loads((feed_dir / "instruments.json").read_text())
+    for ins in published["instruments"]:  # the server merges each instrument's closes and dividends
+        one = json.loads((feed_dir / "instrument" / f"{ins['ticker']}.json").read_text())
+        ins.update({k: one[k] for k in ("closes", "dividends") if k in one})
+    assert json.loads(res["content"][0]["text"]) == compare(published, 20000, 90, 10, ["preferred", "tbill"])
 
 
 def test_other_tools_ping_and_errors(feed_dir):
@@ -96,3 +100,15 @@ def test_server_needs_only_the_standard_library():
             "assert 'httpx' not in sys.modules; print('ok')")
     out = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True)
     assert out.stdout.strip() == "ok", out.stderr
+
+
+def test_scenarios_tool_whole_document_one_situation_and_unknown(feed_dir):
+    call = lambda i, args: {"jsonrpc": "2.0", "id": i, "method": "tools/call",  # noqa: E731
+                            "params": {"name": "scenarios", "arguments": args}}
+    whole, one, bad = talk(feed_dir, call(1, {}), call(2, {"situation": "business_cash_180d"}),
+                           call(3, {"situation": "nope"}))
+    doc = json.loads(whole["result"]["content"][0]["text"])
+    assert [s["id"] for s in doc["situations"]] == ["agent_cash_90d", "business_cash_180d", "savings_income_365d"]
+    got = json.loads(one["result"]["content"][0]["text"])
+    assert got["situation"]["inputs"] == {"amount_usd": 250000, "days": 180}
+    assert bad["result"]["isError"] is True and "unknown situation" in bad["result"]["content"][0]["text"]

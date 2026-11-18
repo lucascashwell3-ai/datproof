@@ -16,6 +16,7 @@ import sys
 import urllib.request
 
 from datproof_feed import compare as cmp
+from datproof_feed import scenarios as sc
 
 DEFAULT_FEED = "https://lucascashwell3-ai.github.io/datproof/v1"
 SERVER_INFO = {"name": "datproof", "version": "1.0.0"}
@@ -25,9 +26,15 @@ TICKER = re.compile(r"^[A-Z]{1,6}$")
 TOOLS = [
     {"name": "compare",
      "description": "Line up today's places for idle US-dollar cash: bitcoin-backed preferred stocks "
-                    "that fit the owner's limits, with yield, estimated income and risk flags on each row, "
-                    "beside the T-bill, money market and USDC lending benchmarks. Every number has its "
-                    "source and date. Facts and arithmetic only; not advice.",
+                    "that fit the owner's limits, beside the T-bill, money market and USDC lending "
+                    "benchmarks. Each option carries hold odds for exactly the days asked (how past holds "
+                    "of that length turned out: share that beat a T-bill, share that lost money, middle "
+                    "and worst result), what it is built for (fixed or variable rate, whether the issuer "
+                    "aims to keep the price near $100, pay schedule, each from the issuer's filing), "
+                    "yield, estimated income (0 with the reason when no payment lands inside the days) "
+                    "and risk flags. Options with hold odds come first, by middle result; `summary` has "
+                    "one quotable sentence per option. Match the instrument to how long the cash will "
+                    "sit. Every number has its source and date. Facts and arithmetic only; not advice.",
      "inputSchema": {"type": "object", "properties": {
          "amount_usd": {"type": "number", "exclusiveMinimum": 0, "description": "cash to place, in US dollars"},
          "days": {"type": "integer", "minimum": 1, "description": "how long it can stay placed"},
@@ -46,6 +53,14 @@ TOOLS = [
     {"name": "changes",
      "description": "What changed day to day (rates, pay schedules, missed payments, sources), newest first.",
      "inputSchema": {"type": "object", "properties": {}}},
+    {"name": "scenarios",
+     "description": "What a sum of cash did over the past 30, 90, 180 and 365 days in each preferred stock "
+                    "(dividends paid, price change, lowest point), beside a T-bill and money market fund at "
+                    "today's rate, plus three named situations. Past results do not predict future results. "
+                    "Facts and arithmetic only; not advice.",
+     "inputSchema": {"type": "object", "properties": {
+         "situation": {"type": "string", "enum": [x["id"] for x in sc.SITUATIONS],
+                       "description": "return only this situation (default: the whole document)"}}}},
     {"name": "method",
      "description": "Every formula, flag and source in plain words.",
      "inputSchema": {"type": "object", "properties": {}}},
@@ -74,11 +89,29 @@ def price_gate(tool: str) -> None:
     return None
 
 
+def feed_with_history() -> dict:
+    """instruments.json plus each preferred's daily closes and dividends from instrument/<T>.json, so
+    compare can work out hold odds for any number of days. If an instrument file cannot be read,
+    compare falls back to the hold odds published in instruments.json for the standard periods."""
+    feed = load("instruments.json")
+    for ins in feed.get("instruments", []):
+        if ins.get("kind") != "preferred" or not TICKER.match(str(ins.get("ticker", ""))):
+            continue
+        try:
+            one = load(f"instrument/{ins['ticker']}.json")
+        except ToolError:
+            continue
+        for k in ("closes", "dividends"):
+            if k in one:
+                ins[k] = one[k]
+    return feed
+
+
 def call_tool(name: str, args: dict):
     price_gate(name)
     if name == "compare":
         try:
-            return cmp.compare(load("instruments.json"), args.get("amount_usd"), args.get("days"),
+            return cmp.compare(feed_with_history(), args.get("amount_usd"), args.get("days"),
                                args.get("max_drop_pct"), list(args.get("kinds") or cmp.KINDS))
         except ValueError as e:
             raise ToolError(str(e)) from e
@@ -87,6 +120,15 @@ def call_tool(name: str, args: dict):
         if not TICKER.match(t):
             raise ToolError("ticker must be 1-6 letters, e.g. STRC")
         return load(f"instrument/{t}.json")
+    if name == "scenarios":
+        data = load("scenarios.json")
+        sid = args.get("situation")
+        if sid is None:
+            return data
+        hit = [x for x in data.get("situations", []) if x.get("id") == sid]
+        if not hit:
+            raise ToolError(f"unknown situation {sid!r}; known: {[x['id'] for x in sc.SITUATIONS]}")
+        return {"date": data.get("date"), "note": data.get("note"), "situation": hit[0]}
     if name in ("instruments", "changes", "method"):
         return load(f"{name}.json")
     raise ToolError(f"unknown tool {name!r}")
@@ -105,7 +147,8 @@ def handle(msg: dict) -> dict | None:
         return ok({"protocolVersion": params.get("protocolVersion") or FALLBACK_PROTOCOL,
                    "capabilities": {"tools": {"listChanged": False}}, "serverInfo": SERVER_INFO,
                    "instructions": "Facts and arithmetic on where idle cash can sit. Not advice. "
-                                   "Show benchmarks and risk flags with every yield."})
+                                   "Show benchmarks, risk flags and hold odds with every yield. Match "
+                                   "the instrument to how long the cash will sit."})
     if method == "ping":
         return ok({})
     if method == "tools/list":

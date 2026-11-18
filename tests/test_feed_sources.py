@@ -196,7 +196,8 @@ def fake_fetch(fail: str | None = None):
              ("strkKpiData", "strategy_strk.json"), ("strdKpiData", "strategy_strd.json"),
              ("base-data", "strive_base.json"), ("calculated", "strive_calc.json"), ("aggregates", "strive_agg.json"),
              ("VMFXX", "vmfxx_summary.json"), ("yields.llama.fi", "llama_chart.json"),
-             ("daily-treasury-rates.csv", "bills.csv"), ("sec.gov", "sec_sats_8k.htm")]
+             ("daily-treasury-rates.csv", "bills.csv"), ("sec.gov", "sec_sats_8k.htm"),
+             ("api.bls.gov", "bls_cpi.json")]
 
     def fetch(url, headers=None, text=False):
         if fail and fail in url:
@@ -254,3 +255,60 @@ def test_a_dividend_disagreement_is_a_problem():
     snap = s.gather(TODAY, fetch=fetch)
     assert snap["problems"] and "STRC" in snap["problems"][0]
     assert next(i for i in snap["instruments"] if i["ticker"] == "STRC")["cross_check"] == "mismatch"
+
+
+# ---------- inflation (BLS CPI-U) and issuer coverage pass-through ----------
+
+def test_cpi_yoy_uses_newest_month_with_a_year_earlier_value():
+    c = s.parse_cpi_yoy(load("bls_cpi.json"))
+    # October 2025 was never published (shown as "-"), so October 2026 has nothing to compare with.
+    assert (c["year"], c["month"]) == (2026, 9) and c["newest_published"] == "2026-10"
+    assert c["index"] == 336.94 and c["index_year_ago"] == 324.8
+    assert c["yoy_pct"] == round((336.94 / 324.8 - 1) * 100, 2) == 3.74
+
+
+def test_cpi_yoy_skips_annual_average_rows():
+    j = {"Results": {"series": [{"data": [
+        {"year": "2026", "period": "M13", "value": "999"},
+        {"year": "2026", "period": "M01", "value": "103"},
+        {"year": "2025", "period": "M13", "value": "1"},
+        {"year": "2025", "period": "M01", "value": "100"}]}]}}
+    assert s.parse_cpi_yoy(j)["yoy_pct"] == 3.0
+
+
+def test_cpi_with_no_comparable_month_is_an_error_not_a_guess():
+    j = {"Results": {"series": [{"data": [{"year": "2026", "period": "M01", "value": "103"}]}]}}
+    with pytest.raises(s.Bad):
+        s.parse_cpi_yoy(j)
+
+
+def test_snapshot_carries_inflation_and_issuer_coverage():
+    from datproof_feed import snapshot
+    snap = s.gather(TODAY, fetch=fake_fetch(), credit_path=FIX / "credit.json")
+    assert snapshot.validate(snap) == []
+    inf = snap["inflation_yoy_pct"]
+    assert inf["value"] == 3.74 and inf["month"] == "2026-09" and inf["source"] == s.BLS_CPI
+    assert inf["index"] == 336.94 and inf["index_year_ago"] == 324.8 and inf["fetched_at"]
+    assert inf["stale"] is False
+    strategy, strive = snap["coverage"]["issuers"]
+    credit = load("credit.json")
+    assert strategy["years_of_dividends_covered"]["value"] == credit["strategy"]["published_years"]
+    assert strategy["btc_held"]["value"] == credit["strategy"]["btc"]
+    assert strive["btc_held"]["value"] == credit["strive"]["btc"]
+    assert strive["dividend_reserve_months"]["value"] > 0
+    assert "years_of_dividends_covered" not in strive  # Strive's own figure is not in the inputs; never recomputed
+
+
+def test_inflation_down_is_null_with_a_reason():
+    snap = s.gather(TODAY, fetch=fake_fetch(fail="api.bls.gov"), credit_path=FIX / "credit.json")
+    assert snap["inflation_yoy_pct"]["value"] is None and "source down" in snap["inflation_yoy_pct"]["reason"]
+    assert snap["sources"]["bls"] == "failed" and snap["problems"] == []
+
+
+def test_missing_credit_file_gives_nulls_with_reasons(tmp_path):
+    from datproof_feed import snapshot
+    snap = s.gather(TODAY, fetch=fake_fetch(), credit_path=tmp_path / "nope.json")
+    strategy = snap["coverage"]["issuers"][0]
+    assert strategy["years_of_dividends_covered"]["value"] is None
+    assert strategy["years_of_dividends_covered"]["reason"]
+    assert snapshot.validate(snap) == []

@@ -53,6 +53,11 @@ BILLS_CSV = ("https://home.treasury.gov/resource-center/data-chart-center/intere
              "{y}/all?type=daily_treasury_bill_rates&field_tdr_date_value={y}&page&_format=csv")
 USDC_POOL = "aa70268e-4b52-42bf-a116-608b370f9501"  # Aave v3, USDC, Ethereum
 LLAMA_CHART = f"https://yields.llama.fi/chart/{USDC_POOL}"
+BLS_CPI = "https://api.bls.gov/publicAPI/v1/timeseries/data/CUUR0000SA0"  # CPI-U, all items, US city average
+PROFILES_FILE = "data/instrument_profiles.json"  # issuer-sourced facts on what each instrument is built for
+PROFILE_FACTS = ("rate_type", "issuer_aims_price_near_100", "pay_schedule", "offer_price_usd")
+CREDIT_FILE = "data/credit.json"  # issuers' own published figures, written by scripts/fetch_credit.py
+INFLATION_STALE_DAYS = 75  # CPI comes out monthly, about two weeks after the month ends
 
 AMOUNT_TOLERANCE = 0.011  # Strategy's own list rounds to the cent (0.96 for 0.958333)
 QUARTERLY_MAX_GAP = 100
@@ -288,6 +293,87 @@ def parse_usdc(chart: dict) -> tuple[dt.date, float]:
 
 # ---------- fetching ----------
 
+def parse_cpi_yoy(j: dict) -> dict:
+    """CPI-U year over year from the BLS API: the newest month that also has a value for the same
+    month a year earlier (BLS skipped some months, for example October 2025)."""
+    rows = j["Results"]["series"][0]["data"]
+    idx = {}
+    for r in rows:
+        if re.fullmatch(r"M(0[1-9]|1[0-2])", r.get("period", "")):
+            try:
+                idx[(int(r["year"]), int(r["period"][1:]))] = float(r["value"])
+            except (TypeError, ValueError):
+                continue  # "-" for a month BLS did not publish
+    check(bool(idx), "bls: no monthly values")
+    newest = max(idx)
+    for (y, m) in sorted(idx, reverse=True):
+        if (y - 1, m) in idx:
+            now, before = idx[(y, m)], idx[(y - 1, m)]
+            return {"year": y, "month": m, "index": now, "index_year_ago": before,
+                    "yoy_pct": round((now / before - 1) * 100, 2),
+                    "newest_published": f"{newest[0]}-{newest[1]:02d}"}
+    raise Bad("bls: no month with a value a year earlier")
+
+
+def _month_end(y: int, m: int) -> dt.date:
+    return (dt.date(y + (m == 12), m % 12 + 1, 1) - dt.timedelta(days=1))
+
+
+def _inflation(today: dt.date, get) -> dict:
+    """{value: CPI-U year-over-year %, ...} with the month, both index values, source and fetch time."""
+    try:
+        payload, at = get("bls", BLS_CPI)
+        c = parse_cpi_yoy(payload)
+        as_of = _month_end(c["year"], c["month"])
+        out = num(c["yoy_pct"], "pct", as_of, BLS_CPI, at, today)
+        out["stale"] = (today - as_of).days > INFLATION_STALE_DAYS
+        out.update({"series": "CUUR0000SA0", "name": "US CPI-U, all items, year over year",
+                    "month": f"{c['year']}-{c['month']:02d}", "index": c["index"],
+                    "year_ago_month": f"{c['year'] - 1}-{c['month']:02d}", "index_year_ago": c["index_year_ago"],
+                    "newest_published": c["newest_published"],
+                    "formula": "index / index_year_ago - 1"})
+        return out
+    except Exception as e:  # noqa: BLE001
+        return missing(_err(e), BLS_CPI, _now())
+
+
+def _credit_coverage(today: dt.date, credit_path, strive_base: dict | None) -> dict:
+    """Each issuer's own published figures, passed through, never recomputed: Strategy's years of
+    dividends covered and bitcoin held (strategy.com, via data/credit.json), Strive's bitcoin held
+    and its own dividend reserve in months (strive.com)."""
+    import json as _json
+    import pathlib as _pl
+    path = _pl.Path(credit_path)
+    try:
+        c = _json.loads(path.read_text())
+    except Exception as e:  # noqa: BLE001
+        c, err = {}, _err(e)
+    else:
+        err = None
+    at = c.get("fetched_at") or _now()
+
+    def pick(block: str, key: str, unit: str, as_of_key: str, src_key: str = "source"):
+        b = c.get(block) or {}
+        if err or b.get(key) is None or (c.get("status") or {}).get(block) not in (None, "ok"):
+            return missing(err or f"{block}.{key} not available in {CREDIT_FILE}", b.get(src_key) or CREDIT_FILE, at)
+        return num(b[key], unit, str(b.get(as_of_key) or at)[:10], b.get(src_key), at, today)
+
+    strategy = {"issuer": "Strategy", "basis": "Strategy's own published figure (strategy.com)",
+                "years_of_dividends_covered": pick("strategy", "published_years", "years", "their_price_time"),
+                "btc_held": pick("strategy", "btc", "btc", "their_price_time")}
+    strive = {"issuer": "Strive", "basis": "Strive's own published figures (strive.com/treasury)",
+              "btc_held": pick("strive", "btc", "btc", "btc_as_of")}
+    try:
+        cd = max(strive_base["data"]["cashDebt"], key=lambda r: r["date"])
+        months = cd["dividend_reserve_months"]
+        check(isinstance(months, (int, float)) and months > 0, "strive: dividend reserve months")
+        strive["dividend_reserve_months"] = num(months, "months", cd["date"], STRIVE_BASE, at, today)
+    except Exception as e:  # noqa: BLE001
+        strive["dividend_reserve_months"] = missing(_err(e), STRIVE_BASE, _now())
+    return {"note": "Each issuer's own figures, passed through as published. DATproof does not recompute them.",
+            "issuers": [strategy, strive]}
+
+
 def _get(url: str, headers: dict | None = None, text: bool = False):
     import httpx
     r = httpx.get(url, headers=headers or BROWSER_UA, timeout=30, follow_redirects=True)
@@ -299,9 +385,41 @@ def _err(e: Exception) -> str:
     return f"{type(e).__name__}: {e}"[:300]
 
 
-def gather(today: dt.date, fetch=_get) -> dict:
+def load_profiles(path) -> tuple[dict, str | None]:
+    """{ticker: profile} from the sourced profiles file, and an error if it could not be read."""
+    import json as _json
+    import pathlib as _pl
+    try:
+        doc = _json.loads(_pl.Path(path).read_text())
+        return doc, None
+    except Exception as e:  # noqa: BLE001
+        return {}, _err(e)
+
+
+def profile_for(sym: str, doc: dict, err: str | None) -> dict:
+    """One instrument's profile, each fact carrying its filing, the exact words and the day it was read.
+    A missing fact is null with the reason; never filled in."""
+    at = str(doc.get("read_on") or "") or _now()
+    p = (doc.get("instruments") or {}).get(sym)
+    out: dict = {"issuer": (p or {}).get("issuer"), "built_for": (p or {}).get("built_for")}
+    for f in PROFILE_FACTS:
+        fact = (p or {}).get(f)
+        if f == "offer_price_usd" and p is not None and fact is None:
+            continue  # only stated where the issuer sold below the stated amount
+        if err or not isinstance(fact, dict) or not fact.get("source") or not fact.get("quote"):
+            reason = err or (fact or {}).get("reason") or f"{sym}.{f} not sourced in {PROFILES_FILE}"
+            out[f] = {"value": None, "source": (fact or {}).get("source") or PROFILES_FILE,
+                      "fetched_at": at, "reason": reason}
+            continue
+        out[f] = {**fact, "fetched_at": at, "reason": None}
+    if out["built_for"] is None:
+        out["built_for_reason"] = err or f"{sym} has no built_for line in {PROFILES_FILE}"
+    return out
+
+
+def gather(today: dt.date, fetch=_get, credit_path=None, profiles_path=None) -> dict:
     """Fetch every source and return the day's snapshot. Never raises for a source failure."""
-    errors: dict[str, list[str]] = {k: [] for k in ("nasdaq", "strategy", "strive", "sec", "treasury", "llama")}
+    errors: dict[str, list[str]] = {k: [] for k in ("nasdaq", "strategy", "strive", "sec", "treasury", "llama", "bls")}
     problems: list[str] = []
     cache: dict[str, object] = {}
 
@@ -322,6 +440,7 @@ def gather(today: dt.date, fetch=_get) -> dict:
 
     # Issuer dividend lists, for the cross-checks.
     issuer_divs: dict[str, list] = {}
+    strive_base = None
     try:
         payload, _ = get("strategy", STRATEGY_KPI.format(sym="strc"))
         issuer_divs["STRC"] = parse_strategy_dividends(payload)
@@ -329,9 +448,13 @@ def gather(today: dt.date, fetch=_get) -> dict:
         errors["strategy"].append(f"STRC dividend list: {_err(e)}")
     try:
         payload, _ = get("strive", STRIVE_BASE)
+        strive_base = payload
         issuer_divs["SATA"] = parse_strive_dividends(payload)
     except Exception as e:  # noqa: BLE001
         errors["strive"].append(f"SATA dividend list: {_err(e)}")
+
+    import pathlib as _pl0
+    profiles, profiles_err = load_profiles(profiles_path or _pl0.Path(__file__).resolve().parents[1] / PROFILES_FILE)
 
     instruments = []
     for sym in TICKERS:
@@ -362,6 +485,10 @@ def gather(today: dt.date, fetch=_get) -> dict:
         inst["worst_drop_pct"] = derived(wd, "pct", "largest fall from a high close to a later close, over the past year",
                                          ["close_usd"], {"close_usd": close})
         inst["trading_days"] = len(rows)
+        if rows:
+            # Daily closes, oldest first, for the look-back arithmetic in scenarios.py.
+            inst["closes"] = {"source": hist_url, "fetched_at": at, "from": d0,
+                              "rows": [[d.isoformat(), c] for d, c, _ in reversed(rows)]}
 
         divs_url = NASDAQ_DIVS.format(sym=sym)
         divs: list = []
@@ -385,19 +512,25 @@ def gather(today: dt.date, fetch=_get) -> dict:
         if any(isinstance(v, dict) and v.get("stale") for v in inst.values()):
             flags.append("stale")
         inst["flags"] = flags
+        inst["profile"] = profile_for(sym, profiles, profiles_err)
         inst["dividends"] = [{"ex": ex.isoformat(), "pay": pay.isoformat(), "usd": amt} for ex, pay, amt in divs]
         if divs:
             inst["dividends_source"] = divs_url
         instruments.append(inst)
 
     benchmarks = [_tbill(today, get), _mmf(today, get), _usdc(today, get)]
+    inflation = _inflation(today, get)
+    import pathlib as _pl
+    coverage = _credit_coverage(today, credit_path or _pl.Path(__file__).resolve().parents[1] / CREDIT_FILE,
+                                strive_base)
 
     # A failed source is not a problem: its fields are null with the reason. Problems are
     # disagreements between sources, which must stop the day's file from being written.
     sources = {k: ("failed" if v else "ok") for k, v in errors.items()}
     return {"date": today.isoformat(), "built_at": _now(), "sources": sources,
             "source_errors": {k: v for k, v in errors.items() if v},
-            "problems": problems, "instruments": instruments, "benchmarks": benchmarks}
+            "problems": problems, "instruments": instruments, "benchmarks": benchmarks,
+            "inflation_yoy_pct": inflation, "coverage": coverage}
 
 
 def _stated_rate(sym: str, today: dt.date, get, d1: str) -> dict:
