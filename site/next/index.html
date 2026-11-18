@@ -31,6 +31,19 @@
     l.href = "https://fonts.googleapis.com/css2?" + FONTS[t] + "&display=swap";
     document.head.appendChild(l);
     window.DP_FONTS = FONTS;
+    /* Body font trial for type C: ?body=0..3, else the visitor's last pick, else 0 (Inter). */
+    var BODY = { "1": "Manrope:wght@300..700", "2": "Bricolage+Grotesque:opsz,wght@12..96,300..700", "3": "Sora:wght@300..700" }, b = null;
+    try { b = new URLSearchParams(location.search).get("body"); } catch (e) {}
+    if (b !== "0" && !BODY[b]) { try { b = localStorage.getItem("dp-body"); } catch (e) {} }
+    if (!BODY[b]) b = "0";
+    try { localStorage.setItem("dp-body", b); } catch (e) {}
+    document.documentElement.setAttribute("data-body", b);
+    if (BODY[b]) {
+      var l3 = document.createElement("link");
+      l3.rel = "stylesheet";
+      l3.href = "https://fonts.googleapis.com/css2?family=" + BODY[b] + "&display=swap";
+      document.head.appendChild(l3);
+    }
     /* Colour option: ?color=green|blue|orange, else the visitor's last pick, else green. */
     var COLORS = { green: 1, blue: 1, orange: 1 }, c = null;
     try { c = new URLSearchParams(location.search).get("color"); } catch (e) {}
@@ -40,7 +53,7 @@
     document.documentElement.setAttribute("data-color", c);
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261117c">
+<link rel="stylesheet" href="styles.css?v=20261117e">
 </head>
 <body>
 <header class="wrap bar">
@@ -158,6 +171,6 @@ https://lucascashwell3-ai.github.io/datproof/llms.txt</code></pre>
   <button type="button" data-c="green" aria-label="Green"><span></span></button><button type="button" data-c="blue" aria-label="Blue"><span></span></button><button type="button" data-c="orange" aria-label="Orange"><span></span></button>
 </div>
 
-<script src="app.js?v=20261117c"></script>
+<script src="app.js?v=20261117e"></script>
 </body>
 </html>

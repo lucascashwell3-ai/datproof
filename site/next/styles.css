@@ -67,6 +67,11 @@
   --tk-wt: 400;
 }
 
+/* Body font trial for type C, set on <html data-body="1|2|3">. 0 keeps Inter. All three have fixed-width numerals. */
+:root[data-type="c"][data-body="1"] { --f-text: "Manrope", system-ui, sans-serif; --f-num: "Manrope", system-ui, sans-serif; }
+:root[data-type="c"][data-body="2"] { --f-text: "Bricolage Grotesque", system-ui, sans-serif; --f-num: "Bricolage Grotesque", system-ui, sans-serif; }
+:root[data-type="c"][data-body="3"] { --f-text: "Sora", system-ui, sans-serif; --f-num: "Sora", system-ui, sans-serif; --n-trk: -0.055em; }
+
 /* Colour options, set on <html data-color="green|blue|orange">. Orange uses the base tokens above.
    Each option retints every neutral toward its own hue; --dither is the dot colour for the dithered backdrops. */
 :root { --dither: transparent; --hover-mix: white; }
