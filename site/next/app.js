@@ -891,40 +891,6 @@
     });
   }
 
-  // ---------- type option switch ----------
-  function initTypeSwitch() {
-    var cur = document.documentElement.getAttribute("data-type");
-    $$(".typesw button").forEach(function (b) {
-      b.setAttribute("aria-pressed", b.getAttribute("data-t") === cur ? "true" : "false");
-      b.addEventListener("click", function () {
-        var t = b.getAttribute("data-t");
-        try { localStorage.setItem("dp-type", t); } catch (e) {}
-        try { var u = new URL(location.href); u.searchParams.set("type", t); history.replaceState(null, "", u); } catch (e) {}
-        document.documentElement.setAttribute("data-type", t);
-        var f = $("#fonts"); if (f && window.DP_FONTS) f.href = "https://fonts.googleapis.com/css2?" + window.DP_FONTS[t] + "&display=swap";
-        $$(".typesw button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-        if (feed) setTimeout(function () { drawEarn(false); drawPaid(); }, 300);
-      });
-    });
-  }
-
-  // ---------- colour option switch ----------
-  function initColorSwitch() {
-    var cur = document.documentElement.getAttribute("data-color");
-    $$(".colorsw button").forEach(function (b) {
-      b.setAttribute("aria-pressed", b.getAttribute("data-c") === cur ? "true" : "false");
-      b.addEventListener("click", function () {
-        var c = b.getAttribute("data-c");
-        try { localStorage.setItem("dp-color", c); } catch (e) {}
-        try { var u = new URL(location.href); u.searchParams.set("color", c); history.replaceState(null, "", u); } catch (e) {}
-        document.documentElement.setAttribute("data-color", c);
-        $$(".colorsw button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-        drawHeroDither(); drawEdgeDither();
-        if (feed) { drawEarn(false); drawPaid(); inkLift(); inkCalc(); }
-      });
-    });
-  }
-
   function getJSON(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); }
   function load(base) {
     return Promise.all([getJSON(base + "instruments.json"), getJSON(base + "scenarios.json")].concat(
@@ -950,7 +916,7 @@
     });
   }
 
-  initTabs(); initTypeSwitch(); initColorSwitch(); drawHeroDither(); drawEdgeDither();
+  initTabs(); drawHeroDither(); drawEdgeDither();
   load("../v1/").catch(function () { return load("./v1-sample/"); }).then(start).catch(function (e) {
     $("#asof").innerHTML = '<span class="err">The feed did not load (' + esc(e.message) + "). Read the JSON files directly.</span>";
   });

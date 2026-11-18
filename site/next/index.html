@@ -10,50 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=gambetta@300,301,400,401&display=swap">
-<script>
-  /* Type option: ?type=a|b|c, else the visitor's last pick, else C. Loads only that option's fonts.
-     C's headline face (Gambetta) comes from the Fontshare link below; its files download only when used. */
-  (function () {
-    var FONTS = {
-      a: "family=Archivo:wdth,wght@62..125,400..800",
-      b: "family=Geist:wght@400..700&family=Geist+Mono:wght@400..600",
-      c: "family=Inter:opsz,wght@14..32,400..700"
-    };
-    var t = null;
-    try { t = new URLSearchParams(location.search).get("type"); } catch (e) {}
-    if (!FONTS[t]) { try { t = localStorage.getItem("dp-type"); } catch (e) {} }
-    if (!FONTS[t]) t = "c";
-    try { localStorage.setItem("dp-type", t); } catch (e) {}
-    document.documentElement.setAttribute("data-type", t);
-    var l = document.createElement("link");
-    l.rel = "stylesheet"; l.id = "fonts";
-    l.href = "https://fonts.googleapis.com/css2?" + FONTS[t] + "&display=swap";
-    document.head.appendChild(l);
-    window.DP_FONTS = FONTS;
-    /* Body font trial for type C: ?body=0..3, else the visitor's last pick, else 0 (Inter). */
-    var BODY = { "1": "Manrope:wght@300..700", "2": "Bricolage+Grotesque:opsz,wght@12..96,300..700", "3": "Sora:wght@300..700" }, b = null;
-    try { b = new URLSearchParams(location.search).get("body"); } catch (e) {}
-    if (b !== "0" && !BODY[b]) { try { b = localStorage.getItem("dp-body"); } catch (e) {} }
-    if (!BODY[b]) b = "0";
-    try { localStorage.setItem("dp-body", b); } catch (e) {}
-    document.documentElement.setAttribute("data-body", b);
-    if (BODY[b]) {
-      var l3 = document.createElement("link");
-      l3.rel = "stylesheet";
-      l3.href = "https://fonts.googleapis.com/css2?family=" + BODY[b] + "&display=swap";
-      document.head.appendChild(l3);
-    }
-    /* Colour option: ?color=green|blue|orange, else the visitor's last pick, else green. */
-    var COLORS = { green: 1, blue: 1, orange: 1 }, c = null;
-    try { c = new URLSearchParams(location.search).get("color"); } catch (e) {}
-    if (!COLORS[c]) { try { c = localStorage.getItem("dp-color"); } catch (e) {} }
-    if (!COLORS[c]) c = "green";
-    try { localStorage.setItem("dp-color", c); } catch (e) {}
-    document.documentElement.setAttribute("data-color", c);
-  })();
-</script>
-<link rel="stylesheet" href="styles.css?v=20261117e">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&display=swap">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=gambetta@300,301,400&display=swap">
+<link rel="stylesheet" href="styles.css?v=20261117f">
 </head>
 <body>
 <header class="wrap bar">
@@ -164,13 +123,6 @@ https://lucascashwell3-ai.github.io/datproof/llms.txt</code></pre>
   <p>Every number is sourced and dated. Prices move and issuers set the rates. This is data, not personal advice.</p>
 </footer>
 
-<div class="typesw" role="group" aria-label="Type option">
-  <button type="button" data-t="a">A</button><button type="button" data-t="b">B</button><button type="button" data-t="c">C</button>
-</div>
-<div class="colorsw" role="group" aria-label="Colour option">
-  <button type="button" data-c="green" aria-label="Green"><span></span></button><button type="button" data-c="blue" aria-label="Blue"><span></span></button><button type="button" data-c="orange" aria-label="Orange"><span></span></button>
-</div>
-
-<script src="app.js?v=20261117e"></script>
+<script src="app.js?v=20261117f"></script>
 </body>
 </html>
