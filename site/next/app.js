@@ -744,6 +744,39 @@
     });
   }
 
+
+  // ---------- 3b. odds by holding time ----------
+  var ODDS_SPANS = [[7, "1 week"], [30, "1 month"], [90, "3 months"]];
+  function pctSigned(x) { return (x >= 0 ? "+" : "\u2212") + n(Math.abs(x), 1) + "%"; }
+  function renderOdds() {
+    var tb = tbillPct(feed), rows = [];
+    ["STRC", "SATA"].forEach(function (t) {
+      var c = closes[t];
+      if (!inst(t) || !c || !c.rows) return;
+      var ins = { closes: { rows: c.rows }, dividends: c.dividends };
+      var cells = ODDS_SPANS.map(function (sp) { return holdOdds(ins, sp[0], tb)[0]; });
+      if (cells.every(function (o) { return o && o.beat_tbill_pct !== null; })) rows.push({ t: t, cells: cells });
+    });
+    if (!rows.length) { $("#odds").hidden = true; return; }
+    $("#odds-out").innerHTML = '<table class="od"><caption class="vh">Share of past holds that beat a 4-week T-bill, by holding time</caption>' +
+      '<thead><tr><th scope="col"><span class="vh">Stock</span></th>' +
+      ODDS_SPANS.map(function (sp) { return '<th scope="col">' + sp[1] + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      rows.map(function (r) {
+        return '<tr><th scope="row" class="od-tk">' + esc(r.t) + "</th>" + r.cells.map(function (o, k) {
+          var beat = Math.round(o.beat_tbill_pct), lost = Math.round(o.lost_pct);
+          return '<td data-span="' + ODDS_SPANS[k][1] + '"><span class="od-n num">' + beat + '%</span> <span class="od-l">beat a T-bill</span>' +
+            '<span class="od-bar" aria-hidden="true"><i style="width:' + beat + '%"></i></span>' +
+            '<span class="od-s">Lost money <b class="num">' + lost + '%</b> of the time</span>' +
+            '<span class="od-s od-s2">Typical result <b class="num">' + pctSigned(o.median_pct) + "</b></span></td>";
+        }).join("") + "</tr>";
+      }).join("") + "</tbody></table>";
+    var last = rows[0].cells[ODDS_SPANS.length - 1];
+    var worst = rows.map(function (r) { return r.t + " " + pctSigned(r.cells[ODDS_SPANS.length - 1].worst_pct); }).join(", ");
+    $("#odds-note").innerHTML = "Past results, closes from " + day(last.closes_from) + " to " + day(feed.date) +
+      ". A price drop can outweigh the dividends: the worst 3-month hold was " + worst + "." +
+      (inst("SATS") ? " SATS is too new to score." : "");
+  }
+
   // ---------- 4. better risk-adjusted returns ----------
   function renderLift() {
     var a = avgY();
@@ -905,7 +938,7 @@
   function start(d) {
     feed = d[0]; scen = d[1];
     [d[2], d[3]].forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
-    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderLift(); renderBacked(); renderCalc(); renderChat(); renderSources();
+    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderOdds(); renderLift(); renderBacked(); renderCalc(); renderChat(); renderSources();
     $("#in-amount").addEventListener("input", fromInput);
     $("#in-slide").addEventListener("input", fromSlide);
     $("#f-calc").addEventListener("submit", function (e) { e.preventDefault(); });
