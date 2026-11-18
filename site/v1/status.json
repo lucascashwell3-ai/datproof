@@ -1,18 +1,24 @@
 {
-  "date": "2026-11-17",
-  "built_at": "2026-11-17T21:26:33Z",
+  "date": "2026-11-18",
+  "built_at": "2026-11-18T02:37:30Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
     "strive": "ok",
     "sec": "ok",
     "treasury": "ok",
-    "llama": "ok"
+    "llama": "ok",
+    "bls": "ok"
   },
   "source_errors": {},
   "problems": [],
   "nulls": [],
-  "stale": [],
-  "snapshot_sha256": "9f5a8e6f908c37c42a933c764056b241e5001bb82512b2ccb3319ff627791624",
-  "stamp": "stamped; 3 earlier stamp(s) confirmed in bitcoin"
+  "stale": [
+    "SATA.stated_rate_pct",
+    "SATA.yield_pct",
+    "coverage.issuers[1].btc_held",
+    "coverage.issuers[1].dividend_reserve_months"
+  ],
+  "snapshot_sha256": "482eaadb9612b455e1682e982ca629ed08c4f388eb0120266577c4225524f0fb",
+  "stamp": "stamped; 4 earlier stamp(s) confirmed in bitcoin"
 }
