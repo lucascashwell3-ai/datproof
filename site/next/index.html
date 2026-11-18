@@ -28,6 +28,19 @@
     l.href = "https://fonts.googleapis.com/css2?" + FONTS[t] + "&display=swap";
     document.head.appendChild(l);
     window.DP_FONTS = FONTS;
+    /* Headline serif for type C: ?serif=0..3, else the visitor's last pick, else 0 (Instrument Serif). */
+    var SERIFS = { "1": "gambetta", "2": "boska", "3": "zodiak" }, s = null;
+    try { s = new URLSearchParams(location.search).get("serif"); } catch (e) {}
+    if (s !== "0" && !SERIFS[s]) { try { s = localStorage.getItem("dp-serif"); } catch (e) {} }
+    if (!SERIFS[s]) s = "0";
+    try { localStorage.setItem("dp-serif", s); } catch (e) {}
+    document.documentElement.setAttribute("data-serif", s);
+    if (SERIFS[s]) {
+      var l2 = document.createElement("link");
+      l2.rel = "stylesheet";
+      l2.href = "https://api.fontshare.com/v2/css?f[]=" + SERIFS[s] + "@300,301,400,401&display=swap";
+      document.head.appendChild(l2);
+    }
     /* Colour option: ?color=green|blue|orange, else the visitor's last pick, else green. */
     var COLORS = { green: 1, blue: 1, orange: 1 }, c = null;
     try { c = new URLSearchParams(location.search).get("color"); } catch (e) {}

@@ -67,6 +67,21 @@
   --tk-wt: 400;
 }
 
+/* Headline serif candidates for type C, set on <html data-serif="1|2|3">. 0 keeps Instrument Serif.
+   These faces run wider than Instrument Serif, so the display sizes step down to hold the same line breaks. */
+:root[data-type="c"]:not([data-serif="0"]) {
+  --t-hero: clamp(2.625rem, 1.3rem + 5.2vw, 5.125rem);
+  --t-xl: clamp(2rem, 1.4rem + 2vw, 3rem);
+  --d-lh: 1.02; --h2-lh: 1.08;
+}
+/* 1 Gambetta: soft, pen-drawn. */
+:root[data-type="c"][data-serif="1"] { --f-disp: "Gambetta", Georgia, serif; --d-wt: 300; --h2-wt: 300; --d-trk: -0.03em; --h2-trk: -0.022em; }
+/* 2 Boska: thin and sharp, high contrast. */
+:root[data-type="c"][data-serif="2"] { --f-disp: "Boska", Georgia, serif; --d-wt: 300; --h2-wt: 400; --d-trk: -0.02em; --h2-trk: -0.015em; --t-hero: clamp(2.75rem, 1.3rem + 5.6vw, 5.5rem); }
+/* 3 Zodiak: wide and sturdy, bank-statement plain. */
+:root[data-type="c"][data-serif="3"] { --f-disp: "Zodiak", Georgia, serif; --d-wt: 400; --h2-wt: 400; --d-trk: -0.025em; --h2-trk: -0.018em; --t-hero: clamp(2.5rem, 1.2rem + 4.6vw, 4.5rem); --t-xl: clamp(1.875rem, 1.3rem + 1.8vw, 2.75rem); }
+:root[data-type="c"][data-serif="2"] :is(.hero-h, h2, h3) { font-variant-numeric: lining-nums; }
+
 /* Colour options, set on <html data-color="green|blue|orange">. Orange uses the base tokens above.
    Each option retints every neutral toward its own hue; --dither is the dot colour for the dithered backdrops. */
 :root { --dither: transparent; --hover-mix: white; }
