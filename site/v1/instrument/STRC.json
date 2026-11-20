@@ -1,25 +1,25 @@
 {
-  "date": "2026-11-19",
+  "date": "2026-11-20",
   "ticker": "STRC",
   "name": "Strategy Stretch preferred",
   "issuer": "Strategy",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 96.11,
+    "value": 94.66,
     "unit": "usd",
-    "as_of": "2026-11-18",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-18&todate=2026-11-19&limit=400",
-    "fetched_at": "2026-11-19T21:02:56Z",
+    "as_of": "2026-11-19",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-19&todate=2026-11-20&limit=400",
+    "fetched_at": "2026-11-20T20:48:49Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 2005319.4,
+    "value": 2063569.3,
     "unit": "shares",
-    "as_of": "2026-11-18",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-18&todate=2026-11-19&limit=400",
-    "fetched_at": "2026-11-19T21:02:56Z",
+    "as_of": "2026-11-19",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-19&todate=2026-11-20&limit=400",
+    "fetched_at": "2026-11-20T20:48:49Z",
     "stale": false,
     "reason": null
   },
@@ -27,14 +27,14 @@
   "stated_rate_pct": {
     "value": 12.0,
     "unit": "pct",
-    "as_of": "2026-11-19",
+    "as_of": "2026-11-20",
     "source": "https://api.strategy.com/btc/strcKpiData",
-    "fetched_at": "2026-11-19T21:02:52Z",
+    "fetched_at": "2026-11-20T20:48:47Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 12.486,
+    "value": 12.677,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -56,14 +56,10 @@
   },
   "trading_days": 252,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-18&todate=2026-11-19&limit=400",
-    "fetched_at": "2026-11-19T21:02:56Z",
-    "from": "2025-11-18",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-19&todate=2026-11-20&limit=400",
+    "fetched_at": "2026-11-20T20:48:49Z",
+    "from": "2025-11-19",
     "rows": [
-      [
-        "2025-11-18",
-        96.39
-      ],
       [
         "2025-11-19",
         94.59
@@ -1067,16 +1063,20 @@
       [
         "2026-11-18",
         96.11
+      ],
+      [
+        "2026-11-19",
+        94.66
       ]
     ]
   },
   "schedule": "every business day",
-  "next_pay_date": "2026-11-20",
+  "next_pay_date": "2026-11-23",
   "payments": {
-    "paid": 32,
-    "in_a_row": 32,
+    "paid": 33,
+    "in_a_row": 33,
     "gaps": [],
-    "last_paid": "2026-11-19"
+    "last_paid": "2026-11-20"
   },
   "cross_check": "ok",
   "flags": [
@@ -1419,9 +1419,9 @@
     "7": {
       "days": 7,
       "holds": 247,
-      "bought_from": "2025-11-18",
-      "bought_to": "2026-11-11",
-      "closes_from": "2025-11-18",
+      "bought_from": "2025-11-19",
+      "bought_to": "2026-11-12",
+      "closes_from": "2025-11-19",
       "tbill_pct": 4.12,
       "tbill_hold_pct": 0.079,
       "beat_tbill": 153,
@@ -1435,15 +1435,15 @@
     "30": {
       "days": 30,
       "holds": 230,
-      "bought_from": "2025-11-18",
-      "bought_to": "2026-10-19",
-      "closes_from": "2025-11-18",
+      "bought_from": "2025-11-19",
+      "bought_to": "2026-10-20",
+      "closes_from": "2025-11-19",
       "tbill_pct": 4.12,
       "tbill_hold_pct": 0.339,
-      "beat_tbill": 178,
-      "beat_tbill_pct": 77.4,
-      "lost": 41,
-      "lost_pct": 17.8,
+      "beat_tbill": 177,
+      "beat_tbill_pct": 77.0,
+      "lost": 42,
+      "lost_pct": 18.3,
       "median_pct": 1.13,
       "worst_pct": -23.84,
       "worst_bought": "2026-05-27"
@@ -1451,32 +1451,32 @@
     "90": {
       "days": 90,
       "holds": 189,
-      "bought_from": "2025-11-18",
-      "bought_to": "2026-08-20",
-      "closes_from": "2025-11-18",
+      "bought_from": "2025-11-19",
+      "bought_to": "2026-08-21",
+      "closes_from": "2025-11-19",
       "tbill_pct": 4.12,
       "tbill_hold_pct": 1.016,
       "beat_tbill": 129,
       "beat_tbill_pct": 68.3,
       "lost": 57,
       "lost_pct": 30.2,
-      "median_pct": 3.35,
+      "median_pct": 3.19,
       "worst_pct": -22.53,
       "worst_bought": "2026-03-30"
     },
     "180": {
       "days": 180,
-      "holds": 128,
-      "bought_from": "2025-11-18",
+      "holds": 127,
+      "bought_from": "2025-11-19",
       "bought_to": "2026-05-22",
-      "closes_from": "2025-11-18",
+      "closes_from": "2025-11-19",
       "tbill_pct": 4.12,
       "tbill_hold_pct": 2.032,
-      "beat_tbill": 82,
-      "beat_tbill_pct": 64.1,
+      "beat_tbill": 81,
+      "beat_tbill_pct": 63.8,
       "lost": 32,
-      "lost_pct": 25.0,
-      "median_pct": 3.59,
+      "lost_pct": 25.2,
+      "median_pct": 3.53,
       "worst_pct": -18.92,
       "worst_bought": "2025-12-30"
     },
