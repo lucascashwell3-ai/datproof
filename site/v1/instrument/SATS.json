@@ -1,40 +1,40 @@
 {
-  "date": "2026-11-20",
+  "date": "2026-11-21",
   "ticker": "SATS",
   "name": "Strive Series S preferred",
   "issuer": "Strive",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 89.55,
+    "value": 85.76,
     "unit": "usd",
-    "as_of": "2026-11-19",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-19&todate=2026-11-20&limit=400",
-    "fetched_at": "2026-11-20T20:48:59Z",
+    "as_of": "2026-11-20",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+    "fetched_at": "2026-11-21T19:52:23Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 345748.6,
+    "value": 351981.2,
     "unit": "shares",
-    "as_of": "2026-11-19",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-19&todate=2026-11-20&limit=400",
-    "fetched_at": "2026-11-20T20:48:59Z",
+    "as_of": "2026-11-20",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+    "fetched_at": "2026-11-21T19:52:23Z",
     "stale": false,
     "reason": null
   },
-  "volume_rows": 25,
+  "volume_rows": 26,
   "stated_rate_pct": {
     "value": 15.0,
     "unit": "pct",
-    "as_of": "2026-11-20",
+    "as_of": "2026-11-21",
     "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-    "fetched_at": "2026-11-20T20:48:59Z",
+    "fetched_at": "2026-11-21T19:52:24Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 16.75,
+    "value": 17.491,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -45,7 +45,7 @@
     "reason": null
   },
   "worst_drop_pct": {
-    "value": 7.599,
+    "value": 11.51,
     "unit": "pct",
     "formula": "largest fall from a high close to a later close, over the past year",
     "inputs": [
@@ -54,11 +54,11 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 25,
+  "trading_days": 26,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-19&todate=2026-11-20&limit=400",
-    "fetched_at": "2026-11-20T20:48:59Z",
-    "from": "2025-11-19",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+    "fetched_at": "2026-11-21T19:52:23Z",
+    "from": "2025-11-20",
     "rows": [
       [
         "2026-10-16",
@@ -159,6 +159,10 @@
       [
         "2026-11-19",
         89.55
+      ],
+      [
+        "2026-11-20",
+        85.76
       ]
     ]
   },
@@ -399,23 +403,23 @@
   "hold_odds": {
     "7": {
       "days": 7,
-      "reason": "not enough history: 20 past holds of 7 days fit in 25 trading days of closes; 60 are needed"
+      "reason": "not enough history: 21 past holds of 7 days fit in 26 trading days of closes; 60 are needed"
     },
     "30": {
       "days": 30,
-      "reason": "not enough history: 3 past holds of 30 days fit in 25 trading days of closes; 60 are needed"
+      "reason": "not enough history: 4 past holds of 30 days fit in 26 trading days of closes; 60 are needed"
     },
     "90": {
       "days": 90,
-      "reason": "not enough history: 0 past holds of 90 days fit in 25 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 90 days fit in 26 trading days of closes; 60 are needed"
     },
     "180": {
       "days": 180,
-      "reason": "not enough history: 0 past holds of 180 days fit in 25 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 180 days fit in 26 trading days of closes; 60 are needed"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 25 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 26 trading days of closes; 60 are needed"
     }
   }
 }
