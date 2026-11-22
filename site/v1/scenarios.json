@@ -1,39 +1,39 @@
 {
-  "date": "2026-11-21",
+  "date": "2026-11-22",
   "note": "Facts and arithmetic from past prices and paid dividends. Past results do not predict future results. A preferred stock's price can fall below its $100 par, and the issuer sets the dividend rate and can lower or skip it. Benchmarks use today's rate for the whole window. Not advice.",
   "lookback": [
     {
       "days": 30,
       "amount_usd": 10000,
-      "end_date": "2026-11-21",
+      "end_date": "2026-11-22",
       "instruments": [
         {
           "ticker": "STRC",
           "name": "Strategy Stretch preferred",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "skipped": false,
-          "start_date": "2026-10-22",
+          "start_date": "2026-10-23",
           "end_date": "2026-11-20",
-          "start_close_usd": 98.65,
+          "start_close_usd": 99.36,
           "end_close_usd": 93.6,
-          "shares": 101,
-          "cash_left_usd": 36.35,
+          "shares": 100,
+          "cash_left_usd": 64.0,
           "dividends_paid": 14,
-          "dividends_usd": 63.63,
-          "earned_not_yet_paid_usd": 10.1,
-          "price_change_usd": -510.05,
-          "total_usd": -446.42,
-          "total_pct": -4.464,
+          "dividends_usd": 63.0,
+          "earned_not_yet_paid_usd": 10.0,
+          "price_change_usd": -576.0,
+          "total_usd": -513.0,
+          "total_pct": -5.13,
           "lowest": {
-            "value_usd": 9553.58,
-            "below_start_usd": 446.42,
-            "below_start_pct": 4.464,
+            "value_usd": 9487.0,
+            "below_start_usd": 513.0,
+            "below_start_pct": 5.13,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
         },
         {
@@ -41,28 +41,28 @@
           "name": "Strive Variable Rate Series A preferred",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "skipped": false,
-          "start_date": "2026-10-22",
+          "start_date": "2026-10-23",
           "end_date": "2026-11-20",
-          "start_close_usd": 97.96,
+          "start_close_usd": 98.02,
           "end_close_usd": 85.0,
           "shares": 102,
-          "cash_left_usd": 8.08,
-          "dividends_paid": 19,
-          "dividends_usd": 107.85,
+          "cash_left_usd": 1.96,
+          "dividends_paid": 18,
+          "dividends_usd": 102.59,
           "earned_not_yet_paid_usd": 5.82,
-          "price_change_usd": -1321.92,
-          "total_usd": -1214.07,
-          "total_pct": -12.141,
+          "price_change_usd": -1328.04,
+          "total_usd": -1225.45,
+          "total_pct": -12.255,
           "lowest": {
-            "value_usd": 8785.93,
-            "below_start_usd": 1214.07,
-            "below_start_pct": 12.141,
+            "value_usd": 8774.55,
+            "below_start_usd": 1225.45,
+            "below_start_pct": 12.254,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
         },
         {
@@ -70,28 +70,28 @@
           "name": "Strive Series S preferred",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "skipped": false,
-          "start_date": "2026-10-22",
+          "start_date": "2026-10-23",
           "end_date": "2026-11-20",
-          "start_close_usd": 94.6,
+          "start_close_usd": 94.8827,
           "end_close_usd": 85.76,
           "shares": 105,
-          "cash_left_usd": 67.0,
+          "cash_left_usd": 37.32,
           "dividends_paid": 9,
           "dividends_usd": 146.73,
           "earned_not_yet_paid_usd": 6.91,
-          "price_change_usd": -928.2,
-          "total_usd": -781.47,
-          "total_pct": -7.815,
+          "price_change_usd": -957.88,
+          "total_usd": -811.15,
+          "total_pct": -8.111,
           "lowest": {
-            "value_usd": 9218.53,
-            "below_start_usd": 781.47,
-            "below_start_pct": 7.815,
+            "value_usd": 9188.84,
+            "below_start_usd": 811.16,
+            "below_start_pct": 8.112,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks"
         },
         {
@@ -99,57 +99,57 @@
           "name": "Strategy Strife preferred",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "skipped": false,
-          "start_date": "2026-10-22",
+          "start_date": "2026-10-23",
           "end_date": "2026-11-20",
-          "start_close_usd": 102.77,
+          "start_close_usd": 101.2,
           "end_close_usd": 94.1,
-          "shares": 97,
-          "cash_left_usd": 31.31,
+          "shares": 98,
+          "cash_left_usd": 82.4,
           "dividends_paid": 0,
           "dividends_usd": 0,
           "earned_not_yet_paid_usd": 0,
-          "price_change_usd": -840.99,
-          "total_usd": -840.99,
-          "total_pct": -8.41,
+          "price_change_usd": -695.8,
+          "total_usd": -695.8,
+          "total_pct": -6.958,
           "lowest": {
-            "value_usd": 9159.01,
-            "below_start_usd": 840.99,
-            "below_start_pct": 8.41,
+            "value_usd": 9304.2,
+            "below_start_usd": 695.8,
+            "below_start_pct": 6.958,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
         },
         {
           "ticker": "STRK",
           "name": "Strategy Strike preferred",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "skipped": false,
-          "start_date": "2026-10-22",
+          "start_date": "2026-10-23",
           "end_date": "2026-11-20",
-          "start_close_usd": 70.47,
+          "start_close_usd": 69.3,
           "end_close_usd": 58.09,
-          "shares": 141,
-          "cash_left_usd": 63.73,
+          "shares": 144,
+          "cash_left_usd": 20.8,
           "dividends_paid": 0,
           "dividends_usd": 0,
           "earned_not_yet_paid_usd": 0,
-          "price_change_usd": -1745.58,
-          "total_usd": -1745.58,
-          "total_pct": -17.456,
+          "price_change_usd": -1614.24,
+          "total_usd": -1614.24,
+          "total_pct": -16.142,
           "lowest": {
-            "value_usd": 8254.42,
-            "below_start_usd": 1745.58,
-            "below_start_pct": 17.456,
+            "value_usd": 8385.76,
+            "below_start_usd": 1614.24,
+            "below_start_pct": 16.142,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
         },
         {
@@ -157,29 +157,29 @@
           "name": "Strategy Stride preferred",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "skipped": false,
-          "start_date": "2026-10-22",
+          "start_date": "2026-10-23",
           "end_date": "2026-11-20",
-          "start_close_usd": 69.65,
+          "start_close_usd": 69.71,
           "end_close_usd": 59.82,
           "shares": 143,
-          "cash_left_usd": 40.05,
+          "cash_left_usd": 31.47,
           "dividends_paid": 0,
           "dividends_usd": 0,
           "earned_not_yet_paid_usd": 0,
-          "price_change_usd": -1405.69,
-          "total_usd": -1405.69,
-          "total_pct": -14.057,
+          "price_change_usd": -1414.27,
+          "total_usd": -1414.27,
+          "total_pct": -14.143,
           "lowest": {
-            "value_usd": 8594.31,
-            "below_start_usd": 1405.69,
-            "below_start_pct": 14.057,
+            "value_usd": 8585.73,
+            "below_start_usd": 1414.27,
+            "below_start_pct": 14.143,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
         }
       ],
       "benchmarks": [
@@ -189,7 +189,7 @@
           "name": "4-week US Treasury bill",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "basis": "at today's rate",
           "rate_pct": 4.11,
           "as_of": "2026-11-20",
@@ -205,10 +205,10 @@
           "name": "Vanguard Federal Money Market (VMFXX)",
           "days": 30,
           "amount_usd": 10000,
-          "window_start": "2026-10-22",
+          "window_start": "2026-10-23",
           "basis": "at today's rate",
           "rate_pct": 3.9479,
-          "as_of": "2026-11-21",
+          "as_of": "2026-11-22",
           "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
           "lowest": null,
           "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
@@ -220,14 +220,14 @@
     {
       "days": 90,
       "amount_usd": 10000,
-      "end_date": "2026-11-21",
+      "end_date": "2026-11-22",
       "instruments": [
         {
           "ticker": "STRC",
           "name": "Strategy Stretch preferred",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "skipped": false,
           "start_date": "2026-08-24",
           "end_date": "2026-11-20",
@@ -248,7 +248,7 @@
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
         },
         {
@@ -256,7 +256,7 @@
           "name": "Strive Variable Rate Series A preferred",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "skipped": false,
           "start_date": "2026-08-24",
           "end_date": "2026-11-20",
@@ -277,7 +277,7 @@
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
         },
         {
@@ -285,16 +285,16 @@
           "name": "Strive Series S preferred",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "skipped": true,
-          "reason": "daily closes start 2026-10-16, after the 90-day window start 2026-08-23: the instrument has not traded that long"
+          "reason": "daily closes start 2026-10-16, after the 90-day window start 2026-08-24: the instrument has not traded that long"
         },
         {
           "ticker": "STRF",
           "name": "Strategy Strife preferred",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "skipped": false,
           "start_date": "2026-08-24",
           "end_date": "2026-11-20",
@@ -302,28 +302,28 @@
           "end_close_usd": 94.1,
           "shares": 99,
           "cash_left_usd": 1.0,
-          "dividends_paid": 0,
-          "dividends_usd": 0,
+          "dividends_paid": 1,
+          "dividends_usd": 247.5,
           "earned_not_yet_paid_usd": 0,
           "price_change_usd": -683.1,
-          "total_usd": -683.1,
-          "total_pct": -6.831,
+          "total_usd": -435.6,
+          "total_pct": -4.356,
           "lowest": {
-            "value_usd": 9316.9,
-            "below_start_usd": 683.1,
-            "below_start_pct": 6.831,
+            "value_usd": 9564.4,
+            "below_start_usd": 435.6,
+            "below_start_pct": 4.356,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
         },
         {
           "ticker": "STRK",
           "name": "Strategy Strike preferred",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "skipped": false,
           "start_date": "2026-08-24",
           "end_date": "2026-11-20",
@@ -344,7 +344,7 @@
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
         },
         {
@@ -352,7 +352,7 @@
           "name": "Strategy Stride preferred",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "skipped": false,
           "start_date": "2026-08-24",
           "end_date": "2026-11-20",
@@ -360,21 +360,21 @@
           "end_close_usd": 59.82,
           "shares": 137,
           "cash_left_usd": 41.47,
-          "dividends_paid": 0,
-          "dividends_usd": 0,
+          "dividends_paid": 1,
+          "dividends_usd": 342.5,
           "earned_not_yet_paid_usd": 0,
           "price_change_usd": -1763.19,
-          "total_usd": -1763.19,
-          "total_pct": -17.632,
+          "total_usd": -1420.69,
+          "total_pct": -14.207,
           "lowest": {
-            "value_usd": 8236.81,
-            "below_start_usd": 1763.19,
-            "below_start_pct": 17.632,
+            "value_usd": 8579.31,
+            "below_start_usd": 1420.69,
+            "below_start_pct": 14.207,
             "date": "2026-11-20"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
         }
       ],
       "benchmarks": [
@@ -384,7 +384,7 @@
           "name": "4-week US Treasury bill",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "basis": "at today's rate",
           "rate_pct": 4.11,
           "as_of": "2026-11-20",
@@ -400,10 +400,10 @@
           "name": "Vanguard Federal Money Market (VMFXX)",
           "days": 90,
           "amount_usd": 10000,
-          "window_start": "2026-08-23",
+          "window_start": "2026-08-24",
           "basis": "at today's rate",
           "rate_pct": 3.9479,
-          "as_of": "2026-11-21",
+          "as_of": "2026-11-22",
           "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
           "lowest": null,
           "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
@@ -415,14 +415,14 @@
     {
       "days": 180,
       "amount_usd": 10000,
-      "end_date": "2026-11-21",
+      "end_date": "2026-11-22",
       "instruments": [
         {
           "ticker": "STRC",
           "name": "Strategy Stretch preferred",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "skipped": false,
           "start_date": "2026-05-26",
           "end_date": "2026-11-20",
@@ -443,7 +443,7 @@
             "date": "2026-06-26"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
         },
         {
@@ -451,7 +451,7 @@
           "name": "Strive Variable Rate Series A preferred",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "skipped": false,
           "start_date": "2026-05-26",
           "end_date": "2026-11-20",
@@ -472,7 +472,7 @@
             "date": "2026-06-25"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
         },
         {
@@ -480,16 +480,16 @@
           "name": "Strive Series S preferred",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "skipped": true,
-          "reason": "daily closes start 2026-10-16, after the 180-day window start 2026-05-25: the instrument has not traded that long"
+          "reason": "daily closes start 2026-10-16, after the 180-day window start 2026-05-26: the instrument has not traded that long"
         },
         {
           "ticker": "STRF",
           "name": "Strategy Strife preferred",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "skipped": false,
           "start_date": "2026-05-26",
           "end_date": "2026-11-20",
@@ -497,12 +497,12 @@
           "end_close_usd": 94.1,
           "shares": 98,
           "cash_left_usd": 92.2,
-          "dividends_paid": 0,
-          "dividends_usd": 0,
+          "dividends_paid": 2,
+          "dividends_usd": 490.0,
           "earned_not_yet_paid_usd": 0,
           "price_change_usd": -686.0,
-          "total_usd": -686.0,
-          "total_pct": -6.86,
+          "total_usd": -196.0,
+          "total_pct": -1.96,
           "lowest": {
             "value_usd": 8360.46,
             "below_start_usd": 1639.54,
@@ -510,15 +510,15 @@
             "date": "2026-06-26"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
         },
         {
           "ticker": "STRK",
           "name": "Strategy Strike preferred",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "skipped": false,
           "start_date": "2026-05-26",
           "end_date": "2026-11-20",
@@ -539,7 +539,7 @@
             "date": "2026-06-25"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
         },
         {
@@ -547,7 +547,7 @@
           "name": "Strategy Stride preferred",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "skipped": false,
           "start_date": "2026-05-26",
           "end_date": "2026-11-20",
@@ -555,12 +555,12 @@
           "end_close_usd": 59.82,
           "shares": 136,
           "cash_left_usd": 17.6,
-          "dividends_paid": 0,
-          "dividends_usd": 0,
+          "dividends_paid": 2,
+          "dividends_usd": 680.0,
           "earned_not_yet_paid_usd": 0,
           "price_change_usd": -1846.88,
-          "total_usd": -1846.88,
-          "total_pct": -18.469,
+          "total_usd": -1166.88,
+          "total_pct": -11.669,
           "lowest": {
             "value_usd": 6817.6,
             "below_start_usd": 3182.4,
@@ -568,8 +568,8 @@
             "date": "2026-06-25"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
         }
       ],
       "benchmarks": [
@@ -579,7 +579,7 @@
           "name": "4-week US Treasury bill",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "basis": "at today's rate",
           "rate_pct": 4.11,
           "as_of": "2026-11-20",
@@ -595,10 +595,10 @@
           "name": "Vanguard Federal Money Market (VMFXX)",
           "days": 180,
           "amount_usd": 10000,
-          "window_start": "2026-05-25",
+          "window_start": "2026-05-26",
           "basis": "at today's rate",
           "rate_pct": 3.9479,
-          "as_of": "2026-11-21",
+          "as_of": "2026-11-22",
           "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
           "lowest": null,
           "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
@@ -610,35 +610,35 @@
     {
       "days": 365,
       "amount_usd": 10000,
-      "end_date": "2026-11-21",
+      "end_date": "2026-11-22",
       "instruments": [
         {
           "ticker": "STRC",
           "name": "Strategy Stretch preferred",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "skipped": false,
-          "start_date": "2025-11-21",
+          "start_date": "2025-11-24",
           "end_date": "2026-11-20",
-          "start_close_usd": 95.38,
+          "start_close_usd": 96.38,
           "end_close_usd": 93.6,
-          "shares": 104,
-          "cash_left_usd": 80.48,
+          "shares": 103,
+          "cash_left_usd": 72.86,
           "dividends_paid": 29,
-          "dividends_usd": 1164.02,
-          "earned_not_yet_paid_usd": 10.4,
-          "price_change_usd": -185.12,
-          "total_usd": 978.9,
-          "total_pct": 9.789,
+          "dividends_usd": 1152.83,
+          "earned_not_yet_paid_usd": 10.3,
+          "price_change_usd": -286.34,
+          "total_usd": 866.49,
+          "total_pct": 8.665,
           "lowest": {
-            "value_usd": 8420.76,
-            "below_start_usd": 1579.24,
-            "below_start_pct": 15.792,
+            "value_usd": 8332.94,
+            "below_start_usd": 1667.06,
+            "below_start_pct": 16.671,
             "date": "2026-06-26"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
         },
         {
@@ -646,28 +646,28 @@
           "name": "Strive Variable Rate Series A preferred",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "skipped": false,
-          "start_date": "2025-11-21",
+          "start_date": "2025-11-24",
           "end_date": "2026-11-20",
-          "start_close_usd": 90.8,
+          "start_close_usd": 91.98,
           "end_close_usd": 85.0,
-          "shares": 110,
-          "cash_left_usd": 12.0,
+          "shares": 108,
+          "cash_left_usd": 66.16,
           "dividends_paid": 116,
-          "dividends_usd": 1443.48,
-          "earned_not_yet_paid_usd": 6.28,
-          "price_change_usd": -638.0,
-          "total_usd": 805.48,
-          "total_pct": 8.055,
+          "dividends_usd": 1417.23,
+          "earned_not_yet_paid_usd": 6.17,
+          "price_change_usd": -753.84,
+          "total_usd": 663.39,
+          "total_pct": 6.634,
           "lowest": {
-            "value_usd": 9323.95,
-            "below_start_usd": 676.05,
-            "below_start_pct": 6.76,
+            "value_usd": 9208.8,
+            "below_start_usd": 791.2,
+            "below_start_pct": 7.912,
             "date": "2026-02-05"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
         },
         {
@@ -675,66 +675,66 @@
           "name": "Strive Series S preferred",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "skipped": true,
-          "reason": "daily closes start 2026-10-16, after the 365-day window start 2025-11-21: the instrument has not traded that long"
+          "reason": "daily closes start 2026-10-16, after the 365-day window start 2025-11-22: the instrument has not traded that long"
         },
         {
           "ticker": "STRF",
           "name": "Strategy Strife preferred",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "skipped": false,
-          "start_date": "2025-11-21",
+          "start_date": "2025-11-24",
           "end_date": "2026-11-20",
-          "start_close_usd": 97.73,
+          "start_close_usd": 102.66,
           "end_close_usd": 94.1,
-          "shares": 102,
-          "cash_left_usd": 31.54,
-          "dividends_paid": 0,
-          "dividends_usd": 0,
+          "shares": 97,
+          "cash_left_usd": 41.98,
+          "dividends_paid": 4,
+          "dividends_usd": 970.0,
           "earned_not_yet_paid_usd": 0,
-          "price_change_usd": -370.26,
-          "total_usd": -370.26,
-          "total_pct": -3.703,
+          "price_change_usd": -830.32,
+          "total_usd": 139.68,
+          "total_pct": 1.397,
           "lowest": {
-            "value_usd": 8637.28,
-            "below_start_usd": 1362.72,
-            "below_start_pct": 13.627,
+            "value_usd": 8710.87,
+            "below_start_usd": 1289.13,
+            "below_start_pct": 12.891,
             "date": "2026-06-26"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
         },
         {
           "ticker": "STRK",
           "name": "Strategy Strike preferred",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "skipped": false,
-          "start_date": "2025-11-21",
+          "start_date": "2025-11-24",
           "end_date": "2026-11-20",
-          "start_close_usd": 76.45,
+          "start_close_usd": 78.9,
           "end_close_usd": 58.09,
-          "shares": 130,
-          "cash_left_usd": 61.5,
+          "shares": 126,
+          "cash_left_usd": 58.6,
           "dividends_paid": 4,
-          "dividends_usd": 1040.0,
+          "dividends_usd": 1008.0,
           "earned_not_yet_paid_usd": 0,
-          "price_change_usd": -2386.8,
-          "total_usd": -1346.8,
-          "total_pct": -13.468,
+          "price_change_usd": -2622.06,
+          "total_usd": -1614.06,
+          "total_pct": -16.141,
           "lowest": {
-            "value_usd": 7305.1,
-            "below_start_usd": 2694.9,
-            "below_start_pct": 26.949,
+            "value_usd": 7079.32,
+            "below_start_usd": 2920.68,
+            "below_start_pct": 29.207,
             "date": "2026-06-25"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+          "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
           "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
         },
         {
@@ -742,29 +742,29 @@
           "name": "Strategy Stride preferred",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "skipped": false,
-          "start_date": "2025-11-21",
+          "start_date": "2025-11-24",
           "end_date": "2026-11-20",
-          "start_close_usd": 67.54,
+          "start_close_usd": 71.12,
           "end_close_usd": 59.82,
-          "shares": 148,
-          "cash_left_usd": 4.08,
-          "dividends_paid": 0,
-          "dividends_usd": 0,
+          "shares": 140,
+          "cash_left_usd": 43.2,
+          "dividends_paid": 4,
+          "dividends_usd": 1400.0,
           "earned_not_yet_paid_usd": 0,
-          "price_change_usd": -1142.56,
-          "total_usd": -1142.56,
-          "total_pct": -11.426,
+          "price_change_usd": -1582.0,
+          "total_usd": -182.0,
+          "total_pct": -1.82,
           "lowest": {
-            "value_usd": 7404.08,
-            "below_start_usd": 2595.92,
-            "below_start_pct": 25.959,
+            "value_usd": 7743.2,
+            "below_start_usd": 2256.8,
+            "below_start_pct": 22.568,
             "date": "2026-06-25"
           },
           "as_of": "2026-11-20",
-          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-          "dividends_source": null
+          "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+          "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
         }
       ],
       "benchmarks": [
@@ -774,7 +774,7 @@
           "name": "4-week US Treasury bill",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "basis": "at today's rate",
           "rate_pct": 4.11,
           "as_of": "2026-11-20",
@@ -790,10 +790,10 @@
           "name": "Vanguard Federal Money Market (VMFXX)",
           "days": 365,
           "amount_usd": 10000,
-          "window_start": "2025-11-21",
+          "window_start": "2025-11-22",
           "basis": "at today's rate",
           "rate_pct": 3.9479,
-          "as_of": "2026-11-21",
+          "as_of": "2026-11-22",
           "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
           "lowest": null,
           "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
@@ -812,7 +812,7 @@
         "days": 90
       },
       "today": {
-        "as_of": "2026-11-21",
+        "as_of": "2026-11-22",
         "inputs": {
           "amount_usd": 10000,
           "days": 90,
@@ -837,16 +837,16 @@
             "worst_drop_pct": 17.935,
             "hold_odds": {
               "days": 90,
-              "holds": 188,
-              "bought_from": "2025-11-20",
+              "holds": 187,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-08-21",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 1.013,
-              "beat_tbill": 164,
+              "beat_tbill": 163,
               "beat_tbill_pct": 87.2,
               "lost": 14,
-              "lost_pct": 7.4,
+              "lost_pct": 7.5,
               "median_pct": 4.91,
               "worst_pct": -11.53,
               "worst_bought": "2026-03-27"
@@ -873,8 +873,8 @@
               "stale"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-14&toDate=2026-11-22"
+            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-15&toDate=2026-11-23"
           },
           {
             "ticker": "STRC",
@@ -888,17 +888,17 @@
             "worst_drop_pct": 25.482,
             "hold_odds": {
               "days": 90,
-              "holds": 188,
-              "bought_from": "2025-11-20",
+              "holds": 187,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-08-21",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 1.013,
-              "beat_tbill": 128,
-              "beat_tbill_pct": 68.1,
+              "beat_tbill": 127,
+              "beat_tbill_pct": 67.9,
               "lost": 57,
-              "lost_pct": 30.3,
-              "median_pct": 3.18,
+              "lost_pct": 30.5,
+              "median_pct": 3.17,
               "worst_pct": -22.53,
               "worst_bought": "2026-03-30"
             },
@@ -923,83 +923,33 @@
               "issuer_sets_rate"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strcKpiData"
-          },
-          {
-            "ticker": "STRF",
-            "name": "Strategy Strife preferred",
-            "kind": "preferred",
-            "yield_pct": 10.627,
-            "est_income_usd": 0,
-            "est_income_reason": "no payment lands inside the 90 days: no declared or projected pay date",
-            "pay_in_hold": false,
-            "pay_in_hold_basis": "no declared or projected pay date",
-            "worst_drop_pct": 23.833,
-            "hold_odds": {
-              "days": 90,
-              "holds": 188,
-              "bought_from": "2025-11-20",
-              "bought_to": "2026-08-21",
-              "closes_from": "2025-11-20",
-              "tbill_pct": 4.11,
-              "tbill_hold_pct": 1.013,
-              "beat_tbill": 75,
-              "beat_tbill_pct": 39.9,
-              "lost": 105,
-              "lost_pct": 55.9,
-              "median_pct": -1.15,
-              "worst_pct": -11.1,
-              "worst_bought": "2026-03-30"
-            },
-            "hold_odds_reason": null,
-            "profile": {
-              "rate_type": "fixed",
-              "issuer_aims_price_near_100": false,
-              "pay_schedule": "quarterly",
-              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
-              "sources": [
-                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
-              ]
-            },
-            "close_usd": 94.1,
-            "par_usd": 100,
-            "stated_rate_pct": 10.0,
-            "schedule": null,
-            "next_pay_date": null,
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "no_payment_in_window"
-            ],
-            "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strfKpiData"
           },
           {
             "ticker": "STRD",
             "name": "Strategy Stride preferred",
             "kind": "preferred",
             "yield_pct": 16.717,
-            "est_income_usd": 0,
-            "est_income_reason": "no payment lands inside the 90 days: no declared or projected pay date",
-            "pay_in_hold": false,
-            "pay_in_hold_basis": "no declared or projected pay date",
+            "est_income_usd": 412.2,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-12-31",
             "worst_drop_pct": 38.408,
             "hold_odds": {
               "days": 90,
-              "holds": 188,
-              "bought_from": "2025-11-20",
+              "holds": 187,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-08-21",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 1.013,
-              "beat_tbill": 71,
-              "beat_tbill_pct": 37.8,
-              "lost": 109,
-              "lost_pct": 58.0,
-              "median_pct": -1.67,
-              "worst_pct": -31.8,
+              "beat_tbill": 98,
+              "beat_tbill_pct": 52.4,
+              "lost": 77,
+              "lost_pct": 41.2,
+              "median_pct": 1.5,
+              "worst_pct": -28.39,
               "worst_bought": "2026-03-27"
             },
             "hold_odds_reason": null,
@@ -1015,16 +965,64 @@
             "close_usd": 59.82,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
-            "schedule": null,
-            "next_pay_date": null,
+            "schedule": "quarterly",
+            "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate",
-              "no_payment_in_window"
+              "issuer_sets_rate"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strdKpiData"
+          },
+          {
+            "ticker": "STRF",
+            "name": "Strategy Strife preferred",
+            "kind": "preferred",
+            "yield_pct": 10.627,
+            "est_income_usd": 262.04,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-12-31",
+            "worst_drop_pct": 23.833,
+            "hold_odds": {
+              "days": 90,
+              "holds": 187,
+              "bought_from": "2025-11-21",
+              "bought_to": "2026-08-21",
+              "closes_from": "2025-11-21",
+              "tbill_pct": 4.11,
+              "tbill_hold_pct": 1.013,
+              "beat_tbill": 96,
+              "beat_tbill_pct": 51.3,
+              "lost": 83,
+              "lost_pct": 44.4,
+              "median_pct": 1.35,
+              "worst_pct": -8.46,
+              "worst_bought": "2026-03-30"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
+              ]
+            },
+            "close_usd": 94.1,
+            "par_usd": 100,
+            "stated_rate_pct": 10.0,
+            "schedule": "quarterly",
+            "next_pay_date": "2026-12-31",
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate"
+            ],
+            "as_of": "2026-11-20",
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strfKpiData"
           },
           {
             "ticker": "STRK",
@@ -1038,17 +1036,17 @@
             "worst_drop_pct": 41.407,
             "hold_odds": {
               "days": 90,
-              "holds": 188,
-              "bought_from": "2025-11-20",
+              "holds": 187,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-08-21",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 1.013,
-              "beat_tbill": 67,
-              "beat_tbill_pct": 35.6,
+              "beat_tbill": 66,
+              "beat_tbill_pct": 35.3,
               "lost": 117,
-              "lost_pct": 62.2,
-              "median_pct": -5.32,
+              "lost_pct": 62.6,
+              "median_pct": -5.41,
               "worst_pct": -25.82,
               "worst_bought": "2026-03-27"
             },
@@ -1072,7 +1070,7 @@
               "issuer_sets_rate"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strkKpiData"
           },
           {
@@ -1109,16 +1107,16 @@
               "no_hold_odds"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
           }
         ],
         "summary": [
           "SATA, 90-day holds over the past year: beat a T-bill 87% of the time, lost money 7% of the time, middle result +4.91%, worst -11.53%.",
-          "STRC, 90-day holds over the past year: beat a T-bill 68% of the time, lost money 30% of the time, middle result +3.18%, worst -22.53%.",
-          "STRF, 90-day holds over the past year: beat a T-bill 40% of the time, lost money 56% of the time, middle result -1.15%, worst -11.10%.",
-          "STRD, 90-day holds over the past year: beat a T-bill 38% of the time, lost money 58% of the time, middle result -1.67%, worst -31.80%.",
-          "STRK, 90-day holds over the past year: beat a T-bill 36% of the time, lost money 62% of the time, middle result -5.32%, worst -25.82%."
+          "STRC, 90-day holds over the past year: beat a T-bill 68% of the time, lost money 30% of the time, middle result +3.17%, worst -22.53%.",
+          "STRD, 90-day holds over the past year: beat a T-bill 52% of the time, lost money 41% of the time, middle result +1.50%, worst -28.39%.",
+          "STRF, 90-day holds over the past year: beat a T-bill 51% of the time, lost money 44% of the time, middle result +1.35%, worst -8.46%.",
+          "STRK, 90-day holds over the past year: beat a T-bill 35% of the time, lost money 63% of the time, middle result -5.41%, worst -25.82%."
         ],
         "benchmarks": [
           {
@@ -1142,20 +1140,20 @@
             "flags": [
               "not_bank_insured"
             ],
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds"
           },
           {
             "id": "usdc_aave_v3",
             "kind": "usdc_lending",
             "name": "USDC lending on Aave v3 (Ethereum)",
-            "yield_pct": 2.447,
-            "est_income_usd": 60.34,
+            "yield_pct": 2.509,
+            "est_income_usd": 61.87,
             "holdable": true,
             "flags": [
               "smart_contract_risk"
             ],
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501"
           }
         ],
@@ -1166,14 +1164,14 @@
       "past": {
         "days": 90,
         "amount_usd": 10000,
-        "end_date": "2026-11-21",
+        "end_date": "2026-11-22",
         "instruments": [
           {
             "ticker": "STRC",
             "name": "Strategy Stretch preferred",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "skipped": false,
             "start_date": "2026-08-24",
             "end_date": "2026-11-20",
@@ -1194,7 +1192,7 @@
               "date": "2026-11-20"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
           },
           {
@@ -1202,7 +1200,7 @@
             "name": "Strive Variable Rate Series A preferred",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "skipped": false,
             "start_date": "2026-08-24",
             "end_date": "2026-11-20",
@@ -1223,7 +1221,7 @@
               "date": "2026-11-20"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
           },
           {
@@ -1231,16 +1229,16 @@
             "name": "Strive Series S preferred",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "skipped": true,
-            "reason": "daily closes start 2026-10-16, after the 90-day window start 2026-08-23: the instrument has not traded that long"
+            "reason": "daily closes start 2026-10-16, after the 90-day window start 2026-08-24: the instrument has not traded that long"
           },
           {
             "ticker": "STRF",
             "name": "Strategy Strife preferred",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "skipped": false,
             "start_date": "2026-08-24",
             "end_date": "2026-11-20",
@@ -1248,28 +1246,28 @@
             "end_close_usd": 94.1,
             "shares": 99,
             "cash_left_usd": 1.0,
-            "dividends_paid": 0,
-            "dividends_usd": 0,
+            "dividends_paid": 1,
+            "dividends_usd": 247.5,
             "earned_not_yet_paid_usd": 0,
             "price_change_usd": -683.1,
-            "total_usd": -683.1,
-            "total_pct": -6.831,
+            "total_usd": -435.6,
+            "total_pct": -4.356,
             "lowest": {
-              "value_usd": 9316.9,
-              "below_start_usd": 683.1,
-              "below_start_pct": 6.831,
+              "value_usd": 9564.4,
+              "below_start_usd": 435.6,
+              "below_start_pct": 4.356,
               "date": "2026-11-20"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "dividends_source": null
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
           },
           {
             "ticker": "STRK",
             "name": "Strategy Strike preferred",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "skipped": false,
             "start_date": "2026-08-24",
             "end_date": "2026-11-20",
@@ -1290,7 +1288,7 @@
               "date": "2026-11-20"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
           },
           {
@@ -1298,7 +1296,7 @@
             "name": "Strategy Stride preferred",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "skipped": false,
             "start_date": "2026-08-24",
             "end_date": "2026-11-20",
@@ -1306,21 +1304,21 @@
             "end_close_usd": 59.82,
             "shares": 137,
             "cash_left_usd": 41.47,
-            "dividends_paid": 0,
-            "dividends_usd": 0,
+            "dividends_paid": 1,
+            "dividends_usd": 342.5,
             "earned_not_yet_paid_usd": 0,
             "price_change_usd": -1763.19,
-            "total_usd": -1763.19,
-            "total_pct": -17.632,
+            "total_usd": -1420.69,
+            "total_pct": -14.207,
             "lowest": {
-              "value_usd": 8236.81,
-              "below_start_usd": 1763.19,
-              "below_start_pct": 17.632,
+              "value_usd": 8579.31,
+              "below_start_usd": 1420.69,
+              "below_start_pct": 14.207,
               "date": "2026-11-20"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "dividends_source": null
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
           }
         ],
         "benchmarks": [
@@ -1330,7 +1328,7 @@
             "name": "4-week US Treasury bill",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "basis": "at today's rate",
             "rate_pct": 4.11,
             "as_of": "2026-11-20",
@@ -1346,10 +1344,10 @@
             "name": "Vanguard Federal Money Market (VMFXX)",
             "days": 90,
             "amount_usd": 10000,
-            "window_start": "2026-08-23",
+            "window_start": "2026-08-24",
             "basis": "at today's rate",
             "rate_pct": 3.9479,
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
             "lowest": null,
             "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
@@ -1367,7 +1365,7 @@
         "days": 180
       },
       "today": {
-        "as_of": "2026-11-21",
+        "as_of": "2026-11-22",
         "inputs": {
           "amount_usd": 250000,
           "days": 180,
@@ -1392,14 +1390,14 @@
             "worst_drop_pct": 17.935,
             "hold_odds": {
               "days": 180,
-              "holds": 126,
-              "bought_from": "2025-11-20",
+              "holds": 125,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-05-22",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 2.027,
-              "beat_tbill": 117,
-              "beat_tbill_pct": 92.9,
+              "beat_tbill": 116,
+              "beat_tbill_pct": 92.8,
               "lost": 4,
               "lost_pct": 3.2,
               "median_pct": 8.68,
@@ -1428,8 +1426,58 @@
               "stale"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-14&toDate=2026-11-22"
+            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-15&toDate=2026-11-23"
+          },
+          {
+            "ticker": "STRF",
+            "name": "Strategy Strife preferred",
+            "kind": "preferred",
+            "yield_pct": 10.627,
+            "est_income_usd": 13101.78,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-12-31",
+            "worst_drop_pct": 23.833,
+            "hold_odds": {
+              "days": 180,
+              "holds": 125,
+              "bought_from": "2025-11-21",
+              "bought_to": "2026-05-22",
+              "closes_from": "2025-11-21",
+              "tbill_pct": 4.11,
+              "tbill_hold_pct": 2.027,
+              "beat_tbill": 78,
+              "beat_tbill_pct": 62.4,
+              "lost": 35,
+              "lost_pct": 28.0,
+              "median_pct": 4.9,
+              "worst_pct": -13.65,
+              "worst_bought": "2025-12-29"
+            },
+            "hold_odds_reason": null,
+            "profile": {
+              "rate_type": "fixed",
+              "issuer_aims_price_near_100": false,
+              "pay_schedule": "quarterly",
+              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
+              "sources": [
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
+              ]
+            },
+            "close_usd": 94.1,
+            "par_usd": 100,
+            "stated_rate_pct": 10.0,
+            "schedule": "quarterly",
+            "next_pay_date": "2026-12-31",
+            "flags": [
+              "price_moves",
+              "issuer_sets_rate",
+              "thin_trading"
+            ],
+            "as_of": "2026-11-20",
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strfKpiData"
           },
           {
             "ticker": "STRC",
@@ -1443,16 +1491,16 @@
             "worst_drop_pct": 25.482,
             "hold_odds": {
               "days": 180,
-              "holds": 126,
-              "bought_from": "2025-11-20",
+              "holds": 125,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-05-22",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 2.027,
-              "beat_tbill": 80,
-              "beat_tbill_pct": 63.5,
+              "beat_tbill": 79,
+              "beat_tbill_pct": 63.2,
               "lost": 32,
-              "lost_pct": 25.4,
+              "lost_pct": 25.6,
               "median_pct": 3.53,
               "worst_pct": -18.92,
               "worst_bought": "2025-12-30"
@@ -1478,34 +1526,34 @@
               "issuer_sets_rate"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strcKpiData"
           },
           {
-            "ticker": "STRF",
-            "name": "Strategy Strife preferred",
+            "ticker": "STRD",
+            "name": "Strategy Stride preferred",
             "kind": "preferred",
-            "yield_pct": 10.627,
-            "est_income_usd": 0,
-            "est_income_reason": "no payment lands inside the 180 days: no declared or projected pay date",
-            "pay_in_hold": false,
-            "pay_in_hold_basis": "no declared or projected pay date",
-            "worst_drop_pct": 23.833,
+            "yield_pct": 16.717,
+            "est_income_usd": 20610.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-12-31",
+            "worst_drop_pct": 38.408,
             "hold_odds": {
               "days": 180,
-              "holds": 126,
-              "bought_from": "2025-11-20",
+              "holds": 125,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-05-22",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 2.027,
-              "beat_tbill": 44,
-              "beat_tbill_pct": 34.9,
-              "lost": 65,
-              "lost_pct": 51.6,
-              "median_pct": -0.16,
-              "worst_pct": -18.48,
-              "worst_bought": "2025-12-29"
+              "beat_tbill": 28,
+              "beat_tbill_pct": 22.4,
+              "lost": 86,
+              "lost_pct": 68.8,
+              "median_pct": -2.81,
+              "worst_pct": -24.01,
+              "worst_bought": "2025-12-30"
             },
             "hold_odds_reason": null,
             "profile": {
@@ -1514,23 +1562,22 @@
               "pay_schedule": "quarterly",
               "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
               "sources": [
-                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525060332/d927140d424b5.htm"
+                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm"
               ]
             },
-            "close_usd": 94.1,
+            "close_usd": 59.82,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
-            "schedule": null,
-            "next_pay_date": null,
+            "schedule": "quarterly",
+            "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
+              "thin_trading"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strfKpiData"
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "rate_source": "https://api.strategy.com/btc/strdKpiData"
           },
           {
             "ticker": "STRK",
@@ -1544,17 +1591,17 @@
             "worst_drop_pct": 41.407,
             "hold_odds": {
               "days": 180,
-              "holds": 126,
-              "bought_from": "2025-11-20",
+              "holds": 125,
+              "bought_from": "2025-11-21",
               "bought_to": "2026-05-22",
-              "closes_from": "2025-11-20",
+              "closes_from": "2025-11-21",
               "tbill_pct": 4.11,
               "tbill_hold_pct": 2.027,
-              "beat_tbill": 24,
-              "beat_tbill_pct": 19.0,
+              "beat_tbill": 23,
+              "beat_tbill_pct": 18.4,
               "lost": 99,
-              "lost_pct": 78.6,
-              "median_pct": -7.06,
+              "lost_pct": 79.2,
+              "median_pct": -7.13,
               "worst_pct": -29.21,
               "worst_bought": "2025-12-29"
             },
@@ -1579,59 +1626,8 @@
               "thin_trading"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strkKpiData"
-          },
-          {
-            "ticker": "STRD",
-            "name": "Strategy Stride preferred",
-            "kind": "preferred",
-            "yield_pct": 16.717,
-            "est_income_usd": 0,
-            "est_income_reason": "no payment lands inside the 180 days: no declared or projected pay date",
-            "pay_in_hold": false,
-            "pay_in_hold_basis": "no declared or projected pay date",
-            "worst_drop_pct": 38.408,
-            "hold_odds": {
-              "days": 180,
-              "holds": 126,
-              "bought_from": "2025-11-20",
-              "bought_to": "2026-05-22",
-              "closes_from": "2025-11-20",
-              "tbill_pct": 4.11,
-              "tbill_hold_pct": 2.027,
-              "beat_tbill": 4,
-              "beat_tbill_pct": 3.2,
-              "lost": 115,
-              "lost_pct": 91.3,
-              "median_pct": -9.13,
-              "worst_pct": -30.51,
-              "worst_bought": "2025-12-30"
-            },
-            "hold_odds_reason": null,
-            "profile": {
-              "rate_type": "fixed",
-              "issuer_aims_price_near_100": false,
-              "pay_schedule": "quarterly",
-              "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move.",
-              "sources": [
-                "https://www.sec.gov/Archives/edgar/data/1050446/000119312525137186/d125757d424b5.htm"
-              ]
-            },
-            "close_usd": 59.82,
-            "par_usd": 100,
-            "stated_rate_pct": 10.0,
-            "schedule": null,
-            "next_pay_date": null,
-            "flags": [
-              "price_moves",
-              "issuer_sets_rate",
-              "thin_trading",
-              "no_payment_in_window"
-            ],
-            "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "rate_source": "https://api.strategy.com/btc/strdKpiData"
           },
           {
             "ticker": "SATS",
@@ -1667,16 +1663,16 @@
               "no_hold_odds"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
           }
         ],
         "summary": [
           "SATA, 180-day holds over the past year: beat a T-bill 93% of the time, lost money 3% of the time, middle result +8.68%, worst -4.29%.",
-          "STRC, 180-day holds over the past year: beat a T-bill 63% of the time, lost money 25% of the time, middle result +3.53%, worst -18.92%.",
-          "STRF, 180-day holds over the past year: beat a T-bill 35% of the time, lost money 52% of the time, middle result -0.16%, worst -18.48%.",
-          "STRK, 180-day holds over the past year: beat a T-bill 19% of the time, lost money 79% of the time, middle result -7.06%, worst -29.21%.",
-          "STRD, 180-day holds over the past year: beat a T-bill 3% of the time, lost money 91% of the time, middle result -9.13%, worst -30.51%."
+          "STRF, 180-day holds over the past year: beat a T-bill 62% of the time, lost money 28% of the time, middle result +4.90%, worst -13.65%.",
+          "STRC, 180-day holds over the past year: beat a T-bill 63% of the time, lost money 26% of the time, middle result +3.53%, worst -18.92%.",
+          "STRD, 180-day holds over the past year: beat a T-bill 22% of the time, lost money 69% of the time, middle result -2.81%, worst -24.01%.",
+          "STRK, 180-day holds over the past year: beat a T-bill 18% of the time, lost money 79% of the time, middle result -7.13%, worst -29.21%."
         ],
         "benchmarks": [
           {
@@ -1700,20 +1696,20 @@
             "flags": [
               "not_bank_insured"
             ],
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds"
           },
           {
             "id": "usdc_aave_v3",
             "kind": "usdc_lending",
             "name": "USDC lending on Aave v3 (Ethereum)",
-            "yield_pct": 2.447,
-            "est_income_usd": 3016.85,
+            "yield_pct": 2.509,
+            "est_income_usd": 3093.29,
             "holdable": true,
             "flags": [
               "smart_contract_risk"
             ],
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501"
           }
         ],
@@ -1724,14 +1720,14 @@
       "past": {
         "days": 180,
         "amount_usd": 250000,
-        "end_date": "2026-11-21",
+        "end_date": "2026-11-22",
         "instruments": [
           {
             "ticker": "STRC",
             "name": "Strategy Stretch preferred",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "skipped": false,
             "start_date": "2026-05-26",
             "end_date": "2026-11-20",
@@ -1752,7 +1748,7 @@
               "date": "2026-06-26"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
           },
           {
@@ -1760,7 +1756,7 @@
             "name": "Strive Variable Rate Series A preferred",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "skipped": false,
             "start_date": "2026-05-26",
             "end_date": "2026-11-20",
@@ -1781,7 +1777,7 @@
               "date": "2026-06-25"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
           },
           {
@@ -1789,16 +1785,16 @@
             "name": "Strive Series S preferred",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "skipped": true,
-            "reason": "daily closes start 2026-10-16, after the 180-day window start 2026-05-25: the instrument has not traded that long"
+            "reason": "daily closes start 2026-10-16, after the 180-day window start 2026-05-26: the instrument has not traded that long"
           },
           {
             "ticker": "STRF",
             "name": "Strategy Strife preferred",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "skipped": false,
             "start_date": "2026-05-26",
             "end_date": "2026-11-20",
@@ -1806,12 +1802,12 @@
             "end_close_usd": 94.1,
             "shares": 2472,
             "cash_left_usd": 80.8,
-            "dividends_paid": 0,
-            "dividends_usd": 0,
+            "dividends_paid": 2,
+            "dividends_usd": 12360.0,
             "earned_not_yet_paid_usd": 0,
             "price_change_usd": -17304.0,
-            "total_usd": -17304.0,
-            "total_pct": -6.922,
+            "total_usd": -4944.0,
+            "total_pct": -1.978,
             "lowest": {
               "value_usd": 208643.44,
               "below_start_usd": 41356.56,
@@ -1819,15 +1815,15 @@
               "date": "2026-06-26"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "dividends_source": null
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
           },
           {
             "ticker": "STRK",
             "name": "Strategy Strike preferred",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "skipped": false,
             "start_date": "2026-05-26",
             "end_date": "2026-11-20",
@@ -1848,7 +1844,7 @@
               "date": "2026-06-25"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
           },
           {
@@ -1856,7 +1852,7 @@
             "name": "Strategy Stride preferred",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "skipped": false,
             "start_date": "2026-05-26",
             "end_date": "2026-11-20",
@@ -1864,12 +1860,12 @@
             "end_close_usd": 59.82,
             "shares": 3405,
             "cash_left_usd": 73.0,
-            "dividends_paid": 0,
-            "dividends_usd": 0,
+            "dividends_paid": 2,
+            "dividends_usd": 17025.0,
             "earned_not_yet_paid_usd": 0,
             "price_change_usd": -46239.9,
-            "total_usd": -46239.9,
-            "total_pct": -18.496,
+            "total_usd": -29214.9,
+            "total_pct": -11.686,
             "lowest": {
               "value_usd": 170323.0,
               "below_start_usd": 79677.0,
@@ -1877,8 +1873,8 @@
               "date": "2026-06-25"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "dividends_source": null
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
           }
         ],
         "benchmarks": [
@@ -1888,7 +1884,7 @@
             "name": "4-week US Treasury bill",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "basis": "at today's rate",
             "rate_pct": 4.11,
             "as_of": "2026-11-20",
@@ -1904,10 +1900,10 @@
             "name": "Vanguard Federal Money Market (VMFXX)",
             "days": 180,
             "amount_usd": 250000,
-            "window_start": "2026-05-25",
+            "window_start": "2026-05-26",
             "basis": "at today's rate",
             "rate_pct": 3.9479,
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
             "lowest": null,
             "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
@@ -1925,7 +1921,7 @@
         "days": 365
       },
       "today": {
-        "as_of": "2026-11-21",
+        "as_of": "2026-11-22",
         "inputs": {
           "amount_usd": 100000,
           "days": 365,
@@ -1972,7 +1968,7 @@
               "no_hold_odds"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm"
           },
           {
@@ -1980,13 +1976,13 @@
             "name": "Strategy Stride preferred",
             "kind": "preferred",
             "yield_pct": 16.717,
-            "est_income_usd": 0,
-            "est_income_reason": "no payment lands inside the 365 days: no declared or projected pay date",
-            "pay_in_hold": false,
-            "pay_in_hold_basis": "no declared or projected pay date",
+            "est_income_usd": 16717.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-12-31",
             "worst_drop_pct": 38.408,
             "hold_odds": null,
-            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "hold_odds_reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
             "profile": {
               "rate_type": "fixed",
               "issuer_aims_price_near_100": false,
@@ -1999,17 +1995,16 @@
             "close_usd": 59.82,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
-            "schedule": null,
-            "next_pay_date": null,
+            "schedule": "quarterly",
+            "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
               "issuer_sets_rate",
               "no_hold_odds",
-              "thin_trading",
-              "no_payment_in_window"
+              "thin_trading"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strdKpiData"
           },
           {
@@ -2023,7 +2018,7 @@
             "pay_in_hold_basis": "declared next pay date 2026-11-23",
             "worst_drop_pct": 17.935,
             "hold_odds": null,
-            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "hold_odds_reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
             "profile": {
               "rate_type": "variable",
               "issuer_aims_price_near_100": true,
@@ -2046,8 +2041,8 @@
               "stale"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-14&toDate=2026-11-22"
+            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "rate_source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-15&toDate=2026-11-23"
           },
           {
             "ticker": "STRK",
@@ -2060,7 +2055,7 @@
             "pay_in_hold_basis": "declared next pay date 2026-12-31",
             "worst_drop_pct": 41.407,
             "hold_odds": null,
-            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "hold_odds_reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
             "profile": {
               "rate_type": "fixed",
               "issuer_aims_price_near_100": false,
@@ -2082,7 +2077,7 @@
               "thin_trading"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strkKpiData"
           },
           {
@@ -2096,7 +2091,7 @@
             "pay_in_hold_basis": "declared next pay date 2026-11-23",
             "worst_drop_pct": 25.482,
             "hold_odds": null,
-            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "hold_odds_reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
             "profile": {
               "rate_type": "variable",
               "issuer_aims_price_near_100": true,
@@ -2118,7 +2113,7 @@
               "no_hold_odds"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strcKpiData"
           },
           {
@@ -2126,13 +2121,13 @@
             "name": "Strategy Strife preferred",
             "kind": "preferred",
             "yield_pct": 10.627,
-            "est_income_usd": 0,
-            "est_income_reason": "no payment lands inside the 365 days: no declared or projected pay date",
-            "pay_in_hold": false,
-            "pay_in_hold_basis": "no declared or projected pay date",
+            "est_income_usd": 10627.0,
+            "est_income_reason": null,
+            "pay_in_hold": true,
+            "pay_in_hold_basis": "declared next pay date 2026-12-31",
             "worst_drop_pct": 23.833,
             "hold_odds": null,
-            "hold_odds_reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed",
+            "hold_odds_reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
             "profile": {
               "rate_type": "fixed",
               "issuer_aims_price_near_100": false,
@@ -2145,17 +2140,16 @@
             "close_usd": 94.1,
             "par_usd": 100,
             "stated_rate_pct": 10.0,
-            "schedule": null,
-            "next_pay_date": null,
+            "schedule": "quarterly",
+            "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
               "issuer_sets_rate",
               "no_hold_odds",
-              "thin_trading",
-              "no_payment_in_window"
+              "thin_trading"
             ],
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "rate_source": "https://api.strategy.com/btc/strfKpiData"
           }
         ],
@@ -2182,20 +2176,20 @@
             "flags": [
               "not_bank_insured"
             ],
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds"
           },
           {
             "id": "usdc_aave_v3",
             "kind": "usdc_lending",
             "name": "USDC lending on Aave v3 (Ethereum)",
-            "yield_pct": 2.447,
-            "est_income_usd": 2447.0,
+            "yield_pct": 2.509,
+            "est_income_usd": 2509.0,
             "holdable": true,
             "flags": [
               "smart_contract_risk"
             ],
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://yields.llama.fi/chart/aa70268e-4b52-42bf-a116-608b370f9501"
           }
         ],
@@ -2206,35 +2200,35 @@
       "past": {
         "days": 365,
         "amount_usd": 100000,
-        "end_date": "2026-11-21",
+        "end_date": "2026-11-22",
         "instruments": [
           {
             "ticker": "STRC",
             "name": "Strategy Stretch preferred",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "skipped": false,
-            "start_date": "2025-11-21",
+            "start_date": "2025-11-24",
             "end_date": "2026-11-20",
-            "start_close_usd": 95.38,
+            "start_close_usd": 96.38,
             "end_close_usd": 93.6,
-            "shares": 1048,
-            "cash_left_usd": 41.76,
+            "shares": 1037,
+            "cash_left_usd": 53.94,
             "dividends_paid": 29,
-            "dividends_usd": 11729.74,
-            "earned_not_yet_paid_usd": 104.8,
-            "price_change_usd": -1865.44,
-            "total_usd": 9864.3,
-            "total_pct": 9.864,
+            "dividends_usd": 11606.62,
+            "earned_not_yet_paid_usd": 103.7,
+            "price_change_usd": -2882.86,
+            "total_usd": 8723.76,
+            "total_pct": 8.724,
             "lowest": {
-              "value_usd": 84086.12,
-              "below_start_usd": 15913.88,
-              "below_start_pct": 15.914,
+              "value_usd": 83216.15,
+              "below_start_usd": 16783.85,
+              "below_start_pct": 16.784,
               "date": "2026-06-26"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks"
           },
           {
@@ -2242,28 +2236,28 @@
             "name": "Strive Variable Rate Series A preferred",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "skipped": false,
-            "start_date": "2025-11-21",
+            "start_date": "2025-11-24",
             "end_date": "2026-11-20",
-            "start_close_usd": 90.8,
+            "start_close_usd": 91.98,
             "end_close_usd": 85.0,
-            "shares": 1101,
-            "cash_left_usd": 29.2,
+            "shares": 1087,
+            "cash_left_usd": 17.74,
             "dividends_paid": 116,
-            "dividends_usd": 14447.87,
-            "earned_not_yet_paid_usd": 62.87,
-            "price_change_usd": -6385.8,
-            "total_usd": 8062.07,
-            "total_pct": 8.062,
+            "dividends_usd": 14264.16,
+            "earned_not_yet_paid_usd": 62.07,
+            "price_change_usd": -7587.26,
+            "total_usd": 6676.9,
+            "total_pct": 6.677,
             "lowest": {
-              "value_usd": 93233.36,
-              "below_start_usd": 6766.64,
-              "below_start_pct": 6.767,
+              "value_usd": 92036.75,
+              "below_start_usd": 7963.25,
+              "below_start_pct": 7.963,
               "date": "2026-02-05"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks"
           },
           {
@@ -2271,66 +2265,66 @@
             "name": "Strive Series S preferred",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "skipped": true,
-            "reason": "daily closes start 2026-10-16, after the 365-day window start 2025-11-21: the instrument has not traded that long"
+            "reason": "daily closes start 2026-10-16, after the 365-day window start 2025-11-22: the instrument has not traded that long"
           },
           {
             "ticker": "STRF",
             "name": "Strategy Strife preferred",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "skipped": false,
-            "start_date": "2025-11-21",
+            "start_date": "2025-11-24",
             "end_date": "2026-11-20",
-            "start_close_usd": 97.73,
+            "start_close_usd": 102.66,
             "end_close_usd": 94.1,
-            "shares": 1023,
-            "cash_left_usd": 22.21,
-            "dividends_paid": 0,
-            "dividends_usd": 0,
+            "shares": 974,
+            "cash_left_usd": 9.16,
+            "dividends_paid": 4,
+            "dividends_usd": 9740.0,
             "earned_not_yet_paid_usd": 0,
-            "price_change_usd": -3713.49,
-            "total_usd": -3713.49,
-            "total_pct": -3.713,
+            "price_change_usd": -8337.44,
+            "total_usd": 1402.56,
+            "total_pct": 1.403,
             "lowest": {
-              "value_usd": 86332.72,
-              "below_start_usd": 13667.28,
-              "below_start_pct": 13.667,
+              "value_usd": 87055.54,
+              "below_start_usd": 12944.46,
+              "below_start_pct": 12.944,
               "date": "2026-06-26"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "dividends_source": null
+            "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks"
           },
           {
             "ticker": "STRK",
             "name": "Strategy Strike preferred",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "skipped": false,
-            "start_date": "2025-11-21",
+            "start_date": "2025-11-24",
             "end_date": "2026-11-20",
-            "start_close_usd": 76.45,
+            "start_close_usd": 78.9,
             "end_close_usd": 58.09,
-            "shares": 1308,
-            "cash_left_usd": 3.4,
+            "shares": 1267,
+            "cash_left_usd": 33.7,
             "dividends_paid": 4,
-            "dividends_usd": 10464.0,
+            "dividends_usd": 10136.0,
             "earned_not_yet_paid_usd": 0,
-            "price_change_usd": -24014.88,
-            "total_usd": -13550.88,
-            "total_pct": -13.551,
+            "price_change_usd": -26366.27,
+            "total_usd": -16230.27,
+            "total_pct": -16.23,
             "lowest": {
-              "value_usd": 72885.16,
-              "below_start_usd": 27114.84,
-              "below_start_pct": 27.115,
+              "value_usd": 70630.94,
+              "below_start_usd": 29369.06,
+              "below_start_pct": 29.369,
               "date": "2026-06-25"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
+            "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
             "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks"
           },
           {
@@ -2338,29 +2332,29 @@
             "name": "Strategy Stride preferred",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "skipped": false,
-            "start_date": "2025-11-21",
+            "start_date": "2025-11-24",
             "end_date": "2026-11-20",
-            "start_close_usd": 67.54,
+            "start_close_usd": 71.12,
             "end_close_usd": 59.82,
-            "shares": 1480,
-            "cash_left_usd": 40.8,
-            "dividends_paid": 0,
-            "dividends_usd": 0,
+            "shares": 1406,
+            "cash_left_usd": 5.28,
+            "dividends_paid": 4,
+            "dividends_usd": 14060.0,
             "earned_not_yet_paid_usd": 0,
-            "price_change_usd": -11425.6,
-            "total_usd": -11425.6,
-            "total_pct": -11.426,
+            "price_change_usd": -15887.8,
+            "total_usd": -1827.8,
+            "total_pct": -1.828,
             "lowest": {
-              "value_usd": 74040.8,
-              "below_start_usd": 25959.2,
-              "below_start_pct": 25.959,
+              "value_usd": 77335.28,
+              "below_start_usd": 22664.72,
+              "below_start_pct": 22.665,
               "date": "2026-06-25"
             },
             "as_of": "2026-11-20",
-            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-20&todate=2026-11-21&limit=400",
-            "dividends_source": null
+            "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
+            "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks"
           }
         ],
         "benchmarks": [
@@ -2370,7 +2364,7 @@
             "name": "4-week US Treasury bill",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "basis": "at today's rate",
             "rate_pct": 4.11,
             "as_of": "2026-11-20",
@@ -2386,10 +2380,10 @@
             "name": "Vanguard Federal Money Market (VMFXX)",
             "days": 365,
             "amount_usd": 100000,
-            "window_start": "2025-11-21",
+            "window_start": "2025-11-22",
             "basis": "at today's rate",
             "rate_pct": 3.9479,
-            "as_of": "2026-11-21",
+            "as_of": "2026-11-22",
             "source": "https://api.nasdaq.com/api/quote/VMFXX/summary?assetclass=mutualfunds",
             "lowest": null,
             "lowest_reason": "not worked out: the feed has no daily price or rate history for this benchmark",
