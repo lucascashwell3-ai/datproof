@@ -37,6 +37,10 @@ its source and date; a number that could not be fetched is empty, with the reaso
   `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `scenarios.json`,
   `method.json` (every formula and flag in plain words), `status.json`, and the dated
   `days/<date>.json`.
+- **Pages** (rewritten each day from the files, figures as plain text so readers that run
+  no script still get them): `https://lucascashwell3-ai.github.io/datproof/idle-cash/` answers "where should a trading bot keep its
+  idle cash?", `https://lucascashwell3-ai.github.io/datproof/next/` is the home page with charts; each has an `index.md` copy.
+  `python -m datproof_feed.pages` rebuilds them.
 - **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
   and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
   returns each option's hold odds for exactly those days (how past holds of that length turned

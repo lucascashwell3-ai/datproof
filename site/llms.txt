@@ -6,6 +6,13 @@
 > every business day, next to a T-bill and inflation. Every number carries its source address and
 > the date it is true for. Data, not personal advice. Nothing here holds, moves or trades money.
 
+## Pages (today's figures written into the text, no script needed)
+
+- https://lucascashwell3-ai.github.io/datproof/idle-cash/ : Where should a trading bot keep its idle cash? Today's yields beside the T-bill, money market fund and USDC lending, past hold odds, and how far each price has fallen, every figure dated.
+- https://lucascashwell3-ai.github.io/datproof/idle-cash/index.md : the same page as Markdown.
+- https://lucascashwell3-ai.github.io/datproof/next/ : the home page, with charts.
+- https://lucascashwell3-ai.github.io/datproof/next/index.md : the home page as Markdown.
+
 ## The point
 
 - A 4-week US Treasury bill pays about 4% a year, and US inflation (CPI-U, year over year) takes

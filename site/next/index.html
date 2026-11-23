@@ -31,13 +31,13 @@
       <p class="earn-foot num" id="earn-foot"></p>
     </figure>
 
-    <p class="hero-act"><a class="btn" href="#agent">Connect your agent</a><span class="asof" id="asof"></span></p>
+    <p class="hero-act"><a class="btn" href="#agent">Connect your agent</a><span class="asof" id="asof"><!--feed:asof-->Data for 22 Nov 2026 · prices at the 20 Nov 2026 close · inflation is US CPI, September 2026 vs a year earlier · SATA rate last published 13 Nov 2026<!--/feed:asof--></span></p>
   </section>
 
   <section class="wrap block" id="three" aria-labelledby="h-three">
     <h2 id="h-three">Income every business day</h2>
     <p class="sub">Three preferred stocks backed by bitcoin. Each pays a dividend every business day.</p>
-    <div class="panels" id="panels"></div>
+    <div class="panels" id="panels"><!--feed:panels--><article class="panel"><div class="p-head"><h3 class="p-tk">STRC</h3><span class="p-iss">Strategy</span></div><p class="p-yield num">12.8%</p><p class="p-x"><span class="num">3.1×</span> a T-bill</p><ul class="p-facts"><li>Pays every business day</li><li><b class="num">33</b> dividends in a row</li><li>Price today <b class="num">$93.60</b></li></ul></article><article class="panel"><div class="p-head"><h3 class="p-tk">SATA</h3><span class="p-iss">Strive</span></div><p class="p-yield num">15.3%</p><p class="p-x"><span class="num">3.7×</span> a T-bill</p><ul class="p-facts"><li>Pays every business day</li><li><b class="num">116</b> dividends in a row</li><li>Price today <b class="num">$85.00</b></li></ul></article><article class="panel"><div class="p-head"><h3 class="p-tk">SATS</h3><span class="p-iss">Strive</span></div><p class="p-yield num">17.5%</p><p class="p-x"><span class="num">4.3×</span> a T-bill</p><ul class="p-facts"><li>Pays every business day</li><li><b class="num">9</b> dividends in a row</li><li>Price today <b class="num">$85.76</b></li></ul></article><!--/feed:panels--></div>
     <div class="longer" id="longer"></div>
   </section>
 
@@ -50,8 +50,8 @@
   <section class="wrap block" id="odds" aria-labelledby="h-odds">
     <h2 id="h-odds">The odds for the time your cash has</h2>
     <p class="sub">Every start day in the past year: buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch.</p>
-    <div class="odds" id="odds-out"></div>
-    <p class="fine" id="odds-note"></p>
+    <div class="odds" id="odds-out"><!--feed:odds--><table class="od"><caption class="vh">Share of past holds that beat a 4-week T-bill, by holding time</caption><thead><tr><th scope="col"><span class="vh">Stock</span></th><th scope="col">1 week</th><th scope="col">1 month</th><th scope="col">3 months</th></tr></thead><tbody><tr><th scope="row" class="od-tk">STRC</th><td data-span="1 week"><span class="od-n num">61%</span> <span class="od-l">beat a T-bill</span><span class="od-bar" aria-hidden="true"><i style="width:61%"></i></span><span class="od-s">Lost money <b class="num">25%</b> of the time</span><span class="od-s od-s2">Typical result <b class="num">+0.3%</b></span></td><td data-span="1 month"><span class="od-n num">76%</span> <span class="od-l">beat a T-bill</span><span class="od-bar" aria-hidden="true"><i style="width:76%"></i></span><span class="od-s">Lost money <b class="num">19%</b> of the time</span><span class="od-s od-s2">Typical result <b class="num">+1.1%</b></span></td><td data-span="3 months"><span class="od-n num">68%</span> <span class="od-l">beat a T-bill</span><span class="od-bar" aria-hidden="true"><i style="width:68%"></i></span><span class="od-s">Lost money <b class="num">31%</b> of the time</span><span class="od-s od-s2">Typical result <b class="num">+3.2%</b></span></td></tr><tr><th scope="row" class="od-tk">SATA</th><td data-span="1 week"><span class="od-n num">65%</span> <span class="od-l">beat a T-bill</span><span class="od-bar" aria-hidden="true"><i style="width:65%"></i></span><span class="od-s">Lost money <b class="num">31%</b> of the time</span><span class="od-s od-s2">Typical result <b class="num">+0.4%</b></span></td><td data-span="1 month"><span class="od-n num">70%</span> <span class="od-l">beat a T-bill</span><span class="od-bar" aria-hidden="true"><i style="width:70%"></i></span><span class="od-s">Lost money <b class="num">26%</b> of the time</span><span class="od-s od-s2">Typical result <b class="num">+1.5%</b></span></td><td data-span="3 months"><span class="od-n num">87%</span> <span class="od-l">beat a T-bill</span><span class="od-bar" aria-hidden="true"><i style="width:87%"></i></span><span class="od-s">Lost money <b class="num">8%</b> of the time</span><span class="od-s od-s2">Typical result <b class="num">+4.9%</b></span></td></tr></tbody></table><!--/feed:odds--></div>
+    <p class="fine" id="odds-note"><!--feed:oddsnote-->Past results, closes from 21 Nov 2025 to 22 Nov 2026. A price drop can outweigh the dividends: the worst 3-month hold was STRC −22.5%, SATA −11.5%. SATS is too new to score.<!--/feed:oddsnote--></p>
   </section>
 
   <section class="wrap block" id="lift" aria-labelledby="h-lift">
@@ -117,7 +117,7 @@ https://lucascashwell3-ai.github.io/datproof/llms.txt</code></pre>
       </div>
       <p class="copy-msg" id="copy-msg" aria-live="polite"></p>
       <p class="broker">Running your agent on Robinhood or Alpaca? Add DATproof alongside your broker connection.</p>
-      <p class="links"><a href="../v1/instruments.json">The JSON feed</a><a href="../llms.txt">/llms.txt</a><a href="https://github.com/lucascashwell3-ai/datproof" rel="noopener">Source code</a></p>
+      <p class="links"><a href="../idle-cash/">Where should a trading bot keep its idle cash?</a><a href="../v1/instruments.json">The JSON feed</a><a href="../llms.txt">/llms.txt</a><a href="https://github.com/lucascashwell3-ai/datproof" rel="noopener">Source code</a></p>
     </div>
   </section>
 </main>

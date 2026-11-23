@@ -35,6 +35,7 @@ jobs:
     outputs:
       dry_run: ${{ steps.dry-run.outputs.dry_run }}
       feed_code: ${{ steps.feed.outputs.feed_code }}
+      pages_code: ${{ steps.pages.outputs.pages_code }}
     steps:
       - uses: actions/checkout@v4
 
@@ -93,6 +94,18 @@ jobs:
           python -m pytest tests/test_feed_*.py -q && python -m datproof_feed.build $flag || code=$?
           [ "$code" = 0 ] || echo "::warning::idle-cash feed failed (exit $code); last published /v1/ files stay up"
           echo "feed_code=$code" >> "$GITHUB_OUTPUT"
+      # Today's figures written into /next/ and /idle-cash/ as plain text, from the /v1/ files, so a
+      # reader that runs no script still gets them. Same rule as the feed: a failure leaves
+      # yesterday's pages up and the feed-check job turns the run red. A dry run writes to a temp folder.
+      - name: Plain-text pages (/next/ figures + /idle-cash/)
+        id: pages
+        run: |
+          flag=""
+          [ "$DRY_RUN" = "true" ] && flag="--dry-run"
+          code=0
+          python -m datproof_feed.pages $flag || code=$?
+          [ "$code" = 0 ] || echo "::warning::pages not rebuilt (exit $code); yesterday's pages stay up"
+          echo "pages_code=$code" >> "$GITHUB_OUTPUT"
       - name: Build site
         run: python scripts/build_grid_site.py
       - name: Source status + freshness
@@ -111,7 +124,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html site/v1
+          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md site/idle-cash
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else
@@ -131,7 +144,7 @@ jobs:
           git status --short data/ site/
           echo "DRY RUN — pulls + build + checks passed, nothing committed or deployed" >> "$GITHUB_STEP_SUMMARY"
 
-  # Red run when the idle-cash feed failed, without holding back the site deploy.
+  # Red run when the idle-cash feed or the plain-text pages failed, without holding back the site deploy.
   feed-check:
     needs: build
     runs-on: ubuntu-latest
@@ -139,11 +152,18 @@ jobs:
       - name: Idle-cash feed result
         run: |
           code="${{ needs.build.outputs.feed_code }}"
+          pages="${{ needs.build.outputs.pages_code }}"
+          bad=0
           if [ "$code" != "0" ]; then
             echo "::error title=Idle-cash feed failed::feed step exit code ${code:-missing}; see the build job log"
-            exit 1
+            bad=1
           fi
-          echo "idle-cash feed ok"
+          if [ "$pages" != "0" ]; then
+            echo "::error title=Plain-text pages failed::pages step exit code ${pages:-missing}; yesterday's pages stay up"
+            bad=1
+          fi
+          [ "$bad" = 0 ] || exit 1
+          echo "idle-cash feed and pages ok"
 
   deploy:
     needs: build
