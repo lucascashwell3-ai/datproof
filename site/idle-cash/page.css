@@ -18,10 +18,10 @@
 .ic-first { padding-top: clamp(2.75rem, 6vw, 4rem); }
 .ic { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .ic thead th { text-align: left; vertical-align: bottom; font-size: var(--t-xs); font-weight: 600; color: var(--ink-3); padding: 0 1.25rem 0.75rem 0; }
-.ic thead th:nth-child(1) { width: 24%; }
-.ic thead th:nth-child(2) { width: 29%; }
-.ic thead th:nth-child(3) { width: 15%; }
-.ic thead th:nth-child(4) { width: 13%; }
+.ic thead th:nth-child(1) { width: 25%; }
+.ic thead th:nth-child(2) { width: 31%; }
+.ic thead th:nth-child(3) { width: 16%; }
+.ic thead th:nth-child(4) { width: 14%; }
 .ic tbody tr { border-top: 1px solid var(--line); }
 .ic tbody tr.dc { border-top-color: var(--line-2); }
 .ic tbody tr.bm:first-of-type, .ic tr.dc + tr.bm { border-top: 1px solid var(--line-2); }
@@ -39,8 +39,9 @@
 .ic tr.bm .ic-bar { height: 0.25rem; }
 .ic td .num { color: var(--ink); font-weight: 600; }
 .ic tr.bm td .num { color: var(--ink-2); font-weight: 400; }
-.ic-f { font-size: var(--t-xs); color: var(--ink-3); line-height: 1.5; }
-.ic-f span { display: block; }
+/* After inflation: one rule for every row, so every row reads the same way */
+.ic td.ic-r .num { color: var(--ink); font-weight: 600; }
+.ic tr.bm td.ic-r .num { color: var(--ink-2); font-weight: 400; }
 @media (prefers-reduced-motion: no-preference) {
   .ic-bar i { animation: ic-grow 900ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }
   .ic tbody tr:nth-child(2) .ic-bar i { animation-delay: 60ms; }
@@ -53,22 +54,20 @@
 @media (max-width: 44rem) {
   .ic, .ic tbody { display: block; width: auto; }
   .ic thead { display: none; }
-  .ic tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; padding: 1.25rem 0 1rem; }
+  .ic tbody tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 1rem; padding: 1.25rem 0 1.125rem; }
   .ic th[scope="row"], .ic td { padding: 0; }
-  .ic th[scope="row"], .ic td.ic-yc, .ic td.ic-f { grid-column: 1 / -1; }
+  .ic th[scope="row"], .ic td.ic-yc { grid-column: 1 / -1; }
   .ic td.ic-yc { margin-top: 0.75rem; }
-  .ic td:not(.ic-yc):not(.ic-f) { margin-top: 0.875rem; }
-  .ic td:not(.ic-yc)::before { content: attr(data-l); display: block; margin-bottom: 0.125rem; font-size: var(--t-xs); color: var(--ink-3); }
-  .ic td.ic-f { margin-top: 0.75rem; }
-  .ic td.ic-f::before { display: none; }
-  .ic-f span { display: inline; }
-  .ic-f span + span::before { content: " · "; }
+  .ic td:not(.ic-yc) { margin-top: 0.875rem; }
+  .ic td:not(.ic-yc)::before { content: attr(data-l); display: block; margin-bottom: 0.125rem; font-size: var(--t-xs); color: var(--ink-3); line-height: 1.35; }
+  /* the quiet rows: name and yield on one line, after inflation under the yield */
   .ic tr.bm { grid-template-columns: 1fr auto; align-items: baseline; padding: 0.875rem 0; }
+  .ic tr.bm th[scope="row"] { grid-column: 1; grid-row: 1 / span 2; }
   .ic tr.bm td.ic-yc { grid-column: 2; grid-row: 1; margin-top: 0; text-align: right; }
   .ic tr.bm td.ic-yc .ic-d, .ic tr.bm .ic-bar { display: none; }
-  .ic tr.bm td:not(.ic-yc):not(.ic-f) { display: none; }
-  .ic tr.bm td.ic-f { margin-top: 0.25rem; }
-  .ic tr.bm th[scope="row"] { grid-column: 1; }
+  .ic tr.bm td:not(.ic-yc):not(.ic-r) { display: none; }
+  .ic tr.bm td.ic-r { grid-column: 2; grid-row: 2; margin-top: 0.25rem; text-align: right; font-size: var(--t-xs); }
+  .ic tr.bm td.ic-r::before { display: inline; margin: 0 0.375rem 0 0; }
 }
 
 /* the drops, one per line */

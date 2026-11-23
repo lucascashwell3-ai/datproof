@@ -176,16 +176,21 @@ def test_page_prints_every_figure_with_a_date(tmp_path):
 # ---------- stale and null ----------
 
 def stale_mismatches(files: dict[str, str]) -> list[str]:
-    want = "SATA rate last published 13 Nov 2026"
-    return [rel for rel in ("next/index.html", "next/index.md", "idle-cash/index.html", "idle-cash/index.md")
-            if want not in files[rel]]
+    """A stale rate is shown with the feed's own date, in plain words, and nothing about its age."""
+    out = [rel for rel in ("next/index.html", "next/index.md", "idle-cash/index.html", "idle-cash/index.md")
+           if "rate as of 13 Nov 2026" not in files[rel]]
+    for rel, text in files.items():
+        if re.search(r"last published|stale|days old", text, re.I):
+            out.append(f"{rel}: talks about age")
+    return out
 
 
-def test_a_stale_figure_says_so_with_its_date(tmp_path):
+def test_a_stale_figure_shows_the_feeds_date(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
     assert stale_mismatches(files) == []
-    assert "rate last published 13 Nov 2026" in files["idle-cash/index.html"]
+    stamp = re.search(r'<p class="ic-asof">(.*?)</p>', files["idle-cash/index.html"]).group(1)
+    assert stamp == "Data for 22 Nov 2026 · prices at the 20 Nov 2026 close"
 
 
 def test_stale_check_catches_a_dropped_note(tmp_path):
@@ -226,14 +231,67 @@ def test_null_check_catches_a_missing_reason(tmp_path):
     assert "the feed gave no reason" in f["idle-cash/index.html"]  # said plainly, never blank
 
 
-def test_every_flag_is_printed_even_one_without_words(tmp_path):
+def test_no_flag_labels_anywhere(tmp_path):
     feed = make_feed()
-    feed["benchmarks"][0]["flags"] = ["brand_new_flag"]  # planted: a flag this page has no words for
+    feed["benchmarks"][0]["flags"] = ["brand_new_flag"]
     code, site = build(tmp_path, feed)
+    for rel, text in outputs(site).items():
+        for label in ("Flags", "Nothing flagged", "Not bank insured", "Short record", "Smart-contract risk",
+                      "Brand new flag", "Issuer sets the rate"):
+            assert label not in text, (rel, label)
+
+
+# ---------- after inflation ----------
+
+def inflation_mismatches(files: dict[str, str], feed: dict) -> list[str]:
+    """Each table row's after-inflation figure must be its yield minus the feed's CPI figure,
+    worked out here from the feed alone, in the same order in the Markdown and in the HTML."""
+    inf = feed["inflation_yoy_pct"]["value"]
+    ys = [i["yield_pct"]["value"] for i in feed["instruments"]] + [b["yield_pct"]["value"] for b in feed["benchmarks"]]
+
+    def signed1(x):
+        q = int(abs(x) * 10 + 0.5) / 10
+        return ("+" if x >= 0 else "\u2212") + f"{q:.1f}%"
+    want = [signed1(y - inf) for y in ys]
+    out = []
+    for rel in ("idle-cash/index.md", "next/index.md"):
+        got = [line.rstrip(" |").rsplit("| ", 1)[-1] for line in files[rel].splitlines()
+               if line.startswith("| ") and "(" in line.split("|")[1]]
+        if got != want:
+            out.append(f"{rel}: {got} != {want}")
+    got = re.findall(r'class="ic-r" data-l="After inflation"><span class="num">([^<]+)<', files["idle-cash/index.html"])
+    if got != want:
+        out.append(f"idle-cash/index.html: {got} != {want}")
+    return out
+
+
+def test_after_inflation_is_yield_minus_cpi(tmp_path):
+    code, site = build(tmp_path)
+    files = outputs(site)
+    assert inflation_mismatches(files, make_feed()) == []
+    assert "After inflation is the yield minus US CPI inflation, 3.7% for the 12 months to September 2026." in files["idle-cash/index.html"]
+    assert "\u22121.2%" in files["idle-cash/index.md"]  # USDC lending: 2.5094 - 3.74
+
+
+def test_inflation_check_catches_a_wrong_subtraction(tmp_path, monkeypatch):
+    monkeypatch.setattr(pages, "after_inflation", lambda y, inf: y + inf)  # planted: added, not subtracted
+    code, site = build(tmp_path)
+    assert code == 0
+    assert inflation_mismatches(outputs(site), make_feed()) != []
+
+
+def test_null_inflation_drops_the_column_and_its_note(tmp_path):
+    feed = make_feed()
+    feed["inflation_yoy_pct"] = {"value": None, "month": None, "reason": "bls.gov did not answer"}
+    code, site = build(tmp_path, feed)
+    assert code == 0
+    for rel, text in outputs(site).items():
+        assert "After inflation" not in text and "after inflation" not in text, rel
+        assert "|  |" not in text and "| |" not in text, rel
     f = outputs(site)
-    row = next(line for line in f["idle-cash/index.md"].splitlines() if line.startswith("| 4-week T-bill"))
-    assert "Brand new flag" in row and "Nothing flagged" not in row
-    assert "Nothing flagged" not in f["idle-cash/index.html"]
+    head = next(line for line in f["idle-cash/index.md"].splitlines() if line.startswith("| Where"))
+    assert head.endswith("| Price |")
+    assert '<th scope="col">Price</th></tr>' in f["idle-cash/index.html"]
 
 
 def test_daily_pay_is_said_only_when_every_stock_pays_daily(tmp_path):
@@ -245,11 +303,13 @@ def test_daily_pay_is_said_only_when_every_stock_pays_daily(tmp_path):
     assert "with a dividend every business day" in outputs(site)["idle-cash/index.html"]
 
 
-def test_short_records_and_unscored_odds_use_the_feeds_words(tmp_path):
+def test_a_new_stock_is_said_plainly(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    assert "SATS: not enough history: 90-day holds need 60 closes." in f["idle-cash/index.md"]
-    assert "in a short record: 10 daily closes since 7 Nov 2026" in f["idle-cash/index.md"]
+    for rel in ("idle-cash/index.html", "idle-cash/index.md"):
+        assert "SATS is too new to score." in f[rel], rel
+        assert "not enough history" not in f[rel] and "short record" not in f[rel].lower(), rel
+    assert "SATS fell 11.5%, from $96.92 on 9 Nov 2026 to $85.76 on 16 Nov 2026. It has traded since 7 Nov 2026." in f["idle-cash/index.md"]
     assert "STRC fell 25.5%, from $100.07" in f["idle-cash/index.md"]
 
 
@@ -303,10 +363,15 @@ def test_a_dry_run_leaves_the_site_alone(tmp_path):
     assert tree(site) == before
 
 
-def test_no_advice_words_and_no_sharpe_claim(tmp_path):
+def test_no_advice_words_and_no_sharpe_section(tmp_path):
     code, site = build(tmp_path)
-    for rel, text in outputs(site).items():
+    f = outputs(site)
+    for rel, text in f.items():
         low = text.lower()
         assert not re.search(r"\bbuy (it|now|strc|sata|sats)\b|\byou should\b|\bguaranteed\b", low), rel
-        assert "raises the sharpe" not in low and "higher sharpe" not in low, rel
-    assert "DATproof does not measure that." in outputs(site)["idle-cash/index.html"]
+        assert "sharpe" not in low and "risk-adjusted" not in low, rel
+    ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', f["idle-cash/index.html"], re.S).group(1))
+    qs = [q["name"] for q in ld["mainEntity"]]
+    assert "What does it add to an account?" in qs
+    assert "## What does it add to an account?" in f["idle-cash/index.md"]
+    assert "earns about $912 a year on that $6,000" in f["idle-cash/index.md"]

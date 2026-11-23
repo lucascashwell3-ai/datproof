@@ -2,20 +2,20 @@
 
 Cash your trading agent won't need for a few months can earn daily dividends from digital credit. DATproof gives your agent the live numbers and the odds.
 
-Data for 22 Nov 2026 · prices at the 20 Nov 2026 close · SATA rate last published 13 Nov 2026. Page with charts: https://lucascashwell3-ai.github.io/datproof/next/
+Data for 22 Nov 2026 · prices at the 20 Nov 2026 close. Page with charts: https://lucascashwell3-ai.github.io/datproof/next/
 
 ## Today's numbers
 
-| Where | Pays a year | Date | On $10,000 a year | Price | Flags |
+| Where | Pays a year | Date | On $10,000 a year | Price | After inflation |
 |---|---|---|---|---|---|
-| STRC (Strategy · pays every business day) | 12.8% | 20 Nov 2026 | $1,282 | $93.60 (20 Nov 2026) | Price moves daily · Issuer sets the rate |
-| SATA (Strive · pays every business day) | 15.3% | rate last published 13 Nov 2026 | $1,529 | $85.00 (20 Nov 2026) | Price moves daily · Issuer sets the rate · A figure is more than 4 days old |
-| SATS (Strive · pays every business day) | 17.5% | 20 Nov 2026 | $1,749 | $85.76 (20 Nov 2026) | Price moves daily · Issuer sets the rate · Short record |
-| 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 | $411 | no share price | Nothing flagged |
-| Money market fund (Vanguard VMFXX) | 3.9% | 22 Nov 2026 | $395 | no share price | Not bank insured |
-| USDC lending (Aave v3, Ethereum) | 2.5% | 22 Nov 2026 | $251 | no share price | Smart-contract risk |
+| STRC (Strategy · pays every business day) | 12.8% | 20 Nov 2026 | $1,282 | $93.60 (20 Nov 2026) | +9.1% |
+| SATA (Strive · pays every business day) | 15.3% | rate as of 13 Nov 2026 | $1,529 | $85.00 (20 Nov 2026) | +11.6% |
+| SATS (Strive · pays every business day) | 17.5% | 20 Nov 2026 | $1,749 | $85.76 (20 Nov 2026) | +13.8% |
+| 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 | $411 | no share price | +0.4% |
+| Money market fund (Vanguard VMFXX) | 3.9% | 22 Nov 2026 | $395 | no share price | +0.2% |
+| USDC lending (Aave v3, Ethereum) | 2.5% | 22 Nov 2026 | $251 | no share price | −1.2% |
 
-Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.
+Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes. After inflation is the yield minus US CPI inflation, 3.7% for the 12 months to September 2026.
 
 ## The odds for the time your cash has
 
@@ -30,7 +30,7 @@ Yield is the stated rate at the latest close. Income is simple interest, before 
 
 Every start day in the past year (closes from 21 Nov 2025 to 22 Nov 2026): buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch (4.11% a year today).
 
-SATS: not enough history: 0 past holds of 90 days fit in 26 trading days of closes; 60 are needed.
+SATS is too new to score.
 
 ## Connect your agent
 

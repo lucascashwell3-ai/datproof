@@ -2,20 +2,20 @@
 
 The usual places for idle cash, a T-bill or a money market fund, pay 3.9% to 4.1% a year today. Digital credit, bitcoin-backed preferred stock (STRC, SATA and SATS), pays 12.8% to 17.5% a year, with a dividend every business day. The price moves, so the record below shows how past holds turned out.
 
-Data for 22 Nov 2026 · prices at the 20 Nov 2026 close · SATA rate last published 13 Nov 2026. Page: https://lucascashwell3-ai.github.io/datproof/idle-cash/
+Data for 22 Nov 2026 · prices at the 20 Nov 2026 close. Page: https://lucascashwell3-ai.github.io/datproof/idle-cash/
 
 ## What does idle cash pay today?
 
-| Where | Pays a year | Date | On $10,000 a year | Price | Flags |
+| Where | Pays a year | Date | On $10,000 a year | Price | After inflation |
 |---|---|---|---|---|---|
-| STRC (Strategy · pays every business day) | 12.8% | 20 Nov 2026 | $1,282 | $93.60 (20 Nov 2026) | Price moves daily · Issuer sets the rate |
-| SATA (Strive · pays every business day) | 15.3% | rate last published 13 Nov 2026 | $1,529 | $85.00 (20 Nov 2026) | Price moves daily · Issuer sets the rate · A figure is more than 4 days old |
-| SATS (Strive · pays every business day) | 17.5% | 20 Nov 2026 | $1,749 | $85.76 (20 Nov 2026) | Price moves daily · Issuer sets the rate · Short record |
-| 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 | $411 | no share price | Nothing flagged |
-| Money market fund (Vanguard VMFXX) | 3.9% | 22 Nov 2026 | $395 | no share price | Not bank insured |
-| USDC lending (Aave v3, Ethereum) | 2.5% | 22 Nov 2026 | $251 | no share price | Smart-contract risk |
+| STRC (Strategy · pays every business day) | 12.8% | 20 Nov 2026 | $1,282 | $93.60 (20 Nov 2026) | +9.1% |
+| SATA (Strive · pays every business day) | 15.3% | rate as of 13 Nov 2026 | $1,529 | $85.00 (20 Nov 2026) | +11.6% |
+| SATS (Strive · pays every business day) | 17.5% | 20 Nov 2026 | $1,749 | $85.76 (20 Nov 2026) | +13.8% |
+| 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 | $411 | no share price | +0.4% |
+| Money market fund (Vanguard VMFXX) | 3.9% | 22 Nov 2026 | $395 | no share price | +0.2% |
+| USDC lending (Aave v3, Ethereum) | 2.5% | 22 Nov 2026 | $251 | no share price | −1.2% |
 
-Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.
+Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes. After inflation is the yield minus US CPI inflation, 3.7% for the 12 months to September 2026.
 
 ## How did past holds turn out?
 
@@ -30,7 +30,7 @@ Yield is the stated rate at the latest close. Income is simple interest, before 
 
 Every start day in the past year (closes from 21 Nov 2025 to 22 Nov 2026): buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch (4.11% a year today).
 
-SATS: not enough history: 0 past holds of 90 days fit in 26 trading days of closes; 60 are needed.
+SATS is too new to score.
 
 ## How far can the price drop?
 
@@ -38,13 +38,11 @@ The largest fall from a high close to a later close, from the feed's daily close
 
 - STRC fell 25.5%, from $100.07 on 12 Jan 2026 to $74.57 on 26 Jun 2026, its largest fall in 251 daily closes since 21 Nov 2025. It closed at $93.60 on 20 Nov 2026.
 - SATA fell 17.9%, from $100.53 on 16 Jan 2026 to $82.50 on 5 Feb 2026, its largest fall in 251 daily closes since 21 Nov 2025. It closed at $85.00 on 20 Nov 2026.
-- SATS fell 11.5%, from $96.92 on 13 Nov 2026 to $85.76 on 20 Nov 2026, in a short record: 26 daily closes since 16 Oct 2026. It closed at $85.76 on 20 Nov 2026.
+- SATS fell 11.5%, from $96.92 on 13 Nov 2026 to $85.76 on 20 Nov 2026. It has traded since 16 Oct 2026. It closed at $85.76 on 20 Nov 2026.
 
-STRC: 31% of 3-month holds lost money, 68% beat a T-bill; SATA: 8% of 3-month holds lost money, 87% beat a T-bill.
+## What does it add to an account?
 
-## Will it raise my bot's Sharpe ratio?
-
-DATproof does not measure that. It adds income on the cash that is not in a trade: a $10,000 account that sits 60% in cash earns about $912 a year on that $6,000 at today's average yield of STRC, SATA and SATS, before tax. It also adds the price swings shown on this page.
+Income on the cash that is not in a trade. A $10,000 account that sits 60% in cash earns about $912 a year on that $6,000 at today's average yield of STRC, SATA and SATS, before tax.
 
 ## Which cash does it fit?
 

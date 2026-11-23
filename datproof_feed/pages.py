@@ -36,17 +36,12 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", 
 MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August",
                "September", "October", "November", "December"]
 AMOUNT = 10_000
-CASH_SHARE = 0.6  # the example account on /next/ ("Better risk-adjusted returns")
-MIN_RECORD = 60   # fewer daily closes than this is called a short record
+CASH_SHARE = 0.6  # the example account on /next/
+MIN_RECORD = 60   # fewer daily closes than this: say only when the stock started trading
 SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
 MARKERS = ("panels", "odds", "oddsnote", "asof")
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
-FLAG_WORDS = {"price_moves": "Price moves daily", "issuer_sets_rate": "Issuer sets the rate",
-              "short_history": "Short record", "not_bank_insured": "Not bank insured",
-              "smart_contract_risk": "Smart-contract risk", "stale": "A figure is more than 4 days old",
-              "payment_gap": "Missed a payment", "thin_trading": "Thin trading", "no_hold_odds": "No hold record",
-              "no_payment_in_window": "No payment in the window"}
 # The page script's own wording, kept identical so the redraw is seamless.
 BROKER = ("Running your agent on Robinhood or Alpaca? Add DATproof alongside your broker connection. "
           "Your agent reads DATproof; trades still go through your own broker, with your approval.")
@@ -141,12 +136,13 @@ def tbill(feed: dict) -> float | None:
 
 
 def yield_date(ins: dict) -> str:
-    """The date a yield is true for: the older of its price and its stated rate, and which one is stale."""
+    """The date a yield is true for: the older of its price and its stated rate. When the feed marks
+    one of them stale, name which one and give its date."""
     rate, close = ins.get("stated_rate_pct") or {}, ins.get("close_usd") or {}
     if rate.get("stale") and rate.get("as_of"):
-        return "rate last published " + day(rate["as_of"])
+        return "rate as of " + day(rate["as_of"])
     if close.get("stale") and close.get("as_of"):
-        return "price last published " + day(close["as_of"])
+        return "price as of " + day(close["as_of"])
     dates = [n["as_of"] for n in (rate, close) if n.get("as_of")]
     return day(min(dates)) if dates else "date not given"
 
@@ -155,15 +151,36 @@ def stale_notes(feed: dict) -> list[str]:
     out = []
     for i in lead(feed):
         d = yield_date(i)
-        if "last published" in d:
+        if " as of " in f" {d}":
             out.append(f"{i['ticker']} {d}")
     return out
 
 
-def flags(node_flags: list[str]) -> str:
-    """The feed's flags in words; a flag this page has no words for is printed by its own name."""
-    words = [FLAG_WORDS.get(f, str(f).replace("_", " ").capitalize()) for f in node_flags or []]
-    return " · ".join(words) if words else "Nothing flagged"
+def inflation(feed: dict) -> dict | None:
+    """The feed's US CPI figure, or None when it has no value or no month."""
+    inf = feed.get("inflation_yoy_pct")
+    return inf if isinstance(inf, dict) and inf.get("value") is not None and inf.get("month") else None
+
+
+def after_inflation(y: float, inf: float) -> float:
+    return y - inf
+
+
+def real(feed: dict, y: float | None) -> str | None:
+    """A yield after inflation, signed, one decimal; None when there is no inflation figure."""
+    inf = inflation(feed)
+    if inf is None:
+        return None
+    return signed(after_inflation(y, inf["value"])) if y is not None else "not available"
+
+
+def inflation_note(feed: dict) -> str:
+    inf = inflation(feed)
+    if inf is None:
+        return ""
+    m = inf["month"]
+    return (f"After inflation is the yield minus US CPI inflation, {pct(inf['value'])} for the 12 months to "
+            f"{MONTHS_LONG[int(m[5:7]) - 1]} {m[:4]}.")
 
 
 def rows(feed: dict) -> list[dict]:
@@ -181,7 +198,7 @@ def rows(feed: dict) -> list[dict]:
             "yield": val(yn), "reason": reason(yn), "ydate": yield_date(i),
             "price": usd(close, 2) if close is not None else "not available",
             "pdate": day(cn.get("as_of")) if close is not None else reason(cn),
-            "flags": flags(i.get("flags")),
+            "real": real(feed, val(yn)),
         })
     for bid, short, who in BENCH:
         b = bench(feed, bid)
@@ -191,8 +208,8 @@ def rows(feed: dict) -> list[dict]:
         out.append({
             "name": short, "who": who, "dc": False,
             "yield": val(node), "reason": reason(node),
-            "ydate": ("last published " if node.get("stale") else "") + day(node.get("as_of")),
-            "price": "", "pdate": "", "flags": flags(b.get("flags")),
+            "ydate": ("as of " if node.get("stale") else "") + day(node.get("as_of")),
+            "price": "", "pdate": "", "real": real(feed, val(node)),
         })
     return out
 
@@ -345,7 +362,7 @@ def answers(feed: dict) -> dict:
         s = (f"{x['ticker']} fell {pct(x['pct'])}, from {usd(x['hi'][1], 2)} on {day(x['hi'][0])} "
              f"to {usd(x['lo'][1], 2)} on {day(x['lo'][0])}")
         if x["n"] < MIN_RECORD:
-            s += f", in a short record: {x['n']} daily closes since {day(x['from'])}."
+            s += f". It has traded since {day(x['from'])}."
         else:
             s += f", its largest fall in {x['n']} daily closes since {day(x['from'])}."
         s += f" It closed at {usd(x['last'][1], 2)} on {day(x['last'][0])}."
@@ -355,9 +372,8 @@ def answers(feed: dict) -> dict:
 
     avg = sum(ys) / len(ys)
     cash = AMOUNT * CASH_SHARE
-    sharpe = (f"DATproof does not measure that. It adds income on the cash that is not in a trade: a {usd(AMOUNT)} account "
-              f"that sits {rnd(CASH_SHARE * 100)}% in cash earns about {usd(cash * avg / 100)} a year on that "
-              f"{usd(cash)} at today's average yield of {tick}, before tax. It also adds the price swings shown on this page.")
+    adds = (f"Income on the cash that is not in a trade. A {usd(AMOUNT)} account that sits {rnd(CASH_SHARE * 100)}% "
+            f"in cash earns about {usd(cash * avg / 100)} a year on that {usd(cash)} at today's average yield of {tick}, before tax.")
 
     steady, free = [], []
     for i in dc:
@@ -374,7 +390,7 @@ def answers(feed: dict) -> dict:
     for t, rate in free:
         fit += f"{t} has {'a ' + rate if rate else 'a'} rate and no stated aim to keep the price near $100, so its price is free to move. "
     fit += "Not for money needed tomorrow at an exact dollar amount: that belongs in a T-bill or money market fund."
-    return {"short": short, "lede": lede, "drop": drop, "lost": lost, "sharpe": sharpe, "fit": fit, "tick": tick}
+    return {"short": short, "lede": lede, "drop": drop, "lost": lost, "adds": adds, "fit": fit, "tick": tick}
 
 
 def income(y: float | None) -> str:
@@ -401,7 +417,7 @@ QUESTIONS = {
     "today": "What does idle cash pay today?",
     "odds": "How did past holds turn out?",
     "drop": "How far can the price drop?",
-    "sharpe": "Will it raise my bot's Sharpe ratio?",
+    "adds": "What does it add to an account?",
     "fit": "Which cash does it fit?",
     "broker": "Can a bot on Robinhood or Alpaca use it?",
 }
@@ -414,7 +430,7 @@ def faq(feed: dict, a: dict) -> list[tuple[str, str]]:
     if a["lost"]:
         out.append((QUESTIONS["odds"], "; ".join(a["lost"]) + f", against a 4-week T-bill"
                     + (f" at {pct(tb['yield'], 2)}" if tb and tb["yield"] is not None else "") + "."))
-    out += [(QUESTIONS["drop"], " ".join(a["drop"])), (QUESTIONS["sharpe"], a["sharpe"]),
+    out += [(QUESTIONS["drop"], " ".join(a["drop"])), (QUESTIONS["adds"], a["adds"]),
             (QUESTIONS["fit"], a["fit"]), (QUESTIONS["broker"], BROKER)]
     return out
 
@@ -423,6 +439,7 @@ def idle_cash_html(feed: dict) -> str:
     a = answers(feed)
     rws = rows(feed)
     top = max((r["yield"] or 0) for r in rws) or 1
+    has_real = inflation(feed) is not None
     trs = ""
     for r in rws:
         if r["yield"] is not None:
@@ -435,19 +452,18 @@ def idle_cash_html(feed: dict) -> str:
         trs += (f'<tr class="{"dc" if r["dc"] else "bm"}">'
                 f'<th scope="row"><span class="ic-nm">{e(r["name"])}</span><span class="ic-d">{e(r["who"])}</span></th>'
                 f'<td class="ic-yc" data-l="Pays a year">{ycell}<span class="ic-bar" aria-hidden="true"><i style="width:{w}%"></i></span></td>'
-                f'<td data-l="On {usd(AMOUNT)}, a year"><span class="num">{income(r["yield"])}</span></td>'
+                f'<td data-l="A year on ${AMOUNT // 1000}k"><span class="num">{income(r["yield"])}</span></td>'
                 f'<td data-l="Price">{price}</td>'
-                '<td data-l="Flags" class="ic-f">' + "".join(f"<span>{e(f)}</span>" for f in r["flags"].split(" · ")) + "</td></tr>")
+                + (f'<td class="ic-r" data-l="After inflation"><span class="num">{e(r["real"])}</span></td>' if has_real else "")
+                + "</tr>")
     table, note = odds_table(feed)
     if table:
-        why = " ".join(f"{t}: {r}." for t, r in unscored(feed))
         tbn = feed_tbill_line(feed)
         odds = ('<section class="wrap block" id="odds" aria-labelledby="h-odds">'
                 f'<h2 id="h-odds">{QUESTIONS["odds"]}</h2>'
                 '<p class="sub">Every start day in the past year: buy, hold, collect the dividends, sell. '
                 f'Scored against a 4-week T-bill held for the same stretch{tbn}.</p>'
-                f'<div class="odds">{table}</div><p class="fine">{e(note.replace(" SATS is too new to score.", ""))}'
-                f'{" " + e(why) if why else ""}</p></section>')
+                f'<div class="odds">{table}</div><p class="fine">{e(note)}</p></section>')
     else:
         odds = ""
     drop = "".join(f"<li>{e(s)}</li>" for s in a["drop"])
@@ -460,7 +476,6 @@ def idle_cash_html(feed: dict) -> str:
     src += '<li>Method for every number: <a href="../v1/method.json">method.json</a></li>'
     px = price_date(feed)
     stamp = f"Data for {day(feed['date'])}" + (f" · prices at the {day(px)} close" if px else "")
-    stamp += "".join(" · " + n for n in stale_notes(feed))
     return f"""<!doctype html>
 <html lang="en" data-type="c" data-color="green">
 <head>
@@ -501,11 +516,11 @@ def idle_cash_html(feed: dict) -> str:
   <section class="wrap ic-first" id="today" aria-labelledby="h-today">
     <h2 id="h-today" class="vh">{QUESTIONS['today']}</h2>
     <table class="ic">
-      <caption class="vh">Yearly yield, income on {usd(AMOUNT)}, price and flags for each place idle cash can sit</caption>
-      <thead><tr><th scope="col">Where</th><th scope="col">Pays a year</th><th scope="col">On {usd(AMOUNT)}, a year</th><th scope="col">Price</th><th scope="col">Flags</th></tr></thead>
+      <caption class="vh">Yearly yield, income on {usd(AMOUNT)}, price{" and yield after inflation" if has_real else ""} for each place idle cash can sit</caption>
+      <thead><tr><th scope="col">Where</th><th scope="col">Pays a year</th><th scope="col">On {usd(AMOUNT)}, a year</th><th scope="col">Price</th>{'<th scope="col">After inflation</th>' if has_real else ""}</tr></thead>
       <tbody>{trs}</tbody>
     </table>
-    <p class="fine">Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.</p>
+    <p class="fine">Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.{" " + e(inflation_note(feed)) if has_real else ""}</p>
   </section>
 
   {odds}
@@ -516,9 +531,9 @@ def idle_cash_html(feed: dict) -> str:
     <ul class="ic-list">{drop}</ul>
   </section>
 
-  <section class="wrap block" id="sharpe" aria-labelledby="h-sharpe">
-    <h2 id="h-sharpe">{QUESTIONS['sharpe']}</h2>
-    <p class="sub">{e(a['sharpe'])}</p>
+  <section class="wrap block" id="adds" aria-labelledby="h-adds">
+    <h2 id="h-adds">{QUESTIONS['adds']}</h2>
+    <p class="sub">{e(a['adds'])}</p>
   </section>
 
   <section class="wrap block" id="fit" aria-labelledby="h-fit">
@@ -552,12 +567,20 @@ def feed_tbill_line(feed: dict) -> str:
 
 
 def md_table(feed: dict) -> str:
-    out = f"| Where | Pays a year | Date | On {usd(AMOUNT)} a year | Price | Flags |\n|---|---|---|---|---|---|\n"
+    has_real = inflation(feed) is not None
+    out = (f"| Where | Pays a year | Date | On {usd(AMOUNT)} a year | Price |" + (" After inflation |" if has_real else "")
+           + "\n|---|---|---|---|---|" + ("---|" if has_real else "") + "\n")
     for r in rows(feed):
         y = pct(r["yield"]) if r["yield"] is not None else f"not available ({r['reason']})"
         price = f"{r['price']} ({r['pdate']})" if r["price"] else "no share price"
-        out += f"| {r['name']} ({r['who']}) | {y} | {r['ydate']} | {income(r['yield'])} | {price} | {r['flags']} |\n"
+        out += (f"| {r['name']} ({r['who']}) | {y} | {r['ydate']} | {income(r['yield'])} | {price} |"
+                + (f" {r['real']} |" if has_real else "") + "\n")
     return out
+
+
+def md_fine(feed: dict) -> str:
+    return ("Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes."
+            + (" " + inflation_note(feed) if inflation(feed) else ""))
 
 
 def md_odds(feed: dict) -> str:
@@ -571,21 +594,20 @@ def md_odds(feed: dict) -> str:
     last = rws[0][1][-1]
     out += (f"\nEvery start day in the past year (closes from {day(last['closes_from'])} to {day(feed['date'])}): "
             f"buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch{feed_tbill_line(feed)}.\n")
-    for t, r in unscored(feed):
-        out += f"\n{t}: {r}.\n"
+    for t, _ in unscored(feed):
+        out += f"\n{t} is too new to score.\n"
     return out
 
 
 def md_stamp(feed: dict) -> str:
     px = price_date(feed)
     s = f"Data for {day(feed['date'])}" + (f" · prices at the {day(px)} close" if px else "")
-    return s + "".join(" · " + n for n in stale_notes(feed))
+    return s
 
 
 def idle_cash_md(feed: dict) -> str:
     a = answers(feed)
     drop = "\n".join(f"- {s}" for s in a["drop"])
-    lost = ("\n\n" + "; ".join(a["lost"]) + ".") if a["lost"] else ""
     return f"""# Where should a trading bot keep its idle cash?
 
 {a['lede']}
@@ -595,7 +617,7 @@ def idle_cash_md(feed: dict) -> str:
 ## {QUESTIONS['today']}
 
 {md_table(feed)}
-Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.
+{md_fine(feed)}
 
 ## {QUESTIONS['odds']}
 
@@ -604,11 +626,11 @@ Yield is the stated rate at the latest close. Income is simple interest, before 
 
 The largest fall from a high close to a later close, from the feed's daily closes:
 
-{drop}{lost}
+{drop}
 
-## {QUESTIONS['sharpe']}
+## {QUESTIONS['adds']}
 
-{a['sharpe']}
+{a['adds']}
 
 ## {QUESTIONS['fit']}
 
@@ -637,7 +659,7 @@ Cash your trading agent won't need for a few months can earn daily dividends fro
 ## Today's numbers
 
 {md_table(feed)}
-Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.
+{md_fine(feed)}
 
 ## The odds for the time your cash has
 
