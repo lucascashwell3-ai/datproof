@@ -44,7 +44,9 @@ BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money mark
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
 FLAG_WORDS = {"price_moves": "Price moves daily", "issuer_sets_rate": "Issuer sets the rate",
               "short_history": "Short record", "not_bank_insured": "Not bank insured",
-              "smart_contract_risk": "Smart-contract risk"}
+              "smart_contract_risk": "Smart-contract risk", "stale": "A figure is more than 4 days old",
+              "payment_gap": "Missed a payment", "thin_trading": "Thin trading", "no_hold_odds": "No hold record",
+              "no_payment_in_window": "No payment in the window"}
 # The page script's own wording, kept identical so the redraw is seamless.
 BROKER = ("Running your agent on Robinhood or Alpaca? Add DATproof alongside your broker connection. "
           "Your agent reads DATproof; trades still go through your own broker, with your approval.")
@@ -159,7 +161,8 @@ def stale_notes(feed: dict) -> list[str]:
 
 
 def flags(node_flags: list[str]) -> str:
-    words = [FLAG_WORDS[f] for f in node_flags or [] if f in FLAG_WORDS]
+    """The feed's flags in words; a flag this page has no words for is printed by its own name."""
+    words = [FLAG_WORDS.get(f, str(f).replace("_", " ").capitalize()) for f in node_flags or []]
     return " · ".join(words) if words else "Nothing flagged"
 
 
@@ -332,8 +335,9 @@ def answers(feed: dict) -> dict:
     short = "The usual places for idle cash, " + "a T-bill or a money market fund"
     short += (f", pay {pct(min(usual_ok))} to {pct(max(usual_ok))} a year today. " if len(usual_ok) > 1
               else f", pay {pct(usual_ok[0])} a year today. " if usual_ok else ". ")
-    short += (f"Digital credit, bitcoin-backed preferred stock ({tick}), pays {pct(min(ys))} to {pct(max(ys))} "
-              "a year, with a dividend every business day.")
+    daily = all(i.get("schedule") == "every business day" for i in dc)
+    short += (f"Digital credit, bitcoin-backed preferred stock ({tick}), pays {pct(min(ys))} to {pct(max(ys))} a year"
+              + (", with a dividend every business day." if daily else "."))
     lede = short + " The price moves, so the record below shows how past holds turned out."
 
     drop = []
@@ -353,7 +357,7 @@ def answers(feed: dict) -> dict:
     cash = AMOUNT * CASH_SHARE
     sharpe = (f"DATproof does not measure that. It adds income on the cash that is not in a trade: a {usd(AMOUNT)} account "
               f"that sits {rnd(CASH_SHARE * 100)}% in cash earns about {usd(cash * avg / 100)} a year on that "
-              f"{usd(cash)} at today's average yield of {tick}, before tax. It also adds the price swings above.")
+              f"{usd(cash)} at today's average yield of {tick}, before tax. It also adds the price swings shown on this page.")
 
     steady, free = [], []
     for i in dc:

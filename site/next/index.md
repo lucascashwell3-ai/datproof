@@ -9,7 +9,7 @@ Data for 22 Nov 2026 · prices at the 20 Nov 2026 close · SATA rate last publis
 | Where | Pays a year | Date | On $10,000 a year | Price | Flags |
 |---|---|---|---|---|---|
 | STRC (Strategy · pays every business day) | 12.8% | 20 Nov 2026 | $1,282 | $93.60 (20 Nov 2026) | Price moves daily · Issuer sets the rate |
-| SATA (Strive · pays every business day) | 15.3% | rate last published 13 Nov 2026 | $1,529 | $85.00 (20 Nov 2026) | Price moves daily · Issuer sets the rate |
+| SATA (Strive · pays every business day) | 15.3% | rate last published 13 Nov 2026 | $1,529 | $85.00 (20 Nov 2026) | Price moves daily · Issuer sets the rate · A figure is more than 4 days old |
 | SATS (Strive · pays every business day) | 17.5% | 20 Nov 2026 | $1,749 | $85.76 (20 Nov 2026) | Price moves daily · Issuer sets the rate · Short record |
 | 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 | $411 | no share price | Nothing flagged |
 | Money market fund (Vanguard VMFXX) | 3.9% | 22 Nov 2026 | $395 | no share price | Not bank insured |

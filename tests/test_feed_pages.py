@@ -226,6 +226,25 @@ def test_null_check_catches_a_missing_reason(tmp_path):
     assert "the feed gave no reason" in f["idle-cash/index.html"]  # said plainly, never blank
 
 
+def test_every_flag_is_printed_even_one_without_words(tmp_path):
+    feed = make_feed()
+    feed["benchmarks"][0]["flags"] = ["brand_new_flag"]  # planted: a flag this page has no words for
+    code, site = build(tmp_path, feed)
+    f = outputs(site)
+    row = next(line for line in f["idle-cash/index.md"].splitlines() if line.startswith("| 4-week T-bill"))
+    assert "Brand new flag" in row and "Nothing flagged" not in row
+    assert "Nothing flagged" not in f["idle-cash/index.html"]
+
+
+def test_daily_pay_is_said_only_when_every_stock_pays_daily(tmp_path):
+    feed = make_feed()
+    feed["instruments"][2]["schedule"] = "monthly"
+    code, site = build(tmp_path, feed)
+    assert "with a dividend every business day" not in outputs(site)["idle-cash/index.html"]
+    code, site = build(tmp_path / "b")
+    assert "with a dividend every business day" in outputs(site)["idle-cash/index.html"]
+
+
 def test_short_records_and_unscored_odds_use_the_feeds_words(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
