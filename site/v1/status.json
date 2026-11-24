@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-22",
-  "built_at": "2026-11-22T20:01:59Z",
+  "date": "2026-11-24",
+  "built_at": "2026-11-24T00:27:53Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -16,9 +16,8 @@
   "stale": [
     "SATA.stated_rate_pct",
     "SATA.yield_pct",
-    "coverage.issuers[1].btc_held",
-    "coverage.issuers[1].dividend_reserve_months"
+    "coverage.issuers[1].btc_held"
   ],
-  "snapshot_sha256": "74e91eddc2d50e17112a75e6c0a4aa234899e49b3afe5f5915a74302783b476b",
-  "stamp": "stamped; 7 earlier stamp(s) confirmed in bitcoin"
+  "snapshot_sha256": "afffe8cf8f5bc8dd8a2db1eb7e9d35dc957b36c11e739a4fb8811e63a002e70a",
+  "stamp": "stamped; 6 earlier stamp(s) confirmed in bitcoin"
 }

@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-22",
+  "date": "2026-11-24",
   "ticker": "SATS",
   "name": "Strive Series S preferred",
   "issuer": "Strive",
@@ -9,8 +9,8 @@
     "value": 85.76,
     "unit": "usd",
     "as_of": "2026-11-20",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:41Z",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-23&todate=2026-11-24&limit=400",
+    "fetched_at": "2026-11-24T00:27:39Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 351981.2,
     "unit": "shares",
     "as_of": "2026-11-20",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:41Z",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-23&todate=2026-11-24&limit=400",
+    "fetched_at": "2026-11-24T00:27:39Z",
     "stale": false,
     "reason": null
   },
@@ -27,9 +27,9 @@
   "stated_rate_pct": {
     "value": 15.0,
     "unit": "pct",
-    "as_of": "2026-11-22",
+    "as_of": "2026-11-24",
     "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-    "fetched_at": "2026-11-22T20:01:41Z",
+    "fetched_at": "2026-11-24T00:27:39Z",
     "stale": false,
     "reason": null
   },
@@ -56,9 +56,9 @@
   },
   "trading_days": 26,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:41Z",
-    "from": "2025-11-21",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-23&todate=2026-11-24&limit=400",
+    "fetched_at": "2026-11-24T00:27:39Z",
+    "from": "2025-11-23",
     "rows": [
       [
         "2026-10-16",
@@ -167,12 +167,12 @@
     ]
   },
   "schedule": "every business day",
-  "next_pay_date": "2026-11-23",
+  "next_pay_date": "2026-11-25",
   "payments": {
-    "paid": 9,
-    "in_a_row": 9,
+    "paid": 11,
+    "in_a_row": 11,
     "gaps": [],
-    "last_paid": "2026-11-20"
+    "last_paid": "2026-11-24"
   },
   "cross_check": "no issuer list",
   "flags": [

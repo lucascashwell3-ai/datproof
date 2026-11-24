@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-22",
+  "date": "2026-11-24",
   "ticker": "SATA",
   "name": "Strive Variable Rate Series A preferred",
   "issuer": "Strive",
@@ -9,8 +9,8 @@
     "value": 85.0,
     "unit": "usd",
     "as_of": "2026-11-20",
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:36Z",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-23&todate=2026-11-24&limit=400",
+    "fetched_at": "2026-11-24T00:27:32Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 461713.8,
     "unit": "shares",
     "as_of": "2026-11-20",
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:36Z",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-23&todate=2026-11-24&limit=400",
+    "fetched_at": "2026-11-24T00:27:32Z",
     "stale": false,
     "reason": null
   },
@@ -28,8 +28,8 @@
     "value": 13.0,
     "unit": "pct",
     "as_of": "2026-11-13",
-    "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-15&toDate=2026-11-23",
-    "fetched_at": "2026-11-22T20:01:36Z",
+    "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-17&toDate=2026-11-25",
+    "fetched_at": "2026-11-24T00:27:32Z",
     "stale": true,
     "reason": null
   },
@@ -54,16 +54,12 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 251,
+  "trading_days": 250,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:36Z",
-    "from": "2025-11-21",
+    "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-23&todate=2026-11-24&limit=400",
+    "fetched_at": "2026-11-24T00:27:32Z",
+    "from": "2025-11-23",
     "rows": [
-      [
-        "2025-11-21",
-        90.8
-      ],
       [
         "2025-11-24",
         91.98
@@ -1067,12 +1063,12 @@
     ]
   },
   "schedule": "every business day",
-  "next_pay_date": "2026-11-23",
+  "next_pay_date": "2026-11-25",
   "payments": {
-    "paid": 116,
-    "in_a_row": 116,
+    "paid": 118,
+    "in_a_row": 118,
     "gaps": [],
-    "last_paid": "2026-11-20"
+    "last_paid": "2026-11-24"
   },
   "cross_check": "ok",
   "flags": [
@@ -1829,71 +1825,71 @@
   "hold_odds": {
     "7": {
       "days": 7,
-      "holds": 246,
-      "bought_from": "2025-11-21",
+      "holds": 245,
+      "bought_from": "2025-11-24",
       "bought_to": "2026-11-13",
-      "closes_from": "2025-11-21",
+      "closes_from": "2025-11-24",
       "tbill_pct": 4.11,
       "tbill_hold_pct": 0.079,
-      "beat_tbill": 160,
-      "beat_tbill_pct": 65.0,
+      "beat_tbill": 159,
+      "beat_tbill_pct": 64.9,
       "lost": 76,
-      "lost_pct": 30.9,
+      "lost_pct": 31.0,
       "median_pct": 0.36,
       "worst_pct": -14.29,
       "worst_bought": "2026-06-18"
     },
     "30": {
       "days": 30,
-      "holds": 229,
-      "bought_from": "2025-11-21",
+      "holds": 228,
+      "bought_from": "2025-11-24",
       "bought_to": "2026-10-21",
-      "closes_from": "2025-11-21",
+      "closes_from": "2025-11-24",
       "tbill_pct": 4.11,
       "tbill_hold_pct": 0.338,
-      "beat_tbill": 161,
-      "beat_tbill_pct": 70.3,
+      "beat_tbill": 160,
+      "beat_tbill_pct": 70.2,
       "lost": 60,
-      "lost_pct": 26.2,
-      "median_pct": 1.54,
+      "lost_pct": 26.3,
+      "median_pct": 1.52,
       "worst_pct": -14.96,
       "worst_bought": "2026-05-26"
     },
     "90": {
       "days": 90,
-      "holds": 187,
-      "bought_from": "2025-11-21",
+      "holds": 186,
+      "bought_from": "2025-11-24",
       "bought_to": "2026-08-21",
-      "closes_from": "2025-11-21",
+      "closes_from": "2025-11-24",
       "tbill_pct": 4.11,
       "tbill_hold_pct": 1.013,
-      "beat_tbill": 163,
-      "beat_tbill_pct": 87.2,
+      "beat_tbill": 162,
+      "beat_tbill_pct": 87.1,
       "lost": 14,
       "lost_pct": 7.5,
-      "median_pct": 4.91,
+      "median_pct": 4.9,
       "worst_pct": -11.53,
       "worst_bought": "2026-03-27"
     },
     "180": {
       "days": 180,
-      "holds": 125,
-      "bought_from": "2025-11-21",
+      "holds": 124,
+      "bought_from": "2025-11-24",
       "bought_to": "2026-05-22",
-      "closes_from": "2025-11-21",
+      "closes_from": "2025-11-24",
       "tbill_pct": 4.11,
       "tbill_hold_pct": 2.027,
-      "beat_tbill": 116,
-      "beat_tbill_pct": 92.8,
+      "beat_tbill": 115,
+      "beat_tbill_pct": 92.7,
       "lost": 4,
       "lost_pct": 3.2,
-      "median_pct": 8.68,
+      "median_pct": 8.64,
       "worst_pct": -4.29,
       "worst_bought": "2026-05-22"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 250 trading days of closes; 60 are needed"
     }
   }
 }
