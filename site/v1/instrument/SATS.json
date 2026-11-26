@@ -1,40 +1,40 @@
 {
-  "date": "2026-11-25",
+  "date": "2026-11-26",
   "ticker": "SATS",
   "name": "Strive Series S preferred",
   "issuer": "Strive",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 88.39,
+    "value": 88.5,
     "unit": "usd",
-    "as_of": "2026-11-24",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-24&todate=2026-11-25&limit=400",
-    "fetched_at": "2026-11-25T22:02:26Z",
+    "as_of": "2026-11-25",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
+    "fetched_at": "2026-11-26T22:00:07Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 340744.4,
+    "value": 335359.7,
     "unit": "shares",
-    "as_of": "2026-11-24",
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-24&todate=2026-11-25&limit=400",
-    "fetched_at": "2026-11-25T22:02:26Z",
+    "as_of": "2026-11-25",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
+    "fetched_at": "2026-11-26T22:00:07Z",
     "stale": false,
     "reason": null
   },
-  "volume_rows": 28,
+  "volume_rows": 29,
   "stated_rate_pct": {
     "value": 15.0,
     "unit": "pct",
-    "as_of": "2026-11-25",
+    "as_of": "2026-11-26",
     "source": "https://www.sec.gov/Archives/edgar/data/1920406/000095010326015849/dp255260_8k.htm",
-    "fetched_at": "2026-11-25T22:02:27Z",
+    "fetched_at": "2026-11-26T22:00:07Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 16.97,
+    "value": 16.949,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -54,11 +54,11 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 28,
+  "trading_days": 29,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-24&todate=2026-11-25&limit=400",
-    "fetched_at": "2026-11-25T22:02:26Z",
-    "from": "2025-11-24",
+    "source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
+    "fetched_at": "2026-11-26T22:00:07Z",
+    "from": "2025-11-25",
     "rows": [
       [
         "2026-10-16",
@@ -171,6 +171,10 @@
       [
         "2026-11-24",
         88.39
+      ],
+      [
+        "2026-11-25",
+        88.5
       ]
     ]
   },
@@ -411,23 +415,23 @@
   "hold_odds": {
     "7": {
       "days": 7,
-      "reason": "not enough history: 23 past holds of 7 days fit in 28 trading days of closes; 60 are needed"
+      "reason": "not enough history: 24 past holds of 7 days fit in 29 trading days of closes; 60 are needed"
     },
     "30": {
       "days": 30,
-      "reason": "not enough history: 6 past holds of 30 days fit in 28 trading days of closes; 60 are needed"
+      "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed"
     },
     "90": {
       "days": 90,
-      "reason": "not enough history: 0 past holds of 90 days fit in 28 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed"
     },
     "180": {
       "days": 180,
-      "reason": "not enough history: 0 past holds of 180 days fit in 28 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 28 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 29 trading days of closes; 60 are needed"
     }
   }
 }
