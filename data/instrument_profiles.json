@@ -145,5 +145,63 @@
       },
       "built_for": "A fixed 10.00% rate with no stated aim to keep the price near $100, paid four times a year: built for income paid quarterly, with the price free to move."
     }
+  },
+  "tax_statements": {
+    "Strategy": {
+      "quote": "Strategy Inc ... today announced that, for U.S. federal income tax purposes, 100% of distributions paid during calendar year 2025 on its preferred equity instruments were treated as a nontaxable return of capital (“ROC”) to the extent of a recipient shareholder’s tax basis in their applicable preferred",
+      "quote_more": [
+        "Strategy expects the distributions paid on its preferred equity instruments to be treated as ROC for the foreseeable future (i.e., ten years or more).",
+        "Strategy’s expectations on E&P may change, and any such change could affect the U.S. federal income tax treatment of the distributions."
+      ],
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526033573/mstr-ex99_1.htm",
+      "document": "Strategy Inc press release, Exhibit 99.1 to Form 8-K",
+      "document_date": "2026-02-02",
+      "read_on": "2026-11-27",
+      "applies_to": [
+        "STRC"
+      ]
+    },
+    "Strive": {
+      "quote": "to the extent distributions on SATA and SATS are not treated as being made out of the Company's accumulated or current earnings and profits, they will be treated generally as tax-deferred recovery of capital to the extent of the investor’s tax basis",
+      "quote_more": [
+        "The Company does not have any accumulated earnings and profits, and does not expect to generate current earnings and profits in the current year or the foreseeable future."
+      ],
+      "source_url": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026073033/asst-20261111.htm",
+      "document": "Strive, Inc. Form 8-K, Item 8.01",
+      "document_date": "2026-11-12",
+      "read_on": "2026-11-27",
+      "applies_to": [
+        "SATA",
+        "SATS"
+      ]
+    },
+    "IRS": {
+      "quote": "For nondividend distributions, once the adjusted cost basis of your stock has been reduced to zero, any further nondividend distribution is a taxable capital gain.",
+      "source_url": "https://www.irs.gov/taxtopics/tc404",
+      "document": "IRS Topic No. 404, Dividends",
+      "document_date": "2026-11-27 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    },
+    "IRS_return_of_capital_basis": {
+      "quote": "A return of capital is a return of some or all of your investment in the stock of the company, which reduces the adjusted cost basis of your stock.",
+      "source_url": "https://www.irs.gov/taxtopics/tc404",
+      "document": "IRS Topic No. 404, Dividends",
+      "document_date": "2026-11-27 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    },
+    "IRS_traditional_IRA": {
+      "quote": "Generally, amounts in your IRA, including earnings and gains, aren’t taxed until they are distributed.",
+      "source_url": "https://www.irs.gov/publications/p590a",
+      "document": "IRS Publication 590-A (2025)",
+      "document_date": "2026-04-30 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    },
+    "IRS_HSA": {
+      "quote": "The interest or other earnings on the assets in the account are tax free.",
+      "source_url": "https://www.irs.gov/publications/p969",
+      "document": "IRS Publication 969 (2025)",
+      "document_date": "2026-04-30 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    }
   }
 }

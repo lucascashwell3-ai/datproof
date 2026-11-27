@@ -1,0 +1,154 @@
+{
+  "checked_on": "2026-11-27",
+  "tickers": [
+    "STRC",
+    "SATA",
+    "SATS"
+  ],
+  "settlement": {
+    "fact": "A sale of a US-listed stock settles the next business day (T+1).",
+    "source": "https://www.finra.org/investors/insights/understanding-settlement-cycles"
+  },
+  "brokers": [
+    {
+      "name": "Coinbase",
+      "tickers": {
+        "STRC": {
+          "url": "https://www.coinbase.com/stock/STRC",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATA": {
+          "url": "https://www.coinbase.com/stock/SATA",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATS": {
+          "url": "https://www.coinbase.com/stock/SATS",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        }
+      }
+    },
+    {
+      "name": "Interactive Brokers",
+      "tickers": {
+        "STRC": {
+          "url": null,
+          "status": "named, no link",
+          "checked_on": null
+        },
+        "SATA": {
+          "url": null,
+          "status": "named, no link",
+          "checked_on": null
+        },
+        "SATS": {
+          "url": null,
+          "status": "named, no link",
+          "checked_on": null
+        }
+      }
+    },
+    {
+      "name": "Kraken (US)",
+      "tickers": {
+        "STRC": {
+          "url": "https://kraken.com/stocks/STRC",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATA": {
+          "url": "https://kraken.com/stocks/SATA",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATS": {
+          "url": "https://kraken.com/stocks/SATS",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        }
+      }
+    },
+    {
+      "name": "Public",
+      "tickers": {
+        "STRC": {
+          "url": "https://public.com/stocks/strc",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATA": {
+          "url": "https://public.com/stocks/sata",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATS": {
+          "url": "https://public.com/stocks/sats",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        }
+      }
+    },
+    {
+      "name": "Robinhood",
+      "tickers": {
+        "STRC": {
+          "url": "https://robinhood.com/us/en/stocks/STRC",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATA": {
+          "url": "https://robinhood.com/us/en/stocks/SATA",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATS": {
+          "url": "https://robinhood.com/us/en/stocks/SATS",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        }
+      }
+    },
+    {
+      "name": "SoFi",
+      "tickers": {
+        "STRC": {
+          "url": "https://www.sofi.com/invest/stock/STRC/",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATA": {
+          "url": "https://www.sofi.com/invest/stock/SATA/",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATS": {
+          "url": "https://www.sofi.com/invest/stock/SATS/",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        }
+      }
+    },
+    {
+      "name": "Webull",
+      "tickers": {
+        "STRC": {
+          "url": "https://www.webull.com/quote/nasdaq-strc",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATA": {
+          "url": "https://www.webull.com/quote/nasdaq-sata",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        },
+        "SATS": {
+          "url": "https://www.webull.com/quote/nasdaq-sats",
+          "status": "ok",
+          "checked_on": "2026-11-27"
+        }
+      }
+    }
+  ]
+}

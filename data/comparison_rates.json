@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-27",
+  "fetched_at": "2026-11-27T21:21:10Z",
+  "note": "Comparison rates for idle cash, each from its own public page with its own date. A rate that could not be refreshed keeps its last good value and date and is marked stale.",
+  "rates": [
+    {
+      "id": "checking_avg",
+      "label": "Checking, national average",
+      "yield_pct": {
+        "value": 0.07,
+        "unit": "pct",
+        "as_of": "2026-11-16",
+        "source": "https://www.fdic.gov/national-rates-and-rate-caps",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "savings_avg",
+      "label": "Savings, national average",
+      "yield_pct": {
+        "value": 0.39,
+        "unit": "pct",
+        "as_of": "2026-11-16",
+        "source": "https://www.fdic.gov/national-rates-and-rate-caps",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "hys_top",
+      "label": "High-yield savings, top widely available",
+      "yield_pct": {
+        "value": 4.4,
+        "unit": "pct",
+        "as_of": "2026-11-27",
+        "source": "https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "cd12_top",
+      "label": "12-month CD, top widely available",
+      "yield_pct": {
+        "value": 4.65,
+        "unit": "pct",
+        "as_of": "2026-11-27",
+        "source": "https://www.bankrate.com/banking/cds/best-1-year-cd-rates/",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "cd12_avg",
+      "label": "12-month CD, national average",
+      "yield_pct": {
+        "value": 1.81,
+        "unit": "pct",
+        "as_of": "2026-11-16",
+        "source": "https://www.fdic.gov/national-rates-and-rate-caps",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "mmf_spaxx",
+      "label": "Money market fund (Fidelity SPAXX, 7-day yield)",
+      "yield_pct": {
+        "value": 3.61,
+        "unit": "pct",
+        "as_of": "2026-11-25",
+        "source": "https://www.fidelity.com/investing/cash-management",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "tbill_4w",
+      "label": "4-week Treasury bill",
+      "yield_pct": {
+        "value": 4.19,
+        "unit": "pct",
+        "as_of": "2026-11-27",
+        "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "muni_mub",
+      "label": "Municipal bond fund (iShares MUB, 30-day SEC yield)",
+      "yield_pct": {
+        "value": 3.81,
+        "unit": "pct",
+        "as_of": "2026-11-25",
+        "source": "https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    },
+    {
+      "id": "broker_cash",
+      "label": "Broker cash sweep (Robinhood, Gold members only)",
+      "note": "One broker's own published rate, paid only to its paid-tier members. Not an average of brokers.",
+      "yield_pct": {
+        "value": 3.6,
+        "unit": "pct",
+        "as_of": "2026-09-17",
+        "source": "https://robinhood.com/us/en/support/articles/cash-program-interest-rate/",
+        "fetched_at": "2026-11-27T21:21:10Z",
+        "stale": false,
+        "reason": null
+      }
+    }
+  ],
+  "failed_checks": []
+}
