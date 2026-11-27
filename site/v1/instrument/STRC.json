@@ -1,25 +1,25 @@
 {
-  "date": "2026-11-22",
+  "date": "2026-11-26",
   "ticker": "STRC",
   "name": "Strategy Stretch preferred",
   "issuer": "Strategy",
   "kind": "preferred",
   "par_usd": 100,
   "close_usd": {
-    "value": 93.6,
+    "value": 98.04,
     "unit": "usd",
-    "as_of": "2026-11-20",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:33Z",
+    "as_of": "2026-11-25",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
+    "fetched_at": "2026-11-26T21:59:58Z",
     "stale": false,
     "reason": null
   },
   "avg_volume_30d": {
-    "value": 2136139.3,
+    "value": 2170490.9,
     "unit": "shares",
-    "as_of": "2026-11-20",
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:33Z",
+    "as_of": "2026-11-25",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
+    "fetched_at": "2026-11-26T21:59:58Z",
     "stale": false,
     "reason": null
   },
@@ -27,14 +27,14 @@
   "stated_rate_pct": {
     "value": 12.0,
     "unit": "pct",
-    "as_of": "2026-11-20",
+    "as_of": "2026-11-25",
     "source": "https://api.strategy.com/btc/strcKpiData",
-    "fetched_at": "2026-11-22T20:01:32Z",
+    "fetched_at": "2026-11-26T21:59:56Z",
     "stale": false,
     "reason": null
   },
   "yield_pct": {
-    "value": 12.821,
+    "value": 12.24,
     "unit": "pct",
     "formula": "stated_rate_pct*par_usd/close_usd",
     "inputs": [
@@ -54,20 +54,12 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 251,
+  "trading_days": 252,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-21&todate=2026-11-22&limit=400",
-    "fetched_at": "2026-11-22T20:01:33Z",
-    "from": "2025-11-21",
+    "source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
+    "fetched_at": "2026-11-26T21:59:58Z",
+    "from": "2025-11-25",
     "rows": [
-      [
-        "2025-11-21",
-        95.38
-      ],
-      [
-        "2025-11-24",
-        96.38
-      ],
       [
         "2025-11-25",
         96.29
@@ -1063,16 +1055,28 @@
       [
         "2026-11-20",
         93.6
+      ],
+      [
+        "2026-11-23",
+        98.3
+      ],
+      [
+        "2026-11-24",
+        97.77
+      ],
+      [
+        "2026-11-25",
+        98.04
       ]
     ]
   },
   "schedule": "every business day",
-  "next_pay_date": "2026-11-23",
+  "next_pay_date": "2026-11-27",
   "payments": {
-    "paid": 33,
-    "in_a_row": 33,
+    "paid": 36,
+    "in_a_row": 36,
     "gaps": [],
-    "last_paid": "2026-11-20"
+    "last_paid": "2026-11-25"
   },
   "cross_check": "ok",
   "flags": [
@@ -1414,71 +1418,71 @@
   "hold_odds": {
     "7": {
       "days": 7,
-      "holds": 246,
-      "bought_from": "2025-11-21",
-      "bought_to": "2026-11-13",
-      "closes_from": "2025-11-21",
-      "tbill_pct": 4.11,
-      "tbill_hold_pct": 0.079,
+      "holds": 247,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-11-18",
+      "closes_from": "2025-11-25",
+      "tbill_pct": 4.19,
+      "tbill_hold_pct": 0.08,
       "beat_tbill": 151,
-      "beat_tbill_pct": 61.4,
-      "lost": 62,
-      "lost_pct": 25.2,
-      "median_pct": 0.26,
+      "beat_tbill_pct": 61.1,
+      "lost": 64,
+      "lost_pct": 25.9,
+      "median_pct": 0.25,
       "worst_pct": -14.56,
       "worst_bought": "2026-06-18"
     },
     "30": {
       "days": 30,
-      "holds": 229,
-      "bought_from": "2025-11-21",
-      "bought_to": "2026-10-21",
-      "closes_from": "2025-11-21",
-      "tbill_pct": 4.11,
-      "tbill_hold_pct": 0.338,
-      "beat_tbill": 175,
-      "beat_tbill_pct": 76.4,
-      "lost": 43,
-      "lost_pct": 18.8,
-      "median_pct": 1.12,
+      "holds": 230,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-10-26",
+      "closes_from": "2025-11-25",
+      "tbill_pct": 4.19,
+      "tbill_hold_pct": 0.344,
+      "beat_tbill": 173,
+      "beat_tbill_pct": 75.2,
+      "lost": 46,
+      "lost_pct": 20.0,
+      "median_pct": 1.06,
       "worst_pct": -23.84,
       "worst_bought": "2026-05-27"
     },
     "90": {
       "days": 90,
-      "holds": 187,
-      "bought_from": "2025-11-21",
-      "bought_to": "2026-08-21",
-      "closes_from": "2025-11-21",
-      "tbill_pct": 4.11,
-      "tbill_hold_pct": 1.013,
-      "beat_tbill": 127,
-      "beat_tbill_pct": 67.9,
-      "lost": 57,
-      "lost_pct": 30.5,
-      "median_pct": 3.17,
+      "holds": 189,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-08-27",
+      "closes_from": "2025-11-25",
+      "tbill_pct": 4.19,
+      "tbill_hold_pct": 1.033,
+      "beat_tbill": 128,
+      "beat_tbill_pct": 67.7,
+      "lost": 58,
+      "lost_pct": 30.7,
+      "median_pct": 3.15,
       "worst_pct": -22.53,
       "worst_bought": "2026-03-30"
     },
     "180": {
       "days": 180,
-      "holds": 125,
-      "bought_from": "2025-11-21",
-      "bought_to": "2026-05-22",
-      "closes_from": "2025-11-21",
-      "tbill_pct": 4.11,
-      "tbill_hold_pct": 2.027,
-      "beat_tbill": 79,
-      "beat_tbill_pct": 63.2,
-      "lost": 32,
-      "lost_pct": 25.6,
+      "holds": 127,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-05-29",
+      "closes_from": "2025-11-25",
+      "tbill_pct": 4.19,
+      "tbill_hold_pct": 2.066,
+      "beat_tbill": 80,
+      "beat_tbill_pct": 63.0,
+      "lost": 33,
+      "lost_pct": 26.0,
       "median_pct": 3.53,
       "worst_pct": -18.92,
       "worst_bought": "2025-12-30"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+      "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
     }
   }
 }
