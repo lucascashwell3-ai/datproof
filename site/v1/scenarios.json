@@ -271,8 +271,8 @@
           "total_usd": -618.41,
           "total_pct": -6.184,
           "lowest": {
-            "value_usd": 8802.59,
-            "below_start_usd": 1197.41,
+            "value_usd": 8802.6,
+            "below_start_usd": 1197.4,
             "below_start_pct": 11.974,
             "date": "2026-11-20"
           },
@@ -1228,8 +1228,8 @@
             "total_usd": -618.41,
             "total_pct": -6.184,
             "lowest": {
-              "value_usd": 8802.59,
-              "below_start_usd": 1197.41,
+              "value_usd": 8802.6,
+              "below_start_usd": 1197.4,
               "below_start_pct": 11.974,
               "date": "2026-11-20"
             },
