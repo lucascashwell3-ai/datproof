@@ -429,7 +429,7 @@ h3 { font-family: var(--f-disp); }
 }
 .bk-crash { margin-top: 2.5rem; }
 .bp-hd { display: block; font-size: var(--t-xs); font-weight: 400; color: var(--ink-3); }
-.bp td.wait { vertical-align: middle; }
+.bp td.wait .bp-s { margin-top: 0.5rem; }
 .lift-sharpe { max-width: 72ch; }
 .bk-out .bp thead th:first-child { width: 6rem; }
 .bk-line { margin-top: 1.25rem; color: var(--ink-2); font-size: var(--t-sm); max-width: 66ch; text-wrap: pretty; }

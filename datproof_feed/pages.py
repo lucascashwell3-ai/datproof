@@ -498,8 +498,8 @@ def below_block(feed: dict) -> str:
         tds = ""
         for c in cols:
             if c["p"] is None:
-                if k == 0:
-                    tds += f'<td class="flat wait" rowspan="{len(labels)}" data-l="{e(c["ticker"])}"><span class="bp-s">{e(wait_note(c))}</span></td>'
+                tds += (f'<td class="flat wait" data-l="{e(c["ticker"])}"><span class="bp-s">{e(wait_note(c))}</span></td>' if k == 0
+                        else f'<td class="flat wait" data-l="{e(c["ticker"])}"><span class="vh">not yet</span></td>')
                 continue
             b = c["p"]["bands"][k]
             big, small = band_cell(b)
