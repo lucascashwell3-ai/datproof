@@ -402,17 +402,21 @@ h3 { font-family: var(--f-disp); }
 .lf-n small { display: block; margin-top: 0.25rem; font-family: var(--f-text); font-size: var(--t-xs); font-weight: 400; letter-spacing: 0; color: var(--ink-3); }
 .lift .fine { margin-top: 0; max-width: 62ch; }
 
-/* backed */
-.backed { margin-top: 2.75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 0 3rem; }
-.bk { border-top: 1px solid var(--line-2); padding: 1.5rem 0 1rem; }
-.bk-iss { font-size: var(--t-lg); font-weight: var(--tk-wt); font-stretch: var(--d-str); }
-:root[data-type="c"] .bk-iss { font-size: 1.75rem; }
-.bk-big { margin-top: 1.25rem; font-size: var(--t-big); font-weight: var(--n-wt); font-stretch: var(--n-str); line-height: 1; letter-spacing: var(--n-trk); }
-.bk-big small { font-family: var(--f-text); font-size: 0.4em; font-weight: 600; letter-spacing: 0; margin-left: 0.35em; color: var(--ink-2); }
-.bk-what { margin-top: 0.625rem; color: var(--ink-2); font-size: var(--t-sm); }
-.bk-two { margin-top: 1.25rem; font-size: var(--t-md); }
-.bk-two b { font-weight: 600; }
-.bk-src { margin-top: 1rem; font-size: var(--t-xs); color: var(--ink-3); }
+/* backed by bitcoin and cash: the crash test table uses the .bp table styles */
+.bk-out { margin-top: 2.5rem; }
+.bk-out .bp thead th:first-child { width: 6rem; }
+.bk-line { margin-top: 1.25rem; color: var(--ink-2); font-size: var(--t-sm); max-width: 66ch; text-wrap: pretty; }
+.bk-line + .bk-line { margin-top: 0.5rem; }
+.bk-line b { color: var(--ink); font-weight: 600; }
+@media (max-width: 44rem) {
+  .bk-out .bp, .bk-out .bp tbody { display: block; }
+  .bk-out .bp thead { display: none; }
+  .bk-out .bp tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 0.875rem; padding: 1rem 0 1.125rem; }
+  .bk-out .bp th[scope="row"] { grid-column: 1 / -1; padding: 0 0 0.5rem; font-size: var(--t-md); }
+  .bk-out .bp td { padding: 0; }
+  .bk-out .bp td::before { content: attr(data-l); display: block; margin-bottom: 0.25rem; font-size: var(--t-xs); color: var(--ink-3); line-height: 1.3; min-height: 2.6em; }
+  .bk-out .bp-n { font-size: 1.375rem; }
+}
 
 /* calculator */
 .calc-in { margin-top: 2.5rem; display: grid; grid-template-columns: auto minmax(0, 26rem); gap: 0.75rem 1.5rem; align-items: center; justify-content: start; }

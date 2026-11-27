@@ -1,0 +1,52 @@
+{
+  "read_on": "2026-11-26",
+  "note": "Figures that change only with a filing. Each carries its filing and the date it is true for. The daily figures (bitcoin price, bitcoin held, cash, amounts outstanding) are fetched each day into data/backing.json.",
+  "strategy": {
+    "debt_usd": {
+      "value": 6750000000,
+      "as_of": "2026-09-30",
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000105044626000060/mstr-20260930.htm",
+      "basis": "Principal outstanding, the 10-Q's own round figure: convertible notes of $6,713.7M (2028 $1,010.0M, 2029 $1,500.0M, 2030A $800.0M, 2030B $2,000.0M, 2031 $603.7M, 2032 $800.0M) plus two small secured loans. No repurchase or conversion in the 8-Ks filed through 2026-11-23."
+    },
+    "usd_reserve_usd": {
+      "value": 3730000000,
+      "as_of": "2026-11-22",
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526470961/mstr-20261123.htm",
+      "basis": "The USD Reserve Strategy holds to pay dividends and interest, after the board moved $1.0B to general cash on 2026-11-23."
+    },
+    "rank": {
+      "value": ["STRF", "STRC", "STRE", "STRK", "STRD"],
+      "as_of": "2026-09-30",
+      "source": "https://www.sec.gov/Archives/edgar/data/1050446/000105044626000060/mstr-20260930.htm",
+      "quote": "rank, from highest to lowest, as follows: STRF Stock, STRC Stock, STRE Stock, STRK Stock, and STRD Stock",
+      "basis": "All debt ranks ahead of every preferred."
+    }
+  },
+  "strive": {
+    "rank": {
+      "value": ["SATA", "SATS"],
+      "as_of": "2026-09-30",
+      "source": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026071332/asst-20260930.htm",
+      "quote": "our SATS Stock is junior to our SATA Stock, and each is junior to our existing and future indebtedness"
+    }
+  },
+  "bitcoin_falls": {
+    "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-01-01",
+    "as_of": "2026-11-26",
+    "basis": "Daily closing prices, from a peak close to the lowest close before a new high.",
+    "rows": [
+      {"peak": "2013-12-04", "peak_usd": 1134.93, "low": "2015-01-14", "low_usd": 175.64, "fall_pct": 84.5},
+      {"peak": "2017-12-16", "peak_usd": 19640.51, "low": "2018-12-15", "low_usd": 3185.07, "fall_pct": 83.8},
+      {"peak": "2021-11-08", "peak_usd": 67541.76, "low": "2022-11-09", "low_usd": 15758.29, "fall_pct": 76.7}
+    ]
+  },
+  "comparison": {
+    "basis": "Asset coverage that business development companies must publish under the Investment Company Act: (total assets minus liabilities that are not senior securities) divided by (debt plus preferred), the same shape as the measure here.",
+    "rows": [
+      {"name": "Ares Capital", "ticker": "ARCC", "value": 1.88, "as_of": "2026-09-30",
+       "source": "https://www.sec.gov/Archives/edgar/data/1287750/000162828026067383/arcc-20260930.htm"},
+      {"name": "Blue Owl Capital", "ticker": "OBDC", "value": 1.84, "as_of": "2026-09-30",
+       "source": "https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm"}
+    ]
+  }
+}

@@ -44,6 +44,10 @@ its source and date; a number that could not be fetched is empty, with the reaso
   close paid (under $90, $90 to $95, $95 to $100, $100 and over): buys, losses, average and worst
   result, and how many separate drops the buys came from. Only for STRC and SATA, whose issuers
   state they adjust the rate to keep the price near $100.
+- **Crash test**: `backing` in each Strategy and Strive preferred: (bitcoin held × bitcoin price + cash)
+  ÷ (debt + every preferred ahead in line + the issue itself), the bitcoin price where that falls to
+  1.0×, and years of the yearly bill covered by cash set aside. `python -m datproof_feed.backing`
+  fetches the daily inputs into `data/backing.json`; filing figures live in `data/backing_static.json`.
 - **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
   and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
   returns each option's hold odds for exactly those days (how past holds of that length turned

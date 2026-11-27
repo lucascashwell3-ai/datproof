@@ -524,13 +524,16 @@ def gather(today: dt.date, fetch=_get, credit_path=None, profiles_path=None) -> 
     coverage = _credit_coverage(today, credit_path or _pl.Path(__file__).resolve().parents[1] / CREDIT_FILE,
                                 strive_base)
 
+    from datproof_feed import backing as _backing
+    crash = _backing.snapshot_block()
+
     # A failed source is not a problem: its fields are null with the reason. Problems are
     # disagreements between sources, which must stop the day's file from being written.
     sources = {k: ("failed" if v else "ok") for k, v in errors.items()}
     return {"date": today.isoformat(), "built_at": _now(), "sources": sources,
             "source_errors": {k: v for k, v in errors.items() if v},
             "problems": problems, "instruments": instruments, "benchmarks": benchmarks,
-            "inflation_yoy_pct": inflation, "coverage": coverage}
+            "inflation_yoy_pct": inflation, "coverage": coverage, "backing": crash}
 
 
 def _stated_rate(sym: str, today: dt.date, get, d1: str) -> dict:

@@ -52,6 +52,18 @@ SATS is too new to score.
 
 A $10,000 account that sits 60% in cash earns about $871 a year on that $6,000 at today's average yield of STRC, SATA and SATS, before tax.
 
+## Backed by bitcoin and cash
+
+| Issue | Backing today | Bitcoin can fall from its record | Cash set aside |
+|---|---|---|---|
+| STRC | 3.66× ($57.1B behind $15.6B of claims) | 90%, to $12,642 before 1.0× | 2.7 years (USD Reserve $3.73B, 22 Nov 2026) |
+| SATA | 2.23× ($3.1B behind $1.4B of claims) | 83%, to $21,671 before 1.0× | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
+| SATS | 1.48× ($3.1B behind $2.1B of claims) | 70%, to $38,124 before 1.0× | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
+
+Bitcoin's last three falls from a record were 77% to 85%. Today it is 51% below its $126,080 record. The same measure is 1.88× at Ares Capital and 1.84× at Blue Owl Capital, from their 30 Sep 2026 filings.
+
+Backing = (bitcoin held × bitcoin price + cash) ÷ (debt + every preferred ahead in line + the issue itself), at stated amounts; the fall is to the bitcoin price where backing would be 1.0×. Bitcoin $61,382 on 27 Nov 2026. Bitcoin held and cash from each issuer's dashboard (Strategy 27 Nov 2026, Strive 13 Nov 2026; cash Strategy 27 Nov 2026, Strive 20 Nov 2026). Strategy debt $6.75B as of 30 Sep 2026 (10-Q); Strive has none.
+
 ## Questions
 
 ### Where should a trading bot keep its idle cash?
@@ -61,6 +73,10 @@ The usual places for idle cash, a T-bill or a money market fund, pay 3.9% to 4.2
 ### How did past holds turn out?
 
 Of 3-month holds started each day over the past year, STRC lost money 31% of the time and beat a 4-week T-bill 68%; SATA lost money 10% of the time and beat a 4-week T-bill 85%.
+
+### What happens if bitcoin crashes?
+
+Measured from bitcoin's record, backing would reach 1.0× after a fall of STRC at 90% ($12,642), SATA at 83% ($21,671) and SATS at 70% ($38,124). Today it is STRC 3.66×, SATA 2.23× and SATS 1.48×. Cash set aside covers 2.7 years of the yearly bill at Strategy and 1.5 years of the yearly bill at Strive. Bitcoin's falls from a record since 2013 were 77% to 85%.
 
 ### Which cash does it fit?
 

@@ -40,7 +40,7 @@ AMOUNT = 10_000
 CASH_SHARE = 0.6  # the example account on /next/
 MIN_RECORD = 60   # fewer daily closes than this: say only when the stock started trading
 SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
-MARKERS = ("asof", "panels", "compare", "below", "odds", "oddsnote", "adds", "faq", "faqld", "sources")
+MARKERS = ("asof", "panels", "compare", "below", "odds", "oddsnote", "adds", "backing", "faq", "faqld", "sources")
 BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
@@ -481,6 +481,136 @@ def below_block(feed: dict) -> str:
             f'<p class="fine">{e(fine)}</p>')
 
 
+def crash_rows(feed: dict) -> list[dict]:
+    """The bitcoin crash test for each lead stock that has one, from the feed."""
+    out = []
+    for t in LEAD:
+        b = (inst(feed, t) or {}).get("backing") or {}
+        if b.get("backing_x") is not None:
+            out.append({"ticker": t, **b})
+    return out
+
+
+def billions(x: float, places: int = 1) -> str:
+    return "$" + fixed(x / 1e9, places) + "B"
+
+
+WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
+
+
+def cash_note(feed: dict, issuer: str) -> str:
+    st = ((feed.get("backing") or {}).get("static") or {})
+    ins = ((feed.get("backing") or {}).get("inputs") or {})
+    if issuer == "Strategy":
+        r = (st.get("strategy") or {}).get("usd_reserve_usd") or {}
+        return f"USD Reserve {billions(r['value'], 2)}, {day(r.get('as_of'))}" if r.get("value") else "USD Reserve"
+    m = ins.get("strive_reserve_months") or {}
+    return f"Strive's stated {fixed(m['value'])} months, {day(m.get('as_of'))}" if m.get("value") else "Strive's stated reserve"
+
+
+def crash_context(feed: dict) -> tuple[str, str, str]:
+    """(past falls line, comparison line HTML, comparison line text)."""
+    blk = feed.get("backing") or {}
+    st, ins = blk.get("static") or {}, blk.get("inputs") or {}
+    falls = [r["fall_pct"] for r in ((st.get("bitcoin_falls") or {}).get("rows") or [])]
+    price, record = (ins.get("btc_usd") or {}).get("value"), (ins.get("btc_record_usd") or {}).get("value")
+    line = ""
+    if falls:
+        line = f"Bitcoin's last {WORDS.get(len(falls), len(falls))} falls from a record were {fixed(min(falls))}% to {fixed(max(falls))}%."
+    if price and record:
+        line += f" Today it is {fixed((1 - price / record) * 100)}% below its {usd(record)} record."
+    rows = (st.get("comparison") or {}).get("rows") or []
+    if rows:
+        parts_h = [f'<b class="num">{fixed(r["value"], 2)}×</b> at <a href="{e(r["source"])}" rel="noopener">{e(r["name"])}</a>' for r in rows]
+        parts_t = [f"{fixed(r['value'], 2)}× at {r['name']}" for r in rows]
+        when = day(rows[0].get("as_of"))
+        comp_h = "The same measure is " + names(parts_h) + f", from their {when} filings."
+        comp_t = "The same measure is " + names(parts_t) + f", from their {when} filings."
+    else:
+        comp_h = comp_t = ""
+    return line.strip(), comp_h, comp_t
+
+
+def crash_rule(feed: dict, rows: list[dict]) -> str:
+    blk = feed.get("backing") or {}
+    st, ins = blk.get("static") or {}, blk.get("inputs") or {}
+    p = ins.get("btc_usd") or {}
+    debt = (st.get("strategy") or {}).get("debt_usd") or {}
+    held = [f"{iss} {day((ins.get(f'{iss.lower()}_btc_held') or {}).get('as_of'))}" for iss in dict.fromkeys(r["issuer"] for r in rows)]
+    cash = [f"{iss} {day((ins.get(f'{iss.lower()}_cash_usd') or {}).get('as_of'))}" for iss in dict.fromkeys(r["issuer"] for r in rows)]
+    s = ("Backing = (bitcoin held × bitcoin price + cash) ÷ (debt + every preferred ahead in line + the issue itself), "
+         "at stated amounts; the fall is to the bitcoin price where backing would be 1.0×.")
+    if p.get("value"):
+        s += f" Bitcoin {usd(p['value'])} on {day(p.get('as_of'))}."
+    if held:
+        s += " Bitcoin held and cash from each issuer's dashboard (" + ", ".join(held) + "; cash " + ", ".join(cash) + ")."
+    if debt.get("value"):
+        s += f" Strategy debt {billions(debt['value'], 2)} as of {day(debt.get('as_of'))} (10-Q); Strive has none."
+    return s
+
+
+def backing_block(feed: dict) -> str:
+    rows = crash_rows(feed)
+    if not rows:
+        return ""
+    body = ""
+    for r in rows:
+        fall = rnd(r["below_record_pct"]) if r.get("below_record_pct") is not None else None
+        yrs = r.get("cash_years")
+        body += (f'<tr><th scope="row" class="bk-tk">{e(r["ticker"])}</th>'
+                 f'<td class="up" data-l="Backing today"><span class="bp-n num">{fixed(r["backing_x"], 2)}×</span>'
+                 f'<span class="bp-s">{billions(r["assets_usd"])} behind {billions(r["claims_usd"])} of claims</span></td>'
+                 f'<td class="up" data-l="Bitcoin can fall from its record"><span class="bp-n num">{fall}%</span>'
+                 f'<span class="bp-s">to {usd(r["break_even_btc_usd"])} before 1.0×</span></td>'
+                 + (f'<td class="up" data-l="Cash set aside"><span class="bp-n num">{fixed(yrs, 1)} years</span>'
+                    f'<span class="bp-s">{e(cash_note(feed, r["issuer"]))}</span></td>' if yrs is not None
+                    else '<td class="flat" data-l="Cash set aside"><span class="bp-s">not available</span></td>')
+                 + "</tr>")
+    table = ('<table class="bp"><caption class="vh">Bitcoin crash test: backing today, how far bitcoin can fall from its '
+             'record before backing drops under 1.0×, and years of dividends and interest covered by cash set aside</caption>'
+             '<thead><tr><th scope="col"><span class="vh">Issue</span></th><th scope="col">Backing today</th>'
+             '<th scope="col">Bitcoin can fall from its record</th><th scope="col">Cash set aside</th></tr></thead>'
+             f'<tbody>{body}</tbody></table>')
+    falls, comp_h, _ = crash_context(feed)
+    return (table + (f'<p class="bk-line">{e(falls)}</p>' if falls else "")
+            + (f'<p class="bk-line">{comp_h}</p>' if comp_h else "")
+            + f'<p class="fine">{e(crash_rule(feed, rows))}</p>')
+
+
+def md_backing(feed: dict) -> str:
+    rows = crash_rows(feed)
+    if not rows:
+        return ""
+    out = "## Backed by bitcoin and cash\n\n| Issue | Backing today | Bitcoin can fall from its record | Cash set aside |\n|---|---|---|---|\n"
+    for r in rows:
+        fall = rnd(r["below_record_pct"]) if r.get("below_record_pct") is not None else None
+        yrs = r.get("cash_years")
+        out += (f"| {r['ticker']} | {fixed(r['backing_x'], 2)}× ({billions(r['assets_usd'])} behind {billions(r['claims_usd'])} of claims) "
+                f"| {fall}%, to {usd(r['break_even_btc_usd'])} before 1.0× "
+                f"| {(fixed(yrs, 1) + ' years (' + cash_note(feed, r['issuer']) + ')') if yrs is not None else 'not available'} |\n")
+    falls, _, comp_t = crash_context(feed)
+    out += "\n" + " ".join(x for x in (falls, comp_t) if x) + "\n\n" + crash_rule(feed, rows) + "\n\n"
+    return out
+
+
+def crash_answer(feed: dict) -> str | None:
+    rows = crash_rows(feed)
+    if not rows:
+        return None
+    falls = [f"{r['ticker']} at {rnd(r['below_record_pct'])}% ({usd(r['break_even_btc_usd'])})" for r in rows
+             if r.get("below_record_pct") is not None]
+    s = ("Measured from bitcoin's record, backing would reach 1.0× after a fall of " + names(falls) + ". "
+         "Today it is " + names([f"{r['ticker']} {fixed(r['backing_x'], 2)}×" for r in rows]) + ".")
+    yrs = {r["issuer"]: r.get("cash_years") for r in rows if r.get("cash_years") is not None}
+    if yrs:
+        s += " Cash set aside covers " + names([f"{fixed(y, 1)} years of the yearly bill at {iss}" for iss, y in yrs.items()]) + "."
+    st = ((feed.get("backing") or {}).get("static") or {}).get("bitcoin_falls") or {}
+    fl = [r["fall_pct"] for r in st.get("rows") or []]
+    if fl:
+        s += f" Bitcoin's falls from a record since 2013 were {fixed(min(fl))}% to {fixed(max(fl))}%."
+    return s
+
+
 def adds_line(feed: dict) -> str:
     dc = lead(feed)
     ys = [val(i["yield_pct"]) for i in dc]
@@ -520,6 +650,9 @@ def faq(feed: dict) -> list[tuple[str, str]]:
         parts = [f"{t} lost money {rnd(c[-1]['lost_pct'])}% of the time and beat a 4-week T-bill {rnd(c[-1]['beat_tbill_pct'])}%"
                  for t, c in od]
         out.append(("How did past holds turn out?", f"Of 3-month holds started each day over the past year, " + "; ".join(parts) + "."))
+    crash = crash_answer(feed)
+    if crash:
+        out.append(("What happens if bitcoin crashes?", crash))
     out.append(("Which cash does it fit?", fit_answer(feed)))
     return out
 
@@ -637,7 +770,7 @@ Cash your trading agent won't need for a few months can earn daily dividends fro
 
 {adds_line(feed)}
 
-## Questions
+{md_backing(feed)}## Questions
 
 {qa}
 
@@ -670,7 +803,8 @@ def render(feed: dict, next_html: str) -> dict[str, str]:
         raise PageError("no yields to show")
     table, note = odds_table(feed)
     parts = {"asof": e(asof(feed)), "panels": pan, "compare": compare_block(feed), "below": below_block(feed),
-             "odds": table, "oddsnote": e(note), "adds": e(adds_line(feed)), "faq": faq_html(feed),
+             "odds": table, "oddsnote": e(note), "adds": e(adds_line(feed)), "backing": backing_block(feed),
+             "faq": faq_html(feed),
              "faqld": faq_ld(feed), "sources": sources_html(feed)}
     assert set(parts) == set(MARKERS)
     out = {"next/index.html": inject(next_html, parts), "next/index.md": next_md(feed)}

@@ -36,6 +36,7 @@ jobs:
       dry_run: ${{ steps.dry-run.outputs.dry_run }}
       feed_code: ${{ steps.feed.outputs.feed_code }}
       pages_code: ${{ steps.pages.outputs.pages_code }}
+      backing_code: ${{ steps.backing.outputs.backing_code }}
     steps:
       - uses: actions/checkout@v4
 
@@ -82,6 +83,17 @@ jobs:
           credit=$(python -c "import json;s=json.load(open('data/credit.json')).get('status',{});print('failed' if 'failed' in s.values() else 'ok')")
           [ "$credit" = ok ] || echo "::warning::credit feed degraded: $(python -c "import json;print(json.load(open('data/credit.json'))['status'])")"
           echo "credit=$credit" >> "$GITHUB_ENV"
+      # Bitcoin crash-test inputs (data/backing.json): bitcoin price and record, bitcoin held, cash and each
+      # series' amount outstanding, from the issuers' and Coinbase's JSON routes. A failed input or check
+      # keeps the last good value with its date and turns the run red through feed-check; the feed build
+      # below still runs on the kept values.
+      - name: Crash-test inputs (bitcoin, cash, amounts outstanding)
+        id: backing
+        run: |
+          code=0
+          python -m datproof_feed.backing || code=$?
+          [ "$code" = 0 ] || echo "::warning::crash-test inputs: a fetch or check failed (exit $code); last good values kept"
+          echo "backing_code=$code" >> "$GITHUB_OUTPUT"
       # Idle-cash feed (/v1/ files): tests first, then the build. A failure here never stops
       # this job or the site deploy; the feed-check job below turns the run red instead.
       # A dry run builds into a temp folder and never stamps.
@@ -144,7 +156,8 @@ jobs:
           git status --short data/ site/
           echo "DRY RUN — pulls + build + checks passed, nothing committed or deployed" >> "$GITHUB_STEP_SUMMARY"
 
-  # Red run when the idle-cash feed or the plain-text pages failed, without holding back the site deploy.
+  # Red run when the idle-cash feed, the crash-test inputs or the plain-text page failed, without holding
+  # back the site deploy.
   feed-check:
     needs: build
     runs-on: ubuntu-latest
@@ -153,6 +166,7 @@ jobs:
         run: |
           code="${{ needs.build.outputs.feed_code }}"
           pages="${{ needs.build.outputs.pages_code }}"
+          crash="${{ needs.build.outputs.backing_code }}"
           bad=0
           if [ "$code" != "0" ]; then
             echo "::error title=Idle-cash feed failed::feed step exit code ${code:-missing}; see the build job log"
@@ -160,6 +174,10 @@ jobs:
           fi
           if [ "$pages" != "0" ]; then
             echo "::error title=Plain-text pages failed::pages step exit code ${pages:-missing}; yesterday's pages stay up"
+            bad=1
+          fi
+          if [ "$crash" != "0" ]; then
+            echo "::error title=Crash-test inputs failed::backing step exit code ${crash:-missing}; last good values kept, see the build job log"
             bad=1
           fi
           [ "$bad" = 0 ] || exit 1

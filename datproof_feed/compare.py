@@ -73,6 +73,15 @@ METHOD = {
                      f"median_pct = the middle result; worst_pct = the lowest, with its start day (worst_bought). "
                      f"Shares are rounded half up to one decimal. Fewer than {MIN_HOLDS} holds gives null "
                      f"with the reason. Past results do not predict future results",
+        "backing": "the bitcoin crash test, one rule for every Strategy and Strive preferred, at stated amounts: "
+                   "backing_x = (bitcoin held * bitcoin price + cash) / (debt + every preferred ahead of it in line "
+                   "+ the issue itself); break_even_btc_usd = (claims - cash) / bitcoin held, the bitcoin price at "
+                   "which backing_x would be 1.0; below_today_pct and below_record_pct = how far that is under "
+                   "today's price and the record; cash_years = cash set aside for dividends and interest, in years "
+                   "of the yearly bill (Strategy: USD Reserve / its yearly bill of dividends and interest; Strive: "
+                   "its stated reserve in months / 12). Daily inputs come from Coinbase, strategy.com and "
+                   "strive.com; debt, the USD Reserve and the order in line come from filings, each dated. A failed "
+                   "input keeps its last good value and date",
         "by_buy_price": f"the same holds as hold_odds, for {', '.join(map(str, BUY_PRICE_PERIODS))} days, split "
                         "by the close on the start day: under $90, $90 to $95, $95 to $100, $100 and over. "
                         "Per band: buys (holds started in the band), lost (results below 0), avg_pct (the mean result) and worst_pct (the "

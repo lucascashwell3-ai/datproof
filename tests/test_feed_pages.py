@@ -8,6 +8,7 @@ from __future__ import annotations
 import copy
 import datetime as dt
 import hashlib
+import html
 import json
 import pathlib
 import re
@@ -24,6 +25,7 @@ NEXT_HTML = """<!doctype html><html><head><!--feed:faqld--><!--/feed:faqld--></h
 <div class="odds" id="odds-out"><!--feed:odds--><!--/feed:odds--></div>
 <p class="fine" id="odds-note"><!--feed:oddsnote--><!--/feed:oddsnote--></p>
 <p class="sub" id="adds"><!--feed:adds--><!--/feed:adds--></p>
+<div class="bk-out"><!--feed:backing--><!--/feed:backing--></div>
 <div class="faq"><!--feed:faq--><!--/feed:faq--></div>
 <div id="sources-list"><!--feed:sources--><!--/feed:sources--></div>
 </body></html>
@@ -99,6 +101,12 @@ def make_feed() -> dict:
     for x, src in ((strc, "https://www.sec.gov/strc-filing"), (sata, "https://www.sec.gov/sata-filing")):
         x["profile"]["issuer_aims_price_near_100"]["source"] = src
     sats["by_buy_price"] = {"reason": "the issuer's filings state no aim to keep the price near $100"}
+    for x, (bx, be, bt, br, yrs, issuer, assets, claims) in zip(
+            (strc, sata, sats), ((3.67, 12640, 79.4, 90.0, 2.65, "Strategy", 57111e6, 15581e6),
+                                 (2.23, 21671, 64.7, 82.8, 1.5, "Strive", 3128e6, 1403e6),
+                                 (1.48, 38124, 37.9, 69.8, 1.5, "Strive", 3128e6, 2117e6))):
+        x["backing"] = {"issuer": issuer, "backing_x": bx, "break_even_btc_usd": be, "below_today_pct": bt,
+                        "below_record_pct": br, "cash_years": yrs, "assets_usd": assets, "claims_usd": claims}
     sats["hold_odds"] = {d: {"days": int(d), "reason": f"not enough history: {d}-day holds need 60 closes"} for d in ("7", "30", "90")}
     return {
         "date": "2026-11-22", "problems": [],
@@ -111,6 +119,17 @@ def make_feed() -> dict:
              "yield_pct": node(2.5094, as_of="2026-11-22")},
         ],
         "inflation_yoy_pct": {"value": 3.74, "month": "2026-09"},
+        "backing": {
+            "inputs": {"btc_usd": node(61425, as_of="2026-11-26"), "btc_record_usd": node(126080, as_of="2026-11-26"),
+                       "strategy_btc_held": node(851305, as_of="2026-11-22"), "strive_btc_held": node(43404, as_of="2026-11-20"),
+                       "strategy_cash_usd": node(4820e6, as_of="2026-11-22"), "strive_cash_usd": node(462.4e6, as_of="2026-11-20"),
+                       "strive_reserve_months": node(18, as_of="2026-11-20")},
+            "static": {"strategy": {"debt_usd": {"value": 6750e6, "as_of": "2026-09-30", "source": "https://www.sec.gov/10q"},
+                                    "usd_reserve_usd": {"value": 3730e6, "as_of": "2026-11-22", "source": "https://www.sec.gov/8k"}},
+                       "bitcoin_falls": {"rows": [{"fall_pct": 84.5}, {"fall_pct": 83.8}, {"fall_pct": 76.7}]},
+                       "comparison": {"rows": [{"name": "Ares Capital", "value": 1.88, "as_of": "2026-09-30", "source": "https://www.sec.gov/arcc"},
+                                               {"name": "Blue Owl Capital", "value": 1.84, "as_of": "2026-09-30", "source": "https://www.sec.gov/obdc"}]}},
+        },
     }
 
 
@@ -379,6 +398,70 @@ def test_a_feed_without_by_price_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     assert re.search(r"<!--feed:below--><!--/feed:below-->", outputs(site)["next/index.html"])
+
+
+# ---------- backed by bitcoin and cash ----------
+
+def crash_mismatches(files: dict[str, str], feed: dict) -> list[str]:
+    """Each issue's backing, fall from the record, break-even price and cash years equal the feed's, in both files."""
+    out = []
+    for i in feed["instruments"]:
+        b = i["backing"]
+        want = [f"{b['backing_x']:.2f}×", f"{int(b['below_record_pct'] + 0.5)}%", f"${b['break_even_btc_usd']:,}",
+                f"{int(b['cash_years'] * 10 + 0.5) / 10:.1f} years"]
+        for rel in FILES:
+            row = next((ln for ln in files[rel].splitlines() if ln.startswith(f"| {i['ticker']} | ") and "×" in ln), None) \
+                if rel.endswith(".md") else re.search(rf'<th scope="row" class="bk-tk">{i["ticker"]}</th>(.*?)</tr>', files[rel])
+            text = row if isinstance(row, str) else (row.group(1) if row else "")
+            for w in want:
+                if w not in text:
+                    out.append(f"{rel} {i['ticker']}: missing {w}")
+    return out
+
+
+def test_crash_figures_equal_the_feed(tmp_path):
+    code, site = build(tmp_path)
+    assert crash_mismatches(outputs(site), make_feed()) == []
+
+
+def test_crash_check_catches_a_planted_wrong_value(tmp_path):
+    code, site = build(tmp_path)
+    files = outputs(site)
+    files["next/index.html"] = files["next/index.html"].replace("$21,671", "$21,617")
+    files["next/index.md"] = files["next/index.md"].replace("1.48×", "1.84×", 1)
+    found = crash_mismatches(files, make_feed())
+    assert any("index.html SATA" in f for f in found) and any("index.md SATS" in f for f in found)
+
+
+def test_crash_section_shows_all_three_by_one_rule_with_dates(tmp_path):
+    code, site = build(tmp_path)
+    f = outputs(site)
+    block = re.search(r"<!--feed:backing-->(.*?)<!--/feed:backing-->", f["next/index.html"], re.S).group(1)
+    for t in ("STRC", "SATA", "SATS"):
+        assert f'class="bk-tk">{t}<' in block
+    assert block.count("Backing = (bitcoin held × bitcoin price + cash)") == 1
+    assert "Bitcoin's last three falls from a record were 77% to 85%. Today it is 51% below its $126,080 record." in html.unescape(block)
+    assert "1.88×</b> at" in block and "Ares Capital" in block and "Blue Owl Capital" in block and "30 Sep 2026" in block
+    assert "Strategy debt $6.75B as of 30 Sep 2026" in block
+
+
+def test_crash_question_answers_with_the_numbers(tmp_path):
+    code, site = build(tmp_path)
+    html_ = outputs(site)["next/index.html"]
+    ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', html_, re.S).group(1))
+    a = next(q["acceptedAnswer"]["text"] for q in ld["mainEntity"] if q["name"] == "What happens if bitcoin crashes?")
+    for fig in ("90% ($12,640)", "83% ($21,671)", "70% ($38,124)", "3.67×", "2.7 years", "1.5 years"):
+        assert fig in a, fig
+
+
+def test_a_feed_without_the_crash_test_still_builds(tmp_path):
+    feed = make_feed()
+    for i in feed["instruments"]:
+        i.pop("backing")
+    code, site = build(tmp_path, feed)
+    assert code == 0
+    html_ = outputs(site)["next/index.html"]
+    assert "<!--feed:backing--><!--/feed:backing-->" in html_ and "What happens if bitcoin crashes?" not in html_
 
 
 # ---------- the questions ----------

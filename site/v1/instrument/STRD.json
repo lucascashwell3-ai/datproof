@@ -1217,5 +1217,61 @@
   },
   "by_buy_price": {
     "reason": "the issuer's filings state no aim to keep the price near $100"
+  },
+  "backing": {
+    "issuer": "Strategy",
+    "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
+    "backing_x": 2.97,
+    "assets_usd": 57072977905,
+    "claims_usd": 19236259500,
+    "debt_usd": 6750000000,
+    "ahead": [
+      "STRF",
+      "STRC",
+      "STRE",
+      "STRK"
+    ],
+    "ahead_usd": 11083837400,
+    "own_usd": 1402422100,
+    "break_even_btc_usd": 16936,
+    "below_today_pct": 72.4,
+    "below_record_pct": 86.6,
+    "cash_years": 2.65,
+    "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
+    "inputs": {
+      "btc_usd": {
+        "value": 61381.835,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_record_usd": {
+        "value": 126080.0,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_held": {
+        "value": 851305.0,
+        "unit": "btc",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "cash_usd": {
+        "value": 4818314860,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null,
+        "formula": "totalReserve - btcNav (the dashboard's dollars on hand)"
+      }
+    }
   }
 }

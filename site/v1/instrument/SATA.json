@@ -2075,5 +2075,56 @@
         "100": 4
       }
     }
+  },
+  "backing": {
+    "issuer": "Strive",
+    "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
+    "backing_x": 2.23,
+    "assets_usd": 3126613165,
+    "claims_usd": 1403017600,
+    "debt_usd": 0.0,
+    "ahead": [],
+    "ahead_usd": 0,
+    "own_usd": 1403017600,
+    "break_even_btc_usd": 21671,
+    "below_today_pct": 64.7,
+    "below_record_pct": 82.8,
+    "cash_years": 1.5,
+    "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
+    "inputs": {
+      "btc_usd": {
+        "value": 61381.835,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_record_usd": {
+        "value": 126080.0,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_held": {
+        "value": 43403.934809050006,
+        "unit": "btc",
+        "as_of": "2026-11-13",
+        "source": "https://strive.com/treasury/api/dashboard/base-data",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null,
+        "filing": "https://www.sec.gov/ix?doc=/Archives/edgar/data/0001920406/000162828026074004/asst-20261116.htm"
+      },
+      "cash_usd": {
+        "value": 462400000.0,
+        "unit": "usd",
+        "as_of": "2026-11-20",
+        "source": "https://strive.com/treasury/api/dashboard/base-data",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      }
+    }
   }
 }
