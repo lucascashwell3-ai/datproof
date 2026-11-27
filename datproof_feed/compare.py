@@ -20,7 +20,7 @@ NOTE = ("Facts and arithmetic only. Not advice. A preferred stock's price can fa
 HOLD_NOTE = ("Hold odds are how past holds of the same length turned out, from daily closes and paid "
              "dividends. Past results do not predict future results.")
 
-FLAG_ORDER = ("price_moves", "issuer_sets_rate", "short_history", "no_hold_odds", "thin_trading",
+FLAG_ORDER = ("price_moves", "issuer_sets_rate", "fixed_rate", "short_history", "no_hold_odds", "thin_trading",
               "payment_gap", "no_payment_in_window", "stale", "not_bank_insured", "smart_contract_risk")
 
 HOLD_PERIODS = (7, 30, 90, 180, 365)
@@ -33,7 +33,7 @@ BUY_PRICE_LEVELS = (90, 95, 100)
 MIN_BAND_BUYS = 5
 # Past-year Sharpe ratio, and the worked example of a bot that moves a slice of its idle cash in.
 TRADING_DAYS = 252
-EXAMPLE = {"bot_sharpe": 1.0, "cash_share": 0.6, "slice_of_cash": 0.25, "bot_swings_pct": (10.0, 20.0),
+EXAMPLE = {"bot_sharpe": 1.0, "cash_share": 0.6, "slice_of_cash": 1.0, "bot_swings_pct": (10.0, 20.0),
            "correlation": 0.0}
 PAST_YEAR_DAYS = 360  # closes reaching back this far are described as "the past year"
 PROJECT_MONTHS = {"monthly": 1, "quarterly": 3}
@@ -81,11 +81,11 @@ METHOD = {
                   f"(mean daily return - 4-week T-bill rate today / {TRADING_DAYS}) / standard deviation of daily "
                   f"returns * sqrt({TRADING_DAYS}). total_return_pct compounds the daily returns; swings_pct = "
                   f"standard deviation * sqrt({TRADING_DAYS}). Fewer than {MIN_HOLDS} daily returns gives null with "
-                  "the reason. example: a bot with a Sharpe ratio of 1.0 that sits 60% in cash moves a quarter of "
-                  "that cash (15% of the account) into the instrument; its new Sharpe ratio = (1.0 * bot swings + "
-                  "0.15 * (total return - T-bill rate)) / sqrt(bot swings^2 + (0.15 * swings)^2), for bot swings of "
-                  "10% and 20% a year, assuming the bot's trades do not move with the instrument. Past results do "
-                  "not predict future results",
+                  "the reason. example: a bot with a Sharpe ratio of 1.0 that sits 60% in cash moves all of that "
+                  "cash (60% of the account) into the instrument; its new Sharpe ratio = (1.0 * bot swings + "
+                  "0.6 * (total return - T-bill rate)) / sqrt(bot swings^2 + (0.6 * swings)^2), for bot swings of "
+                  "10% and 20% a year, assuming the bot's trades do not move with the instrument; "
+                  "extra_return_points = 0.6 * (total return - T-bill rate). Past results do not predict future results",
         "backing": "the bitcoin crash test, one rule for every Strategy and Strive preferred, at stated amounts: "
                    "backing_x = (bitcoin held * bitcoin price + cash) / (debt + every preferred ahead of it in line "
                    "+ the issue itself); break_even_btc_usd = (claims - cash) / bitcoin held, the bitcoin price at "
@@ -127,7 +127,8 @@ METHOD = {
     "flags": {
         "price_moves": "a listed preferred stock: its price moves every day and can fall below the "
                        "$100 par, so the cash back can be less than the cash put in",
-        "issuer_sets_rate": "the issuer sets the dividend rate and can lower or skip it",
+        "issuer_sets_rate": "a variable rate: the issuer sets the dividend rate each period and can lower it",
+        "fixed_rate": "the filing fixes the dividend rate; each dividend is still declared by the issuer's board",
         "short_history": f"fewer than {SHORT_HISTORY_DAYS} trading days of prices, so the worst drop "
                          "covers a short time",
         "no_hold_odds": f"fewer than {MIN_HOLDS} past holds of this length fit in the daily closes, so "
@@ -390,9 +391,9 @@ def sharpe_table(ins: dict, tbill_pct) -> dict:
     total = math.prod(1 + r for r in x) - 1
     swings = sd * math.sqrt(TRADING_DAYS)
     sharpe = (st.mean(x) - rf) / sd * math.sqrt(TRADING_DAYS) if sd else None
-    # The worked example: a bot (Sharpe 1.0, 60% in cash) moves a quarter of that cash into the instrument.
+    # The worked example: a bot (Sharpe 1.0, 60% in cash) moves all of that idle cash into the instrument.
     w = EXAMPLE["cash_share"] * EXAMPLE["slice_of_cash"]
-    extra = total - tbill_pct / 100  # what the slice earned over the T-bill the cash would otherwise earn
+    extra = total - tbill_pct / 100  # what the cash earned over the T-bill it would otherwise have earned
     ex = {}
     for sb in EXAMPLE["bot_swings_pct"]:
         b = sb / 100
@@ -401,7 +402,8 @@ def sharpe_table(ins: dict, tbill_pct) -> dict:
             "total_return_pct": round(total * 100, 2), "swings_pct": round(swings * 100, 2),
             "sharpe": round(sharpe, 2) if sharpe is not None else None,
             "example": {**{k: (list(v) if isinstance(v, tuple) else v) for k, v in EXAMPLE.items()},
-                        "slice_of_account": w, "sharpe_by_bot_swings": ex}}
+                        "slice_of_account": w, "sharpe_by_bot_swings": ex,
+                        "extra_return_points": round(w * extra * 100, 2)}}
 
 
 def _odds_for(ins: dict, days: int, tbill_pct) -> tuple[dict | None, str | None]:

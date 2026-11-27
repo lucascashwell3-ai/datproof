@@ -1,0 +1,66 @@
+{
+  "read_on": "2026-11-27",
+  "note": "Where each issue is listed and its full security name, as Nasdaq's quote route states them. CUSIP and ISIN are left empty until they are sourced.",
+  "instruments": {
+    "STRC": {
+      "security_name": "Strategy Inc Variable Rate Series A Perpetual Stretch Preferred Stock",
+      "exchange_code": "NASDAQ-GS",
+      "exchange": "Nasdaq Global Select Market",
+      "source": "https://api.nasdaq.com/api/quote/STRC/info?assetclass=stocks",
+      "as_of": "2026-11-27",
+      "cusip": null,
+      "isin": null,
+      "id_reason": "CUSIP and ISIN not yet sourced"
+    },
+    "SATA": {
+      "security_name": "Strive, Inc. Variable Rate Series A Perpetual Preferred Stock",
+      "exchange_code": "NASDAQ-GM",
+      "exchange": "Nasdaq Global Market",
+      "source": "https://api.nasdaq.com/api/quote/SATA/info?assetclass=stocks",
+      "as_of": "2026-11-27",
+      "cusip": null,
+      "isin": null,
+      "id_reason": "CUSIP and ISIN not yet sourced"
+    },
+    "SATS": {
+      "security_name": "Strive, Inc. 15% Series A Perpetual SATS Preferred Stock",
+      "exchange_code": "NASDAQ-GM",
+      "exchange": "Nasdaq Global Market",
+      "source": "https://api.nasdaq.com/api/quote/SATS/info?assetclass=stocks",
+      "as_of": "2026-11-27",
+      "cusip": null,
+      "isin": null,
+      "id_reason": "CUSIP and ISIN not yet sourced"
+    },
+    "STRF": {
+      "security_name": "Strategy Inc 10.00% Series A Perpetual Strife Preferred Stock",
+      "exchange_code": "NASDAQ-GS",
+      "exchange": "Nasdaq Global Select Market",
+      "source": "https://api.nasdaq.com/api/quote/STRF/info?assetclass=stocks",
+      "as_of": "2026-11-27",
+      "cusip": null,
+      "isin": null,
+      "id_reason": "CUSIP and ISIN not yet sourced"
+    },
+    "STRK": {
+      "security_name": "Strategy Inc 8.00% Series A Perpetual Strike Preferred Stock",
+      "exchange_code": "NASDAQ-GS",
+      "exchange": "Nasdaq Global Select Market",
+      "source": "https://api.nasdaq.com/api/quote/STRK/info?assetclass=stocks",
+      "as_of": "2026-11-27",
+      "cusip": null,
+      "isin": null,
+      "id_reason": "CUSIP and ISIN not yet sourced"
+    },
+    "STRD": {
+      "security_name": "Strategy Inc 10.00% Series A Perpetual Stride Preferred Stock",
+      "exchange_code": "NASDAQ-GS",
+      "exchange": "Nasdaq Global Select Market",
+      "source": "https://api.nasdaq.com/api/quote/STRD/info?assetclass=stocks",
+      "as_of": "2026-11-27",
+      "cusip": null,
+      "isin": null,
+      "id_reason": "CUSIP and ISIN not yet sourced"
+    }
+  }
+}

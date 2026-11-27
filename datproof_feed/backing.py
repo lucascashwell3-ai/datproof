@@ -214,6 +214,7 @@ def compute(ticker: str, inputs: dict, static: dict) -> dict:
         "below_today_pct": round((1 - be / price) * 100, 1),
         "below_record_pct": round((1 - be / record) * 100, 1) if record else None,
         "cash_years": round(years, 2) if years is not None else None,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": years_basis,
         "inputs": {k: (inputs.get(v) or {}) for k, v in inputs_used.items()},
     }

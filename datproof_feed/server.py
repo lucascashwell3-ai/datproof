@@ -8,6 +8,7 @@ Facts and arithmetic only. It never holds, moves or trades money.
 """
 from __future__ import annotations
 
+import datetime as dt
 import json
 import os
 import pathlib
@@ -22,6 +23,7 @@ DEFAULT_FEED = "https://lucascashwell3-ai.github.io/datproof/v1"
 SERVER_INFO = {"name": "datproof", "version": "1.0.0"}
 FALLBACK_PROTOCOL = "2025-06-18"
 TICKER = re.compile(r"^[A-Z]{1,6}$")
+MAX_AGE_BUSINESS_DAYS = 2  # older than this and every answer says so
 
 TOOLS = [
     {"name": "compare",
@@ -82,6 +84,36 @@ def load(name: str):
         return json.loads((pathlib.Path(base) / name).read_text(encoding="utf-8"))
     except Exception as e:  # noqa: BLE001 - reported to the caller as a tool error
         raise ToolError(f"could not read {name} from the feed: {e}") from e
+
+
+def _today() -> dt.date:
+    return dt.datetime.now(dt.timezone.utc).date()
+
+
+def business_days_between(a: dt.date, b: dt.date) -> int:
+    """Weekdays after a, up to and including b (market holidays are not taken out)."""
+    n, d = 0, a
+    while d < b:
+        d += dt.timedelta(days=1)
+        if d.weekday() < 5:
+            n += 1
+    return n
+
+
+def feed_stamp() -> dict:
+    """The feed's date and age, carried by every answer, with a warning once it is more than two business
+    days old."""
+    try:
+        feed = load("instruments.json")
+        date = dt.date.fromisoformat(str(feed.get("date"))[:10])
+    except Exception as e:  # noqa: BLE001
+        return {"feed_date": None, "feed_warning": f"the feed's date could not be read ({e}); treat every figure as possibly old"}
+    age = business_days_between(date, _today())
+    out = {"feed_date": date.isoformat(), "feed_built_at": feed.get("built_at"), "feed_age_business_days": age}
+    if age > MAX_AGE_BUSINESS_DAYS:
+        out["feed_warning"] = (f"this feed is from {date.isoformat()}, {age} business days old; prices, yields and odds "
+                               "may have moved since. Say so when quoting them.")
+    return out
 
 
 def price_gate(tool: str) -> None:
@@ -156,8 +188,12 @@ def handle(msg: dict) -> dict | None:
     if method == "tools/call":
         try:
             data = call_tool(params.get("name"), params.get("arguments") or {})
-            return ok({"content": [{"type": "text", "text": json.dumps(data, ensure_ascii=False)}],
-                       "isError": False})
+            stamp = feed_stamp()
+            if isinstance(data, dict):
+                data = {**data, **stamp}
+            line = (f"Feed date: {stamp.get('feed_date')}." + (f" Warning: {stamp['feed_warning']}" if stamp.get("feed_warning") else ""))
+            return ok({"content": [{"type": "text", "text": json.dumps(data, ensure_ascii=False)},
+                                   {"type": "text", "text": line}], "isError": False})
         except ToolError as e:
             return ok({"content": [{"type": "text", "text": str(e)}], "isError": True})
     return {"jsonrpc": "2.0", "id": mid, "error": {"code": -32601, "message": f"method not found: {method}"}}

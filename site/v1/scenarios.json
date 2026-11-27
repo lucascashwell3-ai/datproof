@@ -271,8 +271,8 @@
           "total_usd": -618.41,
           "total_pct": -6.184,
           "lowest": {
-            "value_usd": 8802.6,
-            "below_start_usd": 1197.4,
+            "value_usd": 8802.59,
+            "below_start_usd": 1197.41,
             "below_start_pct": 11.974,
             "date": "2026-11-20"
           },
@@ -869,8 +869,7 @@
             "next_pay_date": "2026-11-30",
             "flags": [
               "price_moves",
-              "issuer_sets_rate",
-              "stale"
+              "issuer_sets_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -969,7 +968,8 @@
             "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "fixed_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1018,7 +1018,8 @@
             "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "fixed_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1067,7 +1068,8 @@
             "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "fixed_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1103,6 +1105,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "short_history",
               "no_hold_odds"
             ],
@@ -1215,8 +1218,8 @@
             "total_usd": -618.41,
             "total_pct": -6.184,
             "lowest": {
-              "value_usd": 8802.6,
-              "below_start_usd": 1197.4,
+              "value_usd": 8802.59,
+              "below_start_usd": 1197.41,
               "below_start_pct": 11.974,
               "date": "2026-11-20"
             },
@@ -1422,8 +1425,7 @@
             "next_pay_date": "2026-11-30",
             "flags": [
               "price_moves",
-              "issuer_sets_rate",
-              "stale"
+              "issuer_sets_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1473,6 +1475,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "thin_trading"
             ],
             "as_of": "2026-11-25",
@@ -1573,6 +1576,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "thin_trading"
             ],
             "as_of": "2026-11-25",
@@ -1623,6 +1627,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "thin_trading"
             ],
             "as_of": "2026-11-25",
@@ -1659,6 +1664,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "short_history",
               "no_hold_odds"
             ],
@@ -1964,6 +1970,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "short_history",
               "no_hold_odds"
             ],
@@ -2000,6 +2007,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "no_hold_odds",
               "thin_trading"
             ],
@@ -2037,8 +2045,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "no_hold_odds",
-              "stale"
+              "no_hold_odds"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -2073,6 +2080,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "no_hold_odds",
               "thin_trading"
             ],
@@ -2145,6 +2153,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "no_hold_odds",
               "thin_trading"
             ],

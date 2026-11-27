@@ -34,10 +34,18 @@ def test_hand_count_check_catches_dropped_dividends():
 
 
 def test_worked_example_is_in_the_hand_range():
+    """All the idle cash in: the hand count on these files gives 0.97 to 1.09, about 6 points more return."""
     ex = cmp.sharpe_table(DATA["STRC"], TBILL)["example"]
     vals = ex["sharpe_by_bot_swings"]
-    assert 1.06 <= min(vals.values()) <= max(vals.values()) <= 1.10
-    assert ex["slice_of_account"] == 0.15 and ex["correlation"] == 0.0
+    assert (min(vals.values()), max(vals.values())) == (0.97, 1.09)
+    assert ex["slice_of_account"] == 0.6 and ex["correlation"] == 0.0
+    assert round(ex["extra_return_points"]) == 6
+
+
+def test_worked_example_check_catches_the_old_quarter_slice(monkeypatch):
+    monkeypatch.setitem(cmp.EXAMPLE, "slice_of_cash", 0.25)  # planted: the earlier quarter-of-cash example
+    vals = cmp.sharpe_table(DATA["STRC"], TBILL)["example"]["sharpe_by_bot_swings"]
+    assert (min(vals.values()), max(vals.values())) != (0.97, 1.09)
 
 
 def test_worked_example_reports_a_flat_year_as_it_is():

@@ -189,7 +189,7 @@
   "cross_check": "no issuer list",
   "flags": [
     "price_moves",
-    "issuer_sets_rate",
+    "fixed_rate",
     "short_history"
   ],
   "profile": {
@@ -412,6 +412,29 @@
     }
   ],
   "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks",
+  "avg_value_30d_usd": {
+    "value": 29679333,
+    "unit": "usd",
+    "formula": "avg_volume_30d * close_usd",
+    "inputs": [
+      "avg_volume_30d",
+      "close_usd"
+    ],
+    "as_of": "2026-11-25",
+    "stale": false,
+    "reason": null
+  },
+  "listing": {
+    "security_name": "Strive, Inc. 15% Series A Perpetual SATS Preferred Stock",
+    "exchange_code": "NASDAQ-GM",
+    "exchange": "Nasdaq Global Market",
+    "source": "https://api.nasdaq.com/api/quote/SATS/info?assetclass=stocks",
+    "as_of": "2026-11-27",
+    "cusip": null,
+    "isin": null,
+    "id_reason": "CUSIP and ISIN not yet sourced",
+    "fetched_at": "2026-11-27"
+  },
   "hold_odds": {
     "7": {
       "days": 7,
@@ -473,6 +496,7 @@
     "below_today_pct": 36.4,
     "below_record_pct": 69.8,
     "cash_years": 1.5,
+    "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
     "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
     "inputs": {
       "btc_usd": {

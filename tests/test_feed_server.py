@@ -50,7 +50,10 @@ def test_initialize_list_and_call_compare_over_stdio(feed_dir):
     for ins in published["instruments"]:  # the server merges each instrument's closes and dividends
         one = json.loads((feed_dir / "instrument" / f"{ins['ticker']}.json").read_text())
         ins.update({k: one[k] for k in ("closes", "dividends") if k in one})
-    assert json.loads(res["content"][0]["text"]) == compare(published, 20000, 90, 10, ["preferred", "tbill"])
+    got = json.loads(res["content"][0]["text"])
+    assert got["feed_date"] == published["date"]  # every answer carries the feed's date
+    got = {k: v for k, v in got.items() if not k.startswith("feed_")}
+    assert got == compare(published, 20000, 90, 10, ["preferred", "tbill"])
 
 
 def test_other_tools_ping_and_errors(feed_dir):
@@ -112,3 +115,42 @@ def test_scenarios_tool_whole_document_one_situation_and_unknown(feed_dir):
     got = json.loads(one["result"]["content"][0]["text"])
     assert got["situation"]["inputs"] == {"amount_usd": 250000, "days": 180}
     assert bad["result"]["isError"] is True and "unknown situation" in bad["result"]["content"][0]["text"]
+
+
+# ---------- the feed's age ----------
+
+def _call(name="instruments", args=None):
+    reply = server.handle({"jsonrpc": "2.0", "id": 9, "method": "tools/call",
+                           "params": {"name": name, "arguments": args or {}}})
+    return reply["result"]
+
+
+def test_every_answer_carries_the_feed_date(feed_dir, monkeypatch):
+    monkeypatch.setenv("DATPROOF_FEED", str(feed_dir))
+    date = json.loads((feed_dir / "instruments.json").read_text())["date"]
+    monkeypatch.setattr(server, "_today", lambda: __import__("datetime").date.fromisoformat(date))
+    res = _call("compare", {"amount_usd": 1000, "days": 30, "max_drop_pct": 50})
+    body = json.loads(res["content"][0]["text"])
+    assert body["feed_date"] == date and body["feed_age_business_days"] == 0 and "feed_warning" not in body
+    assert res["content"][1]["text"] == f"Feed date: {date}."
+
+
+def test_an_old_feed_warns(feed_dir, monkeypatch):
+    """Planted: the clock is set 10 days after the feed's date."""
+    monkeypatch.setenv("DATPROOF_FEED", str(feed_dir))
+    import datetime as dt
+    date = dt.date.fromisoformat(json.loads((feed_dir / "instruments.json").read_text())["date"])
+    monkeypatch.setattr(server, "_today", lambda: date + dt.timedelta(days=10))
+    res = _call("method")
+    body = json.loads(res["content"][0]["text"])
+    assert body["feed_age_business_days"] > server.MAX_AGE_BUSINESS_DAYS and "business days old" in body["feed_warning"]
+    assert "Warning:" in res["content"][1]["text"]
+
+
+def test_two_business_days_is_still_fresh(feed_dir, monkeypatch):
+    import datetime as dt
+    monkeypatch.setattr(server, "_today", lambda: dt.date(2026, 11, 30))  # a Monday
+    monkeypatch.setattr(server, "load", lambda name: {"date": "2026-11-26"} if name == "instruments.json" else {})
+    assert "feed_warning" not in server.feed_stamp()  # Thu -> Mon is 2 business days
+    monkeypatch.setattr(server, "_today", lambda: dt.date(2026, 12, 1))
+    assert "feed_warning" in server.feed_stamp()

@@ -112,6 +112,29 @@
         }
       },
       "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks",
+      "avg_value_30d_usd": {
+        "value": 212794928,
+        "unit": "usd",
+        "formula": "avg_volume_30d * close_usd",
+        "inputs": [
+          "avg_volume_30d",
+          "close_usd"
+        ],
+        "as_of": "2026-11-25",
+        "stale": false,
+        "reason": null
+      },
+      "listing": {
+        "security_name": "Strategy Inc Variable Rate Series A Perpetual Stretch Preferred Stock",
+        "exchange_code": "NASDAQ-GS",
+        "exchange": "Nasdaq Global Select Market",
+        "source": "https://api.nasdaq.com/api/quote/STRC/info?assetclass=stocks",
+        "as_of": "2026-11-27",
+        "cusip": null,
+        "isin": null,
+        "id_reason": "CUSIP and ISIN not yet sourced",
+        "fetched_at": "2026-11-27"
+      },
       "hold_odds": {
         "7": {
           "days": 7,
@@ -370,17 +393,18 @@
         "example": {
           "bot_sharpe": 1.0,
           "cash_share": 0.6,
-          "slice_of_cash": 0.25,
+          "slice_of_cash": 1.0,
           "bot_swings_pct": [
             10.0,
             20.0
           ],
           "correlation": 0.0,
-          "slice_of_account": 0.15,
+          "slice_of_account": 0.6,
           "sharpe_by_bot_swings": {
-            "10": 1.08,
-            "20": 1.05
-          }
+            "10": 0.93,
+            "20": 1.06
+          },
+          "extra_return_points": 5.58
         }
       },
       "backing": {
@@ -399,6 +423,7 @@
         "below_today_pct": 78.9,
         "below_record_pct": 90.0,
         "cash_years": 2.65,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
         "inputs": {
           "btc_usd": {
@@ -468,8 +493,9 @@
         "as_of": "2026-11-13",
         "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-20&toDate=2026-11-28",
         "fetched_at": "2026-11-27T19:39:00Z",
-        "stale": true,
-        "reason": null
+        "stale": false,
+        "reason": null,
+        "rate_set_on": "2026-11-13"
       },
       "yield_pct": {
         "value": 14.346,
@@ -479,7 +505,7 @@
           "stated_rate_pct",
           "close_usd"
         ],
-        "stale": true,
+        "stale": false,
         "reason": null
       },
       "worst_drop_pct": {
@@ -504,8 +530,7 @@
       "cross_check": "ok",
       "flags": [
         "price_moves",
-        "issuer_sets_rate",
-        "stale"
+        "issuer_sets_rate"
       ],
       "profile": {
         "issuer": "Strive",
@@ -536,6 +561,29 @@
         }
       },
       "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks",
+      "avg_value_30d_usd": {
+        "value": 37487056,
+        "unit": "usd",
+        "formula": "avg_volume_30d * close_usd",
+        "inputs": [
+          "avg_volume_30d",
+          "close_usd"
+        ],
+        "as_of": "2026-11-25",
+        "stale": false,
+        "reason": null
+      },
+      "listing": {
+        "security_name": "Strive, Inc. Variable Rate Series A Perpetual Preferred Stock",
+        "exchange_code": "NASDAQ-GM",
+        "exchange": "Nasdaq Global Market",
+        "source": "https://api.nasdaq.com/api/quote/SATA/info?assetclass=stocks",
+        "as_of": "2026-11-27",
+        "cusip": null,
+        "isin": null,
+        "id_reason": "CUSIP and ISIN not yet sourced",
+        "fetched_at": "2026-11-27"
+      },
       "hold_odds": {
         "7": {
           "days": 7,
@@ -794,17 +842,18 @@
         "example": {
           "bot_sharpe": 1.0,
           "cash_share": 0.6,
-          "slice_of_cash": 0.25,
+          "slice_of_cash": 1.0,
           "bot_swings_pct": [
             10.0,
             20.0
           ],
           "correlation": 0.0,
-          "slice_of_account": 0.15,
+          "slice_of_account": 0.6,
           "sharpe_by_bot_swings": {
-            "10": 1.07,
-            "20": 1.05
-          }
+            "10": 0.87,
+            "20": 1.03
+          },
+          "extra_return_points": 5.52
         }
       },
       "backing": {
@@ -821,6 +870,7 @@
         "below_today_pct": 63.9,
         "below_record_pct": 82.8,
         "cash_years": 1.5,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
         "inputs": {
           "btc_usd": {
@@ -926,7 +976,7 @@
       "cross_check": "no issuer list",
       "flags": [
         "price_moves",
-        "issuer_sets_rate",
+        "fixed_rate",
         "short_history"
       ],
       "profile": {
@@ -967,6 +1017,29 @@
         }
       },
       "dividends_source": "https://api.nasdaq.com/api/quote/SATS/dividends?assetclass=stocks",
+      "avg_value_30d_usd": {
+        "value": 29679333,
+        "unit": "usd",
+        "formula": "avg_volume_30d * close_usd",
+        "inputs": [
+          "avg_volume_30d",
+          "close_usd"
+        ],
+        "as_of": "2026-11-25",
+        "stale": false,
+        "reason": null
+      },
+      "listing": {
+        "security_name": "Strive, Inc. 15% Series A Perpetual SATS Preferred Stock",
+        "exchange_code": "NASDAQ-GM",
+        "exchange": "Nasdaq Global Market",
+        "source": "https://api.nasdaq.com/api/quote/SATS/info?assetclass=stocks",
+        "as_of": "2026-11-27",
+        "cusip": null,
+        "isin": null,
+        "id_reason": "CUSIP and ISIN not yet sourced",
+        "fetched_at": "2026-11-27"
+      },
       "hold_odds": {
         "7": {
           "days": 7,
@@ -1028,6 +1101,7 @@
         "below_today_pct": 36.4,
         "below_record_pct": 69.8,
         "cash_years": 1.5,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
         "inputs": {
           "btc_usd": {
@@ -1133,7 +1207,7 @@
       "cross_check": "no issuer list",
       "flags": [
         "price_moves",
-        "issuer_sets_rate"
+        "fixed_rate"
       ],
       "profile": {
         "issuer": "Strategy",
@@ -1165,6 +1239,29 @@
         }
       },
       "dividends_source": "https://api.nasdaq.com/api/quote/STRF/dividends?assetclass=stocks",
+      "avg_value_30d_usd": {
+        "value": 8048196,
+        "unit": "usd",
+        "formula": "avg_volume_30d * close_usd",
+        "inputs": [
+          "avg_volume_30d",
+          "close_usd"
+        ],
+        "as_of": "2026-11-25",
+        "stale": false,
+        "reason": null
+      },
+      "listing": {
+        "security_name": "Strategy Inc 10.00% Series A Perpetual Strife Preferred Stock",
+        "exchange_code": "NASDAQ-GS",
+        "exchange": "Nasdaq Global Select Market",
+        "source": "https://api.nasdaq.com/api/quote/STRF/info?assetclass=stocks",
+        "as_of": "2026-11-27",
+        "cusip": null,
+        "isin": null,
+        "id_reason": "CUSIP and ISIN not yet sourced",
+        "fetched_at": "2026-11-27"
+      },
       "hold_odds": {
         "7": {
           "days": 7,
@@ -1423,17 +1520,18 @@
         "example": {
           "bot_sharpe": 1.0,
           "cash_share": 0.6,
-          "slice_of_cash": 0.25,
+          "slice_of_cash": 1.0,
           "bot_swings_pct": [
             10.0,
             20.0
           ],
           "correlation": 0.0,
-          "slice_of_account": 0.15,
+          "slice_of_account": 0.6,
           "sharpe_by_bot_swings": {
-            "10": 0.93,
-            "20": 0.97
-          }
+            "10": 0.55,
+            "20": 0.8
+          },
+          "extra_return_points": -1.04
         }
       },
       "backing": {
@@ -1450,6 +1548,7 @@
         "below_today_pct": 93.7,
         "below_record_pct": 97.0,
         "cash_years": 2.65,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
         "inputs": {
           "btc_usd": {
@@ -1555,7 +1654,7 @@
       "cross_check": "no issuer list",
       "flags": [
         "price_moves",
-        "issuer_sets_rate"
+        "fixed_rate"
       ],
       "profile": {
         "issuer": "Strategy",
@@ -1587,6 +1686,29 @@
         }
       },
       "dividends_source": "https://api.nasdaq.com/api/quote/STRK/dividends?assetclass=stocks",
+      "avg_value_30d_usd": {
+        "value": 6208807,
+        "unit": "usd",
+        "formula": "avg_volume_30d * close_usd",
+        "inputs": [
+          "avg_volume_30d",
+          "close_usd"
+        ],
+        "as_of": "2026-11-25",
+        "stale": false,
+        "reason": null
+      },
+      "listing": {
+        "security_name": "Strategy Inc 8.00% Series A Perpetual Strike Preferred Stock",
+        "exchange_code": "NASDAQ-GS",
+        "exchange": "Nasdaq Global Select Market",
+        "source": "https://api.nasdaq.com/api/quote/STRK/info?assetclass=stocks",
+        "as_of": "2026-11-27",
+        "cusip": null,
+        "isin": null,
+        "id_reason": "CUSIP and ISIN not yet sourced",
+        "fetched_at": "2026-11-27"
+      },
       "hold_odds": {
         "7": {
           "days": 7,
@@ -1845,17 +1967,18 @@
         "example": {
           "bot_sharpe": 1.0,
           "cash_share": 0.6,
-          "slice_of_cash": 0.25,
+          "slice_of_cash": 1.0,
           "bot_swings_pct": [
             10.0,
             20.0
           ],
           "correlation": 0.0,
-          "slice_of_account": 0.15,
+          "slice_of_account": 0.6,
           "sharpe_by_bot_swings": {
-            "10": 0.58,
-            "20": 0.8
-          }
+            "10": -0.13,
+            "20": 0.22
+          },
+          "extra_return_points": -13.26
         }
       },
       "backing": {
@@ -1876,6 +1999,7 @@
         "below_today_pct": 74.5,
         "below_record_pct": 87.9,
         "cash_years": 2.65,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
         "inputs": {
           "btc_usd": {
@@ -1981,7 +2105,7 @@
       "cross_check": "no issuer list",
       "flags": [
         "price_moves",
-        "issuer_sets_rate"
+        "fixed_rate"
       ],
       "profile": {
         "issuer": "Strategy",
@@ -2013,6 +2137,29 @@
         }
       },
       "dividends_source": "https://api.nasdaq.com/api/quote/STRD/dividends?assetclass=stocks",
+      "avg_value_30d_usd": {
+        "value": 6070961,
+        "unit": "usd",
+        "formula": "avg_volume_30d * close_usd",
+        "inputs": [
+          "avg_volume_30d",
+          "close_usd"
+        ],
+        "as_of": "2026-11-25",
+        "stale": false,
+        "reason": null
+      },
+      "listing": {
+        "security_name": "Strategy Inc 10.00% Series A Perpetual Stride Preferred Stock",
+        "exchange_code": "NASDAQ-GS",
+        "exchange": "Nasdaq Global Select Market",
+        "source": "https://api.nasdaq.com/api/quote/STRD/info?assetclass=stocks",
+        "as_of": "2026-11-27",
+        "cusip": null,
+        "isin": null,
+        "id_reason": "CUSIP and ISIN not yet sourced",
+        "fetched_at": "2026-11-27"
+      },
       "hold_odds": {
         "7": {
           "days": 7,
@@ -2271,17 +2418,18 @@
         "example": {
           "bot_sharpe": 1.0,
           "cash_share": 0.6,
-          "slice_of_cash": 0.25,
+          "slice_of_cash": 1.0,
           "bot_swings_pct": [
             10.0,
             20.0
           ],
           "correlation": 0.0,
-          "slice_of_account": 0.15,
+          "slice_of_account": 0.6,
           "sharpe_by_bot_swings": {
-            "10": 0.78,
-            "20": 0.91
-          }
+            "10": 0.21,
+            "20": 0.53
+          },
+          "extra_return_points": -5.55
         }
       },
       "backing": {
@@ -2303,6 +2451,7 @@
         "below_today_pct": 71.8,
         "below_record_pct": 86.6,
         "cash_years": 2.65,
+        "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
         "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
         "inputs": {
           "btc_usd": {
@@ -2423,7 +2572,8 @@
           "source": "https://www.strategy.com/",
           "fetched_at": "2026-11-27T19:38:50Z",
           "stale": false,
-          "reason": null
+          "reason": null,
+          "meaning": "the issuer's own figure: years of dividends its bitcoin and cash together would pay at today's bitcoin price. Not the same as backing.cash_years, which counts only cash set aside."
         },
         "btc_held": {
           "value": 851305.0,
