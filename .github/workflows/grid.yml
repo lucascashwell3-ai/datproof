@@ -37,6 +37,8 @@ jobs:
       feed_code: ${{ steps.feed.outputs.feed_code }}
       pages_code: ${{ steps.pages.outputs.pages_code }}
       backing_code: ${{ steps.backing.outputs.backing_code }}
+      rates_code: ${{ steps.rates.outputs.rates_code }}
+      brokers_code: ${{ steps.brokers.outputs.brokers_code }}
     steps:
       - uses: actions/checkout@v4
 
@@ -94,6 +96,27 @@ jobs:
           python -m datproof_feed.backing || code=$?
           [ "$code" = 0 ] || echo "::warning::crash-test inputs: a fetch or check failed (exit $code); last good values kept"
           echo "backing_code=$code" >> "$GITHUB_OUTPUT"
+      # Comparison rates (data/comparison_rates.json): the feed build below joins this file at
+      # publish time, so it runs first. A failed source or check (0-15% range, no 2-point one-day
+      # move, staleness) keeps the last good values and turns the run red through feed-check; it
+      # never stops this job.
+      - name: Comparison rates
+        id: rates
+        run: |
+          code=0
+          python -m datproof_feed.rates || code=$?
+          [ "$code" = 0 ] || echo "::warning::comparison rates: a source or check failed (exit $code); last good values kept"
+          echo "rates_code=$code" >> "$GITHUB_OUTPUT"
+      # Where-to-buy links (data/where_to_buy.json): a broker link that returns not-found is dropped
+      # from the page; a network error also fails the step. Never stops this job; feed-check turns
+      # the run red.
+      - name: Where-to-buy links
+        id: brokers
+        run: |
+          code=0
+          python -m datproof_feed.brokers || code=$?
+          [ "$code" = 0 ] || echo "::warning::where-to-buy links: a link check failed (exit $code); see the build job log"
+          echo "brokers_code=$code" >> "$GITHUB_OUTPUT"
       # Idle-cash feed (/v1/ files): tests first, then the build. A failure here never stops
       # this job or the site deploy; the feed-check job below turns the run red instead.
       # A dry run builds into a temp folder and never stamps.
@@ -136,7 +159,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md
+          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md site/llms.txt
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else
@@ -156,7 +179,8 @@ jobs:
           git status --short data/ site/
           echo "DRY RUN — pulls + build + checks passed, nothing committed or deployed" >> "$GITHUB_STEP_SUMMARY"
 
-  # Red run when the idle-cash feed, the crash-test inputs or the plain-text page failed, without holding
+  # Red run when the idle-cash feed, the crash-test inputs, the comparison rates, the where-to-buy links
+  # or the plain-text page failed, without holding
   # back the site deploy.
   feed-check:
     needs: build
@@ -167,6 +191,8 @@ jobs:
           code="${{ needs.build.outputs.feed_code }}"
           pages="${{ needs.build.outputs.pages_code }}"
           crash="${{ needs.build.outputs.backing_code }}"
+          rates="${{ needs.build.outputs.rates_code }}"
+          brokers="${{ needs.build.outputs.brokers_code }}"
           bad=0
           if [ "$code" != "0" ]; then
             echo "::error title=Idle-cash feed failed::feed step exit code ${code:-missing}; see the build job log"
@@ -178,6 +204,14 @@ jobs:
           fi
           if [ "$crash" != "0" ]; then
             echo "::error title=Crash-test inputs failed::backing step exit code ${crash:-missing}; last good values kept, see the build job log"
+            bad=1
+          fi
+          if [ "$rates" != "0" ]; then
+            echo "::error title=Comparison rates failed::rates step exit code ${rates:-missing}; last good values kept, see the build job log"
+            bad=1
+          fi
+          if [ "$brokers" != "0" ]; then
+            echo "::error title=Where-to-buy links failed::brokers step exit code ${brokers:-missing}; see the build job log"
             bad=1
           fi
           [ "$bad" = 0 ] || exit 1

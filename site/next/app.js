@@ -91,11 +91,12 @@
     var hurdle = tb === null ? null : tb * days / 365;
     var beat = hurdle === null ? null : res.filter(function (r) { return r > hurdle; }).length;
     var lost = res.filter(function (r) { return r < 0; }).length;
+    var ahead = res.filter(function (r) { return r > 0; }).length;
     return [{ days: days, holds: n, bought_from: hs[0][1], bought_to: hs[n - 1][1],
       closes_from: String(rows[0][0]).slice(0, 10),
       tbill_pct: tb, tbill_hold_pct: hurdle === null ? null : round(hurdle, 3),
       beat_tbill: beat, beat_tbill_pct: beat === null ? null : share(beat, n),
-      lost: lost, lost_pct: share(lost, n),
+      lost: lost, lost_pct: share(lost, n), ahead: ahead, ahead_pct: share(ahead, n),
       median_pct: round(median(res), 2), worst_pct: round(worst[0], 2), worst_bought: worst[1] }, null];
   }
   function tbillPct(feed) {
@@ -212,7 +213,6 @@
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   var SVGNS = "http://www.w3.org/2000/svg";
-  var CASH_SHARE = 0.6;  // the example account in "Better risk-adjusted returns"
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function day(iso) { if (!iso) return ""; var p = iso.slice(0, 10).split("-"); return +p[2] + " " + MONTHS[+p[1] - 1] + " " + p[0]; }
@@ -558,15 +558,6 @@
     var lab = seg.firstElementChild, W = seg.clientWidth, lw = lab ? lab.offsetWidth + 24 : 0;
     DZ.strip(seg, Math.max(0.35, Math.min(0.92, (W - lw) / W)));
   }
-  // Estimator: a dotted rule over the digital-credit result, a flat grey one over the T-bill result.
-  function inkCalc() {
-    $$("#calc-out .co").forEach(function (co) {
-      var rule = co.querySelector(".co-ink");
-      if (!rule) { rule = document.createElement("div"); rule.className = "co-ink"; rule.setAttribute("aria-hidden", "true"); co.insertBefore(rule, co.firstChild); }
-      if (co.classList.contains("dc") && DZ.ok && dithered()) DZ.strip(rule, 0.9);
-      else DZ.clear(rule);
-    });
-  }
 
   function bench(id) { return (feed.benchmarks || []).filter(function (b) { return b.id === id; })[0]; }
   function inst(t) { return (feed.instruments || []).filter(function (i) { return i.ticker === t; })[0]; }
@@ -580,29 +571,21 @@
   // ---------- 1. first screen ----------
   function renderHero() {
     var tb = tbillY(), inf = inflation(), dc = lead();
-    if (dc.length) {
-      var ys = dc.map(function (i) { return Math.round(v(i.yield_pct)); });
-      var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
-      $("#hl-range").textContent = (lo === hi ? lo : lo + "–" + hi) + "%";
-    }
     var foot = [];
-    if (tb !== null) foot.push("T-bills pay " + f1(tb) + "%.");
-    if (inf) foot.push("Inflation runs " + f1(v(inf)) + "%.");
+    foot.push("A year at today's rates and yields, before tax; price change left out.");
     $("#earn-foot").textContent = foot.join(" ");
-    var px = dc.map(function (i) { return i.close_usd.as_of; }).sort().pop();
-    $("#asof").textContent = "Data for " + day(feed.date) + (px ? " · prices at the " + day(px) + " close" : "") +
-      (inf ? " · inflation is US CPI, " + monthName(inf.month) + " " + inf.month.slice(0, 4) + " vs a year earlier" : "");
   }
 
+  function rateOf(id) {
+    var r = ((feed.comparison_rates || {}).rates || []).filter(function (x) { return x.id === id; })[0];
+    return r && has(r.yield_pct) ? v(r.yield_pct) : null;
+  }
   function earnRows() {
-    var rows = [], y = year(), tb = bench("tbill_4w"), mm = bench("mmf_vmfxx");
-    if (tb && has(tb.yield_pct)) rows.push({ name: "T-bill", note: "4-week, at today's rate", usd: AMOUNT * v(tb.yield_pct) / 100 });
-    if (mm && has(mm.yield_pct)) rows.push({ name: "Money market", note: "Vanguard VMFXX, at today's rate", usd: AMOUNT * v(mm.yield_pct) / 100 });
+    var rows = [], hys = rateOf("hys_top"), tb = tbillY();
+    if (hys !== null) rows.push({ name: "High-yield savings", note: "at today's rate", usd: AMOUNT * hys / 100 });
+    if (tb !== null) rows.push({ name: "T-bill", note: "4-week, at today's rate", usd: AMOUNT * tb / 100 });
     lead().forEach(function (i) {
-      var past = y && y.instruments.filter(function (r) { return r.ticker === i.ticker; })[0];
-      if (past && !past.skipped && past.dividends_usd > 0)
-        rows.push({ name: i.ticker, note: "dividends paid, past year", usd: past.dividends_usd, dc: true });
-      else rows.push({ name: i.ticker, note: "at today's rate", usd: AMOUNT * v(i.yield_pct) / 100, dc: true });
+      rows.push({ name: i.ticker, note: "at today's yield", usd: AMOUNT * v(i.yield_pct) / 100, dc: true });
     });
     return rows;
   }
@@ -654,25 +637,6 @@
   }
 
   // ---------- 2. the three ----------
-  function renderPanels() {
-    var tbY = tbillY();
-    $("#panels").innerHTML = lead().map(function (i) {
-      var y = v(i.yield_pct), pay = i.payments || {}, close = v(i.close_usd);
-      var times = tbY ? '<p class="p-x"><span class="num">' + n(y / tbY, 1) + "×</span> a T-bill</p>" : "";
-      var facts = [];
-      facts.push(i.schedule === "every business day" ? "Pays every business day" : "Pays " + esc(i.schedule || ""));
-      if (pay.in_a_row) facts.push('<b class="num">' + n(pay.in_a_row, 0) + "</b> dividends in a row");
-      if (close !== null) facts.push('Price today <b class="num">' + usd(close, 2) + "</b>");
-      return '<article class="panel">' +
-        '<div class="p-head"><h3 class="p-tk">' + esc(i.ticker) + '</h3><span class="p-iss">' + esc(i.issuer) + "</span></div>" +
-        '<p class="p-yield num">' + f1(y) + "%</p>" + times +
-        '<ul class="p-facts">' + facts.map(function (f) { return "<li>" + f + "</li>"; }).join("") + "</ul></article>";
-    }).join("");
-    var rest = (feed.instruments || []).filter(function (i) { return LEAD.indexOf(i.ticker) < 0 && has(i.yield_pct); });
-    $("#longer").innerHTML = rest.length ? '<span class="lg-t">Also covered: longer-term preferreds, paid quarterly.</span>' +
-      rest.map(function (i) { return '<span><b>' + esc(i.ticker) + '</b> <span class="num">' + f1(v(i.yield_pct)) + "% · " + usd(v(i.close_usd), 2) + "</span></span>"; }).join("") : "";
-  }
-
   // ---------- 3. liquid and steady ----------
   function nearShare(rows) { return rows.filter(function (r) { return Math.abs(r[1] - 100) <= 5; }).length / rows.length; }
 
@@ -684,12 +648,9 @@
       out.push({ i: i, rows: c.rows, divs: (c.dividends || []) });
     });
     if (!out.length) { $("#paid").hidden = true; return; }
-    var first = out[0];
-    $("#paid-sub").textContent = "Sell any trading day. " + first.i.ticker + " closed within $5 of $100 on " +
-      Math.round(nearShare(first.rows) * 100) + "% of trading days over the past year.";
     if (!wrap.children.length) {
       wrap.innerHTML = out.map(function (o) {
-        return '<div class="pc"><h3>' + esc(o.i.ticker) + '</h3><div class="chart" role="img"></div><p></p></div>';
+        return '<div class="pc"><h3>' + esc(o.i.ticker) + '</h3><div class="chart" role="img"></div></div>';
       }).join("");
     }
     out.forEach(function (o, k) {
@@ -736,139 +697,61 @@
       var keep = box.querySelector(":scope > canvas.dz-ov");
       box.innerHTML = ""; if (keep) box.appendChild(keep); box.appendChild(svg);
       if (DZ.ok && dithered()) DZ.area(box, W, H, rows.map(function (r) { return [X(r[0]), Y(r[1])]; }), mt + ph); else DZ.clear(box);
-      var none = !((o.i.payments || {}).gaps || []).length;
       var share = Math.round(nearShare(rows) * 100);
-      box.setAttribute("aria-label", o.i.ticker + " closing price over the past year, with " + paid.length + " dividends paid. Within $5 of $100 on " + share + "% of days. " + usd(last[1], 2) + " today.");
-      node.querySelector("p").innerHTML = "Within $5 of $100 on <b>" + share + "%</b> of days. " +
-        (none ? "<b>" + paid.length + "</b> of <b>" + paid.length + "</b> dividends paid." : "<b>" + paid.length + "</b> dividends paid.");
+      box.setAttribute("aria-label", o.i.ticker + " closing price over the past year, each dividend paid marked below. Within $5 of $100 on " + share + "% of days. " + usd(last[1], 2) + " at the last close.");
     });
   }
 
 
   // ---------- 3b. odds by holding time ----------
-  var ODDS_SPANS = [[7, "1 week"], [30, "1 month"], [90, "3 months"]];
-  function pctSigned(x) { return (x >= 0 ? "+" : "\u2212") + n(Math.abs(x), 1) + "%"; }
-  function renderOdds() {
-    var tb = tbillPct(feed), rows = [];
-    ["STRC", "SATA"].forEach(function (t) {
-      var c = closes[t];
-      if (!inst(t) || !c || !c.rows) return;
-      var ins = { closes: { rows: c.rows }, dividends: c.dividends };
-      var cells = ODDS_SPANS.map(function (sp) { return holdOdds(ins, sp[0], tb)[0]; });
-      if (cells.every(function (o) { return o && o.beat_tbill_pct !== null; })) rows.push({ t: t, cells: cells });
-    });
-    if (!rows.length) { $("#odds").hidden = true; return; }
-    $("#odds-out").innerHTML = '<table class="od"><caption class="vh">Share of past holds that beat a 4-week T-bill, by holding time</caption>' +
-      '<thead><tr><th scope="col"><span class="vh">Stock</span></th>' +
-      ODDS_SPANS.map(function (sp) { return '<th scope="col">' + sp[1] + "</th>"; }).join("") + "</tr></thead><tbody>" +
-      rows.map(function (r) {
-        return '<tr><th scope="row" class="od-tk">' + esc(r.t) + "</th>" + r.cells.map(function (o, k) {
-          var beat = Math.round(o.beat_tbill_pct), lost = Math.round(o.lost_pct);
-          return '<td data-span="' + ODDS_SPANS[k][1] + '"><span class="od-n num">' + beat + '%</span> <span class="od-l">beat a T-bill</span>' +
-            '<span class="od-bar" aria-hidden="true"><i style="width:' + beat + '%"></i></span>' +
-            '<span class="od-s">Lost money <b class="num">' + lost + '%</b> of the time</span>' +
-            '<span class="od-s od-s2">Typical result <b class="num">' + pctSigned(o.median_pct) + "</b></span></td>";
-        }).join("") + "</tr>";
-      }).join("") + "</tbody></table>";
-    var last = rows[0].cells[ODDS_SPANS.length - 1];
-    var worst = rows.map(function (r) { return r.t + " " + pctSigned(r.cells[ODDS_SPANS.length - 1].worst_pct); }).join(", ");
-    $("#odds-note").innerHTML = "Past results, closes from " + day(last.closes_from) + " to " + day(feed.date) +
-      ". A price drop can outweigh the dividends: the worst 3-month hold was " + worst + "." +
-      (inst("SATS") ? " SATS is too new to score." : "");
-  }
-
   // ---------- 4. better risk-adjusted returns ----------
-  function renderLift() {
-    var a = avgY();
-    if (a === null) { $("#lift").hidden = true; return; }
-    var cash = AMOUNT * CASH_SHARE, trade = AMOUNT - cash, extra = cash * a / 100;
-    var tw = (1 - CASH_SHARE) * 100, cw = CASH_SHARE * 100;
-    function bar(label, dc) {
-      return '<div class="lf-row' + (dc ? " dc" : "") + '"><p class="lf-name">' + label + "</p>" +
-        '<div class="lf-bar"><span class="lf-seg trade" style="width:' + tw + '%"><span>Trading ' + usd(trade) + "</span></span>" +
-        '<span class="lf-seg cash" style="width:' + cw + '%"><span>Idle cash ' + usd(cash) + "</span></span></div>" +
-        '<p class="lf-n num">' + (dc ? "+" + usd(extra) + "<small>a year</small>" : "$0<small>a year</small>") + "</p></div>";
-    }
-    $("#lift-out").innerHTML = bar("Cash at 0%", false) + bar("Cash in digital credit", true) +
-      '<p class="fine">Example: a ' + usd(AMOUNT) + " account that sits " + Math.round(cw) + "% in cash on average. Extra income from the idle part only, at " +
-      f1(a) + "%, today's average yield of " + leadNames() + ". That adds about " + f1(extra / AMOUNT * 100) + " points to the whole account's yearly return. Simple interest, before tax.</p>";
-    inkLift();
-  }
-
   // ---------- 5. backed by bitcoin and cash: written into the HTML by datproof_feed/pages.py ----------
 
   // ---------- 6. calculator ----------
   function parseNum(s) { var x = Number(String(s).replace(/[$,\s]/g, "")); return isFinite(x) ? x : NaN; }
-  function money(x) { return x >= 100 ? usd(x) : usd(x, 2); }
-  function renderCalc() {
-    var amount = parseNum($("#in-amount").value), out = $("#calc-out"), a = avgY(), tb = tbillY();
+  // Your situation: the same arithmetic as compare.situation in the feed code, from published figures only.
+  var HOLDS = { "1 month": 30, "3 months": 90, "6 months": 180, "1 year": 365 };
+  var HOLD_ADJ = { "1 month": "1-month", "3 months": "3-month", "6 months": "6-month", "1 year": "1-year" };
+  function sgn(x) { return (x >= 0 ? "+" : "\u2212") + f1(Math.abs(x)) + "%"; }
+  function money2(x) { return (x >= 0 ? "+" : "\u2212") + usd(Math.abs(x)); }
+  function rateNode(id) { return ((feed.comparison_rates || {}).rates || []).filter(function (x) { return x.id === id; })[0]; }
+  function renderSit() {
+    var amount = parseNum($("#in-amount").value), hold = $("#in-hold").value, sits = $("#in-sits").value;
+    var out = $("#calc-out"), days = HOLDS[hold];
     if (!(amount > 0)) { out.innerHTML = '<p class="fine">Enter an amount above $0.</p>'; return; }
-    if (a === null) { out.innerHTML = ""; return; }
-    function trio(y, cls, label) {
-      var yr = amount * y / 100;
-      return '<div class="co ' + cls + '"><p class="co-l">' + label + ' <span class="num">' + f1(y) + "%</span></p>" +
-        '<dl class="co-n"><div><dt>Per day</dt><dd class="num">' + money(yr / 365) + "</dd></div>" +
-        '<div><dt>Per month</dt><dd class="num">' + money(yr / 12) + "</dd></div>" +
-        '<div><dt>Per year</dt><dd class="num">' + money(yr) + "</dd></div></dl></div>";
+    var rn = rateNode(sits) || {}, rate = has(rn.yield_pct) ? v(rn.yield_pct) : null, label = (rn.label || "").split(",")[0];
+    var cash = rate === null ? null : Math.round(amount * rate / 100 * days / 365 * 100) / 100;
+    var cols = LEAD.map(inst).filter(function (i) { return !!i; });
+    function cell(t, big, small) {
+      return '<td data-l="' + esc(t) + '">' + (big ? '<span class="st-n num">' + esc(big) + "</span>" : "") +
+        (small ? '<span class="st-s">' + esc(small) + "</span>" : "") + "</td>";
     }
-    out.innerHTML = trio(a, "dc", "Digital credit") + (tb !== null ? trio(tb, "tb", "T-bill") : "");
-    inkCalc();
-    $("#calc-note").textContent = "Digital credit uses " + f1(a) + "%, the average of today's yields on " + leadNames() +
-      ". T-bill is the 4-week rate. At today's rates, simple interest, before tax. Prices move and issuers set the rates.";
-  }
-  function fromSlide() { $("#in-amount").value = n(+$("#in-slide").value, 0); renderCalc(); }
-  function fromInput() {
-    var x = parseNum($("#in-amount").value);
-    if (x > 0) $("#in-slide").value = Math.min(250000, Math.max(1000, x));
-    renderCalc();
+    function row(lbl, f) { return '<tr><th scope="row">' + esc(lbl) + "</th>" + cols.map(function (i) { var c = f(i); return cell(i.ticker, c[0], c[1]); }).join("") + "</tr>"; }
+    function div(i) { var y = v(i.yield_pct); return y === null ? null : Math.round(amount * y / 100 * days / 365 * 100) / 100; }
+    var body =
+      row("Dividends over " + hold, function (i) { var d = div(i); return d === null ? ["not available", ""] : [usd(d), "at " + f1(v(i.yield_pct)) + "% a year today"]; }) +
+      row(label + " earns", function () { return cash === null ? ["not available", rn.yield_pct && rn.yield_pct.reason || ""] : [usd(cash), "at " + n(rate, 2) + "%"]; }) +
+      row("Difference", function (i) { var d = div(i); return d === null || cash === null ? ["not available", ""] : [money2(Math.round((d - cash) * 100) / 100), ""]; }) +
+      row("Past " + HOLD_ADJ[hold] + " holds", function (i) {
+        var o = (i.hold_odds || {})[String(days)] || {};
+        if (o.reason || o.median_pct == null) return ["", "No record yet" + (o.first_results_around ? "; results begin around " + day(o.first_results_around) : "") + "."];
+        return [Math.round(o.ahead_pct) + "%", "came out ahead \u00b7 typical " + sgn(o.median_pct) + " \u00b7 worst " + sgn(o.worst_pct)];
+      }) +
+      row("Whole shares", function (i) {
+        var c = v(i.close_usd); if (c === null) return ["not available", ""];
+        var gap = Math.round((c - (i.par_usd || 100)) * 100) / 100;
+        return [n(Math.floor(amount / c), 0), "at " + usd(c, 2) + ", " + (gap < 0 ? usd(-gap, 2) + " under $100" : gap > 0 ? usd(gap, 2) + " over $100" : "at $100")];
+      }) +
+      '<tr class="st-buy"><th scope="row">Where to buy</th>' + cols.map(function (i) { return '<td data-l="' + esc(i.ticker) + '"><a href="#buy">Brokers for ' + esc(i.ticker) + "</a></td>"; }).join("") + "</tr>";
+    var head = cols.map(function (i) { return '<th scope="col">' + esc(i.ticker) + '<span class="st-iss">' + esc(i.issuer || "") + "</span></th>"; }).join("");
+    out.innerHTML = '<table class="st"><caption class="vh">Your situation: ' + esc(usd(amount)) + " for " + esc(hold) + ", now in " + esc(label.toLowerCase()) +
+      '. The same rows for STRC, SATA and SATS</caption><thead><tr><th scope="col"><span class="vh">Row</span></th>' + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+    $("#calc-note").textContent = "Dividends at today's yield, before tax, price change left out. Past holds are dividends plus price change. " +
+      (rn.label || "") + ": " + (rate === null ? "not available" : n(rate, 2) + "%, " + day(rn.yield_pct.as_of)) + ". What can go wrong is above.";
   }
 
   // ---------- 7. example exchange, from the compare tool ----------
-  function renderChat() {
-    var res = compare(feed, 8000, 90, 30, ["money_market", "preferred", "tbill"]);
-    var rows = res.options.filter(function (o) { return LEAD.indexOf(o.ticker) >= 0; });
-    var tb = res.benchmarks.filter(function (b) { return b.id === "tbill_4w"; })[0];
-    if (!rows.length) { $(".talk").hidden = true; return; }
-    var newer = rows.filter(function (o) { return o.flags.indexOf("short_history") >= 0; }).map(function (o) { return o.ticker; });
-    function line(name, y, inc, dc) {
-      return '<li class="' + (dc ? "dc" : "") + '"><span>' + esc(name) + '</span><span class="num">' + f1(y) + '%</span><span class="num">' + usd(inc) + "</span></li>";
-    }
-    $("#chat-bot").innerHTML = "<p>Over 90 days at today's rates, before tax:</p>" +
-      '<ul class="ans">' + rows.map(function (o) { return line(o.ticker, o.yield_pct, o.est_income_usd, true); }).join("") +
-      (tb && tb.yield_pct !== null ? line("4-week T-bill", tb.yield_pct, tb.est_income_usd, false) : "") + "</ul>" +
-      "<p>All three pay a dividend every business day and trade every market day. Prices move and the issuers set the rates" +
-      (newer.length ? "; " + newer.join(" and ") + (newer.length > 1 ? " are" : " is") + " newer, with a short record" : "") +
-      ". Tell me which, if any, and I'll set up the order for your approval.</p>";
-    $("#chat-tag").textContent = "Example from today's data, " + day(res.as_of);
-  }
-
   // ---------- 8. sources ----------
-  function renderSources() {
-    var items = [];
-    function add2(label, x) { if (x && x.source) items.push([label, x.source, x.as_of]); }
-    feed.benchmarks.forEach(function (b) { add2(b.name, b.yield_pct); });
-    if (feed.inflation_yoy_pct) add2("US CPI-U, all items (" + (feed.inflation_yoy_pct.month || "") + " vs " + (feed.inflation_yoy_pct.year_ago_month || "") + ")", feed.inflation_yoy_pct);
-    feed.instruments.forEach(function (i) {
-      add2(i.ticker + " closing price", i.close_usd);
-      add2(i.ticker + " dividend rate", i.stated_rate_pct);
-    });
-    LEAD.forEach(function (t) { var i = inst(t); if (i && i.dividends_source) items.push([t + " dividends paid", i.dividends_source, feed.date]); });
-    var st = (feed.backing || {}).static || {};
-    if (st.strategy && st.strategy.debt_usd) items.push(["Strategy debt", st.strategy.debt_usd.source, st.strategy.debt_usd.as_of]);
-    if (st.strategy && st.strategy.usd_reserve_usd) items.push(["Strategy USD Reserve", st.strategy.usd_reserve_usd.source, st.strategy.usd_reserve_usd.as_of]);
-    if (st.bitcoin_falls) items.push(["Bitcoin's past falls (daily closes)", st.bitcoin_falls.source, st.bitcoin_falls.as_of]);
-    ((st.comparison || {}).rows || []).forEach(function (r) { items.push([r.name + ", assets behind each $1 owed", r.source, r.as_of]); });
-    ((st.comparison || {}).no_ratio || []).forEach(function (r) { items.push([r.name, r.source, r.as_of]); });
-    ((feed.coverage || {}).issuers || []).forEach(function (c) {
-      add2(c.issuer + " years of dividends covered", c.years_of_dividends_covered);
-      add2(c.issuer + " bitcoin held", c.btc_held);
-      add2(c.issuer + " dividend reserve", c.dividend_reserve_months);
-    });
-    $("#sources-list").innerHTML = "<ul>" + items.map(function (s) {
-      return "<li>" + esc(s[0]) + ': <a href="' + esc(s[1]) + '" rel="noopener">' + esc(host(s[1])) + "</a>" + (s[2] ? ", " + day(s[2]) : "") + "</li>";
-    }).join("") + '<li>Method for every number: <a href="../v1/method.json">method.json</a></li></ul>';
-  }
-
   // ---------- setup tabs and copy ----------
   function selectTab(tab, focus) {
     $$('[role="tab"]').forEach(function (t) {
@@ -920,19 +803,20 @@
   function start(d) {
     feed = d[0]; scen = d[1];
     [d[2], d[3]].forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
-    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderOdds(); renderLift(); renderCalc(); renderChat(); renderSources();
-    $("#in-amount").addEventListener("input", fromInput);
-    $("#in-slide").addEventListener("input", fromSlide);
+    // Every figure outside the charts and the estimator is written into the HTML by datproof_feed/pages.py.
+    // The default case of "your situation" is written into the HTML; the form redraws it only when changed.
+    renderHero(); drawEarn(true); drawPaid(); inkLift();
+    ["#in-amount", "#in-hold", "#in-sits"].forEach(function (id) { $(id).addEventListener(id === "#in-amount" ? "input" : "change", renderSit); });
     $("#f-calc").addEventListener("submit", function (e) { e.preventDefault(); });
     var w = window.innerWidth, t;
     window.addEventListener("resize", function () {
       if (window.innerWidth === w) return; w = window.innerWidth;
-      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); drawHeroDither(); drawEdgeDither(); inkLift(); inkCalc(); }, 120);
+      clearTimeout(t); t = setTimeout(function () { drawEarn(false); drawPaid(); drawHeroDither(); drawEdgeDither(); inkLift(); }, 120);
     });
   }
 
   initTabs(); drawHeroDither(); drawEdgeDither();
   load("../v1/").catch(function () { return load("./v1-sample/"); }).then(start).catch(function (e) {
-    $("#asof").innerHTML = '<span class="err">The feed did not load (' + esc(e.message) + "). Read the JSON files directly.</span>";
+    $("#earn-foot").innerHTML = '<span class="err">The charts did not load (' + esc(e.message) + "). The figures on this page are written in; the JSON files have the rest.</span>";
   });
 })();

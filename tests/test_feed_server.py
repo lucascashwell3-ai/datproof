@@ -10,7 +10,7 @@ import sys
 import pytest
 
 from datproof_feed import publish, server
-from datproof_feed.compare import compare
+from datproof_feed.compare import situation
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FIX = ROOT / "tests" / "fixtures" / "feed"
@@ -32,7 +32,7 @@ def talk(feed_dir, *messages):
 
 
 def test_initialize_list_and_call_compare_over_stdio(feed_dir):
-    args = {"amount_usd": 20000, "days": 90, "max_drop_pct": 10, "kinds": ["preferred", "tbill"]}
+    args = {"amount_usd": 20000, "hold": "3 months", "sits_in": "savings_avg"}
     replies = talk(feed_dir,
                    {"jsonrpc": "2.0", "id": 1, "method": "initialize",
                     "params": {"protocolVersion": "2025-03-26", "capabilities": {}, "clientInfo": {"name": "t"}}},
@@ -47,13 +47,13 @@ def test_initialize_list_and_call_compare_over_stdio(feed_dir):
     res = replies[2]["result"]
     assert res["isError"] is False
     published = json.loads((feed_dir / "instruments.json").read_text())
-    for ins in published["instruments"]:  # the server merges each instrument's closes and dividends
-        one = json.loads((feed_dir / "instrument" / f"{ins['ticker']}.json").read_text())
-        ins.update({k: one[k] for k in ("closes", "dividends") if k in one})
     got = json.loads(res["content"][0]["text"])
     assert got["feed_date"] == published["date"]  # every answer carries the feed's date
     got = {k: v for k, v in got.items() if not k.startswith("feed_")}
-    assert got == compare(published, 20000, 90, 10, ["preferred", "tbill"])
+    want = situation(published, 20000, "3 months", "savings_avg")
+    want["settlement"] = published["where_to_buy"]["settlement"]
+    assert got == want
+    assert [c["ticker"] for c in got["columns"]] == ["STRC", "SATA", "SATS"]  # fixed order, all three
 
 
 def test_other_tools_ping_and_errors(feed_dir):
@@ -72,10 +72,13 @@ def test_other_tools_ping_and_errors(feed_dir):
     assert replies[5]["error"]["code"] == -32601
 
 
-def test_compare_defaults_to_every_kind(feed_dir, monkeypatch):
+def test_compare_days_round_to_a_hold_and_max_drop_never_hides_a_row(feed_dir, monkeypatch):
     monkeypatch.setenv("DATPROOF_FEED", str(feed_dir))
-    got = server.call_tool("compare", {"amount_usd": 1000, "days": 30, "max_drop_pct": 5})
-    assert all(b["holdable"] for b in got["benchmarks"])
+    got = server.call_tool("compare", {"amount_usd": 1000, "days": 100, "max_drop_pct": 5})
+    assert got["inputs"]["hold"] == "3 months" and got["inputs"]["days_asked"] == 100
+    assert [c["ticker"] for c in got["columns"]] == ["STRC", "SATA", "SATS"]
+    assert all("within_max_drop" in c for c in got["columns"])
+    assert got["inputs"]["sits_in"] == "hys_top"  # the default comparison: high-yield savings
 
 
 def test_missing_feed_is_a_tool_error_not_a_crash(tmp_path, monkeypatch):

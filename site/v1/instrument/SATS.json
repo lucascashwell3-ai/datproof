@@ -432,29 +432,34 @@
     "as_of": "2026-11-27",
     "cusip": null,
     "isin": null,
-    "id_reason": "CUSIP and ISIN not yet sourced",
+    "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
     "fetched_at": "2026-11-27"
   },
   "hold_odds": {
     "7": {
       "days": 7,
-      "reason": "not enough history: 24 past holds of 7 days fit in 29 trading days of closes; 60 are needed"
+      "reason": "not enough history: 24 past holds of 7 days fit in 29 trading days of closes; 60 are needed",
+      "first_results_around": "2027-01-14"
     },
     "30": {
       "days": 30,
-      "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed"
+      "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed",
+      "first_results_around": "2027-02-06"
     },
     "90": {
       "days": 90,
-      "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed",
+      "first_results_around": "2027-04-07"
     },
     "180": {
       "days": 180,
-      "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed",
+      "first_results_around": "2027-07-06"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 29 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 29 trading days of closes; 60 are needed",
+      "first_results_around": "2028-01-07"
     }
   },
   "by_buy_price": {

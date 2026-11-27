@@ -847,6 +847,8 @@
               "beat_tbill_pct": 85.1,
               "lost": 18,
               "lost_pct": 9.6,
+              "ahead": 170,
+              "ahead_pct": 90.4,
               "median_pct": 4.69,
               "worst_pct": -11.77,
               "worst_bought": "2026-08-24"
@@ -897,6 +899,8 @@
               "beat_tbill_pct": 67.6,
               "lost": 58,
               "lost_pct": 30.9,
+              "ahead": 130,
+              "ahead_pct": 69.1,
               "median_pct": 3.14,
               "worst_pct": -22.53,
               "worst_bought": "2026-03-30"
@@ -947,6 +951,8 @@
               "beat_tbill_pct": 50.5,
               "lost": 81,
               "lost_pct": 43.1,
+              "ahead": 107,
+              "ahead_pct": 56.9,
               "median_pct": 1.21,
               "worst_pct": -28.39,
               "worst_bought": "2026-03-27"
@@ -997,6 +1003,8 @@
               "beat_tbill_pct": 50.5,
               "lost": 87,
               "lost_pct": 46.3,
+              "ahead": 101,
+              "ahead_pct": 53.7,
               "median_pct": 1.19,
               "worst_pct": -8.46,
               "worst_bought": "2026-03-30"
@@ -1047,6 +1055,8 @@
               "beat_tbill_pct": 33.5,
               "lost": 121,
               "lost_pct": 64.4,
+              "ahead": 67,
+              "ahead_pct": 35.6,
               "median_pct": -5.59,
               "worst_pct": -25.82,
               "worst_bought": "2026-03-27"
@@ -1403,6 +1413,8 @@
               "beat_tbill_pct": 89.7,
               "lost": 8,
               "lost_pct": 6.3,
+              "ahead": 118,
+              "ahead_pct": 93.7,
               "median_pct": 8.57,
               "worst_pct": -8.19,
               "worst_bought": "2026-05-26"
@@ -1453,6 +1465,8 @@
               "beat_tbill_pct": 60.3,
               "lost": 36,
               "lost_pct": 28.6,
+              "ahead": 90,
+              "ahead_pct": 71.4,
               "median_pct": 4.62,
               "worst_pct": -13.65,
               "worst_bought": "2025-12-29"
@@ -1504,6 +1518,8 @@
               "beat_tbill_pct": 62.7,
               "lost": 33,
               "lost_pct": 26.2,
+              "ahead": 93,
+              "ahead_pct": 73.8,
               "median_pct": 3.5,
               "worst_pct": -18.92,
               "worst_bought": "2025-12-30"
@@ -1554,6 +1570,8 @@
               "beat_tbill_pct": 19.8,
               "lost": 90,
               "lost_pct": 71.4,
+              "ahead": 36,
+              "ahead_pct": 28.6,
               "median_pct": -3.21,
               "worst_pct": -24.01,
               "worst_bought": "2025-12-30"
@@ -1605,6 +1623,8 @@
               "beat_tbill_pct": 18.3,
               "lost": 101,
               "lost_pct": 80.2,
+              "ahead": 25,
+              "ahead_pct": 19.8,
               "median_pct": -7.44,
               "worst_pct": -29.21,
               "worst_bought": "2025-12-29"

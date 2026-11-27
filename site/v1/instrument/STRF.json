@@ -1182,6 +1182,8 @@
       "beat_tbill_pct": 48.0,
       "lost": 117,
       "lost_pct": 47.6,
+      "ahead": 128,
+      "ahead_pct": 52.0,
       "median_pct": 0.04,
       "worst_pct": -6.23,
       "worst_bought": "2026-11-13"
@@ -1198,6 +1200,8 @@
       "beat_tbill_pct": 47.2,
       "lost": 110,
       "lost_pct": 48.0,
+      "ahead": 119,
+      "ahead_pct": 52.0,
       "median_pct": 0.15,
       "worst_pct": -14.21,
       "worst_bought": "2026-05-27"
@@ -1214,6 +1218,8 @@
       "beat_tbill_pct": 50.5,
       "lost": 87,
       "lost_pct": 46.3,
+      "ahead": 101,
+      "ahead_pct": 53.7,
       "median_pct": 1.19,
       "worst_pct": -8.46,
       "worst_bought": "2026-03-30"
@@ -1230,13 +1236,16 @@
       "beat_tbill_pct": 60.3,
       "lost": 36,
       "lost_pct": 28.6,
+      "ahead": 90,
+      "ahead_pct": 71.4,
       "median_pct": 4.62,
       "worst_pct": -13.65,
       "worst_bought": "2025-12-29"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+      "first_results_around": "2027-02-24"
     }
   },
   "by_buy_price": {

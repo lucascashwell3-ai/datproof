@@ -27,24 +27,30 @@ MAX_AGE_BUSINESS_DAYS = 2  # older than this and every answer says so
 
 TOOLS = [
     {"name": "compare",
-     "description": "Line up today's places for idle US-dollar cash: bitcoin-backed preferred stocks "
-                    "that fit the owner's limits, beside the T-bill, money market and USDC lending "
-                    "benchmarks. Each option carries hold odds for exactly the days asked (how past holds "
-                    "of that length turned out: share that beat a T-bill, share that lost money, middle "
-                    "and worst result), what it is built for (fixed or variable rate, whether the issuer "
-                    "aims to keep the price near $100, pay schedule, each from the issuer's filing), "
-                    "yield, estimated income (0 with the reason when no payment lands inside the days) "
-                    "and risk flags. Options with hold odds come first, by middle result; `summary` has "
-                    "one quotable sentence per option. Match the instrument to how long the cash will "
-                    "sit. Every number has its source and date. Facts and arithmetic only; not advice.",
+     "description": "What idle cash would earn: for a sum of US-dollar cash, how long it can sit (1 month, "
+                    "3 months, 6 months or 1 year) and where it sits today (checking, savings, high-yield "
+                    "savings, 12-month CD, money market fund, T-bill or broker cash), returns the same rows for "
+                    "STRC, SATA and SATS, bitcoin-backed preferred stocks that pay a dividend every business "
+                    "day: dividends over that time at today's yield, what the cash earns where it sits now (a "
+                    "named, sourced rate), the difference, how past holds of that length turned out (dividends "
+                    "plus price change: share that came out ahead, typical, worst; or the date results begin), "
+                    "whole shares at the last close, the price against $100, and links to brokers' own pages "
+                    "for each ticker. Fixed order, no ranking. Use it for questions like 'where should idle "
+                    "cash go?' or 'what would I earn on $8,000 for three months?'. Every figure carries its "
+                    "date and source. Facts and arithmetic only; not advice; it never places an order.",
      "inputSchema": {"type": "object", "properties": {
-         "amount_usd": {"type": "number", "exclusiveMinimum": 0, "description": "cash to place, in US dollars"},
-         "days": {"type": "integer", "minimum": 1, "description": "how long it can stay placed"},
+         "amount_usd": {"type": "number", "exclusiveMinimum": 0, "description": "cash, in US dollars (default 10000)"},
+         "hold": {"type": "string", "enum": list(cmp.HOLDS),
+                  "description": "how long the cash can sit (default 3 months)"},
+         "days": {"type": "integer", "minimum": 1,
+                  "description": "alternative to hold: days the cash can sit, rounded to the nearest of 30, 90, 180, 365"},
+         "sits_in": {"type": "string", "enum": list(cmp.SITS_IN),
+                     "description": "where the cash sits today: " + ", ".join(f"{k} = {v}" for k, v in cmp.SITS_IN.items())
+                                    + " (default hys_top)"},
          "max_drop_pct": {"type": "number", "minimum": 0,
-                          "description": "biggest past-year price fall the owner accepts, in percent"},
-         "kinds": {"type": "array", "items": {"type": "string", "enum": list(cmp.KINDS)},
-                   "description": "what the account can hold (default: all kinds)"}},
-         "required": ["amount_usd", "days", "max_drop_pct"]}},
+                          "description": "optional: biggest past-year price fall the owner accepts, in percent; "
+                                         "each row then says whether its past-year fall was within it"}},
+         "required": []}},
     {"name": "instrument",
      "description": "Everything the feed knows about one preferred stock today, including its dividends.",
      "inputSchema": {"type": "object", "properties": {
@@ -139,14 +145,44 @@ def feed_with_history() -> dict:
     return feed
 
 
+def _hold_for(args: dict):
+    if args.get("hold") is not None:
+        return args["hold"]
+    d = args.get("days")
+    if d is None:
+        return None
+    if isinstance(d, bool) or not isinstance(d, int) or d < 1:
+        raise ToolError("days must be a whole number of days, 1 or more")
+    return min(cmp.HOLDS, key=lambda h: abs(cmp.HOLDS[h] - d))
+
+
+def situation_answer(args: dict) -> dict:
+    feed = load("instruments.json")
+    try:
+        out = cmp.situation(feed, args.get("amount_usd"), _hold_for(args), args.get("sits_in"))
+    except ValueError as e:
+        raise ToolError(str(e)) from e
+    if args.get("days") is not None and args.get("hold") is None:
+        out["inputs"]["days_asked"] = args["days"]
+    m = args.get("max_drop_pct")
+    if m is not None:
+        if isinstance(m, bool) or not isinstance(m, (int, float)) or m < 0:
+            raise ToolError("max_drop_pct must be a number, 0 or more")
+        for c in out["columns"]:
+            ins = next((i for i in feed.get("instruments", []) if i.get("ticker") == c["ticker"]), {})
+            w = (ins.get("worst_drop_pct") or {}).get("value")
+            c["worst_drop_pct"] = w
+            c["within_max_drop"] = None if w is None else w <= m
+    buy = feed.get("where_to_buy") or {}
+    if buy.get("settlement"):
+        out["settlement"] = buy["settlement"]
+    return out
+
+
 def call_tool(name: str, args: dict):
     price_gate(name)
     if name == "compare":
-        try:
-            return cmp.compare(feed_with_history(), args.get("amount_usd"), args.get("days"),
-                               args.get("max_drop_pct"), list(args.get("kinds") or cmp.KINDS))
-        except ValueError as e:
-            raise ToolError(str(e)) from e
+        return situation_answer(args)
     if name == "instrument":
         t = str(args.get("ticker", "")).strip().upper()
         if not TICKER.match(t):
@@ -178,9 +214,12 @@ def handle(msg: dict) -> dict | None:
     if method == "initialize":
         return ok({"protocolVersion": params.get("protocolVersion") or FALLBACK_PROTOCOL,
                    "capabilities": {"tools": {"listChanged": False}}, "serverInfo": SERVER_INFO,
-                   "instructions": "Facts and arithmetic on where idle cash can sit. Not advice. "
-                                   "Show benchmarks, risk flags and hold odds with every yield. Match "
-                                   "the instrument to how long the cash will sit."})
+                   "instructions": "Facts and arithmetic on where idle cash can sit. Not advice: it never "
+                                   "chooses for anyone and never produces an order. Show the same rows for "
+                                   "STRC, SATA and SATS in that order, with each figure's date and source, "
+                                   "and say once what can go wrong: prices move with bitcoin, issuers can "
+                                   "change rates, these are not bank deposits, past results do not predict "
+                                   "future results."})
     if method == "ping":
         return ok({})
     if method == "tools/list":

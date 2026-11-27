@@ -1846,7 +1846,7 @@
     "as_of": "2026-11-27",
     "cusip": null,
     "isin": null,
-    "id_reason": "CUSIP and ISIN not yet sourced",
+    "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
     "fetched_at": "2026-11-27"
   },
   "hold_odds": {
@@ -1862,6 +1862,8 @@
       "beat_tbill_pct": 64.2,
       "lost": 78,
       "lost_pct": 31.7,
+      "ahead": 166,
+      "ahead_pct": 67.5,
       "median_pct": 0.34,
       "worst_pct": -14.29,
       "worst_bought": "2026-06-18"
@@ -1878,6 +1880,8 @@
       "beat_tbill_pct": 69.0,
       "lost": 63,
       "lost_pct": 27.5,
+      "ahead": 166,
+      "ahead_pct": 72.5,
       "median_pct": 1.47,
       "worst_pct": -14.96,
       "worst_bought": "2026-05-26"
@@ -1894,6 +1898,8 @@
       "beat_tbill_pct": 85.1,
       "lost": 18,
       "lost_pct": 9.6,
+      "ahead": 170,
+      "ahead_pct": 90.4,
       "median_pct": 4.69,
       "worst_pct": -11.77,
       "worst_bought": "2026-08-24"
@@ -1910,13 +1916,16 @@
       "beat_tbill_pct": 89.7,
       "lost": 8,
       "lost_pct": 6.3,
+      "ahead": 118,
+      "ahead_pct": 93.7,
       "median_pct": 8.57,
       "worst_pct": -8.19,
       "worst_bought": "2026-05-26"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+      "first_results_around": "2027-02-24"
     }
   },
   "by_buy_price": {

@@ -132,7 +132,7 @@
         "as_of": "2026-11-27",
         "cusip": null,
         "isin": null,
-        "id_reason": "CUSIP and ISIN not yet sourced",
+        "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
         "fetched_at": "2026-11-27"
       },
       "hold_odds": {
@@ -148,6 +148,8 @@
           "beat_tbill_pct": 61.0,
           "lost": 64,
           "lost_pct": 26.0,
+          "ahead": 176,
+          "ahead_pct": 71.5,
           "median_pct": 0.25,
           "worst_pct": -14.56,
           "worst_bought": "2026-06-18"
@@ -164,6 +166,8 @@
           "beat_tbill_pct": 75.1,
           "lost": 46,
           "lost_pct": 20.1,
+          "ahead": 183,
+          "ahead_pct": 79.9,
           "median_pct": 1.05,
           "worst_pct": -23.84,
           "worst_bought": "2026-05-27"
@@ -180,6 +184,8 @@
           "beat_tbill_pct": 67.6,
           "lost": 58,
           "lost_pct": 30.9,
+          "ahead": 130,
+          "ahead_pct": 69.1,
           "median_pct": 3.14,
           "worst_pct": -22.53,
           "worst_bought": "2026-03-30"
@@ -196,13 +202,16 @@
           "beat_tbill_pct": 62.7,
           "lost": 33,
           "lost_pct": 26.2,
+          "ahead": 93,
+          "ahead_pct": 73.8,
           "median_pct": 3.5,
           "worst_pct": -18.92,
           "worst_bought": "2025-12-30"
         },
         "365": {
           "days": 365,
-          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+          "first_results_around": "2027-02-24"
         }
       },
       "by_buy_price": {
@@ -581,7 +590,7 @@
         "as_of": "2026-11-27",
         "cusip": null,
         "isin": null,
-        "id_reason": "CUSIP and ISIN not yet sourced",
+        "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
         "fetched_at": "2026-11-27"
       },
       "hold_odds": {
@@ -597,6 +606,8 @@
           "beat_tbill_pct": 64.2,
           "lost": 78,
           "lost_pct": 31.7,
+          "ahead": 166,
+          "ahead_pct": 67.5,
           "median_pct": 0.34,
           "worst_pct": -14.29,
           "worst_bought": "2026-06-18"
@@ -613,6 +624,8 @@
           "beat_tbill_pct": 69.0,
           "lost": 63,
           "lost_pct": 27.5,
+          "ahead": 166,
+          "ahead_pct": 72.5,
           "median_pct": 1.47,
           "worst_pct": -14.96,
           "worst_bought": "2026-05-26"
@@ -629,6 +642,8 @@
           "beat_tbill_pct": 85.1,
           "lost": 18,
           "lost_pct": 9.6,
+          "ahead": 170,
+          "ahead_pct": 90.4,
           "median_pct": 4.69,
           "worst_pct": -11.77,
           "worst_bought": "2026-08-24"
@@ -645,13 +660,16 @@
           "beat_tbill_pct": 89.7,
           "lost": 8,
           "lost_pct": 6.3,
+          "ahead": 118,
+          "ahead_pct": 93.7,
           "median_pct": 8.57,
           "worst_pct": -8.19,
           "worst_bought": "2026-05-26"
         },
         "365": {
           "days": 365,
-          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+          "first_results_around": "2027-02-24"
         }
       },
       "by_buy_price": {
@@ -1037,29 +1055,34 @@
         "as_of": "2026-11-27",
         "cusip": null,
         "isin": null,
-        "id_reason": "CUSIP and ISIN not yet sourced",
+        "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
         "fetched_at": "2026-11-27"
       },
       "hold_odds": {
         "7": {
           "days": 7,
-          "reason": "not enough history: 24 past holds of 7 days fit in 29 trading days of closes; 60 are needed"
+          "reason": "not enough history: 24 past holds of 7 days fit in 29 trading days of closes; 60 are needed",
+          "first_results_around": "2027-01-14"
         },
         "30": {
           "days": 30,
-          "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed"
+          "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed",
+          "first_results_around": "2027-02-06"
         },
         "90": {
           "days": 90,
-          "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed",
+          "first_results_around": "2027-04-07"
         },
         "180": {
           "days": 180,
-          "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed",
+          "first_results_around": "2027-07-06"
         },
         "365": {
           "days": 365,
-          "reason": "not enough history: 0 past holds of 365 days fit in 29 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 365 days fit in 29 trading days of closes; 60 are needed",
+          "first_results_around": "2028-01-07"
         }
       },
       "by_buy_price": {
@@ -1275,6 +1298,8 @@
           "beat_tbill_pct": 48.0,
           "lost": 117,
           "lost_pct": 47.6,
+          "ahead": 128,
+          "ahead_pct": 52.0,
           "median_pct": 0.04,
           "worst_pct": -6.23,
           "worst_bought": "2026-11-13"
@@ -1291,6 +1316,8 @@
           "beat_tbill_pct": 47.2,
           "lost": 110,
           "lost_pct": 48.0,
+          "ahead": 119,
+          "ahead_pct": 52.0,
           "median_pct": 0.15,
           "worst_pct": -14.21,
           "worst_bought": "2026-05-27"
@@ -1307,6 +1334,8 @@
           "beat_tbill_pct": 50.5,
           "lost": 87,
           "lost_pct": 46.3,
+          "ahead": 101,
+          "ahead_pct": 53.7,
           "median_pct": 1.19,
           "worst_pct": -8.46,
           "worst_bought": "2026-03-30"
@@ -1323,13 +1352,16 @@
           "beat_tbill_pct": 60.3,
           "lost": 36,
           "lost_pct": 28.6,
+          "ahead": 90,
+          "ahead_pct": 71.4,
           "median_pct": 4.62,
           "worst_pct": -13.65,
           "worst_bought": "2025-12-29"
         },
         "365": {
           "days": 365,
-          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+          "first_results_around": "2027-02-24"
         }
       },
       "by_buy_price": {
@@ -1722,6 +1754,8 @@
           "beat_tbill_pct": 45.9,
           "lost": 129,
           "lost_pct": 52.4,
+          "ahead": 116,
+          "ahead_pct": 47.2,
           "median_pct": -0.23,
           "worst_pct": -14.55,
           "worst_bought": "2026-06-18"
@@ -1738,6 +1772,8 @@
           "beat_tbill_pct": 45.9,
           "lost": 121,
           "lost_pct": 52.8,
+          "ahead": 108,
+          "ahead_pct": 47.2,
           "median_pct": -1.77,
           "worst_pct": -27.29,
           "worst_bought": "2026-05-26"
@@ -1754,6 +1790,8 @@
           "beat_tbill_pct": 33.5,
           "lost": 121,
           "lost_pct": 64.4,
+          "ahead": 67,
+          "ahead_pct": 35.6,
           "median_pct": -5.59,
           "worst_pct": -25.82,
           "worst_bought": "2026-03-27"
@@ -1770,13 +1808,16 @@
           "beat_tbill_pct": 18.3,
           "lost": 101,
           "lost_pct": 80.2,
+          "ahead": 25,
+          "ahead_pct": 19.8,
           "median_pct": -7.44,
           "worst_pct": -29.21,
           "worst_bought": "2025-12-29"
         },
         "365": {
           "days": 365,
-          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+          "first_results_around": "2027-02-24"
         }
       },
       "by_buy_price": {
@@ -2173,6 +2214,8 @@
           "beat_tbill_pct": 49.2,
           "lost": 123,
           "lost_pct": 50.0,
+          "ahead": 122,
+          "ahead_pct": 49.6,
           "median_pct": -0.06,
           "worst_pct": -19.61,
           "worst_bought": "2026-06-18"
@@ -2189,6 +2232,8 @@
           "beat_tbill_pct": 42.8,
           "lost": 127,
           "lost_pct": 55.5,
+          "ahead": 102,
+          "ahead_pct": 44.5,
           "median_pct": -0.96,
           "worst_pct": -28.47,
           "worst_bought": "2026-05-26"
@@ -2205,6 +2250,8 @@
           "beat_tbill_pct": 50.5,
           "lost": 81,
           "lost_pct": 43.1,
+          "ahead": 107,
+          "ahead_pct": 56.9,
           "median_pct": 1.21,
           "worst_pct": -28.39,
           "worst_bought": "2026-03-27"
@@ -2221,13 +2268,16 @@
           "beat_tbill_pct": 19.8,
           "lost": 90,
           "lost_pct": 71.4,
+          "ahead": 36,
+          "ahead_pct": 28.6,
           "median_pct": -3.21,
           "worst_pct": -24.01,
           "worst_bought": "2025-12-30"
         },
         "365": {
           "days": 365,
-          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+          "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+          "first_results_around": "2027-02-24"
         }
       },
       "by_buy_price": {
@@ -2853,8 +2903,7 @@
             "value": 1.88,
             "as_of": "2026-09-30",
             "basis": "asset coverage the Investment Company Act requires it to publish",
-            "source": "https://www.sec.gov/Archives/edgar/data/1287750/000162828026067383/arcc-20260930.htm",
-            "fetched_at": "2026-11-26"
+            "source": "https://www.sec.gov/Archives/edgar/data/1287750/000162828026067383/arcc-20260930.htm"
           },
           {
             "name": "Blue Owl Capital",
@@ -2863,32 +2912,7 @@
             "value": 1.84,
             "as_of": "2026-09-30",
             "basis": "asset coverage the Investment Company Act requires it to publish",
-            "source": "https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm",
-            "fetched_at": "2026-11-26"
-          },
-          {
-            "name": "AT&T",
-            "ticker": "T",
-            "kind": "corporate bonds",
-            "value": 1.38,
-            "as_of": "2026-09-30",
-            "assets_usd": 445900000000.0,
-            "owed_usd": 323100000000.0,
-            "basis": "total assets / (total assets - equity including noncontrolling interest), 10-Q",
-            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000732717.json",
-            "fetched_at": "2026-11-26"
-          },
-          {
-            "name": "Verizon",
-            "ticker": "VZ",
-            "kind": "corporate bonds",
-            "value": 1.35,
-            "as_of": "2026-09-30",
-            "assets_usd": 415500000000.0,
-            "owed_usd": 308200000000.0,
-            "basis": "total assets / total liabilities, 10-Q",
-            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000732712.json",
-            "fetched_at": "2026-11-26"
+            "source": "https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm"
           },
           {
             "name": "US credit unions",
@@ -2898,8 +2922,7 @@
             "assets_usd": 2498900000000.0,
             "owed_usd": 2213600000000.0,
             "basis": "total assets / (total assets - net worth), NCUA quarterly data summary",
-            "source": "https://ncua.gov/files/publications/analysis/quarterly-data-summary-2026-Q2.pdf",
-            "fetched_at": "2026-11-26"
+            "source": "https://ncua.gov/files/publications/analysis/quarterly-data-summary-2026-Q2.pdf"
           },
           {
             "name": "US banks",
@@ -2909,8 +2932,7 @@
             "assets_usd": 26649700000000.0,
             "owed_usd": 24081400000000.0,
             "basis": "total assets / total liabilities, FDIC Quarterly Banking Profile",
-            "source": "https://www.fdic.gov/quarterly-banking-profile/quarterly-banking-profile-q3-2026",
-            "fetched_at": "2026-11-26"
+            "source": "https://www.fdic.gov/quarterly-banking-profile/quarterly-banking-profile-q3-2026"
           },
           {
             "name": "JPMorgan Chase preferred",
@@ -2921,8 +2943,7 @@
             "assets_usd": 5091500000000.0,
             "owed_usd": 4740200000000.0,
             "basis": "total assets / (total liabilities + preferred stock), 10-Q",
-            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json",
-            "fetched_at": "2026-11-26"
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json"
           }
         ],
         "no_ratio": [
@@ -2934,6 +2955,342 @@
           }
         ]
       }
+    }
+  },
+  "comparison_rates": {
+    "fetched_at": "2026-11-27T21:21:10Z",
+    "rates": [
+      {
+        "id": "checking_avg",
+        "label": "Checking, national average",
+        "yield_pct": {
+          "value": 0.07,
+          "unit": "pct",
+          "as_of": "2026-11-16",
+          "source": "https://www.fdic.gov/national-rates-and-rate-caps",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "savings_avg",
+        "label": "Savings, national average",
+        "yield_pct": {
+          "value": 0.39,
+          "unit": "pct",
+          "as_of": "2026-11-16",
+          "source": "https://www.fdic.gov/national-rates-and-rate-caps",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "hys_top",
+        "label": "High-yield savings, top widely available",
+        "yield_pct": {
+          "value": 4.4,
+          "unit": "pct",
+          "as_of": "2026-11-27",
+          "source": "https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "cd12_top",
+        "label": "12-month CD, top widely available",
+        "yield_pct": {
+          "value": 4.65,
+          "unit": "pct",
+          "as_of": "2026-11-27",
+          "source": "https://www.bankrate.com/banking/cds/best-1-year-cd-rates/",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "cd12_avg",
+        "label": "12-month CD, national average",
+        "yield_pct": {
+          "value": 1.81,
+          "unit": "pct",
+          "as_of": "2026-11-16",
+          "source": "https://www.fdic.gov/national-rates-and-rate-caps",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "mmf_spaxx",
+        "label": "Money market fund (Fidelity SPAXX, 7-day yield)",
+        "yield_pct": {
+          "value": 3.61,
+          "unit": "pct",
+          "as_of": "2026-11-25",
+          "source": "https://www.fidelity.com/investing/cash-management",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "tbill_4w",
+        "label": "4-week Treasury bill",
+        "yield_pct": {
+          "value": 4.19,
+          "unit": "pct",
+          "as_of": "2026-11-27",
+          "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "muni_mub",
+        "label": "Municipal bond fund (iShares MUB, 30-day SEC yield)",
+        "yield_pct": {
+          "value": 3.81,
+          "unit": "pct",
+          "as_of": "2026-11-25",
+          "source": "https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      },
+      {
+        "id": "broker_cash",
+        "label": "Broker cash sweep (Robinhood, Gold members only)",
+        "note": "One broker's own published rate, paid only to its paid-tier members. Not an average of brokers.",
+        "yield_pct": {
+          "value": 3.6,
+          "unit": "pct",
+          "as_of": "2026-09-17",
+          "source": "https://robinhood.com/us/en/support/articles/cash-program-interest-rate/",
+          "fetched_at": "2026-11-27T21:21:10Z",
+          "stale": false,
+          "reason": null
+        }
+      }
+    ],
+    "failed_checks": []
+  },
+  "where_to_buy": {
+    "checked_on": "2026-11-27",
+    "tickers": [
+      "STRC",
+      "SATA",
+      "SATS"
+    ],
+    "settlement": {
+      "fact": "A sale of a US-listed stock settles the next business day (T+1).",
+      "source": "https://www.finra.org/investors/insights/understanding-settlement-cycles"
+    },
+    "brokers": [
+      {
+        "name": "Coinbase",
+        "tickers": {
+          "STRC": {
+            "url": "https://www.coinbase.com/stock/STRC",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATA": {
+            "url": "https://www.coinbase.com/stock/SATA",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATS": {
+            "url": "https://www.coinbase.com/stock/SATS",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          }
+        }
+      },
+      {
+        "name": "Interactive Brokers",
+        "tickers": {
+          "STRC": {
+            "url": null,
+            "status": "named, no link",
+            "checked_on": null
+          },
+          "SATA": {
+            "url": null,
+            "status": "named, no link",
+            "checked_on": null
+          },
+          "SATS": {
+            "url": null,
+            "status": "named, no link",
+            "checked_on": null
+          }
+        }
+      },
+      {
+        "name": "Kraken (US)",
+        "tickers": {
+          "STRC": {
+            "url": "https://kraken.com/stocks/STRC",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATA": {
+            "url": "https://kraken.com/stocks/SATA",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATS": {
+            "url": "https://kraken.com/stocks/SATS",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          }
+        }
+      },
+      {
+        "name": "Public",
+        "tickers": {
+          "STRC": {
+            "url": "https://public.com/stocks/strc",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATA": {
+            "url": "https://public.com/stocks/sata",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATS": {
+            "url": "https://public.com/stocks/sats",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          }
+        }
+      },
+      {
+        "name": "Robinhood",
+        "tickers": {
+          "STRC": {
+            "url": "https://robinhood.com/us/en/stocks/STRC",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATA": {
+            "url": "https://robinhood.com/us/en/stocks/SATA",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATS": {
+            "url": "https://robinhood.com/us/en/stocks/SATS",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          }
+        }
+      },
+      {
+        "name": "SoFi",
+        "tickers": {
+          "STRC": {
+            "url": "https://www.sofi.com/invest/stock/STRC/",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATA": {
+            "url": "https://www.sofi.com/invest/stock/SATA/",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATS": {
+            "url": "https://www.sofi.com/invest/stock/SATS/",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          }
+        }
+      },
+      {
+        "name": "Webull",
+        "tickers": {
+          "STRC": {
+            "url": "https://www.webull.com/quote/nasdaq-strc",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATA": {
+            "url": "https://www.webull.com/quote/nasdaq-sata",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          },
+          "SATS": {
+            "url": "https://www.webull.com/quote/nasdaq-sats",
+            "status": "ok",
+            "checked_on": "2026-11-27"
+          }
+        }
+      }
+    ]
+  },
+  "tax_statements": {
+    "Strategy": {
+      "quote": "Strategy Inc ... today announced that, for U.S. federal income tax purposes, 100% of distributions paid during calendar year 2025 on its preferred equity instruments were treated as a nontaxable return of capital (“ROC”) to the extent of a recipient shareholder’s tax basis in their applicable preferred",
+      "quote_more": [
+        "Strategy expects the distributions paid on its preferred equity instruments to be treated as ROC for the foreseeable future (i.e., ten years or more).",
+        "Strategy’s expectations on E&P may change, and any such change could affect the U.S. federal income tax treatment of the distributions."
+      ],
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526033573/mstr-ex99_1.htm",
+      "document": "Strategy Inc press release, Exhibit 99.1 to Form 8-K",
+      "document_date": "2026-02-02",
+      "read_on": "2026-11-27",
+      "applies_to": [
+        "STRC"
+      ]
+    },
+    "Strive": {
+      "quote": "to the extent distributions on SATA and SATS are not treated as being made out of the Company's accumulated or current earnings and profits, they will be treated generally as tax-deferred recovery of capital to the extent of the investor’s tax basis",
+      "quote_more": [
+        "The Company does not have any accumulated earnings and profits, and does not expect to generate current earnings and profits in the current year or the foreseeable future."
+      ],
+      "source_url": "https://www.sec.gov/Archives/edgar/data/0001920406/000162828026073033/asst-20261111.htm",
+      "document": "Strive, Inc. Form 8-K, Item 8.01",
+      "document_date": "2026-11-12",
+      "read_on": "2026-11-27",
+      "applies_to": [
+        "SATA",
+        "SATS"
+      ]
+    },
+    "IRS": {
+      "quote": "For nondividend distributions, once the adjusted cost basis of your stock has been reduced to zero, any further nondividend distribution is a taxable capital gain.",
+      "source_url": "https://www.irs.gov/taxtopics/tc404",
+      "document": "IRS Topic No. 404, Dividends",
+      "document_date": "2026-11-27 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    },
+    "IRS_return_of_capital_basis": {
+      "quote": "A return of capital is a return of some or all of your investment in the stock of the company, which reduces the adjusted cost basis of your stock.",
+      "source_url": "https://www.irs.gov/taxtopics/tc404",
+      "document": "IRS Topic No. 404, Dividends",
+      "document_date": "2026-11-27 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    },
+    "IRS_traditional_IRA": {
+      "quote": "Generally, amounts in your IRA, including earnings and gains, aren’t taxed until they are distributed.",
+      "source_url": "https://www.irs.gov/publications/p590a",
+      "document": "IRS Publication 590-A (2025)",
+      "document_date": "2026-04-30 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    },
+    "IRS_HSA": {
+      "quote": "The interest or other earnings on the assets in the account are tax free.",
+      "source_url": "https://www.irs.gov/publications/p969",
+      "document": "IRS Publication 969 (2025)",
+      "document_date": "2026-04-30 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
     }
   }
 }

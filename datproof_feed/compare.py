@@ -277,11 +277,12 @@ def hold_odds(ins: dict, days: int, tbill_pct) -> tuple[dict | None, str | None]
     hurdle = None if tbill_pct is None else tbill_pct * days / 365
     beat = None if hurdle is None else sum(1 for r in res if r > hurdle)
     lost = sum(1 for r in res if r < 0)
+    ahead = sum(1 for r in res if r > 0)
     return {"days": days, "holds": n, "bought_from": hs[0][1], "bought_to": hs[-1][1],
             "closes_from": str(rows[0][0])[:10],
             "tbill_pct": tbill_pct, "tbill_hold_pct": None if hurdle is None else round(hurdle, 3),
             "beat_tbill": beat, "beat_tbill_pct": None if beat is None else _share(beat, n),
-            "lost": lost, "lost_pct": _share(lost, n),
+            "lost": lost, "lost_pct": _share(lost, n), "ahead": ahead, "ahead_pct": _share(ahead, n),
             "median_pct": round(_median(res), 2), "worst_pct": round(worst[0], 2),
             "worst_bought": worst[1]}, None
 
@@ -298,7 +299,10 @@ def hold_odds_table(ins: dict, tbill_pct) -> dict:
     out = {}
     for d in HOLD_PERIODS:
         odds, reason = hold_odds(ins, d, tbill_pct)
-        out[str(d)] = odds if odds is not None else {"days": d, "reason": reason}
+        if odds is None:
+            rows = (ins.get("closes") or {}).get("rows") or []
+            odds = {"days": d, "reason": reason, **({"first_results_around": first_results_around(rows, d)} if rows else {})}
+        out[str(d)] = odds
     return out
 
 
@@ -543,3 +547,110 @@ def compare(feed: dict, amount_usd: float, days: int, max_drop_pct: float, kinds
                        "kinds": kinds},
             "options": options, "summary": summary, "benchmarks": benchmarks, "excluded": excluded,
             "note": NOTE, "hold_odds_note": HOLD_NOTE}
+
+
+# ---------- your situation: one amount, one time, one place the cash sits now ----------
+
+SITUATION_TICKERS = ("STRC", "SATA", "SATS")  # fixed order, never sorted
+HOLDS = {"1 month": 30, "3 months": 90, "6 months": 180, "1 year": 365}
+SITS_IN = {"checking_avg": "Checking", "savings_avg": "Savings", "hys_top": "High-yield savings",
+           "cd12_top": "12-month CD", "mmf_spaxx": "Money market fund", "tbill_4w": "T-bill",
+           "broker_cash": "Broker cash"}
+SITUATION_DEFAULT = {"amount_usd": 10000, "hold": "3 months", "sits_in": "hys_top"}
+SITUATION_METHOD = (
+    "inputs: amount_usd, hold (1 month, 3 months, 6 months or 1 year = 30, 90, 180 or 365 days) and sits_in "
+    "(where the cash is today, one of the comparison_rates ids). The same rows for STRC, SATA and SATS, in "
+    "that order, never ranked: dividends_usd = amount * yield today * days / 365 (dividends only, before tax, "
+    "price change left out); cash_now_usd = amount * the sits_in rate * days / 365; difference_usd = "
+    "dividends_usd - cash_now_usd; past_holds = hold_odds for the same number of days (dividends plus price "
+    "change: ahead_pct is the share of past holds that ended above what was paid, median_pct the typical "
+    "result, worst_pct the worst), or the reason and first_results_around when there are too few; "
+    "whole_shares = floor(amount / last close); price_vs_100_usd = last close - $100. "
+    "where_to_buy lists brokers' own pages for each ticker. Past results do not predict future results")
+
+
+def _rate_node(feed: dict, rid: str):
+    for r in ((feed.get("comparison_rates") or {}).get("rates") or []):
+        if r.get("id") == rid:
+            return r
+    return None
+
+
+def situation(feed: dict, amount_usd=None, hold=None, sits_in=None) -> dict:
+    """The 'your situation' rows: identical for each of STRC, SATA and SATS, in fixed order.
+    Used by the tool server and by the page (whose default case is written into the HTML)."""
+    amount = SITUATION_DEFAULT["amount_usd"] if amount_usd is None else amount_usd
+    hold = hold or SITUATION_DEFAULT["hold"]
+    sits_in = sits_in or SITUATION_DEFAULT["sits_in"]
+    if isinstance(amount, bool) or not isinstance(amount, (int, float)) or amount <= 0:
+        raise ValueError("amount_usd must be a number above 0")
+    if hold not in HOLDS:
+        raise ValueError(f"hold must be one of {list(HOLDS)}")
+    if sits_in not in SITS_IN:
+        raise ValueError(f"sits_in must be one of {list(SITS_IN)}")
+    days = HOLDS[hold]
+    node = _rate_node(feed, sits_in) or {}
+    yn = node.get("yield_pct") or {}
+    rate = yn.get("value")
+    cash_now = round(amount * rate / 100 * days / 365, 2) if rate is not None else None
+    buy = feed.get("where_to_buy") or {}
+    cols = []
+    for t in SITUATION_TICKERS:
+        ins = next((i for i in feed.get("instruments", []) if i.get("ticker") == t), None)
+        if not ins:
+            continue
+        y, close = ins.get("yield_pct") or {}, ins.get("close_usd") or {}
+        yv, cv = y.get("value"), close.get("value")
+        div = round(amount * yv / 100 * days / 365, 2) if yv is not None else None
+        odds = (ins.get("hold_odds") or {}).get(str(days)) or {}
+        if odds.get("reason") or odds.get("median_pct") is None:
+            past = {"days": days, "reason": odds.get("reason") or "no past holds in this feed",
+                    "first_results_around": odds.get("first_results_around"),
+                    "trading_since": odds.get("closes_from")}
+        else:
+            past = {"days": days, "holds": odds.get("holds"), "ahead_pct": odds.get("ahead_pct"),
+                    "median_pct": odds.get("median_pct"), "worst_pct": odds.get("worst_pct"),
+                    "bought_from": odds.get("bought_from"), "bought_to": odds.get("bought_to"),
+                    "basis": "dividends plus price change"}
+        links = []
+        for b in buy.get("brokers") or []:
+            c = (b.get("tickers") or {}).get(t)
+            if c:
+                links.append({"broker": b["name"], "url": c.get("url"), "checked_on": c.get("checked_on")})
+        cols.append({
+            "ticker": t, "issuer": ins.get("issuer"),
+            "yield_pct": yv, "yield_as_of": y.get("as_of"), "yield_source": y.get("source"),
+            "dividends_usd": div, "dividends_basis": "dividends only, at today's yield, before tax",
+            "cash_now_usd": cash_now,
+            "difference_usd": round(div - cash_now, 2) if div is not None and cash_now is not None else None,
+            "past_holds": past,
+            "close_usd": cv, "close_as_of": close.get("as_of"), "close_source": close.get("source"),
+            "whole_shares": int(amount // cv) if cv else None,
+            "price_vs_100_usd": round(cv - (ins.get("par_usd") or 100), 2) if cv is not None else None,
+            "where_to_buy": links,
+        })
+    return {"inputs": {"amount_usd": amount, "hold": hold, "days": days, "sits_in": sits_in},
+            "cash_now": {"id": sits_in, "label": node.get("label") or SITS_IN[sits_in], "rate_pct": rate,
+                         "as_of": yn.get("as_of"), "source": yn.get("source"), "stale": bool(yn.get("stale")),
+                         "reason": yn.get("reason") if rate is None else None},
+            "columns": cols, "date": feed.get("date"),
+            "note": "Dividends are at today's yield and leave out price change. Past holds are dividends plus "
+                    "price change. Prices move, issuers can change the rates, and past results do not "
+                    "predict future results. Facts and arithmetic only; not advice."}
+
+
+METHOD["situation"] = SITUATION_METHOD
+METHOD["comparison_rates"] = (
+    "what idle cash earns in ordinary places, each a dated, sourced yearly rate refreshed daily: checking and "
+    "savings national averages and the 12-month CD average (FDIC national rates, monthly), top widely "
+    "available high-yield savings and 12-month CD (Bankrate), a money market fund (Fidelity SPAXX 7-day "
+    "yield), the 4-week T-bill (US Treasury), a municipal bond fund (iShares MUB 30-day SEC yield) and one "
+    "broker's cash rate (named in the label). A failed source keeps its last good figure and date; each rate "
+    "must be between 0% and 15% and may not move more than 2 points in one day")
+METHOD["where_to_buy"] = (
+    "brokers whose own pages for STRC, SATA and SATS were found, alphabetical, checked daily: a page that "
+    "names the ticker and the security is ok; a broker that blocks scripts is 'not checked by script'; a "
+    "missing page is dropped. No ranking, no referral codes, no tracking parameters")
+METHOD["tax_statements"] = (
+    "the issuers' and the IRS's own words on how these dividends are treated, quoted with the document, its "
+    "date and link. Treatment depends on each holder's situation")

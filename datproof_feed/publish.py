@@ -21,7 +21,11 @@ from datproof_feed import backing, scenarios
 from datproof_feed.compare import METHOD, _tbill_pct, buy_price_table, hold_odds_table, sharpe_table
 
 MAX_CHANGES = 90
-LISTINGS_FILE = pathlib.Path(__file__).resolve().parents[1] / "data" / "instrument_listings.json"
+DATA = pathlib.Path(__file__).resolve().parents[1] / "data"
+LISTINGS_FILE = DATA / "instrument_listings.json"
+RATES_FILE = DATA / "comparison_rates.json"      # written daily by python -m datproof_feed.rates
+BROKERS_FILE = DATA / "where_to_buy.json"        # written daily by python -m datproof_feed.brokers
+PROFILES_FILE = DATA / "instrument_profiles.json"  # tax_statements: issuers' and the IRS's own words
 RATE_RESET_DAYS = 35  # a monthly-reset rate is only out of date once a reset has been missed
 STALE_DAYS = 4
 
@@ -65,6 +69,35 @@ def tidy(ins: dict, date: str, listings: dict) -> dict:
     if lst:
         ins["listing"] = {**lst, "fetched_at": listings.get("read_on")}
     return ins
+
+
+def _read(path: pathlib.Path) -> dict:
+    try:
+        return json.loads(path.read_text())
+    except Exception:  # noqa: BLE001 - side files are extra; their absence must not stop the feed
+        return {}
+
+
+def side_files() -> dict:
+    """The dated side files joined into instruments.json: comparison rates, where to buy, tax statements.
+    Each keeps its own dates; a missing file leaves its key out."""
+    from datproof_feed import brokers
+    out = {}
+    rates = _read(RATES_FILE)
+    if rates.get("rates"):
+        out["comparison_rates"] = {"fetched_at": rates.get("fetched_at"), "rates": rates["rates"],
+                                   "failed_checks": rates.get("failed_checks") or []}
+    buy = _read(BROKERS_FILE)
+    if buy.get("brokers"):
+        out["where_to_buy"] = {"checked_on": buy.get("checked_on"), "tickers": buy.get("tickers"),
+                               "settlement": buy.get("settlement"), "brokers": brokers.shown(buy)}
+    static = _read(DATA / "backing_static.json").get("comparison")
+    if static:
+        out["_backing_comparison"] = static
+    tax = _read(PROFILES_FILE).get("tax_statements")
+    if tax:
+        out["tax_statements"] = tax
+    return out
 
 
 def _coverage_meanings(snap: dict) -> dict:
@@ -137,6 +170,12 @@ def publish(snap: dict, out, prev: dict | None) -> None:
     except Exception:  # noqa: BLE001 - listings are extra; their absence must not stop the feed
         listings = {}
     snap = _coverage_meanings({**snap, "instruments": [tidy(i, snap["date"], listings) for i in snap.get("instruments", [])]})
+    side = side_files()
+    cmp_rows = side.pop("_backing_comparison", None)
+    if cmp_rows and isinstance(snap.get("backing"), dict) and isinstance(snap["backing"].get("static"), dict):
+        # the comparison rows are reference figures, not day data: the current file wins
+        snap = {**snap, "backing": {**snap["backing"], "static": {**snap["backing"]["static"], "comparison": cmp_rows}}}
+    snap = {**snap, **side}
     full = [{**i, "hold_odds": hold_odds_table(i, tbill), "by_buy_price": buy_price_table(i),
              "sharpe": sharpe_table(i, tbill),
              **({"backing": crash[i["ticker"]]} if i["ticker"] in crash else {})}

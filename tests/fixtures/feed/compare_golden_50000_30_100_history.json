@@ -34,6 +34,8 @@
         "beat_tbill_pct": 70.9,
         "lost": 59,
         "lost_pct": 25.7,
+        "ahead": 171,
+        "ahead_pct": 74.3,
         "median_pct": 1.55,
         "worst_pct": -14.96,
         "worst_bought": "2026-05-26"
@@ -85,6 +87,8 @@
         "beat_tbill_pct": 77.8,
         "lost": 40,
         "lost_pct": 17.4,
+        "ahead": 190,
+        "ahead_pct": 82.6,
         "median_pct": 1.16,
         "worst_pct": -23.84,
         "worst_bought": "2026-05-27"
@@ -135,6 +139,8 @@
         "beat_tbill_pct": 50.9,
         "lost": 102,
         "lost_pct": 44.3,
+        "ahead": 128,
+        "ahead_pct": 55.7,
         "median_pct": 0.53,
         "worst_pct": -14.21,
         "worst_bought": "2026-05-27"
@@ -185,6 +191,8 @@
         "beat_tbill_pct": 49.6,
         "lost": 113,
         "lost_pct": 49.1,
+        "ahead": 117,
+        "ahead_pct": 50.9,
         "median_pct": 0.21,
         "worst_pct": -27.29,
         "worst_bought": "2026-05-26"
@@ -236,6 +244,8 @@
         "beat_tbill_pct": 46.5,
         "lost": 119,
         "lost_pct": 51.7,
+        "ahead": 111,
+        "ahead_pct": 48.3,
         "median_pct": -0.38,
         "worst_pct": -28.47,
         "worst_bought": "2026-05-26"
