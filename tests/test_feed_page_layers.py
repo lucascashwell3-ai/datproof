@@ -54,3 +54,32 @@ def test_the_length_check_catches_a_planted_paragraph():
     planted = PAGE.replace('<h2 id="h-risk">What can go wrong</h2>',
                            '<h2 id="h-risk">What can go wrong</h2><p class="fine">' + "word " * 100 + "</p>")
     assert long_lines(planted)
+
+
+def headline_problems(page: str, md: str, rng: str) -> list[str]:
+    import html as h
+    from datproof_feed import pages
+    want = pages.HEADLINE.format(range=rng)
+    m = re.search(r'<h1[^>]*>(.*?)</h1>', page, re.S)
+    got = h.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip() if m else ""
+    out = [] if got == want else [f"page h1 is {got!r}, not {want!r}"]
+    if not md.startswith(f"# DATproof: earn {rng} on your idle cash\n"):
+        out.append("the twin's first heading does not match")
+    if "agent's idle cash" in page or "agent's idle cash" in md:
+        out.append("old agent-only headline found")
+    return out
+
+
+def test_the_headline_is_for_anyone_with_idle_cash():
+    import json
+    from datproof_feed import pages
+    feed = json.loads((ROOT / "site" / "v1" / "instruments.json").read_text())
+    md = (ROOT / "site" / "next" / "index.md").read_text()
+    assert headline_problems(PAGE, md, pages.hl_range(feed)) == []
+    assert pages.HEADLINE == "Earn {range} on your idle cash."
+
+
+def test_the_headline_check_catches_the_old_wording():
+    planted = PAGE.replace("on your idle cash.</h1>", "on your agent's idle cash.</h1>")
+    md = (ROOT / "site" / "next" / "index.md").read_text()
+    assert headline_problems(planted, md, "12–17%")

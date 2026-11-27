@@ -27,7 +27,7 @@ share sales and the digital credit instruments (STRC, SATA) that raise the cash.
 
 ## Where can idle cash sit?
 
-A free daily data feed for AI agents and the people who run them. It lists the Bitcoin
+A free daily data feed for anyone with idle cash and the AI they ask. It lists the Bitcoin
 treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside what idle cash earns
 in savings, CDs, a money market fund, T-bills and a municipal bond fund, each with its
 yield, its worst past-year price fall, its payment record and risk flags. Every number names

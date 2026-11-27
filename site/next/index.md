@@ -1,4 +1,4 @@
-# DATproof: earn 12–17% on your agent's idle cash
+# DATproof: earn 12–17% on your idle cash
 
 Cash you can leave for three months or more can earn a dividend every business day from digital credit, preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.
 

@@ -1,8 +1,8 @@
 # DATproof
 
-> DATproof is a free daily data feed on where idle US-dollar cash can sit: three bitcoin-backed
-> preferred stocks (STRC, SATA, SATS) that pay a dividend every business day, beside savings,
-> CDs, a money market fund and T-bills. Every number carries its source and the date it is true
+> DATproof is a free daily data feed, for anyone with idle cash and the AI they ask, on where
+> idle US-dollar cash can sit: three bitcoin-backed preferred stocks (STRC, SATA, SATS) that pay
+> a dividend every business day, beside savings, CDs, a money market fund and T-bills. Every number carries its source and the date it is true
 > for. It informs and does arithmetic; it never chooses for anyone, holds no money and places no
 > orders. Not advice.
 

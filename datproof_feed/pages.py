@@ -46,6 +46,7 @@ MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc
 BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
+HEADLINE = "Earn {range} on your idle cash."  # the page's h1, with the range filled from the feed
 HERO_SUB = ("Cash you can leave for three months or more can earn a dividend every business day from digital credit, "
             "preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.")
 
@@ -1286,7 +1287,7 @@ def next_md(feed: dict) -> str:
     qa = "\n\n".join(f"### {q}\n\n{a}" for q, a in faq(feed))
     risk = "\n".join(f"- **{a}**" + (f" {b}" if b else "") for a, b in risk_items(feed))
     chat = "\n\n".join(f"> {x}" for x in chat_lines(feed))
-    return f"""# DATproof: earn {hl_range(feed)} on your agent's idle cash
+    return f"""# DATproof: {HEADLINE.format(range=hl_range(feed)).rstrip(".").replace("Earn", "earn", 1)}
 
 {HERO_SUB}
 
@@ -1369,9 +1370,9 @@ def llms_txt(feed: dict) -> str:
     rate_line += (f"; a 4-week T-bill {pct(tb, 2)}.\n" if tb is not None else ".\n")
     return f"""# DATproof
 
-> DATproof is a free daily data feed on where idle US-dollar cash can sit: three bitcoin-backed
-> preferred stocks (STRC, SATA, SATS) that pay a dividend every business day, beside savings,
-> CDs, a money market fund and T-bills. Every number carries its source and the date it is true
+> DATproof is a free daily data feed, for anyone with idle cash and the AI they ask, on where
+> idle US-dollar cash can sit: three bitcoin-backed preferred stocks (STRC, SATA, SATS) that pay
+> a dividend every business day, beside savings, CDs, a money market fund and T-bills. Every number carries its source and the date it is true
 > for. It informs and does arithmetic; it never chooses for anyone, holds no money and places no
 > orders. Not advice.
 
