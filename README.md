@@ -1,34 +1,25 @@
 # DATproof
 
-**[Live site →](https://lucascashwell3-ai.github.io/datproof/)**
+**Where idle cash can earn more than a savings account, with the record and the risks.**
 
-An adoption accelerator for digital asset treasuries — an information hub for corporate
-Bitcoin purchase data. Every disclosed BTC purchase since 2020 on one activity grid, each
-square linked to the filing behind it, with the funding beside the buys: at-the-market
-share sales and the digital credit instruments (STRC, SATA) that raise the cash.
+A free daily page and data feed for anyone with idle cash at a US broker or bank, and the AI
+they ask. It shows three bitcoin-backed preferred stocks that pay a dividend every business day
+(STRC, SATA and SATS) beside savings, CDs, a money market fund and T-bills: today's yields, how
+past holds turned out, a bitcoin crash test and what can go wrong. Every number carries its
+source and date. It informs and does arithmetic; it never picks one, holds no money and places
+no orders. Not advice.
 
-## How it works
+- **Page:** https://lucascashwell3-ai.github.io/datproof/ (Markdown copy at `index.md`, a guide for AI readers at `llms.txt`)
+- **Feed:** https://lucascashwell3-ai.github.io/datproof/v1/instruments.json
+- **Plug-in for your AI agent, one command:**
 
-- **The data** — `data/moves/*.csv`: one row per disclosed move (BTC buy or ATM sale) for
-  Strategy, Strive, and Metaplanet, each with date, amounts, and its `source_url`. What
-  can't be sourced from a filing isn't in the data.
-- **The pullers** — `scripts/pull_mstr.py`, `pull_asst.py`, `pull_metaplanet.py` read the
-  companies' disclosures; `scripts/build_grid_site.py` renders `site/grid/index.html` (served at `/grid/`) from the
-  CSVs plus a keyless BTC ticker (`scripts/fetch_ticker.py`).
-- **The Action** — `.github/workflows/grid.yml` re-pulls, rebuilds, and redeploys the site
-  every day.
-- **Dry runs** — `gh workflow run grid.yml --ref <branch> -f dry_run=true` pulls, builds, and
-  runs the checks below with nothing committed or deployed; any run on a branch other than
-  `main` does the same automatically, so a branch can never push data to `main`.
-- **Source status** — `data/run-status.json`, written and committed each run, records
-  ok/failed per data source, the newest filing date found for each, and whether the data has
-  gone stale — so a source that fails quietly (old behavior: keep last data, stay green,
-  nobody notices) now shows up instead of hiding.
+```bash
+claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+```
 
-## Where can idle cash sit?
+## The feed and the page
 
-A free daily data feed for anyone with idle cash and the AI they ask. It lists the Bitcoin
-treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside what idle cash earns
+The feed lists the bitcoin treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside what idle cash earns
 in savings, CDs, a money market fund, T-bills and a municipal bond fund, each with its
 yield, its worst past-year price fall, its payment record and risk flags. Every number names
 its source and date; a number that could not be fetched is empty, with the reason.
@@ -66,7 +57,7 @@ its source and date; a number that could not be fetched is empty, with the reaso
   and money market fund at today's rate, plus three named situations. Past results do not
   predict future results.
 
-### Use it
+### Use it with any MCP client
 
 ```bash
 # 1. Run the tool server for any MCP client (or, from a clone: python3 -m datproof_feed.server)
@@ -79,6 +70,33 @@ cp -r skills/park-idle-cash ~/.claude/skills/
 It never holds or moves money, places no orders, and is not advice: facts and arithmetic
 only.
 
+## Daily build
+
+- **The Action** — `.github/workflows/grid.yml` re-pulls, rebuilds, and redeploys the site
+  every day.
+- **Dry runs** — `gh workflow run grid.yml --ref <branch> -f dry_run=true` pulls, builds, and
+  runs every check with nothing committed or deployed; any run on a branch other than
+  `main` does the same automatically, so a branch can never push data to `main`.
+- **Source status** — `data/run-status.json`, written and committed each run, records
+  ok/failed per data source, the newest filing date found for each, and whether the data has
+  gone stale — so a source that fails quietly (old behavior: keep last data, stay green,
+  nobody notices) now shows up instead of hiding.
+- **Link picture** — `python -m datproof_feed.og` draws `site/og.png`, the 1200x630 picture shown
+  when the page is shared, from the same feed; a failed build keeps yesterday's picture.
+
+## Also here: the bitcoin purchase grid
+
+Every disclosed bitcoin purchase by Strategy, Strive and Metaplanet since 2020 on one activity
+grid, each square linked to the filing behind it, with the funding beside the buys. Served at
+https://lucascashwell3-ai.github.io/datproof/grid/ and rebuilt by the same daily job.
+
+- **The data** — `data/moves/*.csv`: one row per disclosed move (BTC buy or ATM sale) for
+  Strategy, Strive, and Metaplanet, each with date, amounts, and its `source_url`. What
+  can't be sourced from a filing isn't in the data.
+- **The pullers** — `scripts/pull_mstr.py`, `pull_asst.py`, `pull_metaplanet.py` read the
+  companies' disclosures; `scripts/build_grid_site.py` renders `site/grid/index.html` (served at `/grid/`) from the
+  CSVs plus a keyless BTC ticker (`scripts/fetch_ticker.py`).
+
 ## Visitor count (off)
 
 Set `site/config.json` to `{"counter": {"provider": "goatcounter", "code": "<your site code>"}}` (or `"cloudflare"` with the 32-character token) and the next daily build adds that one cookie-free counter script to the home page.
@@ -87,7 +105,8 @@ Leave `provider` empty and nothing is added; any other provider, or a code that 
 ## Run it locally
 
 ```bash
-python3 scripts/build_grid_site.py
+python3 -m datproof_feed.pages          # home page, index.md, llms.txt, sitemap.xml
+python3 scripts/build_grid_site.py      # the grid page at /grid/
 python3 -m http.server 8471 --directory site
 ```
 
