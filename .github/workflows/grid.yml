@@ -94,10 +94,10 @@ jobs:
           python -m pytest tests/test_feed_*.py -q && python -m datproof_feed.build $flag || code=$?
           [ "$code" = 0 ] || echo "::warning::idle-cash feed failed (exit $code); last published /v1/ files stay up"
           echo "feed_code=$code" >> "$GITHUB_OUTPUT"
-      # Today's figures written into /next/ and /idle-cash/ as plain text, from the /v1/ files, so a
+      # Today's figures written into /next/ as plain text, from the /v1/ files, so a
       # reader that runs no script still gets them. Same rule as the feed: a failure leaves
       # yesterday's pages up and the feed-check job turns the run red. A dry run writes to a temp folder.
-      - name: Plain-text pages (/next/ figures + /idle-cash/)
+      - name: Plain-text page (/next/ figures + index.md)
         id: pages
         run: |
           flag=""
@@ -124,7 +124,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md site/idle-cash
+          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else

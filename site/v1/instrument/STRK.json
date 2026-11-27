@@ -1224,5 +1224,8 @@
       "days": 365,
       "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
     }
+  },
+  "by_buy_price": {
+    "reason": "the issuer's filings state no aim to keep the price near $100"
   }
 }

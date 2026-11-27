@@ -5,9 +5,10 @@ gets the yields, prices and odds.
     python -m datproof_feed.pages --dry-run    # renders and checks, writes to a temp folder
 
 Reads only the published /v1/ files. Writes:
-  site/next/index.html     figures between the <!--feed:NAME--> markers (the page script redraws them)
+  site/next/index.html     figures between the <!--feed:NAME--> markers. The page script redraws the
+                           panels, odds, date line and sources; the comparison, the price-paid table,
+                           the account example and the questions are plain HTML only.
   site/next/index.md       the same page as plain Markdown
-  site/idle-cash/index.html + index.md   "Where should a trading bot keep its idle cash?"
 
 Everything is rendered and checked in memory first. If anything fails, no file is touched (the
 last good pages stay up) and the exit code is 1. A second run on the same feed changes nothing.
@@ -39,7 +40,8 @@ AMOUNT = 10_000
 CASH_SHARE = 0.6  # the example account on /next/
 MIN_RECORD = 60   # fewer daily closes than this: say only when the stock started trading
 SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
-MARKERS = ("panels", "odds", "oddsnote", "asof")
+MARKERS = ("asof", "panels", "compare", "below", "odds", "oddsnote", "adds", "faq", "faqld", "sources")
+BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
 # The page script's own wording, kept identical so the redraw is seamless.
@@ -55,14 +57,15 @@ class PageError(Exception):
 # ---------- numbers, rounded the way the page script rounds them ----------
 
 def fixed(x: float, places: int = 0) -> str:
-    """Half away from zero on the exact value, like JavaScript's toLocaleString and Math.round
-    (for the non-negative numbers Math.round sees here). Python's round() would send 30.5 to 30."""
+    """Half away from zero on the number as written (its shortest decimal form), the way the browser's
+    toLocaleString and Math.round round it. Python's round() would send 30.5 to 30, and rounding the exact
+    binary value would send a stored 3.15 to 3.1."""
     q = Decimal(1).scaleb(-places)
-    return f"{Decimal(x).quantize(q, rounding=ROUND_HALF_UP):,}"
+    return f"{Decimal(repr(float(x))).quantize(q, rounding=ROUND_HALF_UP):,}"
 
 
 def rnd(x: float) -> int:
-    return int(Decimal(x).quantize(Decimal(1), rounding=ROUND_HALF_UP))
+    return int(Decimal(repr(float(x))).quantize(Decimal(1), rounding=ROUND_HALF_UP))
 
 
 def pct(x: float, places: int = 1) -> str:
@@ -338,63 +341,198 @@ def inject(page: str, parts: dict[str, str]) -> str:
     return out
 
 
-# ---------- the idle-cash page ----------
-
-def answers(feed: dict) -> dict:
-    """Every sentence with a number in it, built once and used by the HTML, the Markdown and the FAQ data."""
-    dc = lead(feed)
-    if not dc:
-        raise PageError("the feed has no digital credit yield today")
-    ys = [val(i["yield_pct"]) for i in dc]
-    tick = names([i["ticker"] for i in dc])
-    usual = [(short, val(b.get("yield_pct"))) for bid, short, _ in BENCH[:2] if (b := bench(feed, bid))]
-    usual_ok = [y for _, y in usual if y is not None]
-    short = "The usual places for idle cash, " + "a T-bill or a money market fund"
-    short += (f", pay {pct(min(usual_ok))} to {pct(max(usual_ok))} a year today. " if len(usual_ok) > 1
-              else f", pay {pct(usual_ok[0])} a year today. " if usual_ok else ". ")
-    daily = all(i.get("schedule") == "every business day" for i in dc)
-    short += (f"Digital credit, bitcoin-backed preferred stock ({tick}), pays {pct(min(ys))} to {pct(max(ys))} a year"
-              + (", with a dividend every business day." if daily else "."))
-    lede = short + " The price moves, so the record below shows how past holds turned out."
-
-    drop = []
-    for x in drops(feed):
-        s = (f"{x['ticker']} fell {pct(x['pct'])}, from {usd(x['hi'][1], 2)} on {day(x['hi'][0])} "
-             f"to {usd(x['lo'][1], 2)} on {day(x['lo'][0])}")
-        if x["n"] < MIN_RECORD:
-            s += f". It has traded since {day(x['from'])}."
-        else:
-            s += f", its largest fall in {x['n']} daily closes since {day(x['from'])}."
-        s += f" It closed at {usd(x['last'][1], 2)} on {day(x['last'][0])}."
-        drop.append(s)
-    lost = [f"{t}: {rnd(c[-1]['lost_pct'])}% of 3-month holds lost money, {rnd(c[-1]['beat_tbill_pct'])}% beat a T-bill"
-            for t, c in odds_rows(feed)]
-
-    avg = sum(ys) / len(ys)
-    cash = AMOUNT * CASH_SHARE
-    adds = (f"Income on the cash that is not in a trade. A {usd(AMOUNT)} account that sits {rnd(CASH_SHARE * 100)}% "
-            f"in cash earns about {usd(cash * avg / 100)} a year on that {usd(cash)} at today's average yield of {tick}, before tax.")
-
-    steady, free = [], []
-    for i in dc:
-        p = i.get("profile") or {}
-        rate, aim = val(p.get("rate_type")), val(p.get("issuer_aims_price_near_100"))
-        if rate == "variable" and aim is True:
-            steady.append(i["ticker"])
-        elif aim is False:
-            free.append((i["ticker"], rate))
-    fit = "Cash your trading agent won't need for a few months. "
-    if steady:
-        fit += (f"{names(steady)} {'have variable rates their issuers say they adjust' if len(steady) > 1 else 'has a variable rate its issuer says it adjusts'}"
-                " to keep the price near $100. ")
-    for t, rate in free:
-        fit += f"{t} has {'a ' + rate if rate else 'a'} rate and no stated aim to keep the price near $100, so its price is free to move. "
-    fit += "Not for money needed tomorrow at an exact dollar amount: that belongs in a T-bill or money market fund."
-    return {"short": short, "lede": lede, "drop": drop, "lost": lost, "adds": adds, "fit": fit, "tick": tick}
-
+# ---------- the sections added to /next/ ----------
 
 def income(y: float | None) -> str:
     return usd(AMOUNT * y / 100) if y is not None else "not available"
+
+
+def compare_block(feed: dict) -> str:
+    """The comparison under the three panels: each place idle cash can sit, with yield after inflation."""
+    rws = rows(feed)
+    top = max((r["yield"] or 0) for r in rws) or 1
+    has_real = inflation(feed) is not None
+    trs = ""
+    for r in rws:
+        if r["yield"] is not None:
+            dcls = "cmp-d cmp-as" if r["ydate"].startswith(("rate as of", "price as of", "as of")) else "cmp-d"
+            ycell = f'<span class="cmp-y num">{pct(r["yield"])}</span><span class="{dcls}">{e(r["ydate"])}</span>'
+        else:
+            ycell = f'<span class="cmp-y">not available</span><span class="cmp-d">{e(r["reason"])}</span>'
+        w = fixed((r["yield"] or 0) / top * 100, 1)
+        price = (f'<span class="num">{e(r["price"])}</span><span class="cmp-d">{e(r["pdate"])}</span>' if r["price"]
+                 else '<span class="cmp-d">No share price</span>')
+        trs += (f'<tr class="{"dc" if r["dc"] else "bm"}">'
+                f'<th scope="row"><span class="cmp-nm">{e(r["name"])}</span><span class="cmp-d">{e(r["who"])}</span></th>'
+                f'<td class="cmp-yc" data-l="Pays a year">{ycell}<span class="cmp-bar" aria-hidden="true"><i style="width:{w}%"></i></span></td>'
+                f'<td data-l="A year on ${AMOUNT // 1000}k"><span class="num">{income(r["yield"])}</span></td>'
+                f'<td data-l="Price">{price}</td>'
+                + (f'<td class="cmp-r" data-l="After inflation"><span class="num">{e(r["real"])}</span></td>' if has_real else "")
+                + "</tr>")
+    cap = f"Yearly yield, income on {usd(AMOUNT)}, price" + (" and yield after inflation" if has_real else "")
+    head = ('<thead><tr><th scope="col">Where</th><th scope="col">Pays a year</th>'
+            f'<th scope="col">On {usd(AMOUNT)}, a year</th><th scope="col">Price</th>'
+            + ('<th scope="col">After inflation</th>' if has_real else "") + "</tr></thead>")
+    return (f'<table class="cmp"><caption class="vh">{cap} for each place idle cash can sit</caption>{head}<tbody>{trs}</tbody></table>'
+            f'<p class="fine">{e(md_fine(feed))}</p>')
+
+
+def md_fine(feed: dict) -> str:
+    return ("Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes."
+            + (" " + inflation_note(feed) if inflation(feed) else ""))
+
+
+def buy_price(feed: dict) -> list[tuple[dict, dict]]:
+    """(instrument, its 90-day by_buy_price table) for each lead stock the feed scores by price paid."""
+    out = []
+    for t in LEAD:
+        i = inst(feed, t)
+        p = ((i or {}).get("by_buy_price") or {}).get(str(BUY_DAYS))
+        if i and p and not p.get("reason") and p.get("bands"):
+            out.append((i, p))
+    return out
+
+
+def band_cell(b: dict) -> tuple[str, str]:
+    """(big figure, small line) for one band, from the feed; a small band says so."""
+    if b.get("avg_pct") is None:
+        return "", f"{b['buys']} buys, too few to score"
+    return signed(b["avg_pct"]), f"{b['buys']} buys · {b['lost']} lost · worst {signed(b['worst_pct'])}"
+
+
+def aims_sources(items: list[dict]) -> list[tuple[str, str]]:
+    out = []
+    for i in items:
+        node = (i.get("profile") or {}).get("issuer_aims_price_near_100") or {}
+        if node.get("source"):
+            out.append((f"{i['ticker']} filing", node["source"]))
+    return out
+
+
+def today_lines(items: list[dict]) -> list[dict]:
+    out = []
+    for i in items:
+        close, rate, y = val(i.get("close_usd")), val(i.get("stated_rate_pct")), val(i.get("yield_pct"))
+        if close is None or rate is None or y is None:
+            continue
+        par = i.get("par_usd") or 100
+        gap = par - close
+        where = (f"{usd(abs(gap), 2)} under ${par}" if gap > 0 else f"{usd(abs(gap), 2)} over ${par}" if gap < 0 else f"at ${par}")
+        pdate, rdate = day((i.get("close_usd") or {}).get("as_of")), yield_date(i)
+        out.append({"ticker": i["ticker"], "close": usd(close, 2), "where": where, "yield": pct(y), "rate": pct(rate),
+                    "pdate": pdate, "rnote": "" if rdate == pdate else f" ({rdate})"})
+    return out
+
+
+def drop_line(feed: dict, tickers: list[str]) -> str:
+    """The past year's largest falls, from the closes, once; plus how many separate drops the under-$90 buys came from."""
+    parts = []
+    for x in drops(feed):
+        if x["ticker"] in tickers:
+            parts.append(f"{x['ticker']} {pct(x['pct'])}, from {usd(x['hi'][1], 2)} on {day(x['hi'][0])} "
+                         f"to {usd(x['lo'][1], 2)} on {day(x['lo'][0])}")
+    s = ("Largest fall from a high close in the past year: " + "; ".join(parts) + ".") if parts else ""
+    runs = []
+    for i, p in buy_price(feed):
+        n = (p.get("drops_under") or {}).get("90")
+        b = next((b for b in p["bands"] if b["band"] == "under_90"), None)
+        if n and b and b["buys"]:
+            runs.append(f"{n} separate {'drop' if n == 1 else 'drops'} for {i['ticker']}")
+    if runs:
+        s += " The under-$90 buys came from " + names(runs) + "."
+    return s.strip()
+
+
+BUY_TITLE = "Under $100, more yield and room to climb"
+
+
+def below_block(feed: dict) -> str:
+    """Liquid and steady: past 90-day holds by price paid, today's price against $100, the largest falls."""
+    bp = buy_price(feed)
+    if not bp:
+        return ""
+    items = [i for i, _ in bp]
+    tick = [i["ticker"] for i in items]
+    srcs = aims_sources(items)
+    links = " (" + ", ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a>' for lbl, u in srcs) + ")" if srcs else ""
+    lede = (f"Under $100 you earn more on what you pay, and the issuers of {names(tick)} say they adjust the rate "
+            f"to keep the price near $100{links}.")
+    labels = [b["label"] for b in bp[0][1]["bands"]]
+    head = "".join(f'<th scope="col">{e(i["ticker"])}</th>' for i in items)
+    body = ""
+    for k, label in enumerate(labels):
+        tds = ""
+        for i, p in bp:
+            big, small = band_cell(p["bands"][k])
+            cls = "up" if p["bands"][k].get("avg_pct") is not None and p["bands"][k]["avg_pct"] > 0 else "flat"
+            tds += (f'<td class="{cls}" data-l="{e(i["ticker"])}">' + (f'<span class="bp-n num">{big}</span>' if big else "")
+                    + f'<span class="bp-s">{e(small)}</span></td>')
+        body += f'<tr><th scope="row">{e(label[0].upper() + label[1:])}</th>{tds}</tr>'
+    p0 = bp[0][1]
+    table = (f'<table class="bp"><caption class="vh">Past {BUY_DAYS}-day holds by price paid: average result, buys and losses</caption>'
+             f'<thead><tr><th scope="col">Bought at</th>{head}</tr></thead><tbody>{body}</tbody></table>')
+    now = "".join(f'<li><span class="bp-tk">{e(t["ticker"])}</span><span><b class="num">{e(t["close"])}</b> at the {e(t["pdate"])} close, {e(t["where"])}</span>'
+                  f'<span>Pays <b class="num">{e(t["yield"])}</b> at this price; stated rate {e(t["rate"])}{e(t["rnote"])}</span></li>'
+                  for t in today_lines(items))
+    fine = (f"Average result of {BUY_DAYS}-day holds bought from {day(p0['bought_from'])} to {day(p0['bought_to'])}, dividends included. "
+            + drop_line(feed, tick))
+    return (f'<h3 class="bp-h">{BUY_TITLE}</h3><p class="bp-lede">{lede}</p>'
+            f'<div class="bp-grid">{table}<ul class="bp-now" aria-label="Today">{now}</ul></div>'
+            f'<p class="fine">{e(fine)}</p>')
+
+
+def adds_line(feed: dict) -> str:
+    dc = lead(feed)
+    ys = [val(i["yield_pct"]) for i in dc]
+    cash = AMOUNT * CASH_SHARE
+    return (f"A {usd(AMOUNT)} account that sits {rnd(CASH_SHARE * 100)}% in cash earns about {usd(cash * sum(ys) / len(ys) / 100)} "
+            f"a year on that {usd(cash)} at today's average yield of {names([i['ticker'] for i in dc])}, before tax.")
+
+
+def short_answer(feed: dict) -> str:
+    dc = lead(feed)
+    ys = [val(i["yield_pct"]) for i in dc]
+    usual = [val((bench(feed, bid) or {}).get("yield_pct")) for bid, _, _ in BENCH[:2]]
+    usual = [y for y in usual if y is not None]
+    s = "The usual places for idle cash, a T-bill or a money market fund"
+    s += (f", pay {pct(min(usual))} to {pct(max(usual))} a year today. " if len(usual) > 1
+          else f", pay {pct(usual[0])} a year today. " if usual else ". ")
+    daily = all(i.get("schedule") == "every business day" for i in dc)
+    s += (f"Digital credit, bitcoin-backed preferred stock ({names([i['ticker'] for i in dc])}), pays {pct(min(ys))} to "
+          f"{pct(max(ys))} a year" + (", with a dividend every business day." if daily else "."))
+    return s
+
+
+def fit_answer(feed: dict) -> str:
+    s = "Cash your trading agent won't need for a few months. Money needed tomorrow at an exact dollar amount belongs in a T-bill or money market fund."
+    for i in lead(feed):
+        p = i.get("profile") or {}
+        if val(p.get("issuer_aims_price_near_100")) is False:
+            rate = val(p.get("rate_type"))
+            s += f" {i['ticker']} has {'a ' + rate if rate else 'a'} rate and no stated aim to keep the price near $100, so its price is free to move."
+    return s
+
+
+def faq(feed: dict) -> list[tuple[str, str]]:
+    out = [("Where should a trading bot keep its idle cash?", short_answer(feed))]
+    od = odds_rows(feed)
+    if od:
+        parts = [f"{t} lost money {rnd(c[-1]['lost_pct'])}% of the time and beat a 4-week T-bill {rnd(c[-1]['beat_tbill_pct'])}%"
+                 for t, c in od]
+        out.append(("How did past holds turn out?", f"Of 3-month holds started each day over the past year, " + "; ".join(parts) + "."))
+    out.append(("Which cash does it fit?", fit_answer(feed)))
+    return out
+
+
+def faq_html(feed: dict) -> str:
+    return "".join(f'<div class="qa"><h3>{e(q)}</h3><p>{e(a)}</p></div>' for q, a in faq(feed))
+
+
+def faq_ld(feed: dict) -> str:
+    ld = json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "dateModified": feed["date"],
+                     "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+                                    for q, a in faq(feed)]}, ensure_ascii=False).replace("</", "<\\/")
+    return f'<script type="application/ld+json">{ld}</script>'
 
 
 def sources_of(feed: dict) -> list[tuple[str, str, str | None]]:
@@ -403,168 +541,22 @@ def sources_of(feed: dict) -> list[tuple[str, str, str | None]]:
     def add(label, node):
         if isinstance(node, dict) and node.get("source"):
             out.append((label, node["source"], node.get("as_of")))
+    for b in feed.get("benchmarks", []):
+        add(b.get("name", b.get("id", "")), b.get("yield_pct"))
     for t in LEAD:
         i = inst(feed, t) or {}
         add(f"{t} closing price", i.get("close_usd"))
         add(f"{t} dividend rate", i.get("stated_rate_pct"))
-    for b in feed.get("benchmarks", []):
-        add(b.get("name", b.get("id", "")), b.get("yield_pct"))
     return out
 
 
-QUESTIONS = {
-    "short": "Where should a trading bot keep its idle cash?",
-    "today": "What does idle cash pay today?",
-    "odds": "How did past holds turn out?",
-    "drop": "How far can the price drop?",
-    "adds": "What does it add to an account?",
-    "fit": "Which cash does it fit?",
-    "broker": "Can a bot on Robinhood or Alpaca use it?",
-}
+def sources_html(feed: dict) -> str:
+    li = "".join(f'<li>{e(lbl)}: <a href="{e(u)}" rel="noopener">{e(host(u))}</a>{", " + day(d) if d else ""}</li>'
+                 for lbl, u, d in sources_of(feed))
+    return f'<ul>{li}<li>Method for every number: <a href="../v1/method.json">method.json</a></li></ul>'
 
 
-def faq(feed: dict, a: dict) -> list[tuple[str, str]]:
-    tb = next((r for r in rows(feed) if r["name"] == "4-week T-bill"), None)
-    today = "; ".join(f"{r['name']} {pct(r['yield']) if r['yield'] is not None else 'not available'}" for r in rows(feed))
-    out = [(QUESTIONS["short"], a["short"]), (QUESTIONS["today"], today + f" (data for {day(feed['date'])}).")]
-    if a["lost"]:
-        out.append((QUESTIONS["odds"], "; ".join(a["lost"]) + f", against a 4-week T-bill"
-                    + (f" at {pct(tb['yield'], 2)}" if tb and tb["yield"] is not None else "") + "."))
-    out += [(QUESTIONS["drop"], " ".join(a["drop"])), (QUESTIONS["adds"], a["adds"]),
-            (QUESTIONS["fit"], a["fit"]), (QUESTIONS["broker"], BROKER)]
-    return out
-
-
-def idle_cash_html(feed: dict) -> str:
-    a = answers(feed)
-    rws = rows(feed)
-    top = max((r["yield"] or 0) for r in rws) or 1
-    has_real = inflation(feed) is not None
-    trs = ""
-    for r in rws:
-        if r["yield"] is not None:
-            ycell = f'<span class="ic-y num">{pct(r["yield"])}</span><span class="ic-d">{e(r["ydate"])}</span>'
-        else:
-            ycell = f'<span class="ic-y">not available</span><span class="ic-d">{e(r["reason"])}</span>'
-        w = fixed((r["yield"] or 0) / top * 100, 1)
-        price = (f'<span class="num">{e(r["price"])}</span><span class="ic-d">{e(r["pdate"])}</span>' if r["price"]
-                 else '<span class="ic-d">No share price</span>')
-        trs += (f'<tr class="{"dc" if r["dc"] else "bm"}">'
-                f'<th scope="row"><span class="ic-nm">{e(r["name"])}</span><span class="ic-d">{e(r["who"])}</span></th>'
-                f'<td class="ic-yc" data-l="Pays a year">{ycell}<span class="ic-bar" aria-hidden="true"><i style="width:{w}%"></i></span></td>'
-                f'<td data-l="A year on ${AMOUNT // 1000}k"><span class="num">{income(r["yield"])}</span></td>'
-                f'<td data-l="Price">{price}</td>'
-                + (f'<td class="ic-r" data-l="After inflation"><span class="num">{e(r["real"])}</span></td>' if has_real else "")
-                + "</tr>")
-    table, note = odds_table(feed)
-    if table:
-        tbn = feed_tbill_line(feed)
-        odds = ('<section class="wrap block" id="odds" aria-labelledby="h-odds">'
-                f'<h2 id="h-odds">{QUESTIONS["odds"]}</h2>'
-                '<p class="sub">Every start day in the past year: buy, hold, collect the dividends, sell. '
-                f'Scored against a 4-week T-bill held for the same stretch{tbn}.</p>'
-                f'<div class="odds">{table}</div><p class="fine">{e(note)}</p></section>')
-    else:
-        odds = ""
-    drop = "".join(f"<li>{e(s)}</li>" for s in a["drop"])
-    ld = json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "dateModified": feed["date"],
-                     "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": t}}
-                                    for q, t in faq(feed, a)]},
-                    ensure_ascii=False).replace("</", "<\\/")
-    src = "".join(f'<li>{e(lbl)}: <a href="{e(u)}" rel="noopener">{e(host(u))}</a>{", " + day(d) if d else ""}</li>'
-                  for lbl, u, d in sources_of(feed))
-    src += '<li>Method for every number: <a href="../v1/method.json">method.json</a></li>'
-    px = price_date(feed)
-    stamp = f"Data for {day(feed['date'])}" + (f" · prices at the {day(px)} close" if px else "")
-    return f"""<!doctype html>
-<html lang="en" data-type="c" data-color="green">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Where should a trading bot keep its idle cash? | DATproof</title>
-<meta name="description" content="{e(a['short'])}">
-<meta name="color-scheme" content="dark light">
-<link rel="canonical" href="{BASE}/idle-cash/">
-<link rel="alternate" type="text/markdown" href="index.md">
-<meta property="og:title" content="Where should a trading bot keep its idle cash?">
-<meta property="og:description" content="{e(a['short'])}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="{BASE}/idle-cash/">
-<link rel="icon" type="image/svg+xml" href="../favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&display=swap">
-<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=gambetta@300,301,400&display=swap">
-<link rel="stylesheet" href="../next/styles.css?v=20261117h">
-<link rel="stylesheet" href="page.css?v=20261122a">
-<script type="application/ld+json">{ld}</script>
-</head>
-<body>
-<header class="wrap bar">
-  <a class="mark" href="../next/">DATproof</a>
-  <a class="bar-link" href="#agent">Connect your agent</a>
-</header>
-
-<main>
-  <section class="wrap ic-hero" aria-labelledby="h-hero">
-    <h1 id="h-hero" class="ic-h">Where should a trading bot keep its idle cash?</h1>
-    <p class="ic-lede">{e(a['lede'])}</p>
-    <p class="ic-asof">{e(stamp)}</p>
-  </section>
-
-  <section class="wrap ic-first" id="today" aria-labelledby="h-today">
-    <h2 id="h-today" class="vh">{QUESTIONS['today']}</h2>
-    <table class="ic">
-      <caption class="vh">Yearly yield, income on {usd(AMOUNT)}, price{" and yield after inflation" if has_real else ""} for each place idle cash can sit</caption>
-      <thead><tr><th scope="col">Where</th><th scope="col">Pays a year</th><th scope="col">On {usd(AMOUNT)}, a year</th><th scope="col">Price</th>{'<th scope="col">After inflation</th>' if has_real else ""}</tr></thead>
-      <tbody>{trs}</tbody>
-    </table>
-    <p class="fine">Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes.{" " + e(inflation_note(feed)) if has_real else ""}</p>
-  </section>
-
-  {odds}
-
-  <section class="wrap block" id="drop" aria-labelledby="h-drop">
-    <h2 id="h-drop">{QUESTIONS['drop']}</h2>
-    <p class="sub">The largest fall from a high close to a later close, from the feed's daily closes:</p>
-    <ul class="ic-list">{drop}</ul>
-  </section>
-
-  <section class="wrap block" id="adds" aria-labelledby="h-adds">
-    <h2 id="h-adds">{QUESTIONS['adds']}</h2>
-    <p class="sub">{e(a['adds'])}</p>
-  </section>
-
-  <section class="wrap block" id="fit" aria-labelledby="h-fit">
-    <h2 id="h-fit">{QUESTIONS['fit']}</h2>
-    <p class="sub">{e(a['fit'])}</p>
-  </section>
-
-  <section class="wrap block" id="agent" aria-labelledby="h-agent">
-    <h2 id="h-agent">Connect your agent</h2>
-    <p class="sub">{e(BROKER)}</p>
-    <pre class="code ic-code"><code>{e(SETUP)}</code></pre>
-    <p class="links"><a href="../next/">See it with charts</a><a href="../v1/instruments.json">The JSON feed</a><a href="index.md">This page as Markdown</a><a href="../llms.txt">/llms.txt</a></p>
-  </section>
-</main>
-
-<footer class="wrap foot">
-  <details class="sources">
-    <summary>Sources</summary>
-    <ul>{src}</ul>
-  </details>
-  <p>{FOOT}</p>
-</footer>
-</body>
-</html>
-"""
-
-
-def feed_tbill_line(feed: dict) -> str:
-    tb = tbill(feed)
-    return f" ({pct(tb, 2)} a year today)" if tb is not None else ""
-
+# ---------- the Markdown twin ----------
 
 def md_table(feed: dict) -> str:
     has_real = inflation(feed) is not None
@@ -578,9 +570,28 @@ def md_table(feed: dict) -> str:
     return out
 
 
-def md_fine(feed: dict) -> str:
-    return ("Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes."
-            + (" " + inflation_note(feed) if inflation(feed) else ""))
+def md_buy_price(feed: dict) -> str:
+    bp = buy_price(feed)
+    if not bp:
+        return ""
+    items = [i for i, _ in bp]
+    srcs = aims_sources(items)
+    out = (f"## {BUY_TITLE}\n\nUnder $100 you earn more on what you pay, and the issuers of {names([i['ticker'] for i in items])} "
+           "say they adjust the rate to keep the price near $100"
+           + (" (" + ", ".join(f"{lbl}: {u}" for lbl, u in srcs) + ")" if srcs else "") + ".\n\n")
+    for t in today_lines(items):
+        out += f"- {t['ticker']}: {t['close']} at the {t['pdate']} close, {t['where']}; pays {t['yield']} at this price, stated rate {t['rate']}{t['rnote']}.\n"
+    out += f"\n| Bought at | " + " | ".join(i["ticker"] for i in items) + " |\n|---|" + "---|" * len(items) + "\n"
+    for k, b0 in enumerate(bp[0][1]["bands"]):
+        cells = []
+        for _, p in bp:
+            big, small = band_cell(p["bands"][k])
+            cells.append((big + ": " if big else "") + small.replace(" · ", ", "))
+        out += f"| {b0['label']} | " + " | ".join(cells) + " |\n"
+    p0 = bp[0][1]
+    out += (f"\n{BUY_DAYS}-day holds bought from {day(p0['bought_from'])} to {day(p0['bought_to'])}, dividends included; "
+            "the figure is the average result. " + drop_line(feed, [i["ticker"] for i in items]) + "\n\n")
+    return out
 
 
 def md_odds(feed: dict) -> str:
@@ -592,8 +603,10 @@ def md_odds(feed: dict) -> str:
         for (_, label), o in zip(SPANS, cells):
             out += f"| {t} | {label} | {rnd(o['beat_tbill_pct'])}% | {rnd(o['lost_pct'])}% | {signed(o['median_pct'])} | {signed(o['worst_pct'])} |\n"
     last = rws[0][1][-1]
+    tb = tbill(feed)
     out += (f"\nEvery start day in the past year (closes from {day(last['closes_from'])} to {day(feed['date'])}): "
-            f"buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch{feed_tbill_line(feed)}.\n")
+            "buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch"
+            + (f" ({pct(tb, 2)} a year today)" if tb is not None else "") + ".\n")
     for t, _ in unscored(feed):
         out += f"\n{t} is too new to score.\n"
     return out
@@ -601,76 +614,39 @@ def md_odds(feed: dict) -> str:
 
 def md_stamp(feed: dict) -> str:
     px = price_date(feed)
-    s = f"Data for {day(feed['date'])}" + (f" · prices at the {day(px)} close" if px else "")
-    return s
-
-
-def idle_cash_md(feed: dict) -> str:
-    a = answers(feed)
-    drop = "\n".join(f"- {s}" for s in a["drop"])
-    return f"""# Where should a trading bot keep its idle cash?
-
-{a['lede']}
-
-{md_stamp(feed)}. Page: {BASE}/idle-cash/
-
-## {QUESTIONS['today']}
-
-{md_table(feed)}
-{md_fine(feed)}
-
-## {QUESTIONS['odds']}
-
-{md_odds(feed)}
-## {QUESTIONS['drop']}
-
-The largest fall from a high close to a later close, from the feed's daily closes:
-
-{drop}
-
-## {QUESTIONS['adds']}
-
-{a['adds']}
-
-## {QUESTIONS['fit']}
-
-{a['fit']}
-
-## Connect your agent
-
-{BROKER}
-
-    {SETUP}
-
-- JSON feed: {BASE}/v1/instruments.json
-- For AI readers: {BASE}/llms.txt
-
-{FOOT}
-"""
+    return f"Data for {day(feed['date'])}" + (f" · prices at the {day(px)} close" if px else "")
 
 
 def next_md(feed: dict) -> str:
+    qa = "\n\n".join(f"### {q}\n\n{a}" for q, a in faq(feed))
     return f"""# DATproof: earn more on your trading agent's idle cash
 
 Cash your trading agent won't need for a few months can earn daily dividends from digital credit. DATproof gives your agent the live numbers and the odds.
 
 {md_stamp(feed)}. Page with charts: {BASE}/next/
 
-## Today's numbers
+## Income every business day
 
 {md_table(feed)}
 {md_fine(feed)}
 
-## The odds for the time your cash has
+{md_buy_price(feed)}## The odds for the time your cash has
 
 {md_odds(feed)}
+## What does it add to an account?
+
+{adds_line(feed)}
+
+## Questions
+
+{qa}
+
 ## Connect your agent
 
 {BROKER}
 
     {SETUP}
 
-- Where should a trading bot keep its idle cash? {BASE}/idle-cash/
 - JSON feed: {BASE}/v1/instruments.json
 - For AI readers: {BASE}/llms.txt
 
@@ -693,12 +669,11 @@ def render(feed: dict, next_html: str) -> dict[str, str]:
     if not pan:
         raise PageError("no yields to show")
     table, note = odds_table(feed)
-    out = {
-        "next/index.html": inject(next_html, {"panels": pan, "odds": table, "oddsnote": e(note), "asof": e(asof(feed))}),
-        "next/index.md": next_md(feed),
-        "idle-cash/index.html": idle_cash_html(feed),
-        "idle-cash/index.md": idle_cash_md(feed),
-    }
+    parts = {"asof": e(asof(feed)), "panels": pan, "compare": compare_block(feed), "below": below_block(feed),
+             "odds": table, "oddsnote": e(note), "adds": e(adds_line(feed)), "faq": faq_html(feed),
+             "faqld": faq_ld(feed), "sources": sources_html(feed)}
+    assert set(parts) == set(MARKERS)
+    out = {"next/index.html": inject(next_html, parts), "next/index.md": next_md(feed)}
     for path, text in out.items():
         m = BAD.search(text)
         if m:

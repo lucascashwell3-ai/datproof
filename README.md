@@ -37,10 +37,13 @@ its source and date; a number that could not be fetched is empty, with the reaso
   `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `scenarios.json`,
   `method.json` (every formula and flag in plain words), `status.json`, and the dated
   `days/<date>.json`.
-- **Pages** (rewritten each day from the files, figures as plain text so readers that run
-  no script still get them): `https://lucascashwell3-ai.github.io/datproof/idle-cash/` answers "where should a trading bot keep its
-  idle cash?", `https://lucascashwell3-ai.github.io/datproof/next/` is the home page with charts; each has an `index.md` copy.
-  `python -m datproof_feed.pages` rebuilds them.
+- **Page** (rewritten each day from the files, figures as plain text so readers that run no
+  script still get them): `https://lucascashwell3-ai.github.io/datproof/next/`, with a Markdown copy at `index.md`.
+  `python -m datproof_feed.pages` rebuilds it.
+- **By price paid**: `by_buy_price` in each instrument splits the 30, 90 and 180-day holds by the
+  close paid (under $90, $90 to $95, $95 to $100, $100 and over): buys, losses, average and worst
+  result, and how many separate drops the buys came from. Only for STRC and SATA, whose issuers
+  state they adjust the rate to keep the price near $100.
 - **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
   and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
   returns each option's hold odds for exactly those days (how past holds of that length turned

@@ -25,6 +25,12 @@ FLAG_ORDER = ("price_moves", "issuer_sets_rate", "short_history", "no_hold_odds"
 
 HOLD_PERIODS = (7, 30, 90, 180, 365)
 MIN_HOLDS = 60
+# Holds split by the price paid, for issues whose issuer states it adjusts the rate to keep the price near $100.
+BUY_PRICE_PERIODS = (30, 90, 180)
+BUY_PRICE_BANDS = (("under_90", "under $90", None, 90.0), ("90_to_95", "$90 to $95", 90.0, 95.0),
+                   ("95_to_100", "$95 to $100", 95.0, 100.0), ("100_and_over", "$100 and over", 100.0, None))
+BUY_PRICE_LEVELS = (90, 95, 100)
+MIN_BAND_BUYS = 5
 PAST_YEAR_DAYS = 360  # closes reaching back this far are described as "the past year"
 PROJECT_MONTHS = {"monthly": 1, "quarterly": 3}
 
@@ -67,6 +73,14 @@ METHOD = {
                      f"median_pct = the middle result; worst_pct = the lowest, with its start day (worst_bought). "
                      f"Shares are rounded half up to one decimal. Fewer than {MIN_HOLDS} holds gives null "
                      f"with the reason. Past results do not predict future results",
+        "by_buy_price": f"the same holds as hold_odds, for {', '.join(map(str, BUY_PRICE_PERIODS))} days, split "
+                        "by the close on the start day: under $90, $90 to $95, $95 to $100, $100 and over. "
+                        "Per band: buys (holds started in the band), lost (results below 0), avg_pct (the mean result) and worst_pct (the "
+                        f"lowest). A band with fewer than {MIN_BAND_BUYS} buys gives null with the reason. "
+                        "drops_under counts the separate runs of start-day closes below $90, $95 and $100. "
+                        "Only for issues whose issuer states it adjusts the rate to keep the price near $100 "
+                        "(profile.issuer_aims_price_near_100); others carry the reason instead. Past results "
+                        "do not predict future results",
     },
     "compare": {
         "inputs": {"amount_usd": "the cash to place, in US dollars",
@@ -261,6 +275,53 @@ def hold_odds_table(ins: dict, tbill_pct) -> dict:
     for d in HOLD_PERIODS:
         odds, reason = hold_odds(ins, d, tbill_pct)
         out[str(d)] = odds if odds is not None else {"days": d, "reason": reason}
+    return out
+
+
+def _runs_below(prices: list[float], level: float) -> int:
+    """Separate runs of consecutive prices below `level`."""
+    runs, inside = 0, False
+    for p in prices:
+        if p < level and not inside:
+            runs += 1
+        inside = p < level
+    return runs
+
+
+def buy_price_table(ins: dict) -> dict:
+    """Past holds split by the price paid, as published in instruments.json as by_buy_price."""
+    aims = _v((ins.get("profile") or {}).get("issuer_aims_price_near_100"))
+    if aims is not True:
+        return {"reason": "the issuer's filings state no aim to keep the price near $100" if aims is False
+                else "no sourced statement on whether the issuer aims to keep the price near $100"}
+    rows = (ins.get("closes") or {}).get("rows") or []
+    if not rows:
+        return {"reason": "no daily closes in this feed file"}
+    close_on = {str(d)[:10]: float(c) for d, c in rows}
+    out = {}
+    for days in BUY_PRICE_PERIODS:
+        hs = holds(ins, days)
+        n = len(hs)
+        if n < MIN_HOLDS:
+            out[str(days)] = {"days": days, "reason": f"not enough history: {n} past holds of {days} days fit in "
+                                                      f"{len(rows)} trading days of closes; {MIN_HOLDS} are needed"}
+            continue
+        bands = []
+        for key, label, lo, hi in BUY_PRICE_BANDS:
+            res = [r for r, b in hs if (lo is None or close_on[b] >= lo) and (hi is None or close_on[b] < hi)]
+            k = len(res)
+            band = {"band": key, "label": label, "from_usd": lo, "under_usd": hi, "buys": k}
+            if k < MIN_BAND_BUYS:
+                band.update(lost=None, avg_pct=None, worst_pct=None,
+                            reason=f"{k} buys in this band; {MIN_BAND_BUYS} are needed")
+            else:
+                band.update(lost=sum(1 for r in res if r < 0), avg_pct=round(sum(res) / k, 2),
+                            worst_pct=round(min(res), 2), reason=None)
+            bands.append(band)
+        paid = [close_on[b] for _, b in hs]
+        out[str(days)] = {"days": days, "holds": n, "bought_from": hs[0][1], "bought_to": hs[-1][1],
+                          "closes_from": str(rows[0][0])[:10], "bands": bands,
+                          "drops_under": {str(lv): _runs_below(paid, lv) for lv in BUY_PRICE_LEVELS}}
     return out
 
 

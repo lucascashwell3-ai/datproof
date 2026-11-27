@@ -1,4 +1,4 @@
-"""The plain-text pages: figures written into /next/ and the idle-cash page, from small fixtures.
+"""The plain-text page: figures written into /next/ and its Markdown twin, from small fixtures.
 
 Each check is also run against a planted fault (a wrong figure, a dropped stale note, a missing
 reason) and must catch it. A check that cannot catch a planted fault does not count.
@@ -16,11 +16,16 @@ import pytest
 
 from datproof_feed import pages
 
-NEXT_HTML = """<!doctype html><html><body>
+NEXT_HTML = """<!doctype html><html><head><!--feed:faqld--><!--/feed:faqld--></head><body>
 <span class="asof" id="asof"><!--feed:asof--><!--/feed:asof--></span>
 <div class="panels" id="panels"><!--feed:panels--><!--/feed:panels--></div>
+<div class="cmp-wrap" id="compare"><!--feed:compare--><!--/feed:compare--></div>
+<div class="below" id="below"><!--feed:below--><!--/feed:below--></div>
 <div class="odds" id="odds-out"><!--feed:odds--><!--/feed:odds--></div>
 <p class="fine" id="odds-note"><!--feed:oddsnote--><!--/feed:oddsnote--></p>
+<p class="sub" id="adds"><!--feed:adds--><!--/feed:adds--></p>
+<div class="faq"><!--feed:faq--><!--/feed:faq--></div>
+<div id="sources-list"><!--feed:sources--><!--/feed:sources--></div>
 </body></html>
 """
 
@@ -55,6 +60,17 @@ CLOSES = {
 }
 
 
+def band(key, label, lo, hi, buys, lost=None, avg=None, worst_pct=None):
+    small = avg is None
+    return {"band": key, "label": label, "from_usd": lo, "under_usd": hi, "buys": buys, "lost": lost,
+            "avg_pct": avg, "worst_pct": worst_pct, "reason": f"{buys} buys in this band; 5 are needed" if small else None}
+
+
+def by_price(b90, d90=1, d95=4, d100=7):
+    return {"90": {"days": 90, "holds": sum(b["buys"] for b in b90), "bought_from": "2025-11-21", "bought_to": "2026-08-22",
+                   "closes_from": "2025-11-21", "bands": b90, "drops_under": {"90": d90, "95": d95, "100": d100}}}
+
+
 def make_feed() -> dict:
     def ins(t, issuer, close, rate, yld, rate_node=None, flags=("price_moves", "issuer_sets_rate"), aims=True,
             rtype="variable", in_a_row=12):
@@ -72,6 +88,17 @@ def make_feed() -> dict:
                          "90": odds(67.9, 30.5, 3.17, -22.53)}
     sata["hold_odds"] = {"7": odds(65.0, 30.9, 0.36, -14.29), "30": odds(70.3, 26.2, 1.5, -15.04),
                          "90": odds(87.2, 7.5, 4.91, -11.53)}
+    strc["by_buy_price"] = by_price([band("under_90", "under $90", None, 90.0, 31, 0, 18.41, 12.49),
+                                     band("90_to_95", "$90 to $95", 90.0, 95.0, 13, 0, 8.7, 5.9),
+                                     band("95_to_100", "$95 to $100", 95.0, 100.0, 111, 37, 0.25, -22.53),
+                                     band("100_and_over", "$100 and over", 100.0, None, 32, 20, -2.78, -13.47)])
+    sata["by_buy_price"] = by_price([band("under_90", "under $90", None, 90.0, 4),
+                                     band("90_to_95", "$90 to $95", 90.0, 95.0, 50, 0, 8.31, 2.95),
+                                     band("95_to_100", "$95 to $100", 95.0, 100.0, 114, 12, 3.02, -11.53),
+                                     band("100_and_over", "$100 and over", 100.0, None, 14, 2, 2.0, -8.4)], d90=2)
+    for x, src in ((strc, "https://www.sec.gov/strc-filing"), (sata, "https://www.sec.gov/sata-filing")):
+        x["profile"]["issuer_aims_price_near_100"]["source"] = src
+    sats["by_buy_price"] = {"reason": "the issuer's filings state no aim to keep the price near $100"}
     sats["hold_odds"] = {d: {"days": int(d), "reason": f"not enough history: {d}-day holds need 60 closes"} for d in ("7", "30", "90")}
     return {
         "date": "2026-11-22", "problems": [],
@@ -107,34 +134,38 @@ def build(tmp_path, feed=None, next_html=NEXT_HTML) -> tuple[int, pathlib.Path]:
     return pages.main(["--site", str(site)]), site
 
 
+FILES = ("next/index.html", "next/index.md")
+
+
 def outputs(site: pathlib.Path) -> dict[str, str]:
-    return {rel: (site / rel).read_text() for rel in ("next/index.html", "next/index.md", "idle-cash/index.html", "idle-cash/index.md")}
+    return {rel: (site / rel).read_text() for rel in FILES}
+
+
+def one(x):  # half up, one place, the page script's rounding
+    q = int(abs(x) * 10 + 0.5) / 10
+    return f"{q:.1f}%"
+
+
+def signed1(x):
+    return ("+" if x >= 0 else "−") + one(x)
 
 
 # ---------- every printed figure equals the feed's ----------
 
-def expected_figures(feed: dict) -> dict[str, list[str]]:
-    """What each output file must print, worked out from the feed alone (not from pages.py)."""
-    def one(x):  # half up, one place, the page script's rounding
-        return f"{int(x * 10 + 0.5) / 10:.1f}%"
-    ys = [one(i["yield_pct"]["value"]) for i in feed["instruments"]]
-    prices = [f"${i['close_usd']['value']:.2f}" for i in feed["instruments"]]
+def expected_figures(feed: dict) -> list[str]:
+    """What the page and its Markdown twin must both print, worked out from the feed alone."""
+    ins = feed["instruments"]
+    ys = [one(i["yield_pct"]["value"]) for i in ins]
+    prices = [f"${i['close_usd']['value']:.2f}" for i in ins]
     bench = [one(b["yield_pct"]["value"]) for b in feed["benchmarks"]]
-    oddsn = [f"{int(c[k] + 0.5)}%" for i in feed["instruments"][:2] for c in i["hold_odds"].values()
-             for k in ("beat_tbill_pct", "lost_pct")]
-    drops = [one(i["worst_drop_pct"]["value"]) for i in feed["instruments"]]
-    return {
-        "next/index.html": ys + prices + oddsn,
-        "next/index.md": ys + prices + bench + oddsn,
-        "idle-cash/index.html": ys + prices + bench + oddsn + drops,
-        "idle-cash/index.md": ys + prices + bench + oddsn + drops,
-    }
+    oddsn = [f"{int(c[k] + 0.5)}%" for i in ins[:2] for c in i["hold_odds"].values() for k in ("beat_tbill_pct", "lost_pct")]
+    drops = [one(i["worst_drop_pct"]["value"]) for i in ins[:2]]
+    return ys + prices + bench + oddsn + drops
 
 
 def figure_mismatches(files: dict[str, str], feed: dict) -> list[str]:
-    out = [f"{rel}: missing {fig}" for rel, figs in expected_figures(feed).items() for fig in figs if fig not in files[rel]]
-    # and no yield on the panels that the feed does not have
-    want = {f"{int(i['yield_pct']['value'] * 10 + 0.5) / 10:.1f}%" for i in feed["instruments"]}
+    out = [f"{rel}: missing {fig}" for rel in FILES for fig in expected_figures(feed) if fig not in files[rel]]
+    want = {one(i["yield_pct"]["value"]) for i in feed["instruments"]}
     for y in re.findall(r'class="p-yield num">([\d.]+%)<', files["next/index.html"]):
         if y not in want:
             out.append(f"next/index.html: panel shows {y}, not in the feed")
@@ -151,34 +182,33 @@ def test_figure_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
     files["next/index.html"] = files["next/index.html"].replace('p-yield num">12.8%', 'p-yield num">12.9%')
-    files["idle-cash/index.md"] = files["idle-cash/index.md"].replace("$85.76", "$85.67")
+    files["next/index.md"] = files["next/index.md"].replace("$85.76", "$85.67")
     found = figure_mismatches(files, make_feed())
     assert any("12.9%" in f for f in found) and any("$85.76" in f for f in found)
 
 
 def test_odds_round_half_up_like_the_page_script(tmp_path):
-    # STRC's 3-month lost_pct is 30.5: the page script prints 31%, Python's round() would print 30%.
     code, site = build(tmp_path)
     html_ = outputs(site)["next/index.html"]
-    assert "Lost money <b class=\"num\">31%</b>" in html_
-    assert "Lost money <b class=\"num\">30%</b>" not in html_
+    assert 'Lost money <b class="num">31%</b>' in html_  # 30.5 -> 31, as Math.round does
+    assert 'Lost money <b class="num">30%</b>' not in html_
     assert pages.rnd(30.5) == 31 and pages.fixed(0.25, 1) == "0.3" and pages.signed(-11.53) == "−11.5%"
+    # The browser rounds the number as written: a stored 3.15 prints as 3.2 (its exact binary value is 3.1499...).
+    assert pages.signed(3.15) == "+3.2%" and pages.fixed(1.005, 2) == "1.01"
 
 
 def test_page_prints_every_figure_with_a_date(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
     assert "Data for 22 Nov 2026 · prices at the 20 Nov 2026 close" in f["next/index.html"]
-    assert "Data for 22 Nov 2026 · prices at the 20 Nov 2026 close" in f["idle-cash/index.html"]
-    assert "| 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 |" in f["idle-cash/index.md"]
+    assert "Data for 22 Nov 2026 · prices at the 20 Nov 2026 close." in f["next/index.md"]
+    assert "| 4-week T-bill (US Treasury) | 4.1% | 20 Nov 2026 |" in f["next/index.md"]
 
 
 # ---------- stale and null ----------
 
 def stale_mismatches(files: dict[str, str]) -> list[str]:
-    """A stale rate is shown with the feed's own date, in plain words, and nothing about its age."""
-    out = [rel for rel in ("next/index.html", "next/index.md", "idle-cash/index.html", "idle-cash/index.md")
-           if "rate as of 13 Nov 2026" not in files[rel]]
+    out = [rel for rel in FILES if "rate as of 13 Nov 2026" not in files[rel]]
     for rel, text in files.items():
         if re.search(r"last published|stale|days old", text, re.I):
             out.append(f"{rel}: talks about age")
@@ -187,13 +217,10 @@ def stale_mismatches(files: dict[str, str]) -> list[str]:
 
 def test_a_stale_figure_shows_the_feeds_date(tmp_path):
     code, site = build(tmp_path)
-    files = outputs(site)
-    assert stale_mismatches(files) == []
-    stamp = re.search(r'<p class="ic-asof">(.*?)</p>', files["idle-cash/index.html"]).group(1)
-    assert stamp == "Data for 22 Nov 2026 · prices at the 20 Nov 2026 close"
+    assert stale_mismatches(outputs(site)) == []
 
 
-def test_stale_check_catches_a_dropped_note(tmp_path):
+def test_stale_check_catches_a_dropped_date(tmp_path):
     feed = make_feed()
     feed["instruments"][1]["stated_rate_pct"]["stale"] = False  # planted: the feed's stale flag is lost
     code, site = build(tmp_path, feed)
@@ -207,8 +234,8 @@ def test_a_null_yield_prints_the_feeds_reason(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "no close for SATS today" in f["idle-cash/index.html"]
-    assert "not available (no close for SATS today)" in f["idle-cash/index.md"]
+    assert "no close for SATS today" in f["next/index.html"]
+    assert "not available (no close for SATS today)" in f["next/index.md"]
     assert "SATS</h3>" not in f["next/index.html"]  # the panel drops it, as the page script does
 
 
@@ -218,7 +245,7 @@ def test_a_null_tbill_prints_the_reason_and_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "treasury.gov did not answer" in f["idle-cash/index.html"]
+    assert "treasury.gov did not answer" in f["next/index.html"]
     assert "× a T-bill" not in f["next/index.html"]
 
 
@@ -227,8 +254,7 @@ def test_null_check_catches_a_missing_reason(tmp_path):
     feed["instruments"][2]["yield_pct"] = {"value": None, "stale": False, "reason": None}  # planted: no reason given
     code, site = build(tmp_path, feed)
     f = outputs(site)
-    assert "no close for SATS today" not in f["idle-cash/index.html"]
-    assert "the feed gave no reason" in f["idle-cash/index.html"]  # said plainly, never blank
+    assert "the feed gave no reason" in f["next/index.html"]  # said plainly, never blank
 
 
 def test_no_flag_labels_anywhere(tmp_path):
@@ -244,24 +270,20 @@ def test_no_flag_labels_anywhere(tmp_path):
 # ---------- after inflation ----------
 
 def inflation_mismatches(files: dict[str, str], feed: dict) -> list[str]:
-    """Each table row's after-inflation figure must be its yield minus the feed's CPI figure,
-    worked out here from the feed alone, in the same order in the Markdown and in the HTML."""
+    """Each comparison row's after-inflation figure is its yield minus the feed's CPI figure, in the same
+    order in the Markdown and in the HTML."""
     inf = feed["inflation_yoy_pct"]["value"]
     ys = [i["yield_pct"]["value"] for i in feed["instruments"]] + [b["yield_pct"]["value"] for b in feed["benchmarks"]]
-
-    def signed1(x):
-        q = int(abs(x) * 10 + 0.5) / 10
-        return ("+" if x >= 0 else "\u2212") + f"{q:.1f}%"
     want = [signed1(y - inf) for y in ys]
     out = []
-    for rel in ("idle-cash/index.md", "next/index.md"):
-        got = [line.rstrip(" |").rsplit("| ", 1)[-1] for line in files[rel].splitlines()
-               if line.startswith("| ") and "(" in line.split("|")[1]]
-        if got != want:
-            out.append(f"{rel}: {got} != {want}")
-    got = re.findall(r'class="ic-r" data-l="After inflation"><span class="num">([^<]+)<', files["idle-cash/index.html"])
+    md = files["next/index.md"]
+    table = md[md.index("| Where |"):md.index("Yield is the stated rate")]
+    got = [line.rstrip(" |").rsplit("| ", 1)[-1] for line in table.splitlines() if line.startswith("| ") and "(" in line.split("|")[1]]
     if got != want:
-        out.append(f"idle-cash/index.html: {got} != {want}")
+        out.append(f"next/index.md: {got} != {want}")
+    got = re.findall(r'class="cmp-r" data-l="After inflation"><span class="num">([^<]+)<', files["next/index.html"])
+    if got != want:
+        out.append(f"next/index.html: {got} != {want}")
     return out
 
 
@@ -269,8 +291,7 @@ def test_after_inflation_is_yield_minus_cpi(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
     assert inflation_mismatches(files, make_feed()) == []
-    assert "After inflation is the yield minus US CPI inflation, 3.7% for the 12 months to September 2026." in files["idle-cash/index.html"]
-    assert "\u22121.2%" in files["idle-cash/index.md"]  # USDC lending: 2.5094 - 3.74
+    assert "After inflation is the yield minus US CPI inflation, 3.7% for the 12 months to September 2026." in files["next/index.html"]
 
 
 def test_inflation_check_catches_a_wrong_subtraction(tmp_path, monkeypatch):
@@ -286,31 +307,119 @@ def test_null_inflation_drops_the_column_and_its_note(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     for rel, text in outputs(site).items():
-        assert "After inflation" not in text and "after inflation" not in text, rel
+        assert "after inflation" not in text.lower(), rel
         assert "|  |" not in text and "| |" not in text, rel
     f = outputs(site)
-    head = next(line for line in f["idle-cash/index.md"].splitlines() if line.startswith("| Where"))
+    head = next(line for line in f["next/index.md"].splitlines() if line.startswith("| Where"))
     assert head.endswith("| Price |")
-    assert '<th scope="col">Price</th></tr>' in f["idle-cash/index.html"]
+    assert '<th scope="col">Price</th></tr>' in f["next/index.html"]
+
+
+# ---------- past holds by price paid ----------
+
+def by_price_mismatches(files: dict[str, str], feed: dict) -> list[str]:
+    """Every scored band prints the feed's average, buys and losses, in table order, in both files."""
+    out = []
+    want = []
+    for i in feed["instruments"][:2]:
+        for b in i["by_buy_price"]["90"]["bands"]:
+            want.append((i["ticker"], b["label"],
+                         None if b["avg_pct"] is None else f"{signed1(b['avg_pct'])}",
+                         f"{b['buys']} buys" + ("" if b["avg_pct"] is None else f" · {b['lost']} lost · worst {signed1(b['worst_pct'])}")))
+    html_ = files["next/index.html"]
+    cells = re.findall(r'<td class="(?:up|flat)" data-l="(\w+)">(?:<span class="bp-n num">([^<]+)</span>)?<span class="bp-s">([^<]+)</span>', html_)
+    got = sorted((t, n or "", small.replace(", too few to score", "")) for t, n, small in cells)
+    exp = sorted((t, n or "", small) for t, _, n, small in want)
+    if got != exp:
+        out.append(f"next/index.html: {got} != {exp}")
+    md = files["next/index.md"]
+    for t, label, n, small in want:
+        piece = (n + ": " if n else "") + small.replace(" · ", ", ")
+        if piece not in md:
+            out.append(f"next/index.md: missing {t} {label} '{piece}'")
+    return out
+
+
+def test_by_price_figures_equal_the_feed(tmp_path):
+    code, site = build(tmp_path)
+    assert by_price_mismatches(outputs(site), make_feed()) == []
+
+
+def test_by_price_check_catches_a_planted_wrong_value(tmp_path):
+    code, site = build(tmp_path)
+    files = outputs(site)
+    files["next/index.html"] = files["next/index.html"].replace("31 buys · 0 lost", "31 buys · 1 lost")
+    files["next/index.md"] = files["next/index.md"].replace("+8.7%", "+8.8%")
+    found = by_price_mismatches(files, make_feed())
+    assert any("index.html" in f for f in found) and any("index.md" in f for f in found)
+
+
+def test_small_bands_and_non_aiming_issues(tmp_path):
+    code, site = build(tmp_path)
+    f = outputs(site)
+    assert "4 buys, too few to score" in f["next/index.html"]
+    block = re.search(r"<!--feed:below-->(.*?)<!--/feed:below-->", f["next/index.html"], re.S).group(1)
+    assert "SATS" not in block  # fixed rate, no stated aim for $100: left out of the table and the claim
+
+
+def test_risk_and_the_issuer_claim_are_said_once(tmp_path):
+    code, site = build(tmp_path)
+    html_ = outputs(site)["next/index.html"]
+    assert html_.count("Largest fall from a high close") == 1
+    assert html_.count("say they adjust the rate to keep the price near $100") == 1
+    assert 'href="https://www.sec.gov/strc-filing"' in html_ and 'href="https://www.sec.gov/sata-filing"' in html_
+    assert "The under-$90 buys came from 1 separate drop for STRC and 2 separate drops for SATA." in html_
+    assert "Today: STRC" not in html_ and "today_lines" not in html_
+
+
+def test_a_feed_without_by_price_still_builds(tmp_path):
+    feed = make_feed()
+    for i in feed["instruments"]:
+        i.pop("by_buy_price")
+    code, site = build(tmp_path, feed)
+    assert code == 0
+    assert re.search(r"<!--feed:below--><!--/feed:below-->", outputs(site)["next/index.html"])
+
+
+# ---------- the questions ----------
+
+def test_questions_match_their_search_data_and_repeat_no_section(tmp_path):
+    code, site = build(tmp_path)
+    f = outputs(site)
+    html_ = f["next/index.html"]
+    ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', html_, re.S).group(1))
+    asked = [q["name"] for q in ld["mainEntity"]]
+    shown = re.findall(r'<div class="qa"><h3>([^<]+)</h3>', html_)
+    assert asked == shown and "Where should a trading bot keep its idle cash?" in asked
+    for q in ld["mainEntity"]:
+        a = q["acceptedAnswer"]["text"]
+        assert "Largest fall" not in a and "adjust the rate" not in a and "earns about" not in a
+    assert "### Where should a trading bot keep its idle cash?" in f["next/index.md"]
 
 
 def test_daily_pay_is_said_only_when_every_stock_pays_daily(tmp_path):
     feed = make_feed()
     feed["instruments"][2]["schedule"] = "monthly"
     code, site = build(tmp_path, feed)
-    assert "with a dividend every business day" not in outputs(site)["idle-cash/index.html"]
+    assert "with a dividend every business day" not in outputs(site)["next/index.html"]
     code, site = build(tmp_path / "b")
-    assert "with a dividend every business day" in outputs(site)["idle-cash/index.html"]
+    assert "with a dividend every business day" in outputs(site)["next/index.html"]
 
 
 def test_a_new_stock_is_said_plainly(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    for rel in ("idle-cash/index.html", "idle-cash/index.md"):
+    for rel in FILES:
         assert "SATS is too new to score." in f[rel], rel
-        assert "not enough history" not in f[rel] and "short record" not in f[rel].lower(), rel
-    assert "SATS fell 11.5%, from $96.92 on 9 Nov 2026 to $85.76 on 16 Nov 2026. It has traded since 7 Nov 2026." in f["idle-cash/index.md"]
-    assert "STRC fell 25.5%, from $100.07" in f["idle-cash/index.md"]
+        assert "not enough history" not in f[rel], rel
+
+
+def test_account_example_and_sources(tmp_path):
+    code, site = build(tmp_path)
+    f = outputs(site)
+    for rel in FILES:
+        assert "earns about $912 a year on that $6,000" in f[rel], rel
+    assert "method.json" in re.search(r"<!--feed:sources-->(.*?)<!--/feed:sources-->", f["next/index.html"], re.S).group(1)
 
 
 # ---------- nothing written on failure ----------
@@ -319,7 +428,7 @@ def test_a_new_stock_is_said_plainly(tmp_path):
 def test_a_failure_writes_nothing_and_exits_1(tmp_path, fault):
     feed, html_ = make_feed(), NEXT_HTML
     if fault == "missing marker":
-        html_ = html_.replace("<!--feed:oddsnote--><!--/feed:oddsnote-->", "")
+        html_ = html_.replace("<!--feed:faqld--><!--/feed:faqld-->", "")
     elif fault == "feed problems":
         feed["problems"] = ["SATA close missing"]
     elif fault == "drop disagrees":
@@ -328,8 +437,6 @@ def test_a_failure_writes_nothing_and_exits_1(tmp_path, fault):
         for i in feed["instruments"]:
             i["yield_pct"]["value"] = None
     site = write_site(tmp_path / "site", feed, html_)
-    (site / "idle-cash").mkdir()
-    (site / "idle-cash" / "index.html").write_text("yesterday's page")
     before = tree(site)
     assert pages.main(["--site", str(site)]) == 1
     assert tree(site) == before
@@ -363,15 +470,9 @@ def test_a_dry_run_leaves_the_site_alone(tmp_path):
     assert tree(site) == before
 
 
-def test_no_advice_words_and_no_sharpe_section(tmp_path):
+def test_no_advice_words_and_no_risk_adjusted_claim(tmp_path):
     code, site = build(tmp_path)
-    f = outputs(site)
-    for rel, text in f.items():
+    for rel, text in outputs(site).items():
         low = text.lower()
-        assert not re.search(r"\bbuy (it|now|strc|sata|sats)\b|\byou should\b|\bguaranteed\b", low), rel
+        assert not re.search(r"\bbuy (it|now|strc|sata|sats)\b|\byou should\b|\bguaranteed\b|\balways\b|\bevery time\b", low), rel
         assert "sharpe" not in low and "risk-adjusted" not in low, rel
-    ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', f["idle-cash/index.html"], re.S).group(1))
-    qs = [q["name"] for q in ld["mainEntity"]]
-    assert "What does it add to an account?" in qs
-    assert "## What does it add to an account?" in f["idle-cash/index.md"]
-    assert "earns about $912 a year on that $6,000" in f["idle-cash/index.md"]
