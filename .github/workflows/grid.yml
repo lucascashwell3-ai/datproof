@@ -264,15 +264,24 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: main
-      # The date the live site must show afterwards: the one in the files being published. A failed
-      # feed build keeps yesterday's files on purpose, so this is not always today's date.
-      - name: Date being published
+      # The dates the live site must show afterwards: the ones in the files being published. A failed
+      # feed or page build keeps yesterday's files on purpose, and status.json can be newer than the
+      # home page, so each live file is compared with its own checked-out copy, not with today's date.
+      - name: Dates being published
         id: built
         run: |
-          d=$(python3 -c "import json;print(json.load(open('site/v1/status.json'))['date'])")
-          echo "date=$d" >> "$GITHUB_OUTPUT"
-          echo "publishing the site built for $d"
+          status=$(python3 -c "import json;print(json.load(open('site/v1/status.json'))['date'])")
+          home=$(grep -o '"dateModified": *"[0-9-]*"' site/index.html | grep -o '[0-9-]\{10\}')
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "home=$home" >> "$GITHUB_OUTPUT"
+          echo "publishing status.json dated $status and the home page dated $home"
 
+      # A manual re-run of a failed deploy starts clean: no upload left over from the earlier attempt.
+      - name: Clear any earlier upload
+        run: |
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+          done
       - name: Upload site (try 1)
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
@@ -327,16 +336,17 @@ jobs:
       # query string skips any cache. Fails the run if the live date never matches.
       - name: Live site shows the date just built
         run: |
-          want="${{ steps.built.outputs.date }}"
+          want_status="${{ steps.built.outputs.status }}"
+          want_home="${{ steps.built.outputs.home }}"
           base="https://lucascashwell3-ai.github.io/datproof"
           for i in 1 2 3 4 5 6 7 8 9 10; do
             status=$(curl -fsSL "$base/v1/status.json?run=${{ github.run_id }}-$i" | python3 -c "import json,sys;print(json.load(sys.stdin)['date'])" || echo none)
             home=$(curl -fsSL "$base/?run=${{ github.run_id }}-$i" | grep -o '"dateModified": *"[0-9-]*"' | grep -o '[0-9-]\{10\}' || echo none)
-            echo "try $i: status.json $status, home page $home, want $want"
-            if [ "$status" = "$want" ] && [ "$home" = "$want" ]; then echo "live site is current"; exit 0; fi
+            echo "try $i: status.json $status (want $want_status), home page $home (want $want_home)"
+            if [ "$status" = "$want_status" ] && [ "$home" = "$want_home" ]; then echo "live site is current"; exit 0; fi
             sleep 30
           done
-          echo "::error title=Site not current::live site shows status.json $status and home page $home, not $want"
+          echo "::error title=Site not current::live site shows status.json $status and home page $home, not $want_status and $want_home"
           exit 1
       - name: Say plainly that the site did not update
         if: failure()

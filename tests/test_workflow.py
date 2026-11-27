@@ -33,9 +33,12 @@ def check_deploy(doc: dict) -> list[str]:
         if not prev.get("continue-on-error"):
             bad.append(f"{prev.get('id')} stops the job instead of letting the next try run")
     clears = [s for s in steps if "actions/artifacts/" in str(s.get("run", "")) and "DELETE" in str(s.get("run", ""))]
-    if len(clears) < len(deploys) - 1:
-        bad.append("an earlier upload is not cleared before each retry")
-    live = [s for s in steps if "status.json" in str(s.get("run", "")) and "dateModified" in str(s.get("run", ""))]
+    if len(clears) < len(deploys):
+        bad.append("an earlier upload is not cleared before each try")
+    built = next((s for s in steps if s.get("id") == "built"), {})
+    if "site/index.html" not in str(built.get("run", "")) or "status.json" not in str(built.get("run", "")):
+        bad.append("the live dates must be compared with the checked-out home page and status.json")
+    live = [s for s in steps if "curl" in str(s.get("run", "")) and "status.json" in str(s.get("run", "")) and "dateModified" in str(s.get("run", ""))]
     if not live:
         bad.append("no check that the live home page and status.json show the date just built")
     elif "exit 1" not in live[0]["run"] or "?run=" not in live[0]["run"]:

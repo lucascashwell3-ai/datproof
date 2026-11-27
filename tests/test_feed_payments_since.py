@@ -44,7 +44,9 @@ def test_page_shows_when_the_run_began():
     feed = pages.load(ROOT / "site" / "v1")
     for i in feed["instruments"]:
         if i["ticker"] == "STRC":
-            i["payments"] = {**i["payments"], "since": "2025-08-31", "schedules": ["monthly", "twice a month", "daily"]}
+            # set in full, so a day when the live feed lacks the count cannot fail this test (and block the build)
+            i["payments"] = {"paid": 37, "in_a_row": 37, "gaps": [], "last_paid": feed["date"], "since": "2025-08-31",
+                             "schedules": ["monthly", "twice a month", "daily"]}
     out = pages.render(feed, (ROOT / "site" / "index.html").read_text())
     assert "dividends in a row since 31 Aug 2025 (monthly at first, now daily)" in out["index.html"]
     assert "dividends in a row since 31 Aug 2025 (monthly at first, now daily)" in out["index.md"]

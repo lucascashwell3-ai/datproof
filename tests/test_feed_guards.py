@@ -18,7 +18,7 @@ def node(v, as_of=PREV, **kw):
 
 
 def snap(date, close=100.0, rate=12.0, yld=12.0, ticker="STRC", **close_kw):
-    return {"date": date, "instruments": [{"ticker": ticker, "close_usd": node(close, date, **close_kw),
+    return {"date": date, "instruments": [{"ticker": ticker, "par_usd": 100, "close_usd": node(close, date, **close_kw),
                                            "stated_rate_pct": node(rate, date),
                                            "yield_pct": {"value": yld, "formula": "f", "inputs": ["a"], "stale": False,
                                                          "reason": None}}]}
@@ -42,13 +42,29 @@ def test_planted_jump_keeps_the_last_good_figure(field, new):
     today = snap("2026-11-13")
     today["instruments"][0][field]["value"] = new
     held = sources.hold_jumps(today, snap(PREV))
-    assert len(held) == 1 and held[0].startswith(f"STRC.{field} held")
+    assert held[0].startswith(f"STRC.{field} held")
     kept = today["instruments"][0][field]
     assert kept["value"] in (100.0, 12.0)
     assert kept["stale"] is True and kept["held"]["rejected"] == new and kept["held"]["since"] == "2026-11-13"
     if field != "yield_pct":
         assert kept["as_of"] == PREV, "the kept figure carries its own date"
-    assert sources.held_now(today) == [f"STRC.{field}"]
+    assert f"STRC.{field}" in sources.held_now(today)
+
+
+def test_planted_rate_jump_cannot_reach_the_page_through_the_yield():
+    # rate 12 -> 15.9 is held; the fresh yield moved only 3.9 points, under its own limit
+    today = snap("2026-11-13", rate=15.9, yld=15.9)
+    held = sources.hold_jumps(today, snap(PREV))
+    i = today["instruments"][0]
+    assert i["stated_rate_pct"]["value"] == 12.0
+    assert i["yield_pct"]["value"] == 12.0 and i["yield_pct"]["held"]["rejected"] == 15.9
+    assert sources.held_now(today) == ["STRC.stated_rate_pct", "STRC.yield_pct"] and len(held) == 2
+
+
+def test_planted_close_jump_rebuilds_the_yield_from_the_kept_close():
+    today = snap("2026-11-13", close=130.0, yld=12.0 * 100 / 130)  # close +30%, yield -2.8 points
+    sources.hold_jumps(today, snap(PREV))
+    assert today["instruments"][0]["yield_pct"]["value"] == 12.0
 
 
 def test_no_day_before_or_no_figure_means_nothing_to_compare():

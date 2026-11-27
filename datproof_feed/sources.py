@@ -649,8 +649,10 @@ def _usdc(today: dt.date, get) -> dict:
 #   stated_rate_pct  1.5 points. The issuers moved their rates at most 0.5 point at a time: STRC 10.0%
 #                    (Sep 2025) to 11.5% (Mar 2026) in 0.25 steps, then 12.0%; SATA 12.25% to 13.0% in
 #                    0.25 steps; SATS is fixed at 15%.
-#   yield_pct        4 points. STRC's 12.2% close move at a yield near 13.5% moved it about 1.9 points;
-#                    the largest move in the daily files is 0.76 point.
+#   yield_pct        4 points. STRC's 12.2% close move at a yield near 13.5% moved it about 1.9 points, STRD's
+#                    9.8% fall (24 Jun 2026) about 2.0; the largest move in the daily files is 0.76 point.
+# STRF, STRK and STRD sit inside the same limits: largest one-day close moves 9.0%, 10.6% and 10.2%.
+# A held close or rate also holds the yield worked out from it.
 # Over the limit: the day before's figure is kept, with its own date, marked stale and "held", and the
 # run goes red (build.py exits 1). A real jump is accepted on the next build if the source gives the same
 # new level again (within the limit of the figure that was held back): two red days, never a false figure.
@@ -693,6 +695,18 @@ def hold_jumps(snap: dict, prev: dict | None) -> list[str]:
             inst[field] = kept
             msg = f"{inst['ticker']}.{field} held at {old_v} ({old.get('as_of') or 'derived'}): new {new_v} is a {m:.2f}{unit} one-day move, over {limit:g}{unit}"
             held.append(msg)
+        # The yield was worked out from the fresh rate and close. If either was held, work it out again from the
+        # figures kept, so a held rate cannot reach the page through the yield.
+        inputs_held = [f for f in ("close_usd", "stated_rate_pct") if (inst.get(f) or {}).get("held")]
+        y = inst.get("yield_pct")
+        if inputs_held and isinstance(y, dict) and not y.get("held"):
+            rate, close = inst["stated_rate_pct"].get("value"), inst["close_usd"].get("value")
+            par = inst.get("par_usd") or 100
+            if rate is not None and close:
+                inst["yield_pct"] = {**y, "value": round(current_yield_pct(rate, par, close), 3), "stale": True,
+                                     "held": {"rejected": y.get("value"), "since": snap.get("date"),
+                                              "because": ", ".join(inputs_held) + " held"}}
+                held.append(f"{inst['ticker']}.yield_pct worked out again from the kept {', '.join(inputs_held)}")
     return held
 
 

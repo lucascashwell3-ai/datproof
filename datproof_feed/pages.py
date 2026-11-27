@@ -667,6 +667,11 @@ def lift_line(feed: dict) -> str:
             f"average yield today, {pct(avg_yield(feed))}, price change left out.")
 
 
+# The line opens "Over the past year", so the short form says the rest; the page caps fine lines at 460 characters
+# and allows one per section.
+FORECAST = "Past prices, not a forecast."
+
+
 def sharpe_line(feed: dict, own: bool = True) -> str:
     rs = sharpe_rows(feed)
     if not rs:
@@ -684,7 +689,7 @@ def sharpe_line(feed: dict, own: bool = True) -> str:
     s += (f" Assumes the bot's own swings of {fixed(min(sw))}% to {fixed(max(sw))}% a year do not move with the stock.")
     if own:
         s += " On their own: " + names([f"{r['ticker']} {fixed(r['sharpe'], 2)}" for r in sharpe_rows(feed)]) + "."
-    return s + " Past prices, not a forecast."  # the line opens "Over the past year"; the page caps fine lines at 460
+    return s + " " + FORECAST
 
 
 def lift_block(feed: dict) -> str:
