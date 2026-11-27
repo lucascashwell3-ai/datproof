@@ -44,7 +44,12 @@ MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "
 AMOUNT = 10_000
 CASH_SHARE = 0.6  # the example account on the home page
 MIN_RECORD = 60   # fewer daily closes than this: say only when the stock started trading
-SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
+# The tool server people install, fixed to one commit so a stranger's machine runs code that was read,
+# not whatever the default branch holds that day. This is the one place the pin lives; every copy of the
+# install command (README, site/index.html, index.md, llms.txt) must match it (tests/test_install_pin.py).
+SERVER_PIN = "17f9c63c65d6e69023084cf0f8403b5c98f5d8f7"
+INSTALL_FROM = "git+https://github.com/lucascashwell3-ai/datproof@" + SERVER_PIN
+SETUP = "claude mcp add datproof -- uvx --from " + INSTALL_FROM + " datproof-mcp"
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
            "lifthead", "lift", "backing", "risk", "situation", "sitnote", "buy", "buyfine", "faq", "chat", "chattag",
            "sources", "about", "counter")

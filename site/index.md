@@ -154,7 +154,7 @@ They are ordinary Nasdaq-listed stocks, so a broker that offers an IRA or HSA wi
 
 One line of setup. Your agent reads DATproof; any order goes through your own broker, placed by you.
 
-    claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+    claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@17f9c63c65d6e69023084cf0f8403b5c98f5d8f7 datproof-mcp
 
 Example. You ask: "I have $8,000 sitting idle for about three months. What are my options?"
 

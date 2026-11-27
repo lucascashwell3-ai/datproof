@@ -14,7 +14,7 @@ no orders. Not advice.
 - **Plug-in for your AI agent, one command:**
 
 ```bash
-claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@17f9c63c65d6e69023084cf0f8403b5c98f5d8f7 datproof-mcp
 ```
 
 ## The feed and the page
@@ -61,7 +61,7 @@ its source and date; a number that could not be fetched is empty, with the reaso
 
 ```bash
 # 1. Run the tool server for any MCP client (or, from a clone: python3 -m datproof_feed.server)
-uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+uvx --from git+https://github.com/lucascashwell3-ai/datproof@17f9c63c65d6e69023084cf0f8403b5c98f5d8f7 datproof-mcp
 
 # 2. Optional: add the Claude Code skill that walks through the questions
 cp -r skills/park-idle-cash ~/.claude/skills/
@@ -117,6 +117,11 @@ python3 -m http.server 8471 --directory site
 - `.github/workflows/daily-brief.yml` — legacy manual-dispatch fallback from that concept;
   the cron was removed 2026-08-22.
 - Tests live in `tests/`.
+- **Moving the install pin.** The install command names one fixed commit (`SERVER_PIN` in `datproof_feed/pages.py`).
+  1. Merge the tool server change to `main` first; the pin must point at a commit on `main`.
+  2. Set `SERVER_PIN` to that commit's full hash and replace the old hash in `README.md` and `site/index.html`.
+  3. Run `python3 -m datproof_feed.pages` to rewrite `index.md` and `llms.txt`, then the tests.
+  4. `tests/test_install_pin.py` fails if any copy still names another commit or the commit is missing.
 
 Built by [Lucas Cashwell](https://github.com/lucascashwell3-ai) · part of the `-proof`
 family (Skillproof · Modelproof).
