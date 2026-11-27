@@ -433,5 +433,81 @@
       "days": 365,
       "reason": "not enough history: 0 past holds of 365 days fit in 29 trading days of closes; 60 are needed"
     }
+  },
+  "by_buy_price": {
+    "issuer_aims_price_near_100": false,
+    "30": {
+      "days": 30,
+      "first_results_around": "2027-02-06",
+      "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed"
+    },
+    "90": {
+      "days": 90,
+      "first_results_around": "2027-04-07",
+      "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed"
+    },
+    "180": {
+      "days": 180,
+      "first_results_around": "2027-07-06",
+      "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed"
+    }
+  },
+  "sharpe": {
+    "returns": 28,
+    "reason": "not enough history: 28 daily returns in 29 trading days of closes; 60 are needed",
+    "first_results_around": "2027-01-07"
+  },
+  "backing": {
+    "issuer": "Strive",
+    "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
+    "backing_x": 1.48,
+    "assets_usd": 3126613165,
+    "claims_usd": 2117121300,
+    "debt_usd": 0.0,
+    "ahead": [
+      "SATA"
+    ],
+    "ahead_usd": 1403017600,
+    "own_usd": 714103700,
+    "break_even_btc_usd": 38124,
+    "below_today_pct": 37.9,
+    "below_record_pct": 69.8,
+    "cash_years": 1.5,
+    "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
+    "inputs": {
+      "btc_usd": {
+        "value": 61381.835,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_record_usd": {
+        "value": 126080.0,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_held": {
+        "value": 43403.934809050006,
+        "unit": "btc",
+        "as_of": "2026-11-13",
+        "source": "https://strive.com/treasury/api/dashboard/base-data",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null,
+        "filing": "https://www.sec.gov/ix?doc=/Archives/edgar/data/0001920406/000162828026074004/asst-20261116.htm"
+      },
+      "cash_usd": {
+        "value": 462400000.0,
+        "unit": "usd",
+        "as_of": "2026-11-20",
+        "source": "https://strive.com/treasury/api/dashboard/base-data",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      }
+    }
   }
 }

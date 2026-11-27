@@ -1,7 +1,9 @@
 """Write the public /v1/ files from a day's snapshot.
 
     instruments.json          the snapshot without the dividend lists and daily closes, plus each
-                              instrument's hold odds for 7, 30, 90, 180 and 365 days
+                              instrument's hold odds for 7, 30, 90, 180 and 365 days, and the same
+                              holds split by the price paid (by_buy_price), and the bitcoin
+                              crash test (backing) for each Strategy and Strive preferred
     instrument/<TICKER>.json  one instrument, with its dividends, daily closes and hold odds
     changes.json              what changed day to day, newest first, 90 entries at most
     method.json               every formula, flag and source in plain words (from compare.METHOD
@@ -15,8 +17,8 @@ from __future__ import annotations
 import json
 import pathlib
 
-from datproof_feed import scenarios
-from datproof_feed.compare import METHOD, _tbill_pct, hold_odds_table
+from datproof_feed import backing, scenarios
+from datproof_feed.compare import METHOD, _tbill_pct, buy_price_table, hold_odds_table, sharpe_table
 
 MAX_CHANGES = 90
 
@@ -69,7 +71,11 @@ def publish(snap: dict, out, prev: dict | None) -> None:
     (out / "instrument").mkdir(parents=True, exist_ok=True)
 
     tbill = _tbill_pct(snap)
-    full = [{**i, "hold_odds": hold_odds_table(i, tbill)} for i in snap.get("instruments", [])]
+    crash = backing.table(snap.get("backing"))
+    full = [{**i, "hold_odds": hold_odds_table(i, tbill), "by_buy_price": buy_price_table(i),
+             "sharpe": sharpe_table(i, tbill),
+             **({"backing": crash[i["ticker"]]} if i["ticker"] in crash else {})}
+            for i in snap.get("instruments", [])]
     lean = {**snap, "instruments": [{k: v for k, v in i.items() if k not in ("dividends", "closes")}
                                     for i in full]}
     (out / "instruments.json").write_text(_dump(lean))

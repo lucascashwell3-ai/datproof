@@ -37,6 +37,19 @@ its source and date; a number that could not be fetched is empty, with the reaso
   `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `scenarios.json`,
   `method.json` (every formula and flag in plain words), `status.json`, and the dated
   `days/<date>.json`.
+- **Page** (rewritten each day from the files, figures as plain text so readers that run no
+  script still get them): `https://lucascashwell3-ai.github.io/datproof/next/`, with a Markdown copy at `index.md`.
+  `python -m datproof_feed.pages` rebuilds it.
+- **By price paid**: `by_buy_price` in each instrument splits the 30, 90 and 180-day holds by the
+  close paid (under $90, $90 to $95, $95 to $100, $100 and over): buys, losses, average and worst
+  result, and how many separate drops the buys came from, for every issue, with whether its issuer
+  states it adjusts the rate to keep the price near $100.
+- **Sharpe**: `sharpe` in each instrument: past-year Sharpe ratio, total return and yearly swings from
+  daily total returns, plus a worked example of a bot moving a quarter of its idle cash in.
+- **Crash test**: `backing` in each Strategy and Strive preferred: (bitcoin held × bitcoin price + cash)
+  ÷ (debt + every preferred ahead in line + the issue itself), the bitcoin price where that falls to
+  1.0×, and years of the yearly bill covered by cash set aside. `python -m datproof_feed.backing`
+  fetches the daily inputs into `data/backing.json`; filing figures live in `data/backing_static.json`.
 - **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
   and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
   returns each option's hold odds for exactly those days (how past holds of that length turned

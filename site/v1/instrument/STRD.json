@@ -1214,5 +1214,262 @@
       "days": 365,
       "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
     }
+  },
+  "by_buy_price": {
+    "issuer_aims_price_near_100": false,
+    "30": {
+      "days": 30,
+      "holds": 230,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-10-26",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 230,
+          "lost": 127,
+          "avg_pct": 0.22,
+          "worst_pct": -28.47,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 1,
+        "100": 1
+      }
+    },
+    "90": {
+      "days": 90,
+      "holds": 189,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-08-27",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 189,
+          "lost": 81,
+          "avg_pct": 1.79,
+          "worst_pct": -28.39,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 1,
+        "100": 1
+      }
+    },
+    "180": {
+      "days": 180,
+      "holds": 127,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-05-29",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 127,
+          "lost": 90,
+          "avg_pct": -4.34,
+          "worst_pct": -24.01,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 1,
+        "100": 1
+      }
+    }
+  },
+  "sharpe": {
+    "returns": 251,
+    "from": "2025-11-25",
+    "to": "2026-11-25",
+    "tbill_pct": 4.19,
+    "total_return_pct": -1.28,
+    "swings_pct": 31.17,
+    "sharpe": -0.02,
+    "example": {
+      "bot_sharpe": 1.0,
+      "cash_share": 0.6,
+      "slice_of_cash": 0.25,
+      "bot_swings_pct": [
+        10.0,
+        20.0
+      ],
+      "correlation": 0.0,
+      "slice_of_account": 0.15,
+      "sharpe_by_bot_swings": {
+        "10": 0.83,
+        "20": 0.93
+      }
+    }
+  },
+  "backing": {
+    "issuer": "Strategy",
+    "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
+    "backing_x": 2.97,
+    "assets_usd": 57072977905,
+    "claims_usd": 19236259500,
+    "debt_usd": 6750000000,
+    "ahead": [
+      "STRF",
+      "STRC",
+      "STRE",
+      "STRK"
+    ],
+    "ahead_usd": 11083837400,
+    "own_usd": 1402422100,
+    "break_even_btc_usd": 16936,
+    "below_today_pct": 72.4,
+    "below_record_pct": 86.6,
+    "cash_years": 2.65,
+    "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
+    "inputs": {
+      "btc_usd": {
+        "value": 61381.835,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_record_usd": {
+        "value": 126080.0,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_held": {
+        "value": 851305.0,
+        "unit": "btc",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "cash_usd": {
+        "value": 4818314860,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null,
+        "formula": "totalReserve - btcNav (the dashboard's dollars on hand)"
+      }
+    }
   }
 }

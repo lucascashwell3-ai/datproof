@@ -795,31 +795,7 @@
     inkLift();
   }
 
-  // ---------- 5. backed by bitcoin ----------
-  function renderBacked() {
-    var cov = feed.coverage && feed.coverage.issuers;
-    if (!cov || !cov.length) { $("#backed").hidden = true; return; }
-    var html = cov.map(function (c) {
-      var yrs = c.years_of_dividends_covered, btc = c.btc_held, res = c.dividend_reserve_months;
-      var big, what, two = "", srcs = [yrs, btc, res].filter(has);
-      if (!srcs.length) return "";
-      if (has(yrs)) {
-        big = n(v(yrs), 1) + "<small>years</small>";
-        what = "of dividends and interest covered by its bitcoin and cash. " + esc(c.issuer) + "'s own figure.";
-        if (has(btc)) two = '<b class="num">' + n(v(btc), 0) + "</b> bitcoin held";
-      } else if (has(btc)) {
-        big = n(v(btc), 0) + "<small>bitcoin</small>";
-        what = "held by " + esc(c.issuer) + ", by its own count.";
-        if (has(res)) two = '<b class="num">' + n(v(res), 0) + " months</b> of dividends set aside in cash, " + esc(c.issuer) + "'s own figure";
-      } else return "";
-      var s = srcs[0];
-      return '<div class="bk"><h3 class="bk-iss">' + esc(c.issuer) + '</h3><p class="bk-big num">' + big + '</p><p class="bk-what">' + what + "</p>" +
-        (two ? '<p class="bk-two">' + two + "</p>" : "") +
-        '<p class="bk-src"><a href="' + esc(s.source) + '" rel="noopener">' + esc(host(s.source)) + "</a>, as of " + day(s.as_of) + "</p></div>";
-    }).join("");
-    if (!html) { $("#backed").hidden = true; return; }
-    $("#backed-grid").innerHTML = html;
-  }
+  // ---------- 5. backed by bitcoin and cash: written into the HTML by datproof_feed/pages.py ----------
 
   // ---------- 6. calculator ----------
   function parseNum(s) { var x = Number(String(s).replace(/[$,\s]/g, "")); return isFinite(x) ? x : NaN; }
@@ -877,6 +853,12 @@
       add2(i.ticker + " dividend rate", i.stated_rate_pct);
     });
     LEAD.forEach(function (t) { var i = inst(t); if (i && i.dividends_source) items.push([t + " dividends paid", i.dividends_source, feed.date]); });
+    var st = (feed.backing || {}).static || {};
+    if (st.strategy && st.strategy.debt_usd) items.push(["Strategy debt", st.strategy.debt_usd.source, st.strategy.debt_usd.as_of]);
+    if (st.strategy && st.strategy.usd_reserve_usd) items.push(["Strategy USD Reserve", st.strategy.usd_reserve_usd.source, st.strategy.usd_reserve_usd.as_of]);
+    if (st.bitcoin_falls) items.push(["Bitcoin's past falls (daily closes)", st.bitcoin_falls.source, st.bitcoin_falls.as_of]);
+    ((st.comparison || {}).rows || []).forEach(function (r) { items.push([r.name + ", assets behind each $1 owed", r.source, r.as_of]); });
+    ((st.comparison || {}).no_ratio || []).forEach(function (r) { items.push([r.name, r.source, r.as_of]); });
     ((feed.coverage || {}).issuers || []).forEach(function (c) {
       add2(c.issuer + " years of dividends covered", c.years_of_dividends_covered);
       add2(c.issuer + " bitcoin held", c.btc_held);
@@ -938,7 +920,7 @@
   function start(d) {
     feed = d[0]; scen = d[1];
     [d[2], d[3]].forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
-    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderOdds(); renderLift(); renderBacked(); renderCalc(); renderChat(); renderSources();
+    renderHero(); drawEarn(true); renderPanels(); drawPaid(); renderOdds(); renderLift(); renderCalc(); renderChat(); renderSources();
     $("#in-amount").addEventListener("input", fromInput);
     $("#in-slide").addEventListener("input", fromSlide);
     $("#f-calc").addEventListener("submit", function (e) { e.preventDefault(); });

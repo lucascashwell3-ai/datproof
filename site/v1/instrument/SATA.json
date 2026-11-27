@@ -1899,5 +1899,257 @@
       "days": 365,
       "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
     }
+  },
+  "by_buy_price": {
+    "issuer_aims_price_near_100": true,
+    "30": {
+      "days": 30,
+      "holds": 230,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-10-26",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 9,
+          "lost": 0,
+          "avg_pct": 11.81,
+          "worst_pct": 7.79,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 48,
+          "lost": 1,
+          "avg_pct": 5.11,
+          "worst_pct": -3.34,
+          "reason": null
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 133,
+          "lost": 35,
+          "avg_pct": 0.4,
+          "worst_pct": -12.22,
+          "reason": null
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 40,
+          "lost": 27,
+          "avg_pct": -1.95,
+          "worst_pct": -14.96,
+          "reason": null
+        }
+      ],
+      "drops_under": {
+        "90": 2,
+        "95": 6,
+        "100": 13
+      }
+    },
+    "90": {
+      "days": 90,
+      "holds": 189,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-08-27",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 9,
+          "lost": 0,
+          "avg_pct": 18.39,
+          "worst_pct": 15.0,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 48,
+          "lost": 0,
+          "avg_pct": 8.39,
+          "worst_pct": 2.95,
+          "reason": null
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 114,
+          "lost": 12,
+          "avg_pct": 3.02,
+          "worst_pct": -11.53,
+          "reason": null
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 18,
+          "lost": 6,
+          "avg_pct": -0.2,
+          "worst_pct": -11.77,
+          "reason": null
+        }
+      ],
+      "drops_under": {
+        "90": 2,
+        "95": 6,
+        "100": 7
+      }
+    },
+    "180": {
+      "days": 180,
+      "holds": 127,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-05-29",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 6,
+          "lost": 0,
+          "avg_pct": 20.76,
+          "worst_pct": 17.4,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 44,
+          "lost": 1,
+          "avg_pct": 12.44,
+          "worst_pct": -0.32,
+          "reason": null
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 66,
+          "lost": 1,
+          "avg_pct": 6.54,
+          "worst_pct": -0.47,
+          "reason": null
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 11,
+          "lost": 6,
+          "avg_pct": -0.32,
+          "worst_pct": -8.19,
+          "reason": null
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 4,
+        "100": 4
+      }
+    }
+  },
+  "sharpe": {
+    "returns": 251,
+    "from": "2025-11-25",
+    "to": "2026-11-25",
+    "tbill_pct": 4.19,
+    "total_return_pct": 14.04,
+    "swings_pct": 24.38,
+    "sharpe": 0.49,
+    "example": {
+      "bot_sharpe": 1.0,
+      "cash_share": 0.6,
+      "slice_of_cash": 0.25,
+      "bot_swings_pct": [
+        10.0,
+        20.0
+      ],
+      "correlation": 0.0,
+      "slice_of_account": 0.15,
+      "sharpe_by_bot_swings": {
+        "10": 1.08,
+        "20": 1.06
+      }
+    }
+  },
+  "backing": {
+    "issuer": "Strive",
+    "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
+    "backing_x": 2.23,
+    "assets_usd": 3126613165,
+    "claims_usd": 1403017600,
+    "debt_usd": 0.0,
+    "ahead": [],
+    "ahead_usd": 0,
+    "own_usd": 1403017600,
+    "break_even_btc_usd": 21671,
+    "below_today_pct": 64.7,
+    "below_record_pct": 82.8,
+    "cash_years": 1.5,
+    "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
+    "inputs": {
+      "btc_usd": {
+        "value": 61381.835,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_record_usd": {
+        "value": 126080.0,
+        "unit": "usd",
+        "as_of": "2026-11-27",
+        "source": "https://api.strategy.com/btc/bitcoinKpis",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      },
+      "btc_held": {
+        "value": 43403.934809050006,
+        "unit": "btc",
+        "as_of": "2026-11-13",
+        "source": "https://strive.com/treasury/api/dashboard/base-data",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null,
+        "filing": "https://www.sec.gov/ix?doc=/Archives/edgar/data/0001920406/000162828026074004/asst-20261116.htm"
+      },
+      "cash_usd": {
+        "value": 462400000.0,
+        "unit": "usd",
+        "as_of": "2026-11-20",
+        "source": "https://strive.com/treasury/api/dashboard/base-data",
+        "fetched_at": "2026-11-27T04:12:27Z",
+        "reason": null
+      }
+    }
   }
 }

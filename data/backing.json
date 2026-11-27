@@ -1,0 +1,162 @@
+{
+  "date": "2026-11-27",
+  "fetched_at": "2026-11-27T04:12:30Z",
+  "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
+  "inputs": {
+    "SATA_outstanding_usd": {
+      "value": 1403017600.0,
+      "unit": "usd",
+      "as_of": "2026-11-13",
+      "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-20&toDate=2026-11-27",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "shares": 14030176
+    },
+    "SATS_outstanding_usd": {
+      "value": 714103700.0,
+      "unit": "usd",
+      "as_of": "2026-11-13",
+      "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-20&toDate=2026-11-27",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "shares": 7141037
+    },
+    "STRC_outstanding_usd": {
+      "value": 7546844100.0,
+      "unit": "usd",
+      "as_of": "2026-11-25",
+      "source": "https://api.strategy.com/btc/strcKpiData",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "basis": "the dashboard's notional at $100 stated amount a share"
+    },
+    "STRD_outstanding_usd": {
+      "value": 1402422100.0,
+      "unit": "usd",
+      "as_of": "2026-11-25",
+      "source": "https://api.strategy.com/btc/strdKpiData",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "basis": "the dashboard's notional at $100 stated amount a share"
+    },
+    "STRE_outstanding_usd": {
+      "value": 850950000.0,
+      "unit": "usd",
+      "as_of": "2026-11-26",
+      "source": "https://api.strategy.com/btc/streKpiData",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "basis": "the dashboard's notional at $100 stated amount a share"
+    },
+    "STRF_outstanding_usd": {
+      "value": 1283968900.0,
+      "unit": "usd",
+      "as_of": "2026-11-25",
+      "source": "https://api.strategy.com/btc/strfKpiData",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "basis": "the dashboard's notional at $100 stated amount a share"
+    },
+    "STRK_outstanding_usd": {
+      "value": 1402074400.0,
+      "unit": "usd",
+      "as_of": "2026-11-25",
+      "source": "https://api.strategy.com/btc/strkKpiData",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "basis": "the dashboard's notional at $100 stated amount a share"
+    },
+    "btc_record_usd": {
+      "value": 126080.0,
+      "unit": "usd",
+      "as_of": "2026-11-27",
+      "source": "https://api.strategy.com/btc/bitcoinKpis",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "btc_usd": {
+      "value": 61381.835,
+      "unit": "usd",
+      "as_of": "2026-11-27",
+      "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "btc_usd_strategy": {
+      "value": 61385.0,
+      "unit": "usd",
+      "as_of": "2026-11-27",
+      "source": "https://api.strategy.com/btc/bitcoinKpis",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "strategy_btc_held": {
+      "value": 851305.0,
+      "unit": "btc",
+      "as_of": "2026-11-27",
+      "source": "https://api.strategy.com/btc/bitcoinKpis",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "strategy_cash_usd": {
+      "value": 4818314860,
+      "unit": "usd",
+      "as_of": "2026-11-27",
+      "source": "https://api.strategy.com/btc/bitcoinKpis",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "formula": "totalReserve - btcNav (the dashboard's dollars on hand)"
+    },
+    "strategy_debt_dashboard_usd": {
+      "value": 6713979360,
+      "unit": "usd",
+      "as_of": "2026-11-27",
+      "source": "https://api.strategy.com/btc/bitcoinKpis",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "formula": "(debtPrefByBN - prefByBN) / 100 * btcNav; a cross-check on the filing figure"
+    },
+    "strategy_yearly_bill_usd": {
+      "value": 1406116656.5,
+      "unit": "usd",
+      "as_of": "2026-11-27",
+      "source": "https://api.strategy.com/btc/bitcoinKpis",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "strive_btc_held": {
+      "value": 43403.934809050006,
+      "unit": "btc",
+      "as_of": "2026-11-13",
+      "source": "https://strive.com/treasury/api/dashboard/base-data",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null,
+      "filing": "https://www.sec.gov/ix?doc=/Archives/edgar/data/0001920406/000162828026074004/asst-20261116.htm"
+    },
+    "strive_cash_usd": {
+      "value": 462400000.0,
+      "unit": "usd",
+      "as_of": "2026-11-20",
+      "source": "https://strive.com/treasury/api/dashboard/base-data",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "strive_debt_usd": {
+      "value": 0.0,
+      "unit": "usd",
+      "as_of": "2026-11-20",
+      "source": "https://strive.com/treasury/api/dashboard/base-data",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    },
+    "strive_reserve_months": {
+      "value": 18.0,
+      "unit": "months",
+      "as_of": "2026-11-20",
+      "source": "https://strive.com/treasury/api/dashboard/base-data",
+      "fetched_at": "2026-11-27T04:12:27Z",
+      "reason": null
+    }
+  },
+  "failed_checks": []
+}
