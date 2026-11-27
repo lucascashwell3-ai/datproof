@@ -248,8 +248,8 @@ def rate_val(feed: dict, rid: str) -> float | None:
 # The comparison under the panels, in this order. (id, plain label, short source for the source line)
 RATES = [("checking_avg", "Checking, national average", "FDIC"),
          ("savings_avg", "Savings, national average", "FDIC"),
-         ("hys_top", "High-yield savings, top widely available", "Bankrate"),
-         ("cd12_top", "12-month CD, top widely available", "Bankrate"),
+         ("hys_top", "High-yield savings, best rate", "Bankrate"),
+         ("cd12_top", "12-month CD, best rate", "Bankrate"),
          ("mmf_spaxx", "Money market fund", "Fidelity SPAXX 7-day yield"),
          ("tbill_4w", "4-week T-bill", "US Treasury"),
          ("muni_mub", "Municipal bond fund", "iShares MUB 30-day SEC yield")]
@@ -599,15 +599,14 @@ def lift_head(feed: dict) -> str:
     pts = f"{rnd(lo)}" if rnd(lo) == rnd(hi) else f"{rnd(lo)} to {rnd(hi)}"
     bot = rs[0]["ex"].get("bot_sharpe", 1.0)
     if all(abs(r["lo"] - bot) <= LEVEL and abs(r["hi"] - bot) <= LEVEL for r in rs):
-        tail = "about the same Sharpe ratio"
+        tail = "same Sharpe"
     elif all(r["lo"] > bot for r in rs):
-        tail = "a higher Sharpe ratio"
+        tail = "higher Sharpe"
     elif all(r["hi"] < bot for r in rs):
-        tail = "a lower Sharpe ratio"
+        tail = "lower Sharpe"
     else:
-        tail = "a Sharpe ratio a little higher or lower"
-    word = "more" if lo >= 0 else "different"
-    return f"About {pts} points {word} return a year, {tail}"
+        tail = "Sharpe a little higher or lower"
+    return f"{'More' if lo >= 0 else 'Less'} return, {tail}"
 
 
 def avg_yield(feed: dict) -> float:
@@ -633,26 +632,32 @@ def lift_bars(feed: dict) -> str:
 def lift_line(feed: dict) -> str:
     label, r, d = comparison_name(feed)
     dc = lead(feed)
-    return (f"{usd(AMOUNT)} account, {rnd(CASH_SHARE * 100)}% idle, before tax: {label} {pct(r, 2)} against dividends at the "
-            f"average yield of {names([i['ticker'] for i in dc])}, {pct(avg_yield(feed))}, price change left out.")
+    return (f"{usd(AMOUNT)} account, {rnd(CASH_SHARE * 100)}% idle, before tax: {label} at {pct(r, 2)}; dividends at the "
+            f"average yield today, {pct(avg_yield(feed))}, price change left out.")
 
 
-def sharpe_line(feed: dict) -> str:
+def sharpe_line(feed: dict, own: bool = True) -> str:
     rs = sharpe_rows(feed)
     if not rs:
         return ""
     ex = rs[0]["ex"]
     sw = ex.get("bot_swings_pct") or [10, 20]
-    worked = [f"{r['ticker']} {fixed(r['lo'], 2)}–{fixed(r['hi'], 2)}, +{fixed(r['extra'], 1)} points"
-              for r in rs if r["extra"] is not None]
-    own = [f"{r['ticker']} {fixed(r['sharpe'], 2)}" for r in rs]
-    return (f"Past year, a Sharpe-{fixed(ex.get('bot_sharpe', 1.0), 1)} bot {rnd(ex.get('cash_share', 0.6) * 100)}% in cash, "
-            f"all of it in: {'; '.join(worked)} (own: {names(own)}). Assumes its swings of {fixed(min(sw))}–{fixed(max(sw))}% "
-            "a year do not move with the stock.")
+    rs = [r for r in rs if r["extra"] is not None]
+    if not rs:
+        return ""
+    first, rest = rs[0], rs[1:]
+    s = (f"Over the past year, a bot with a Sharpe ratio of {fixed(ex.get('bot_sharpe', 1.0), 1)} that kept "
+         f"{rnd(ex.get('cash_share', 0.6) * 100)}% in cash and put all of it in {first['ticker']} would have scored "
+         f"{fixed(first['lo'], 2)} to {fixed(first['hi'], 2)} and added {fixed(first['extra'], 1)} points of return")
+    s += "".join(f"; in {r['ticker']}, {fixed(r['lo'], 2)} to {fixed(r['hi'], 2)} and {fixed(r['extra'], 1)} points" for r in rest) + "."
+    s += (f" Assumes the bot's own swings of {fixed(min(sw))}% to {fixed(max(sw))}% a year do not move with the stock.")
+    if own:
+        s += " On their own: " + names([f"{r['ticker']} {fixed(r['sharpe'], 2)}" for r in sharpe_rows(feed)]) + "."
+    return s
 
 
 def lift_block(feed: dict) -> str:
-    sl = sharpe_line(feed)
+    sl = sharpe_line(feed, own=False)
     return lift_bars(feed) + f'<p class="fine lift-sharpe">{e(lift_line(feed) + (" " + sl if sl else ""))}</p>'
 
 
@@ -794,20 +799,6 @@ def risk_items(feed: dict) -> list[tuple[str, str]]:
                 s += f", trading since {day(x['from'])}"
             parts.append(s)
         out.append(("Prices fall.", "Largest fall from a high close in the past year: " + "; ".join(parts) + "."))
-    weak = []
-    tb = tbill(feed)
-    for i, p in buy_price(feed):
-        b = next((b for b in p["bands"] if b["band"] == "95_to_100"), None)
-        hurdle = tb * BUY_DAYS / 365 if tb is not None else None  # a T-bill held as long
-        if b and b.get("avg_pct") is not None and (hurdle is None or b["avg_pct"] < hurdle):
-            weak.append(f"{i['ticker']} bought at $95 to $100 averaged {signed(b['avg_pct'])} over {BUY_DAYS} days, "
-                        f"and {b['lost']} of {b['buys']} such holds lost money")
-    od = odds_rows(feed)
-    if weak or od:
-        s = ("; ".join(weak) + "." if weak else "")
-        if od:
-            s += " The worst 3-month hold: " + names([f"{t} {signed(c[1]['worst_pct'])}" for t, c in od]) + "."
-        out.append(("Buying near $100 earned little over short holds.", s.strip()))
     var = [i["ticker"] for i in lead(feed) if rate_kind(i) == "variable"]
     fix = [i for i in lead(feed) if rate_kind(i) == "fixed"]
     s = ""
@@ -926,6 +917,10 @@ def buy_block(feed: dict) -> str:
     body = ""
     for b in brokers:
         cells = ""
+        if not any(((b.get("tickers") or {}).get(t) or {}).get("url") for t in tickers):
+            body += (f'<tr><th scope="row">{e(b["name"])}</th><td colspan="{len(tickers)}"><span class="wb-n">'
+                     f'search the ticker in the app</span></td></tr>')
+            continue
         for t in tickers:
             c = (b.get("tickers") or {}).get(t) or {}
             if c.get("url"):
@@ -1265,6 +1260,9 @@ def md_buy(feed: dict) -> str:
     out = ("## Where to buy\n\nAll three trade on Nasdaq under their tickers, so a US stock broker can place the order. "
            "DATproof holds no money and places no orders.\n\n| Broker | " + " | ".join(tickers) + " |\n|---|" + "---|" * len(tickers) + "\n")
     for b in doc["brokers"]:
+        if not any(((b.get("tickers") or {}).get(t) or {}).get("url") for t in tickers):
+            out += f"| {b['name']} | search the ticker in the app | | |\n"
+            continue
         cells = []
         for t in tickers:
             c = (b.get("tickers") or {}).get(t) or {}
@@ -1300,7 +1298,7 @@ def next_md(feed: dict) -> str:
 {md_table(feed)}
 {compare_fine(feed, False)}
 
-## Sell any trading day
+## Liquid and steady
 
 {liquid(feed)}
 

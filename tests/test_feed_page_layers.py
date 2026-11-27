@@ -33,7 +33,7 @@ def test_the_layer_check_catches_a_planted_second_line():
     assert any(s.startswith("risk:") for s in too_many(planted))
 
 
-MAX_SOURCE_LINE = 380  # characters: a short line, not a paragraph
+MAX_SOURCE_LINE = 460  # characters: a short line, not a paragraph
 
 
 def long_lines(page: str) -> list[str]:

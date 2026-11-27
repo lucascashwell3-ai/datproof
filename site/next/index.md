@@ -17,15 +17,15 @@ Prices at the 25 Nov 2026 close · data for 27 Nov 2026. Page with charts: https
 | SATS (Strive) | 16.9% | 25 Nov 2026 | $1,695 | +13.2% |
 | Checking, national average | 0.07% | 16 Nov 2026 | $7 | −3.7% |
 | Savings, national average | 0.39% | 16 Nov 2026 | $39 | −3.4% |
-| High-yield savings, top widely available | 4.40% | 27 Nov 2026 | $440 | +0.7% |
-| 12-month CD, top widely available | 4.65% (national average 1.81%) | 27 Nov 2026 | $465 | +0.9% |
+| High-yield savings, best rate | 4.40% | 27 Nov 2026 | $440 | +0.7% |
+| 12-month CD, best rate | 4.65% (national average 1.81%) | 27 Nov 2026 | $465 | +0.9% |
 | Money market fund | 3.61% | 25 Nov 2026 | $361 | −0.1% |
 | 4-week T-bill | 4.19% | 27 Nov 2026 | $419 | +0.5% |
 | Municipal bond fund | 3.81% | 25 Nov 2026 | $381 | +0.1% |
 
 Digital credit is dividends only, before tax, price change left out; yield = yearly dividend on $100 / today's price. Past year: 26 Nov 2025 to 25 Nov 2026. Inflation 3.7% (US CPI, Sep 2026). Rates: FDIC 16 Nov (https://www.fdic.gov/national-rates-and-rate-caps), Bankrate 27 Nov (https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/), Fidelity 25 Nov (https://www.fidelity.com/investing/cash-management), Treasury 27 Nov (https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611), iShares 25 Nov (https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub).
 
-## Sell any trading day
+## Liquid and steady
 
 Sell at the market price, which moves every day and tends to move with bitcoin. Average trading value over the past 30 days: STRC $213M, SATA $37M and SATS $30M a day.
 
@@ -60,9 +60,9 @@ Each day of the past year: buy, hold, collect the dividends, sell. Dividends plu
 
 Closes from 26 Nov 2025 to 27 Nov 2026.
 
-## About 6 points more return a year, about the same Sharpe ratio
+## More return, same Sharpe
 
-$10,000 account, 60% idle, before tax: high-yield savings 4.40% against dividends at the average yield of STRC, SATA and SATS, 14.5%, price change left out. Past year, a Sharpe-1.0 bot 60% in cash, all of it in: STRC 0.93–1.06, +5.6 points; SATA 0.87–1.03, +5.5 points (own: STRC 0.49 and SATA 0.47). Assumes its swings of 10–20% a year do not move with the stock.
+$10,000 account, 60% idle, before tax: high-yield savings at 4.40%; dividends at the average yield today, 14.5%, price change left out. Over the past year, a bot with a Sharpe ratio of 1.0 that kept 60% in cash and put all of it in STRC would have scored 0.93 to 1.06 and added 5.6 points of return; in SATA, 0.87 to 1.03 and 5.5 points. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47.
 
 ## Backed by bitcoin and cash
 
@@ -90,7 +90,6 @@ Municipal bonds have no such figure: they are backed by taxing power or project 
 ## What can go wrong
 
 - **Prices fall.** Largest fall from a high close in the past year: STRC 25.5% (12 Jan 2026 to 26 Jun 2026); SATA 17.9% (16 Jan 2026 to 5 Feb 2026); SATS 11.5% (13 Nov 2026 to 20 Nov 2026), trading since 16 Oct 2026.
-- **Buying near $100 earned little over short holds.** STRC bought at $95 to $100 averaged +0.2% over 90 days, and 38 of 112 such holds lost money. The worst 3-month hold: STRC −22.5% and SATA −11.8%.
 - **Issuers can change or reset rates.** STRC and SATA have variable rates the issuer resets and can lower. SATS has a fixed 15% rate; each dividend is still declared by the issuer's board.
 - **Bitcoin falls.** Bitcoin has fallen 77% to 85% from its record in each of its last three big falls; today it is 52% below its $126,080 record.
 - **SATS is new.** Trading since 16 Oct 2026; no 90-day record until about 7 Apr 2027.
@@ -120,7 +119,7 @@ All three trade on Nasdaq under their tickers, so a US stock broker can place th
 | Broker | STRC | SATA | SATS |
 |---|---|---|---|
 | Coinbase | https://www.coinbase.com/stock/STRC | https://www.coinbase.com/stock/SATA | https://www.coinbase.com/stock/SATS |
-| Interactive Brokers | carries it; no page link | carries it; no page link | carries it; no page link |
+| Interactive Brokers | search the ticker in the app | | |
 | Kraken (US) | https://kraken.com/stocks/STRC | https://kraken.com/stocks/SATA | https://kraken.com/stocks/SATS |
 | Public | https://public.com/stocks/strc | https://public.com/stocks/sata | https://public.com/stocks/sats |
 | Robinhood | https://robinhood.com/us/en/stocks/STRC | https://robinhood.com/us/en/stocks/SATA | https://robinhood.com/us/en/stocks/SATS |

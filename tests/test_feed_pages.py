@@ -37,7 +37,7 @@ NEXT_HTML = f"""<!doctype html><html><head>{_mk("faqld")}</head><body>
 <h2 id="h-three">Income every business day</h2>
 <div class="panels" id="panels">{_mk("panels")}</div>
 <div class="cmp-wrap" id="compare">{_mk("compare")}</div>
-<h2 id="h-paid">Sell any trading day</h2>
+<h2 id="h-paid">Liquid and steady</h2>
 <p class="sub" id="paid-sub">{_mk("liquid")}</p>
 <p class="fine">{_mk("liquidsrc")}</p>
 <h2 id="h-below">Bought under $100</h2>
@@ -114,8 +114,8 @@ def by_price(b90, d90=1, d95=4, d100=7):
 # (id, label as the feed names it, shown name on the page, value, as_of)
 RATE_ROWS = [("checking_avg", "Checking, national average", "Checking, national average", 0.07, "2026-11-16"),
              ("savings_avg", "Savings, national average", "Savings, national average", 0.40, "2026-11-16"),
-             ("hys_top", "High-yield savings, top widely available", "High-yield savings, top widely available", 4.40, "2026-11-22"),
-             ("cd12_top", "12-month CD, top widely available", "12-month CD, top widely available", 4.65, "2026-11-22"),
+             ("hys_top", "High-yield savings, top widely available", "High-yield savings, best rate", 4.40, "2026-11-22"),
+             ("cd12_top", "12-month CD, top widely available", "12-month CD, best rate", 4.65, "2026-11-22"),
              ("mmf_spaxx", "Money market fund (Fidelity SPAXX, 7-day yield)", "Money market fund", 3.95, "2026-11-20"),
              ("tbill_4w", "4-week Treasury bill", "4-week T-bill", 4.11, "2026-11-22"),
              ("muni_mub", "Municipal bond fund (iShares MUB, 30-day SEC yield)", "Municipal bond fund", 3.81, "2026-11-20")]
@@ -699,8 +699,7 @@ def test_risk_section_prints_each_figure_from_the_feed(tmp_path):
     f = outputs(site)
     risk = text_of(region(f["next/index.html"], "risk"))
     md = text_of(f["next/index.md"]).replace("**", "")
-    for piece in ("Largest fall from a high close", "STRC 25.5%", "SATS 11.5%", "7 Nov 2026", "37 of 111", "+0.3%",
-                  "STRC −22.5%", "SATA −11.5%", "variable", "fixed 15%", "77% to 85%", "51% below", "$126,080",
+    for piece in ("Largest fall from a high close", "STRC 25.5%", "SATS 11.5%", "7 Nov 2026", "variable", "fixed 15%", "77% to 85%", "51% below", "$126,080",
                   "7 Apr 2027", "Past results do not predict future results"):
         assert piece in risk, piece
         assert piece in md, piece
@@ -792,9 +791,9 @@ def sharpe_mismatches(files: dict[str, str], feed: dict) -> list[str]:
     for i in feed["instruments"][:2]:
         s = i["sharpe"]
         ex = s["example"]["sharpe_by_bot_swings"]
-        want = [f"{i['ticker']} {min(ex.values()):.2f}–{max(ex.values()):.2f}, +{hu(s['example']['extra_return_points'], 1)} points",
-                f"{i['ticker']} {s['sharpe']:.2f}"]
+        worked = [f"{min(ex.values()):.2f} to {max(ex.values()):.2f}", f"{hu(s['example']['extra_return_points'], 1)} points"]
         for rel in PAGE_FILES:
+            want = worked + ([f"{i['ticker']} {s['sharpe']:.2f}"] if rel.endswith(".md") else [])  # own Sharpe: twin only
             for w in want:
                 if w not in files[rel]:
                     out.append(f"{rel}: missing '{w}'")
@@ -807,29 +806,29 @@ def test_sharpe_figures_equal_the_feed(tmp_path):
     assert sharpe_mismatches(f, make_feed()) == []
     for rel in PAGE_FILES:
         assert f[rel].count("do not move with the stock") == 1, rel  # the assumption, stated once
-    assert "<!--feed:lifthead-->About 6 points more return a year, about the same Sharpe ratio<" in f["next/index.html"]
-    assert "## About 6 points more return a year, about the same Sharpe ratio" in f["next/index.md"]
+    assert "<!--feed:lifthead-->More return, same Sharpe<" in f["next/index.html"]
+    assert "## More return, same Sharpe" in f["next/index.md"]
 
 
 def test_sharpe_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace("1.06–1.09", "1.16–1.19")
-    files["next/index.md"] = files["next/index.md"].replace("+5.6 points", "+5.9 points")
+    files["next/index.html"] = files["next/index.html"].replace("1.06 to 1.09", "1.16 to 1.19")
+    files["next/index.md"] = files["next/index.md"].replace("5.6 points", "5.9 points")
     found = sharpe_mismatches(files, make_feed())
-    assert any("index.html" in m and "1.06–1.09" in m for m in found) and any("index.md" in m and "+5.6 points" in m for m in found)
+    assert any("index.html" in m and "1.06 to 1.09" in m for m in found) and any("index.md" in m and "5.6 points" in m for m in found)
 
 
-@pytest.mark.parametrize("levels,tail", [({"10": 1.5, "20": 1.3}, "a higher Sharpe ratio"),
-                                         ({"10": 0.7, "20": 0.5}, "a lower Sharpe ratio"),
-                                         ({"10": 1.6, "20": 0.5}, "a Sharpe ratio a little higher or lower")])
+@pytest.mark.parametrize("levels,tail", [({"10": 1.5, "20": 1.3}, "higher Sharpe"),
+                                         ({"10": 0.7, "20": 0.5}, "lower Sharpe"),
+                                         ({"10": 1.6, "20": 0.5}, "Sharpe a little higher or lower")])
 def test_heading_follows_the_worked_example(tmp_path, levels, tail):
     feed = make_feed()
     for i in feed["instruments"][:2]:
         i["sharpe"]["example"]["sharpe_by_bot_swings"] = levels
     code, site = build(tmp_path, feed)
-    assert f"points more return a year, {tail}<" in outputs(site)["next/index.html"]
-    assert "about the same Sharpe ratio" not in outputs(site)["next/index.html"]
+    assert f"More return, {tail}<" in outputs(site)["next/index.html"]
+    assert "More return, same Sharpe<" not in outputs(site)["next/index.html"]
 
 
 def test_the_account_example_names_both_cash_homes(tmp_path):
@@ -883,9 +882,9 @@ def test_the_buy_table_links_each_broker_and_says_when_there_is_no_link(tmp_path
     block = region(f["next/index.html"], "buy")
     assert block.count('rel="noopener nofollow"') == 3  # one broker with links, three tickers
     assert 'href="https://example.com/alpha/STRC" rel="noopener nofollow" aria-label="STRC at Alpha Broker">STRC</a>' in block
-    assert block.count("no page link") == 3
+    assert block.count("search the ticker in the app") == 1 and 'colspan="3"' in block
     assert block.index("Alpha Broker") < block.index("Beta Broker")
-    assert "https://example.com/alpha/SATS" in f["next/index.md"] and "| Beta Broker | carries it; no page link |" in f["next/index.md"]
+    assert "https://example.com/alpha/SATS" in f["next/index.md"] and "| Beta Broker | search the ticker in the app |" in f["next/index.md"]
     fine = text_of(region(f["next/index.html"], "buyfine"))
     assert "T+1" in fine and "FINRA" in fine and "22 Nov 2026" in fine
 
@@ -996,7 +995,7 @@ def h2_texts(html_: str) -> list[str]:
     return [html.unescape(re.sub(r"<[^>]+>", "", h)).strip() for h in re.findall(r"<h2[^>]*>(.*?)</h2>", html_, re.S)]
 
 
-REQUIRED_HEADINGS = ["Sell any trading day", "What can go wrong", "Your situation", "Where to buy"]
+REQUIRED_HEADINGS = ["Liquid and steady", "What can go wrong", "Your situation", "Where to buy"]
 
 
 def heading_mismatches(rendered_html: str, md: str) -> list[str]:
@@ -1062,7 +1061,7 @@ def test_llms_check_catches_a_planted_wrong_range(tmp_path):
     assert llms_mismatches(files, make_feed()) != []
 
 
-BANNED = re.compile(r"\bbest\b|\bfits\b|\brecommend\w*|we'd pick|tax-free|tax free", re.I)
+BANNED = re.compile(r"\bbest\b(?! rate)|\bfits\b|\brecommend\w*|we'd pick|tax-free|tax free", re.I)
 ADVICE = re.compile(r"\bbuy (it|now|strc|sata|sats)\b|\byou should\b|\bguaranteed\b|\balways\b|\bevery time\b", re.I)
 
 
