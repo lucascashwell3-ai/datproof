@@ -91,12 +91,21 @@ def test_separate_drops_are_counted_as_runs():
     assert cmp.buy_price_table(DATA["STRC"])["90"]["drops_under"]["90"] == 1
 
 
-def test_only_issues_that_aim_for_100():
+def test_every_issue_is_scored_and_carries_the_aim_as_its_own_field():
     ins = copy.deepcopy(DATA["STRC"])
     ins["profile"]["issuer_aims_price_near_100"]["value"] = False
-    assert "no aim" in cmp.buy_price_table(ins)["reason"]
-    del ins["profile"]["issuer_aims_price_near_100"]
-    assert "reason" in cmp.buy_price_table(ins)
+    t = cmp.buy_price_table(ins)
+    assert t["issuer_aims_price_near_100"] is False and t["90"]["bands"]
+    assert cmp.buy_price_table(DATA["SATA"])["issuer_aims_price_near_100"] is True
+
+
+def test_a_new_issue_says_when_its_first_results_arrive():
+    ins = copy.deepcopy(DATA["SATA"])
+    ins["closes"]["rows"] = [["2026-10-16", 90.0], ["2026-10-19", 92.0]]
+    p = cmp.buy_price_table(ins)["30"]
+    assert "not enough history" in p["reason"]
+    # 58 more weekdays after 19 Oct 2026 is 7 Jan 2027; plus 30 days is 6 Feb 2027.
+    assert p["first_results_around"] == "2027-02-06"
 
 
 def test_short_history_gives_the_reason():

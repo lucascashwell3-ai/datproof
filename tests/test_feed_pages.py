@@ -24,7 +24,9 @@ NEXT_HTML = """<!doctype html><html><head><!--feed:faqld--><!--/feed:faqld--></h
 <div class="below" id="below"><!--feed:below--><!--/feed:below--></div>
 <div class="odds" id="odds-out"><!--feed:odds--><!--/feed:odds--></div>
 <p class="fine" id="odds-note"><!--feed:oddsnote--><!--/feed:oddsnote--></p>
-<p class="sub" id="adds"><!--feed:adds--><!--/feed:adds--></p>
+<h2 id="h-lift"><!--feed:lifthead--><!--/feed:lifthead--></h2>
+<div class="lift" id="lift-out"><!--feed:adds--><!--/feed:adds--></div>
+<p class="fine lift-sharpe"><!--feed:sharpe--><!--/feed:sharpe--></p>
 <div class="bk-out"><!--feed:backing--><!--/feed:backing--></div>
 <div class="faq"><!--feed:faq--><!--/feed:faq--></div>
 <div id="sources-list"><!--feed:sources--><!--/feed:sources--></div>
@@ -100,7 +102,18 @@ def make_feed() -> dict:
                                      band("100_and_over", "$100 and over", 100.0, None, 14, 2, 2.0, -8.4)], d90=2)
     for x, src in ((strc, "https://www.sec.gov/strc-filing"), (sata, "https://www.sec.gov/sata-filing")):
         x["profile"]["issuer_aims_price_near_100"]["source"] = src
-    sats["by_buy_price"] = {"reason": "the issuer's filings state no aim to keep the price near $100"}
+    sats["by_buy_price"] = {"issuer_aims_price_near_100": False,
+                            "30": {"days": 30, "reason": "not enough history", "first_results_around": "2027-02-06"},
+                            "90": {"days": 90, "reason": "not enough history", "first_results_around": "2027-04-07"}}
+    strc["by_buy_price"]["issuer_aims_price_near_100"] = True
+    sata["by_buy_price"]["issuer_aims_price_near_100"] = True
+    ex = lambda lo, hi: {"bot_sharpe": 1.0, "cash_share": 0.6, "slice_of_cash": 0.25, "bot_swings_pct": [10.0, 20.0],
+                         "sharpe_by_bot_swings": {"10": hi, "20": lo}}
+    strc["sharpe"] = {"returns": 251, "from": "2025-11-25", "to": "2026-11-25", "total_return_pct": 14.52,
+                      "swings_pct": 22.47, "sharpe": 0.53, "example": ex(1.06, 1.09)}
+    sata["sharpe"] = {"returns": 251, "from": "2025-11-25", "to": "2026-11-25", "total_return_pct": 14.04,
+                      "swings_pct": 24.38, "sharpe": 0.49, "example": ex(1.06, 1.08)}
+    sats["sharpe"] = {"returns": 28, "reason": "not enough history: 28 daily returns; 60 are needed"}
     for x, (bx, be, bt, br, yrs, issuer, assets, claims) in zip(
             (strc, sata, sats), ((3.67, 12640, 79.4, 90.0, 2.65, "Strategy", 57111e6, 15581e6),
                                  (2.23, 21671, 64.7, 82.8, 1.5, "Strive", 3128e6, 1403e6),
@@ -127,8 +140,10 @@ def make_feed() -> dict:
             "static": {"strategy": {"debt_usd": {"value": 6750e6, "as_of": "2026-09-30", "source": "https://www.sec.gov/10q"},
                                     "usd_reserve_usd": {"value": 3730e6, "as_of": "2026-11-22", "source": "https://www.sec.gov/8k"}},
                        "bitcoin_falls": {"rows": [{"fall_pct": 84.5}, {"fall_pct": 83.8}, {"fall_pct": 76.7}]},
-                       "comparison": {"rows": [{"name": "Ares Capital", "value": 1.88, "as_of": "2026-09-30", "source": "https://www.sec.gov/arcc"},
-                                               {"name": "Blue Owl Capital", "value": 1.84, "as_of": "2026-09-30", "source": "https://www.sec.gov/obdc"}]}},
+                       "comparison": {"rows": [{"name": "Ares Capital", "kind": "business development company", "value": 1.88, "as_of": "2026-09-30", "source": "https://www.sec.gov/arcc"},
+                                               {"name": "Blue Owl Capital", "kind": "business development company", "value": 1.84, "as_of": "2026-09-30", "source": "https://www.sec.gov/obdc"},
+                                               {"name": "US banks", "kind": "all FDIC-insured banks", "value": 1.11, "as_of": "2026-09-30", "source": "https://www.fdic.gov/qbp"}],
+                                      "no_ratio": [{"name": "Municipal bonds", "text": "backed by taxing power or project revenue, not by a pool of assets", "source": "https://www.msrb.org/x"}]}},
         },
     }
 
@@ -373,12 +388,25 @@ def test_by_price_check_catches_a_planted_wrong_value(tmp_path):
     assert any("index.html" in f for f in found) and any("index.md" in f for f in found)
 
 
-def test_small_bands_and_non_aiming_issues(tmp_path):
+def test_small_bands_and_a_new_issue(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
     assert "4 buys, too few to score" in f["next/index.html"]
-    block = re.search(r"<!--feed:below-->(.*?)<!--/feed:below-->", f["next/index.html"], re.S).group(1)
-    assert "SATS" not in block  # fixed rate, no stated aim for $100: left out of the table and the claim
+    block = html.unescape(re.search(r"<!--feed:below-->(.*?)<!--/feed:below-->", f["next/index.html"], re.S).group(1))
+    assert "Trading since 7 Nov 2026. First results around 6 Feb 2027." in block  # SATS fills in on its own later
+    assert "Pays 17.5% at this price; fixed rate 15.0%" in re.sub(r"<[^>]+>", "", block)
+    # the issuer claim names only the issues whose filings state it
+    assert "the issuers of STRC and SATA say they adjust the rate" in block
+
+
+def test_a_new_issue_fills_in_once_it_has_30_day_results(tmp_path):
+    feed = make_feed()
+    feed["instruments"][2]["by_buy_price"]["30"] = by_price(
+        [band("under_90", "under $90", None, 90.0, 40, 1, 2.5, -1.2), band("90_to_95", "$90 to $95", 90.0, 95.0, 20, 0, 1.9, 0.4),
+         band("95_to_100", "$95 to $100", 95.0, 100.0, 3), band("100_and_over", "$100 and over", 100.0, None, 0)])["90"] | {"days": 30}
+    code, site = build(tmp_path, feed)
+    block = re.search(r"<!--feed:below-->(.*?)<!--/feed:below-->", outputs(site)["next/index.html"], re.S).group(1)
+    assert "30-day holds" in block and "40 buys · 1 lost" in block and "First results around" not in block
 
 
 def test_risk_and_the_issuer_claim_are_said_once(tmp_path):
@@ -388,7 +416,7 @@ def test_risk_and_the_issuer_claim_are_said_once(tmp_path):
     assert html_.count("say they adjust the rate to keep the price near $100") == 1
     assert 'href="https://www.sec.gov/strc-filing"' in html_ and 'href="https://www.sec.gov/sata-filing"' in html_
     assert "The under-$90 buys came from 1 separate drop for STRC and 2 separate drops for SATA." in html_
-    assert "Today: STRC" not in html_ and "today_lines" not in html_
+    assert "SATS say they adjust" not in html_
 
 
 def test_a_feed_without_by_price_still_builds(tmp_path):
@@ -407,14 +435,21 @@ def crash_mismatches(files: dict[str, str], feed: dict) -> list[str]:
     out = []
     for i in feed["instruments"]:
         b = i["backing"]
-        want = [f"{b['backing_x']:.2f}×", f"{int(b['below_record_pct'] + 0.5)}%", f"${b['break_even_btc_usd']:,}",
-                f"{int(b['cash_years'] * 10 + 0.5) / 10:.1f} years"]
+        per1 = f"${b['backing_x']:.2f}"
+        want = [f"{int(b['below_record_pct'] + 0.5)}%", f"${b['break_even_btc_usd']:,}", f"{int(b['cash_years'] * 10 + 0.5) / 10:.1f} years"]
         for rel in FILES:
-            row = next((ln for ln in files[rel].splitlines() if ln.startswith(f"| {i['ticker']} | ") and "×" in ln), None) \
-                if rel.endswith(".md") else re.search(rf'<th scope="row" class="bk-tk">{i["ticker"]}</th>(.*?)</tr>', files[rel])
-            text = row if isinstance(row, str) else (row.group(1) if row else "")
+            if rel.endswith(".md"):
+                rank = next((ln for ln in files[rel].splitlines() if ln.startswith(f"| {i['ticker']} | $")), "")
+                row = next((ln for ln in files[rel].splitlines() if ln.startswith(f"| {i['ticker']} | ") and "before assets" in ln), "")
+            else:
+                m = re.search(rf'<span class="rk-nm">{i["ticker"]}<.*?<span class="rk-v num">([^<]+)</span>', files[rel])
+                rank = m.group(1) if m else ""
+                m = re.search(rf'<th scope="row" class="bk-tk">{i["ticker"]}</th>(.*?)</tr>', files[rel])
+                row = m.group(1) if m else ""
+            if per1 not in rank:
+                out.append(f"{rel} {i['ticker']}: missing {per1}")
             for w in want:
-                if w not in text:
+                if w not in row:
                     out.append(f"{rel} {i['ticker']}: missing {w}")
     return out
 
@@ -428,7 +463,7 @@ def test_crash_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
     files["next/index.html"] = files["next/index.html"].replace("$21,671", "$21,617")
-    files["next/index.md"] = files["next/index.md"].replace("1.48×", "1.84×", 1)
+    files["next/index.md"] = files["next/index.md"].replace("| SATS | $1.48", "| SATS | $1.84", 1)
     found = crash_mismatches(files, make_feed())
     assert any("index.html SATA" in f for f in found) and any("index.md SATS" in f for f in found)
 
@@ -439,10 +474,15 @@ def test_crash_section_shows_all_three_by_one_rule_with_dates(tmp_path):
     block = re.search(r"<!--feed:backing-->(.*?)<!--/feed:backing-->", f["next/index.html"], re.S).group(1)
     for t in ("STRC", "SATA", "SATS"):
         assert f'class="bk-tk">{t}<' in block
-    assert block.count("Backing = (bitcoin held × bitcoin price + cash)") == 1
-    assert "Bitcoin's last three falls from a record were 77% to 85%. Today it is 51% below its $126,080 record." in html.unescape(block)
-    assert "1.88×</b> at" in block and "Ares Capital" in block and "Blue Owl Capital" in block and "30 Sep 2026" in block
-    assert "Strategy debt $6.75B as of 30 Sep 2026" in block
+    text = html.unescape(block)
+    assert text.count("Assets behind each $1 owed: everything the issuer holds") == 1
+    assert "Bitcoin's last three falls from a record were 77% to 85%. Today it is 51% below its $126,080 record." in text
+    names_in_order = re.findall(r'<span class="rk-nm">(?:<a [^>]+>)?([^<]+)<', block)
+    assert names_in_order == ["STRC", "SATA", "Ares Capital", "Blue Owl Capital", "SATS", "US banks"]  # ranked
+    assert "Municipal bonds have no such figure" in text
+    assert "Strategy holds 851,305 bitcoin worth $52.29B and $4.82B in cash" in text
+    assert "$57.1B of bitcoin and cash" in text  # the dollar value beside the per-$1 figure
+    assert "Strategy debt $6.75B as of 30 Sep 2026" in text
 
 
 def test_crash_question_answers_with_the_numbers(tmp_path):
@@ -450,7 +490,7 @@ def test_crash_question_answers_with_the_numbers(tmp_path):
     html_ = outputs(site)["next/index.html"]
     ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', html_, re.S).group(1))
     a = next(q["acceptedAnswer"]["text"] for q in ld["mainEntity"] if q["name"] == "What happens if bitcoin crashes?")
-    for fig in ("90% ($12,640)", "83% ($21,671)", "70% ($38,124)", "3.67×", "2.7 years", "1.5 years"):
+    for fig in ("90% ($12,640)", "83% ($21,671)", "70% ($38,124)", "$3.67 behind each $1 owed", "2.7 years", "1.5 years"):
         assert fig in a, fig
 
 
@@ -472,7 +512,7 @@ def test_questions_match_their_search_data_and_repeat_no_section(tmp_path):
     html_ = f["next/index.html"]
     ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', html_, re.S).group(1))
     asked = [q["name"] for q in ld["mainEntity"]]
-    shown = re.findall(r'<div class="qa"><h3>([^<]+)</h3>', html_)
+    shown = [html.unescape(q) for q in re.findall(r'<div class="qa"><h3>([^<]+)</h3>', html_)]
     assert asked == shown and "Where should a trading bot keep its idle cash?" in asked
     for q in ld["mainEntity"]:
         a = q["acceptedAnswer"]["text"]
@@ -502,6 +542,7 @@ def test_account_example_and_sources(tmp_path):
     f = outputs(site)
     for rel in FILES:
         assert "earns about $912 a year on that $6,000" in f[rel], rel
+    assert '<div class="lift" id="lift-out"><!--feed:adds--><p class="fine">' in f["next/index.html"]
     assert "method.json" in re.search(r"<!--feed:sources-->(.*?)<!--/feed:sources-->", f["next/index.html"], re.S).group(1)
 
 
@@ -553,9 +594,57 @@ def test_a_dry_run_leaves_the_site_alone(tmp_path):
     assert tree(site) == before
 
 
-def test_no_advice_words_and_no_risk_adjusted_claim(tmp_path):
+def test_no_advice_words(tmp_path):
     code, site = build(tmp_path)
     for rel, text in outputs(site).items():
         low = text.lower()
         assert not re.search(r"\bbuy (it|now|strc|sata|sats)\b|\byou should\b|\bguaranteed\b|\balways\b|\bevery time\b", low), rel
-        assert "sharpe" not in low and "risk-adjusted" not in low, rel
+
+
+# ---------- return per unit of swing ----------
+
+def sharpe_mismatches(files: dict[str, str], feed: dict) -> list[str]:
+    out = []
+    for i in feed["instruments"][:2]:
+        s = i["sharpe"]
+        ex = s["example"]["sharpe_by_bot_swings"]
+        want = [f"{min(ex.values()):.2f} to {max(ex.values()):.2f} with {i['ticker']}", f"{i['ticker']} {s['sharpe']:.2f}"]
+        for rel in FILES:
+            for w in want:
+                if w not in files[rel]:
+                    out.append(f"{rel}: missing '{w}'")
+    return out
+
+
+def test_sharpe_figures_equal_the_feed(tmp_path):
+    code, site = build(tmp_path)
+    f = outputs(site)
+    assert sharpe_mismatches(f, make_feed()) == []
+    assert "do not move with the stock" in f["next/index.html"]  # the assumption, stated once
+    assert re.search(r'<h2 id="h-lift"><!--feed:lifthead-->Better risk-adjusted returns<', f["next/index.html"])
+
+
+def test_sharpe_check_catches_a_planted_wrong_value(tmp_path):
+    code, site = build(tmp_path)
+    files = outputs(site)
+    files["next/index.html"] = files["next/index.html"].replace("1.06 to 1.09 with STRC", "1.16 to 1.19 with STRC")
+    assert any("1.06 to 1.09" in m for m in sharpe_mismatches(files, make_feed()))
+
+
+def test_heading_steps_back_when_the_worked_example_is_not_above_one(tmp_path):
+    feed = make_feed()
+    feed["instruments"][1]["sharpe"]["example"]["sharpe_by_bot_swings"] = {"10": 1.01, "20": 0.98}  # planted flat day
+    code, site = build(tmp_path, feed)
+    html_ = outputs(site)["next/index.html"]
+    assert "Better risk-adjusted returns" not in html_
+    assert "<!--feed:lifthead-->Return per unit of swing<" in html_ and "0.98 to 1.01 with SATA" in html_
+
+
+def test_a_feed_without_sharpe_still_builds(tmp_path):
+    feed = make_feed()
+    for i in feed["instruments"]:
+        i.pop("sharpe")
+    code, site = build(tmp_path, feed)
+    assert code == 0
+    html_ = outputs(site)["next/index.html"]
+    assert "<!--feed:sharpe--><!--/feed:sharpe-->" in html_ and "Better risk-adjusted returns" not in html_

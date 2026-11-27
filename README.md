@@ -42,8 +42,10 @@ its source and date; a number that could not be fetched is empty, with the reaso
   `python -m datproof_feed.pages` rebuilds it.
 - **By price paid**: `by_buy_price` in each instrument splits the 30, 90 and 180-day holds by the
   close paid (under $90, $90 to $95, $95 to $100, $100 and over): buys, losses, average and worst
-  result, and how many separate drops the buys came from. Only for STRC and SATA, whose issuers
-  state they adjust the rate to keep the price near $100.
+  result, and how many separate drops the buys came from, for every issue, with whether its issuer
+  states it adjusts the rate to keep the price near $100.
+- **Sharpe**: `sharpe` in each instrument: past-year Sharpe ratio, total return and yearly swings from
+  daily total returns, plus a worked example of a bot moving a quarter of its idle cash in.
 - **Crash test**: `backing` in each Strategy and Strive preferred: (bitcoin held × bitcoin price + cash)
   ÷ (debt + every preferred ahead in line + the issue itself), the bitcoin price where that falls to
   1.0×, and years of the yearly bill covered by cash set aside. `python -m datproof_feed.backing`

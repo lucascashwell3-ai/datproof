@@ -383,6 +383,7 @@ h3 { font-family: var(--f-disp); }
 .below .fine { max-width: 76ch; }
 @media (max-width: 52rem) { .bp-grid { grid-template-columns: 1fr; } }
 @media (max-width: 30rem) { .bp thead th:first-child { width: 6.25rem; } .bp th[scope="row"], .bp td { padding-right: 0.625rem; } }
+@media (max-width: 30rem) { .below .bp thead th:first-child { width: 5rem; } .below .bp-n { font-size: 1.25rem; letter-spacing: -0.02em; } .below .bp th[scope="row"] { font-size: var(--t-xs); } }
 /* questions */
 .faq { margin-top: 2.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 0 3rem; }
 .qa { border-top: 1px solid var(--line-2); padding: 1.5rem 0 1.75rem; }
@@ -402,8 +403,34 @@ h3 { font-family: var(--f-disp); }
 .lf-n small { display: block; margin-top: 0.25rem; font-family: var(--f-text); font-size: var(--t-xs); font-weight: 400; letter-spacing: 0; color: var(--ink-3); }
 .lift .fine { margin-top: 0; max-width: 62ch; }
 
-/* backed by bitcoin and cash: the crash test table uses the .bp table styles */
-.bk-out { margin-top: 2.5rem; }
+/* backed by bitcoin and cash: a ranked list (digital credit in the accent, the rest quiet), then the crash
+   test table in the .bp table styles */
+.bk-out { margin-top: 2rem; }
+.bk-measure { color: var(--ink-2); font-size: var(--t-sm); max-width: 66ch; }
+.rk { margin: 1.25rem 0 0; padding: 0; list-style: none; max-width: 56rem; }
+.rk li { display: grid; grid-template-columns: minmax(0, 18rem) minmax(0, 1fr) 4.5rem; gap: 0.25rem 1.25rem; align-items: center;
+  padding: 0.625rem 0; border-top: 1px solid var(--line); }
+.rk li.dc { border-top-color: var(--line-2); }
+.rk-nm { font-size: var(--t-sm); font-weight: 600; color: var(--ink); line-height: 1.3; }
+.rk li.dc .rk-nm { font-family: var(--f-disp); font-size: 1.25rem; font-weight: var(--tk-wt); }
+.rk-nm a { text-decoration-color: var(--line-2); }
+.rk-d { display: block; margin-top: 0.125rem; font-family: var(--f-text); font-size: var(--t-xs); font-weight: 400; color: var(--ink-3); }
+.rk-bar { display: block; height: 0.5rem; background: var(--line); border-radius: 2px; overflow: hidden; }
+.rk-bar i { display: block; height: 100%; background: var(--quiet); border-radius: 2px; transform-origin: left center; }
+.rk li.dc .rk-bar { height: 0.75rem; }
+.rk li.dc .rk-bar i { background: var(--accent); }
+.rk-v { text-align: right; font-size: var(--t-md); color: var(--ink-2); }
+.rk li.dc .rk-v { font-size: 1.375rem; font-weight: var(--n-wt); letter-spacing: var(--n-trk); color: var(--accent-ink); }
+@media (prefers-reduced-motion: no-preference) { .rk-bar i { animation: grow 900ms cubic-bezier(0.16, 1, 0.3, 1) backwards; } }
+@media (max-width: 44rem) {
+  .rk li { grid-template-columns: minmax(0, 1fr) auto; }
+  .rk-bar { grid-column: 1 / -1; grid-row: 2; }
+  .rk-v { grid-column: 2; grid-row: 1; }
+}
+.bk-crash { margin-top: 2.5rem; }
+.bp-hd { display: block; font-size: var(--t-xs); font-weight: 400; color: var(--ink-3); }
+.bp td.wait { vertical-align: middle; }
+.lift-sharpe { max-width: 72ch; }
 .bk-out .bp thead th:first-child { width: 6rem; }
 .bk-line { margin-top: 1.25rem; color: var(--ink-2); font-size: var(--t-sm); max-width: 66ch; text-wrap: pretty; }
 .bk-line + .bk-line { margin-top: 0.5rem; }

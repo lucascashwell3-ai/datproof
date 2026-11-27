@@ -15,7 +15,13 @@
       "basis": "The USD Reserve Strategy holds to pay dividends and interest, after the board moved $1.0B to general cash on 2026-11-23."
     },
     "rank": {
-      "value": ["STRF", "STRC", "STRE", "STRK", "STRD"],
+      "value": [
+        "STRF",
+        "STRC",
+        "STRE",
+        "STRK",
+        "STRD"
+      ],
       "as_of": "2026-09-30",
       "source": "https://www.sec.gov/Archives/edgar/data/1050446/000105044626000060/mstr-20260930.htm",
       "quote": "rank, from highest to lowest, as follows: STRF Stock, STRC Stock, STRE Stock, STRK Stock, and STRD Stock",
@@ -24,7 +30,10 @@
   },
   "strive": {
     "rank": {
-      "value": ["SATA", "SATS"],
+      "value": [
+        "SATA",
+        "SATS"
+      ],
       "as_of": "2026-09-30",
       "source": "https://www.sec.gov/Archives/edgar/data/1920406/000162828026071332/asst-20260930.htm",
       "quote": "our SATS Stock is junior to our SATA Stock, and each is junior to our existing and future indebtedness"
@@ -35,18 +44,111 @@
     "as_of": "2026-11-26",
     "basis": "Daily closing prices, from a peak close to the lowest close before a new high.",
     "rows": [
-      {"peak": "2013-12-04", "peak_usd": 1134.93, "low": "2015-01-14", "low_usd": 175.64, "fall_pct": 84.5},
-      {"peak": "2017-12-16", "peak_usd": 19640.51, "low": "2018-12-15", "low_usd": 3185.07, "fall_pct": 83.8},
-      {"peak": "2021-11-08", "peak_usd": 67541.76, "low": "2022-11-09", "low_usd": 15758.29, "fall_pct": 76.7}
+      {
+        "peak": "2013-12-04",
+        "peak_usd": 1134.93,
+        "low": "2015-01-14",
+        "low_usd": 175.64,
+        "fall_pct": 84.5
+      },
+      {
+        "peak": "2017-12-16",
+        "peak_usd": 19640.51,
+        "low": "2018-12-15",
+        "low_usd": 3185.07,
+        "fall_pct": 83.8
+      },
+      {
+        "peak": "2021-11-08",
+        "peak_usd": 67541.76,
+        "low": "2022-11-09",
+        "low_usd": 15758.29,
+        "fall_pct": 76.7
+      }
     ]
   },
   "comparison": {
-    "basis": "Asset coverage that business development companies must publish under the Investment Company Act: (total assets minus liabilities that are not senior securities) divided by (debt plus preferred), the same shape as the measure here.",
+    "basis": "Assets behind each $1 owed: total assets divided by everything owed up to and including the instrument, from each filing's balance sheet (book value). Figures with goodwill and licenses removed are not used.",
     "rows": [
-      {"name": "Ares Capital", "ticker": "ARCC", "value": 1.88, "as_of": "2026-09-30",
-       "source": "https://www.sec.gov/Archives/edgar/data/1287750/000162828026067383/arcc-20260930.htm"},
-      {"name": "Blue Owl Capital", "ticker": "OBDC", "value": 1.84, "as_of": "2026-09-30",
-       "source": "https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm"}
+      {
+        "name": "Ares Capital",
+        "ticker": "ARCC",
+        "kind": "business development company",
+        "value": 1.88,
+        "as_of": "2026-09-30",
+        "basis": "asset coverage the Investment Company Act requires it to publish",
+        "source": "https://www.sec.gov/Archives/edgar/data/1287750/000162828026067383/arcc-20260930.htm"
+      },
+      {
+        "name": "Blue Owl Capital",
+        "ticker": "OBDC",
+        "kind": "business development company",
+        "value": 1.84,
+        "as_of": "2026-09-30",
+        "basis": "asset coverage the Investment Company Act requires it to publish",
+        "source": "https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm"
+      },
+      {
+        "name": "AT&T",
+        "ticker": "T",
+        "kind": "corporate bonds",
+        "value": 1.38,
+        "as_of": "2026-09-30",
+        "assets_usd": 445900000000.0,
+        "owed_usd": 323100000000.0,
+        "basis": "total assets / (total assets - equity including noncontrolling interest), 10-Q",
+        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000732717.json"
+      },
+      {
+        "name": "Verizon",
+        "ticker": "VZ",
+        "kind": "corporate bonds",
+        "value": 1.35,
+        "as_of": "2026-09-30",
+        "assets_usd": 415500000000.0,
+        "owed_usd": 308200000000.0,
+        "basis": "total assets / total liabilities, 10-Q",
+        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000732712.json"
+      },
+      {
+        "name": "US credit unions",
+        "kind": "federally insured credit unions",
+        "value": 1.13,
+        "as_of": "2026-06-30",
+        "assets_usd": 2498900000000.0,
+        "owed_usd": 2213600000000.0,
+        "basis": "total assets / (total assets - net worth), NCUA quarterly data summary",
+        "source": "https://ncua.gov/files/publications/analysis/quarterly-data-summary-2026-Q2.pdf"
+      },
+      {
+        "name": "US banks",
+        "kind": "all FDIC-insured banks",
+        "value": 1.11,
+        "as_of": "2026-09-30",
+        "assets_usd": 26649700000000.0,
+        "owed_usd": 24081400000000.0,
+        "basis": "total assets / total liabilities, FDIC Quarterly Banking Profile",
+        "source": "https://www.fdic.gov/quarterly-banking-profile/quarterly-banking-profile-q3-2026"
+      },
+      {
+        "name": "JPMorgan Chase preferred",
+        "ticker": "JPM",
+        "kind": "bank preferred stock",
+        "value": 1.07,
+        "as_of": "2026-09-30",
+        "assets_usd": 5091500000000.0,
+        "owed_usd": 4740200000000.0,
+        "basis": "total assets / (total liabilities + preferred stock), 10-Q",
+        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json"
+      }
+    ],
+    "no_ratio": [
+      {
+        "name": "Municipal bonds",
+        "text": "backed by taxing power or project revenue, not by a pool of assets",
+        "source": "https://www.msrb.org/Municipal-Bond-Basics",
+        "as_of": "2026-11-26"
+      }
     ]
   }
 }

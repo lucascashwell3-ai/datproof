@@ -1216,7 +1216,205 @@
     }
   },
   "by_buy_price": {
-    "reason": "the issuer's filings state no aim to keep the price near $100"
+    "issuer_aims_price_near_100": false,
+    "30": {
+      "days": 30,
+      "holds": 230,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-10-26",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 230,
+          "lost": 127,
+          "avg_pct": 0.22,
+          "worst_pct": -28.47,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 1,
+        "100": 1
+      }
+    },
+    "90": {
+      "days": 90,
+      "holds": 189,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-08-27",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 189,
+          "lost": 81,
+          "avg_pct": 1.79,
+          "worst_pct": -28.39,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 1,
+        "100": 1
+      }
+    },
+    "180": {
+      "days": 180,
+      "holds": 127,
+      "bought_from": "2025-11-25",
+      "bought_to": "2026-05-29",
+      "closes_from": "2025-11-25",
+      "bands": [
+        {
+          "band": "under_90",
+          "label": "under $90",
+          "from_usd": null,
+          "under_usd": 90.0,
+          "buys": 127,
+          "lost": 90,
+          "avg_pct": -4.34,
+          "worst_pct": -24.01,
+          "reason": null
+        },
+        {
+          "band": "90_to_95",
+          "label": "$90 to $95",
+          "from_usd": 90.0,
+          "under_usd": 95.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "95_to_100",
+          "label": "$95 to $100",
+          "from_usd": 95.0,
+          "under_usd": 100.0,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        },
+        {
+          "band": "100_and_over",
+          "label": "$100 and over",
+          "from_usd": 100.0,
+          "under_usd": null,
+          "buys": 0,
+          "lost": null,
+          "avg_pct": null,
+          "worst_pct": null,
+          "reason": "0 buys in this band; 5 are needed"
+        }
+      ],
+      "drops_under": {
+        "90": 1,
+        "95": 1,
+        "100": 1
+      }
+    }
+  },
+  "sharpe": {
+    "returns": 251,
+    "from": "2025-11-25",
+    "to": "2026-11-25",
+    "tbill_pct": 4.19,
+    "total_return_pct": -1.28,
+    "swings_pct": 31.17,
+    "sharpe": -0.02,
+    "example": {
+      "bot_sharpe": 1.0,
+      "cash_share": 0.6,
+      "slice_of_cash": 0.25,
+      "bot_swings_pct": [
+        10.0,
+        20.0
+      ],
+      "correlation": 0.0,
+      "slice_of_account": 0.15,
+      "sharpe_by_bot_swings": {
+        "10": 0.83,
+        "20": 0.93
+      }
+    }
   },
   "backing": {
     "issuer": "Strategy",

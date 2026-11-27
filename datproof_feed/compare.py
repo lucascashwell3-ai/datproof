@@ -31,6 +31,10 @@ BUY_PRICE_BANDS = (("under_90", "under $90", None, 90.0), ("90_to_95", "$90 to $
                    ("95_to_100", "$95 to $100", 95.0, 100.0), ("100_and_over", "$100 and over", 100.0, None))
 BUY_PRICE_LEVELS = (90, 95, 100)
 MIN_BAND_BUYS = 5
+# Past-year Sharpe ratio, and the worked example of a bot that moves a slice of its idle cash in.
+TRADING_DAYS = 252
+EXAMPLE = {"bot_sharpe": 1.0, "cash_share": 0.6, "slice_of_cash": 0.25, "bot_swings_pct": (10.0, 20.0),
+           "correlation": 0.0}
 PAST_YEAR_DAYS = 360  # closes reaching back this far are described as "the past year"
 PROJECT_MONTHS = {"monthly": 1, "quarterly": 3}
 
@@ -73,6 +77,15 @@ METHOD = {
                      f"median_pct = the middle result; worst_pct = the lowest, with its start day (worst_bought). "
                      f"Shares are rounded half up to one decimal. Fewer than {MIN_HOLDS} holds gives null "
                      f"with the reason. Past results do not predict future results",
+        "sharpe": "past-year Sharpe ratio from daily total returns (close to close, dividends on their ex-date): "
+                  f"(mean daily return - 4-week T-bill rate today / {TRADING_DAYS}) / standard deviation of daily "
+                  f"returns * sqrt({TRADING_DAYS}). total_return_pct compounds the daily returns; swings_pct = "
+                  f"standard deviation * sqrt({TRADING_DAYS}). Fewer than {MIN_HOLDS} daily returns gives null with "
+                  "the reason. example: a bot with a Sharpe ratio of 1.0 that sits 60% in cash moves a quarter of "
+                  "that cash (15% of the account) into the instrument; its new Sharpe ratio = (1.0 * bot swings + "
+                  "0.15 * (total return - T-bill rate)) / sqrt(bot swings^2 + (0.15 * swings)^2), for bot swings of "
+                  "10% and 20% a year, assuming the bot's trades do not move with the instrument. Past results do "
+                  "not predict future results",
         "backing": "the bitcoin crash test, one rule for every Strategy and Strive preferred, at stated amounts: "
                    "backing_x = (bitcoin held * bitcoin price + cash) / (debt + every preferred ahead of it in line "
                    "+ the issue itself); break_even_btc_usd = (claims - cash) / bitcoin held, the bitcoin price at "
@@ -87,8 +100,9 @@ METHOD = {
                         "Per band: buys (holds started in the band), lost (results below 0), avg_pct (the mean result) and worst_pct (the "
                         f"lowest). A band with fewer than {MIN_BAND_BUYS} buys gives null with the reason. "
                         "drops_under counts the separate runs of start-day closes below $90, $95 and $100. "
-                        "Only for issues whose issuer states it adjusts the rate to keep the price near $100 "
-                        "(profile.issuer_aims_price_near_100); others carry the reason instead. Past results "
+                        "issuer_aims_price_near_100 repeats the sourced profile fact. A holding time with too few "
+                        "holds gives the reason and first_results_around, the day the "
+                        f"{MIN_HOLDS}th hold should finish (weekdays; holidays can push it later). Past results "
                         "do not predict future results",
     },
     "compare": {
@@ -297,23 +311,36 @@ def _runs_below(prices: list[float], level: float) -> int:
     return runs
 
 
+def first_results_around(rows: list, days: int) -> str:
+    """When the MIN_HOLDS-th hold of `days` calendar days will have finished: the MIN_HOLDS-th trading day,
+    projected over weekdays past the newest close, plus `days`. Holidays can push it a few days later."""
+    d = dt.date.fromisoformat(str(rows[-1][0])[:10])
+    if len(rows) >= MIN_HOLDS:
+        d = dt.date.fromisoformat(str(rows[MIN_HOLDS - 1][0])[:10])
+    else:
+        left = MIN_HOLDS - len(rows)
+        while left:
+            d += dt.timedelta(days=1)
+            if d.weekday() < 5:
+                left -= 1
+    return (d + dt.timedelta(days=days)).isoformat()
+
+
 def buy_price_table(ins: dict) -> dict:
     """Past holds split by the price paid, as published in instruments.json as by_buy_price."""
     aims = _v((ins.get("profile") or {}).get("issuer_aims_price_near_100"))
-    if aims is not True:
-        return {"reason": "the issuer's filings state no aim to keep the price near $100" if aims is False
-                else "no sourced statement on whether the issuer aims to keep the price near $100"}
     rows = (ins.get("closes") or {}).get("rows") or []
     if not rows:
-        return {"reason": "no daily closes in this feed file"}
+        return {"issuer_aims_price_near_100": aims, "reason": "no daily closes in this feed file"}
     close_on = {str(d)[:10]: float(c) for d, c in rows}
-    out = {}
+    out = {"issuer_aims_price_near_100": aims}
     for days in BUY_PRICE_PERIODS:
         hs = holds(ins, days)
         n = len(hs)
         if n < MIN_HOLDS:
-            out[str(days)] = {"days": days, "reason": f"not enough history: {n} past holds of {days} days fit in "
-                                                      f"{len(rows)} trading days of closes; {MIN_HOLDS} are needed"}
+            out[str(days)] = {"days": days, "first_results_around": first_results_around(rows, days),
+                              "reason": f"not enough history: {n} past holds of {days} days fit in "
+                                        f"{len(rows)} trading days of closes; {MIN_HOLDS} are needed"}
             continue
         bands = []
         for key, label, lo, hi in BUY_PRICE_BANDS:
@@ -332,6 +359,49 @@ def buy_price_table(ins: dict) -> dict:
                           "closes_from": str(rows[0][0])[:10], "bands": bands,
                           "drops_under": {str(lv): _runs_below(paid, lv) for lv in BUY_PRICE_LEVELS}}
     return out
+
+
+def daily_returns(ins: dict) -> list[tuple[str, float]]:
+    """(day, total return) from one close to the next, dividends counted on their ex-date."""
+    rows = [(str(d)[:10], float(c)) for d, c in (ins.get("closes") or {}).get("rows") or []]
+    divs = [(x["ex"], float(x["usd"])) for x in ins.get("dividends") or []]
+    out = []
+    for (d0, c0), (d1, c1) in zip(rows, rows[1:]):
+        dv = sum(u for e, u in divs if d0 < e <= d1)
+        out.append((d1, (c1 + dv) / c0 - 1))
+    return out
+
+
+def sharpe_table(ins: dict, tbill_pct) -> dict:
+    """Past-year Sharpe ratio from daily total returns, as published in instruments.json as sharpe."""
+    rs = daily_returns(ins)
+    rows = (ins.get("closes") or {}).get("rows") or []
+    if len(rs) < MIN_HOLDS:
+        return {"returns": len(rs), "reason": f"not enough history: {len(rs)} daily returns in {len(rows)} trading "
+                                              f"days of closes; {MIN_HOLDS} are needed",
+                **({"first_results_around": first_results_around(rows, 0)} if rows else {})}
+    if tbill_pct is None:
+        return {"returns": len(rs), "reason": "no 4-week T-bill rate today"}
+    import math
+    import statistics as st
+    x = [r for _, r in rs]
+    rf = tbill_pct / 100 / TRADING_DAYS
+    sd = st.stdev(x)
+    total = math.prod(1 + r for r in x) - 1
+    swings = sd * math.sqrt(TRADING_DAYS)
+    sharpe = (st.mean(x) - rf) / sd * math.sqrt(TRADING_DAYS) if sd else None
+    # The worked example: a bot (Sharpe 1.0, 60% in cash) moves a quarter of that cash into the instrument.
+    w = EXAMPLE["cash_share"] * EXAMPLE["slice_of_cash"]
+    extra = total - tbill_pct / 100  # what the slice earned over the T-bill the cash would otherwise earn
+    ex = {}
+    for sb in EXAMPLE["bot_swings_pct"]:
+        b = sb / 100
+        ex[str(int(sb))] = round((EXAMPLE["bot_sharpe"] * b + w * extra) / math.sqrt(b * b + (w * swings) ** 2), 2)
+    return {"returns": len(rs), "from": rows[0][0], "to": rows[-1][0], "tbill_pct": tbill_pct,
+            "total_return_pct": round(total * 100, 2), "swings_pct": round(swings * 100, 2),
+            "sharpe": round(sharpe, 2) if sharpe is not None else None,
+            "example": {**{k: (list(v) if isinstance(v, tuple) else v) for k, v in EXAMPLE.items()},
+                        "slice_of_account": w, "sharpe_by_bot_swings": ex}}
 
 
 def _odds_for(ins: dict, days: int, tbill_pct) -> tuple[dict | None, str | None]:

@@ -853,6 +853,12 @@
       add2(i.ticker + " dividend rate", i.stated_rate_pct);
     });
     LEAD.forEach(function (t) { var i = inst(t); if (i && i.dividends_source) items.push([t + " dividends paid", i.dividends_source, feed.date]); });
+    var st = (feed.backing || {}).static || {};
+    if (st.strategy && st.strategy.debt_usd) items.push(["Strategy debt", st.strategy.debt_usd.source, st.strategy.debt_usd.as_of]);
+    if (st.strategy && st.strategy.usd_reserve_usd) items.push(["Strategy USD Reserve", st.strategy.usd_reserve_usd.source, st.strategy.usd_reserve_usd.as_of]);
+    if (st.bitcoin_falls) items.push(["Bitcoin's past falls (daily closes)", st.bitcoin_falls.source, st.bitcoin_falls.as_of]);
+    ((st.comparison || {}).rows || []).forEach(function (r) { items.push([r.name + ", assets behind each $1 owed", r.source, r.as_of]); });
+    ((st.comparison || {}).no_ratio || []).forEach(function (r) { items.push([r.name, r.source, r.as_of]); });
     ((feed.coverage || {}).issuers || []).forEach(function (c) {
       add2(c.issuer + " years of dividends covered", c.years_of_dividends_covered);
       add2(c.issuer + " bitcoin held", c.btc_held);

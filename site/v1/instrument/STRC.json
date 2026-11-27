@@ -1486,6 +1486,7 @@
     }
   },
   "by_buy_price": {
+    "issuer_aims_price_near_100": true,
     "30": {
       "days": 30,
       "holds": 230,
@@ -1658,6 +1659,30 @@
         "90": 0,
         "95": 1,
         "100": 8
+      }
+    }
+  },
+  "sharpe": {
+    "returns": 251,
+    "from": "2025-11-25",
+    "to": "2026-11-25",
+    "tbill_pct": 4.19,
+    "total_return_pct": 14.52,
+    "swings_pct": 22.47,
+    "sharpe": 0.53,
+    "example": {
+      "bot_sharpe": 1.0,
+      "cash_share": 0.6,
+      "slice_of_cash": 0.25,
+      "bot_swings_pct": [
+        10.0,
+        20.0
+      ],
+      "correlation": 0.0,
+      "slice_of_account": 0.15,
+      "sharpe_by_bot_swings": {
+        "10": 1.09,
+        "20": 1.06
       }
     }
   },

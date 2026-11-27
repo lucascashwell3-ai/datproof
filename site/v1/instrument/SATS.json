@@ -435,7 +435,27 @@
     }
   },
   "by_buy_price": {
-    "reason": "the issuer's filings state no aim to keep the price near $100"
+    "issuer_aims_price_near_100": false,
+    "30": {
+      "days": 30,
+      "first_results_around": "2027-02-06",
+      "reason": "not enough history: 7 past holds of 30 days fit in 29 trading days of closes; 60 are needed"
+    },
+    "90": {
+      "days": 90,
+      "first_results_around": "2027-04-07",
+      "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed"
+    },
+    "180": {
+      "days": 180,
+      "first_results_around": "2027-07-06",
+      "reason": "not enough history: 0 past holds of 180 days fit in 29 trading days of closes; 60 are needed"
+    }
+  },
+  "sharpe": {
+    "returns": 28,
+    "reason": "not enough history: 28 daily returns in 29 trading days of closes; 60 are needed",
+    "first_results_around": "2027-01-07"
   },
   "backing": {
     "issuer": "Strive",

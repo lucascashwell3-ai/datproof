@@ -18,7 +18,7 @@ import json
 import pathlib
 
 from datproof_feed import backing, scenarios
-from datproof_feed.compare import METHOD, _tbill_pct, buy_price_table, hold_odds_table
+from datproof_feed.compare import METHOD, _tbill_pct, buy_price_table, hold_odds_table, sharpe_table
 
 MAX_CHANGES = 90
 
@@ -73,6 +73,7 @@ def publish(snap: dict, out, prev: dict | None) -> None:
     tbill = _tbill_pct(snap)
     crash = backing.table(snap.get("backing"))
     full = [{**i, "hold_odds": hold_odds_table(i, tbill), "by_buy_price": buy_price_table(i),
+             "sharpe": sharpe_table(i, tbill),
              **({"backing": crash[i["ticker"]]} if i["ticker"] in crash else {})}
             for i in snap.get("instruments", [])]
     lean = {**snap, "instruments": [{k: v for k, v in i.items() if k not in ("dividends", "closes")}
