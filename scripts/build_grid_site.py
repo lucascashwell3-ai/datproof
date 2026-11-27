@@ -10,6 +10,13 @@ COMPANIES = json.loads((MOVES / "companies.json").read_text())  # [{ticker,name,
 CREDIT = {"STRK", "STRF", "STRD", "STRC", "SATA"}
 START = dt.date(2020, 1, 6)
 
+def script_json(obj) -> str:
+    """JSON that is safe inside an inline <script>: names and notes come from outside feeds and filings, so a
+    `</script>` or `<!--` in them must not end the block. Every `<` becomes \\u003c (still the same string to
+    JSON.parse and to JavaScript), and U+2028/U+2029, which end a line in older JavaScript, are escaped too."""
+    return (json.dumps(obj, separators=(",", ":"))
+            .replace("<", "\\u003c").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
+
 def num(x):
     try: return float(x) if x not in ("", None) else None
     except ValueError: return None
@@ -83,7 +90,7 @@ def main():
         "ticker": ticker,
         "credit": json.loads(CREDIT_JSON.read_text()) if CREDIT_JSON.exists() else {},
     }
-    html_out = TEMPLATE.read_text().replace("/*__DATA__*/", "window.DATA=" + json.dumps(data, separators=(",", ":")) + ";")
+    html_out = TEMPLATE.read_text().replace("/*__DATA__*/", "window.DATA=" + script_json(data) + ";")
     OUT.write_text(html_out)
     print(f"built: {len(series)} companies, {purchase_days} purchase days, {total_btc:,.0f} BTC, credit ytd ${credit_ytd:,.0f}")
 if __name__ == "__main__":

@@ -340,7 +340,9 @@ const usd=n=>n==null?'—':n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).
 const T=D.ticker,tk=[];
 if(T.btc_usd)tk.push(`BTC <b>$${fmt(T.btc_usd)}</b> <span class="${T.btc_change_24h>=0?'up':'down'}">${T.btc_change_24h>=0?'+':''}${T.btc_change_24h.toFixed(1)}%</span>`);
 tk.push(`tracked-company BTC <b>${fmt(S.total_btc)}</b>`);
-if(S.last_buy)tk.push(`latest buy <b>${S.last_buy.t} · ${S.last_buy.date} · ${fmt(S.last_buy.btc)} BTC</b>`);
+const escT=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const web=u=>typeof u==='string'&&/^https?:\/\//i.test(u)?u:''; // only web links go into href
+if(S.last_buy)tk.push(`latest buy <b>${escT(S.last_buy.t)} · ${escT(S.last_buy.date)} · ${fmt(S.last_buy.btc)} BTC</b>`);
 if(T.block_height)tk.push(`block <b>${fmt(T.block_height)}</b>`);
 document.getElementById('ticker').innerHTML=tk.map(x=>`<span>${x}</span>`).join('');
 // hero count-up (fallback lands the number even without animation frames)
@@ -370,7 +372,7 @@ function drawGrid(){
   out.push({v,btc,dt,label})}return out};
  const draw=(id,arr,name,link)=>{const el=document.getElementById(id);el.style.gridTemplateColumns='repeat('+cols+',1fr)';
   el.innerHTML=arr.map(c=>{if(!c.v)return '<i></i>';const t=`${name} · ${c.label} · ${fmt(Math.round(c.btc))} BTC`;
-   const url=link&&link.src&&link.src[c.dt];return url?`<a class="v${Math.min(c.v,4)}" href="${url}" target="_blank" rel="noopener" title="${t}"></a>`:`<i class="v${Math.min(c.v,4)}" title="${t}"></i>`}).join('')};
+   const url=web(link&&link.src&&link.src[c.dt]);return url?`<a class="v${Math.min(c.v,4)}" href="${escT(url)}" target="_blank" rel="noopener" title="${escT(t)}"></a>`:`<i class="v${Math.min(c.v,4)}" title="${escT(t)}"></i>`}).join('')};
  draw('g-all',bucket(D.agg),'All DATs',null);
  draw('g-mstr',bucket(mstr),'Strategy',mstr);
  draw('g-asst',bucket(asst),'Strive',asst);
@@ -401,7 +403,7 @@ document.getElementById('g-exp').onclick=()=>{expanded=!expanded;drawGrid()};
  const pct=n=>ok(n)?(n<0?'−':'')+Math.abs(n).toFixed(2)+'%':null;
  const count=n=>ok(n)?Math.round(n).toLocaleString('en-US'):null;
  const site=u=>{try{const x=new URL(u);return (x.host.replace(/^www\./,'')+x.pathname).replace(/\/$/,'')}catch(e){return 'source'}};
- const link=(url,text)=>url?`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(text)}</a>`:'';
+ const link=(url,text)=>web(url)?`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(text)}</a>`:'';
  const src=(url,name,date)=>url?link(url,date?name+', '+date:name):'';
  const put=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html==null||html===''?NP:html};
  const opt=(id,html)=>{const el=document.getElementById(id);if(el){el.innerHTML=html||'';el.hidden=!html}};

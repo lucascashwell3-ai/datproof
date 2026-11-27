@@ -102,6 +102,15 @@ def e(s) -> str:
     return html.escape(str(s), quote=True)
 
 
+def url(u) -> str:
+    """A link address from the feed, escaped for an href. Only web addresses: a `javascript:` or `data:`
+    address in a source or broker field stops the page build (yesterday's pages stay up) instead of
+    becoming a link that runs code."""
+    if not isinstance(u, str) or not re.match(r"https?://[^\s\"'<>]+$", u):
+        raise PageError(f"not a web address: {u!r}"[:200])
+    return e(u)
+
+
 def host(url: str) -> str:
     m = re.match(r"https?://([^/]+)", url or "")
     return re.sub(r"^www\.", "", m.group(1)) if m else (url or "")
@@ -115,6 +124,8 @@ def names(items: list[str]) -> str:
 
 def load(v1: pathlib.Path) -> dict:
     feed = json.loads((v1 / "instruments.json").read_text())
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(feed.get("date"))):
+        raise PageError(f"feed date is not a date: {feed.get('date')!r}"[:200])
     feed["_closes"] = {}
     for t in LEAD:
         p = v1 / "instrument" / f"{t}.json"
@@ -391,7 +402,7 @@ def compare_fine(feed: dict, html_links: bool) -> str:
     if src:
         short = [(lbl.split(" ")[0] if lbl != "US Treasury" else "Treasury", u, d) for lbl, u, d in src]
         if html_links:
-            return e(s) + "Rates: " + ", ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a> {e(day(d)[:-5])}' for lbl, u, d in short) + "."
+            return e(s) + "Rates: " + ", ".join(f'<a href="{url(u)}" rel="noopener">{e(lbl)}</a> {e(day(d)[:-5])}' for lbl, u, d in short) + "."
         return s + "Rates: " + ", ".join(f"{lbl} {day(d)[:-5]} ({u})" for lbl, u, d in short) + "."
     return e(s.strip()) if html_links else s.strip()
 
@@ -512,7 +523,7 @@ def buy_lede(cols: list[dict], html_links: bool) -> str:
     parts = []
     if aim:
         srcs = aims_sources(aim)
-        link = ((" (" + ", ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a>' for lbl, u in srcs) + ")") if html_links
+        link = ((" (" + ", ".join(f'<a href="{url(u)}" rel="noopener">{e(lbl)}</a>' for lbl, u in srcs) + ")") if html_links
                 else (" (" + ", ".join(f"{lbl}: {u}" for lbl, u in srcs) + ")")) if srcs else ""
         issuers = names(list(dict.fromkeys(i.get("issuer", "") for i in aim)))
         parts.append(f"{issuers} say they adjust the rates of {names([i['ticker'] for i in aim])} to keep the price near $100{link}.")
@@ -761,7 +772,7 @@ def backing_block(feed: dict) -> str:
     top = max(r["value"] for r in rk) or 1
     li = ""
     for r in rk:
-        nm = (f'<a href="{e(r["href"])}" rel="noopener">{e(r["name"])}</a>' if r["href"] else e(r["name"]))
+        nm = (f'<a href="{url(r["href"])}" rel="noopener">{e(r["name"])}</a>' if r["href"] else e(r["name"]))
         li += (f'<li class="{"dc" if r["dc"] else "cm"}"><span class="rk-nm">{nm}<span class="rk-d">{e(r["sub"])}</span></span>'
                f'<span class="rk-bar" aria-hidden="true"><i style="width:{fixed(r["value"] / top * 100, 1)}%"></i></span>'
                f'<span class="rk-v num">${fixed(r["value"], 2)}</span></li>')
@@ -837,8 +848,8 @@ def risk_items(feed: dict) -> list[tuple[str, str]]:
 def risk_block(feed: dict) -> str:
     li = "".join(f'<li><b>{e(a)}</b>' + (f" {e(b)}" if b else "") + "</li>" for a, b in risk_items(feed))
     ins = insurance(feed)
-    fine = (f'<p class="fine">Insurance: <a href="{e(ins["FDIC"]["source_url"])}" rel="noopener">FDIC</a>, '
-            f'<a href="{e(ins["SIPC"]["source_url"])}" rel="noopener">SIPC</a>, read {day(ins["FDIC"].get("read_on"))}.</p>') if ins else ""
+    fine = (f'<p class="fine">Insurance: <a href="{url(ins["FDIC"]["source_url"])}" rel="noopener">FDIC</a>, '
+            f'<a href="{url(ins["SIPC"]["source_url"])}" rel="noopener">SIPC</a>, read {day(ins["FDIC"].get("read_on"))}.</p>') if ins else ""
     return f'<ul class="risk-l">{li}</ul>{fine}'
 
 
@@ -935,7 +946,7 @@ def buy_block(feed: dict) -> str:
         for t in tickers:
             c = (b.get("tickers") or {}).get(t) or {}
             if c.get("url"):
-                cells += f'<td><a href="{e(c["url"])}" rel="noopener nofollow" aria-label="{e(t)} at {e(b["name"])}">{e(t)}</a></td>'
+                cells += f'<td><a href="{url(c["url"])}" rel="noopener nofollow" aria-label="{e(t)} at {e(b["name"])}">{e(t)}</a></td>'
             elif c:
                 cells += '<td><span class="wb-n">no page link</span></td>'
             else:
@@ -961,7 +972,7 @@ def buy_fine_html(feed: dict) -> str:
     fact = (st.get("fact") or "").rstrip(".")
     s = e(fact)
     if fact:
-        s += (f' (<a href="{e(st["source"])}" rel="noopener">FINRA</a>).' if st.get("source") else ".")
+        s += (f' (<a href="{url(st["source"])}" rel="noopener">FINRA</a>).' if st.get("source") else ".")
     if doc.get("checked_on"):
         s += f" Links checked {day(doc['checked_on'])}. Alphabetical; DATproof has no tie to any broker."
     return s.strip()
@@ -1060,7 +1071,7 @@ def linkify(text: str) -> str:
     """Escape, then turn '(date, https://…)' citations into short links."""
     def sub(m):
         d, u = m.group(1), m.group(2)
-        return f'(<a href="{u}" rel="noopener">{e(d or host(u))}</a>)'
+        return f'(<a href="{url(u)}" rel="noopener">{e(d or host(u))}</a>)'
     out, pos = "", 0
     for m in LINK.finditer(text):
         out += e(text[pos:m.start()]) + sub(m)
@@ -1075,7 +1086,7 @@ def faq_html(feed: dict) -> str:
 def faq_ld(feed: dict) -> str:
     ld = json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "dateModified": feed["date"],
                      "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
-                                    for q, a in faq(feed)]}, ensure_ascii=False).replace("</", "<\\/")
+                                    for q, a in faq(feed)]}, ensure_ascii=False).replace("<", "\\u003c")  # no </script> or <!-- can end the block
     return f'<script type="application/ld+json">{ld}</script>'
 
 
@@ -1158,7 +1169,7 @@ def sources_of(feed: dict) -> list[tuple[str, str, str | None]]:
 
 
 def sources_html(feed: dict) -> str:
-    li = "".join(f'<li>{e(lbl)}: <a href="{e(u)}" rel="noopener">{e(host(u))}</a>{", " + day(d) if d else ""}</li>'
+    li = "".join(f'<li>{e(lbl)}: <a href="{url(u)}" rel="noopener">{e(host(u))}</a>{", " + day(d) if d else ""}</li>'
                  for lbl, u, d in sources_of(feed))
     return f'<ul>{li}<li>Method for every number: <a href="../v1/method.json">method.json</a></li></ul>'
 
