@@ -13,7 +13,7 @@ share sales and the digital credit instruments (STRC, SATA) that raise the cash.
   Strategy, Strive, and Metaplanet, each with date, amounts, and its `source_url`. What
   can't be sourced from a filing isn't in the data.
 - **The pullers** — `scripts/pull_mstr.py`, `pull_asst.py`, `pull_metaplanet.py` read the
-  companies' disclosures; `scripts/build_grid_site.py` renders `site/index.html` from the
+  companies' disclosures; `scripts/build_grid_site.py` renders `site/grid/index.html` (served at `/grid/`) from the
   CSVs plus a keyless BTC ticker (`scripts/fetch_ticker.py`).
 - **The Action** — `.github/workflows/grid.yml` re-pulls, rebuilds, and redeploys the site
   every day.
@@ -38,7 +38,7 @@ its source and date; a number that could not be fetched is empty, with the reaso
   `method.json` (every formula and flag in plain words), `status.json`, and the dated
   `days/<date>.json`.
 - **Page** (rewritten each day from the files, figures as plain text so readers that run no
-  script still get them): `https://lucascashwell3-ai.github.io/datproof/next/`, with a Markdown copy at `index.md`.
+  script still get them): the home page, `https://lucascashwell3-ai.github.io/datproof/`, with a Markdown copy at `index.md`.
   `python -m datproof_feed.pages` rebuilds it.
 - **By price paid**: `by_buy_price` in each instrument splits the 30, 90 and 180-day holds by the
   close paid (under $90, $90 to $95, $95 to $100, $100 and over): buys, losses, average and worst

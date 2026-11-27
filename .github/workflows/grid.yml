@@ -129,10 +129,11 @@ jobs:
           python -m pytest tests/test_feed_*.py -q && python -m datproof_feed.build $flag || code=$?
           [ "$code" = 0 ] || echo "::warning::idle-cash feed failed (exit $code); last published /v1/ files stay up"
           echo "feed_code=$code" >> "$GITHUB_OUTPUT"
-      # Today's figures written into /next/ as plain text, from the /v1/ files, so a
-      # reader that runs no script still gets them. Same rule as the feed: a failure leaves
-      # yesterday's pages up and the feed-check job turns the run red. A dry run writes to a temp folder.
-      - name: Plain-text page (/next/ figures + index.md)
+      # Today's figures written into the home page (site/index.html) as plain text, from the /v1/
+      # files, so a reader that runs no script still gets them; also index.md, llms.txt, sitemap.xml.
+      # /next/ is a fixed page that sends readers home; nothing here writes it.
+      # Same rule as the feed: a failure leaves yesterday's pages up and the feed-check job turns the run red. A dry run writes to a temp folder.
+      - name: Plain-text home page (figures + index.md + llms.txt + sitemap)
         id: pages
         run: |
           flag=""
@@ -141,7 +142,8 @@ jobs:
           python -m datproof_feed.pages $flag || code=$?
           [ "$code" = 0 ] || echo "::warning::pages not rebuilt (exit $code); yesterday's pages stay up"
           echo "pages_code=$code" >> "$GITHUB_OUTPUT"
-      - name: Build site
+      # The bitcoin purchase grid, served at /grid/ (site/grid/index.html). Never the home page.
+      - name: Build grid page (/grid/)
         run: python scripts/build_grid_site.py
       - name: Source status + freshness
         run: |
@@ -159,7 +161,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md site/llms.txt
+          git add data/ data/run-status.json site/index.html site/index.md site/llms.txt site/sitemap.xml site/grid/index.html site/v1
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else

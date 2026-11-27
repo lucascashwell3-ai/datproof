@@ -10,8 +10,8 @@ Figures below are from the feed dated 27 Nov 2026 and are rebuilt every day.
 
 ## Page (today's figures written into the text, no script needed)
 
-- https://lucascashwell3-ai.github.io/datproof/next/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
-- https://lucascashwell3-ai.github.io/datproof/next/index.md : the same page as Markdown.
+- https://lucascashwell3-ai.github.io/datproof/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
+- https://lucascashwell3-ai.github.io/datproof/index.md : the same page as Markdown.
 
 ## Today
 

@@ -817,7 +817,7 @@
   }
 
   initTabs(); drawHeroDither(); drawEdgeDither();
-  load("../v1/").catch(function () { return load("./v1-sample/"); }).then(start).catch(function (e) {
+  load("v1/").catch(function () { return load("next/v1-sample/"); }).then(start).catch(function (e) {
     $("#earn-foot").innerHTML = '<span class="err">The charts did not load (' + esc(e.message) + "). The figures on this page are written in; the JSON files have the rest.</span>";
   });
 })();

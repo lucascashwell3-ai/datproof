@@ -20,12 +20,12 @@ def test_archived_story_page_still_references_its_data():
 
 def test_story_url_redirects_to_the_stress_test():
     page = (ROOT / "site" / "story" / "index.html").read_text(encoding="utf-8")
-    assert 'http-equiv="refresh" content="0; url=../#stress"' in page
-    assert 'href="../#stress"' in page
+    assert 'http-equiv="refresh" content="0; url=../grid/#stress"' in page
+    assert 'href="../grid/#stress"' in page
     assert not (ROOT / "site" / "story" / "story-data.js").exists()
 
 
 def test_front_page_no_longer_loads_the_story_engine():
-    template = (ROOT / "site" / "template.html").read_text(encoding="utf-8")
+    template = (ROOT / "site" / "grid" / "template.html").read_text(encoding="utf-8")
     for gone in ("story/story-data.js", "__storySpine", 'id="story"', "stageNav", 'href="#story"'):
         assert gone not in template, gone

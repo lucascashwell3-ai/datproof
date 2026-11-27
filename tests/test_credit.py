@@ -65,7 +65,7 @@ def test_js_and_python_math_agree():
               "sata_shares": 11_184_160, "sata_rate": 0.13}
     strategy = {"btc": 846_000, "usd_assets": 6_092_000_000, "annual_obligation": 1_622_235_820.5}
     prices = [0, 25_000, 83_251.93, 150_000]
-    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'coverage.js'))});"
+    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'grid' / 'coverage.js'))});"
               f"const a={json.dumps(strive)},b={json.dumps(strategy)};"
               f"console.log(JSON.stringify({json.dumps(prices)}.map(p=>[C.striveYears(a,p),C.strategyYears(b,p)])))")
     js = json.loads(subprocess.run([node, "-e", script], capture_output=True, text=True, check=True).stdout)
@@ -78,7 +78,7 @@ def test_js_refuses_a_zero_or_negative_obligation():
     node = shutil.which("node")
     if not node:
         pytest.skip("node not installed")
-    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'coverage.js'))});"
+    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'grid' / 'coverage.js'))});"
               "console.log(JSON.stringify([C.yearsCovered(1,1,1,0),C.yearsCovered(1,1,1,-5),"
               "C.striveYears({btc:1,cash:1,securities:1,sata_shares:0,sata_rate:0.13},1)].map(Number.isFinite)))")
     out = json.loads(subprocess.run([node, "-e", script], capture_output=True, text=True, check=True).stdout)

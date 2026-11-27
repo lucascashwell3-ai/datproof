@@ -1,5 +1,5 @@
 """Front page sections: credit family, stress test, and the next-up teaser. The page's own
-coverage math (site/coverage.js) must reproduce each company's published figure at its price."""
+coverage math (site/grid/coverage.js) must reproduce each company's published figure at its price."""
 import json
 import re
 import shutil
@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE = (ROOT / "site" / "template.html").read_text(encoding="utf-8")
+TEMPLATE = (ROOT / "site" / "grid" / "template.html").read_text(encoding="utf-8")
 CREDIT = json.loads((ROOT / "data" / "credit.json").read_text())
 
 
@@ -58,7 +58,7 @@ def test_page_math_reproduces_strategy_published_figure():
     if not node:
         pytest.skip("node not installed")
     st = CREDIT["strategy"]
-    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'coverage.js'))});"
+    script = (f"const C=require({json.dumps(str(ROOT / 'site' / 'grid' / 'coverage.js'))});"
               f"const s={json.dumps(st)};console.log(C.strategyYears(s,s.their_btc_price))")
     ours = float(subprocess.run([node, "-e", script], capture_output=True, text=True, check=True).stdout)
     assert round(ours, 1) == round(st["published_years"], 1)

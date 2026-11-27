@@ -1,4 +1,4 @@
-"""The plain-text page: figures written into /next/, its Markdown twin and llms.txt, from small fixtures.
+"""The plain-text page: figures written into the home page, its Markdown twin and llms.txt, from small fixtures.
 
 Each check is also run against a planted fault (a wrong figure, a dropped stale note, a missing
 reason) and must catch it. A check that cannot catch a planted fault does not count.
@@ -240,7 +240,7 @@ def write_site(root: pathlib.Path, feed: dict, next_html: str = NEXT_HTML) -> pa
     for t, rows in CLOSES.items():
         (v1 / "instrument" / f"{t}.json").write_text(json.dumps({"ticker": t, "closes": {"rows": rows}}))
     (root / "next").mkdir()
-    (root / "next" / "index.html").write_text(next_html)
+    (root / "index.html").write_text(next_html)
     return root
 
 
@@ -253,8 +253,8 @@ def build(tmp_path, feed=None, next_html=NEXT_HTML) -> tuple[int, pathlib.Path]:
     return pages.main(["--site", str(site)]), site
 
 
-FILES = ("next/index.html", "next/index.md", "llms.txt")
-PAGE_FILES = ("next/index.html", "next/index.md")
+FILES = ("index.html", "index.md", "llms.txt", "sitemap.xml")
+PAGE_FILES = ("index.html", "index.md")
 
 
 def outputs(site: pathlib.Path) -> dict[str, str]:
@@ -317,9 +317,9 @@ def expected_figures(feed: dict) -> list[str]:
 def figure_mismatches(files: dict[str, str], feed: dict) -> list[str]:
     out = [f"{rel}: missing {fig}" for rel in PAGE_FILES for fig in expected_figures(feed) if fig not in text_of(files[rel])]
     want = {one(i["yield_pct"]["value"]) for i in feed["instruments"]}
-    for y in re.findall(r'class="p-yield num">([\d.]+%)<', files["next/index.html"]):
+    for y in re.findall(r'class="p-yield num">([\d.]+%)<', files["index.html"]):
         if y not in want:
-            out.append(f"next/index.html: panel shows {y}, not in the feed")
+            out.append(f"index.html: panel shows {y}, not in the feed")
     return out
 
 
@@ -332,15 +332,15 @@ def test_every_figure_equals_the_feed(tmp_path):
 def test_figure_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace('p-yield num">12.8%', 'p-yield num">12.9%')
-    files["next/index.md"] = files["next/index.md"].replace("$85.76", "$85.67").replace("4.40%", "4.04%")
+    files["index.html"] = files["index.html"].replace('p-yield num">12.8%', 'p-yield num">12.9%')
+    files["index.md"] = files["index.md"].replace("$85.76", "$85.67").replace("4.40%", "4.04%")
     found = figure_mismatches(files, make_feed())
     assert any("12.9%" in f for f in found) and any("$85.76" in f for f in found) and any("4.40%" in f for f in found)
 
 
 def test_odds_round_half_up_like_the_page_script(tmp_path):
     code, site = build(tmp_path)
-    html_ = (site / "next/index.html").read_text()
+    html_ = (site / "index.html").read_text()
     assert "31%" in region(html_, "odds")  # 30.5 -> 31, as Math.round does
     assert pages.rnd(30.5) == 31 and pages.fixed(0.25, 1) == "0.3" and pages.signed(-11.53) == "−11.5%"
     # The browser rounds the number as written: a stored 3.15 prints as 3.2 (its exact binary value is 3.1499...).
@@ -349,8 +349,8 @@ def test_odds_round_half_up_like_the_page_script(tmp_path):
 
 def asof_mismatches(files: dict[str, str]) -> list[str]:
     out = []
-    line = next((ln for ln in files["next/index.md"].splitlines() if "22 Nov 2026" in ln and "20 Nov 2026" in ln), "")
-    for rel, text in (("next/index.html", region(files["next/index.html"], "asof")), ("next/index.md", line)):
+    line = next((ln for ln in files["index.md"].splitlines() if "22 Nov 2026" in ln and "20 Nov 2026" in ln), "")
+    for rel, text in (("index.html", region(files["index.html"], "asof")), ("index.md", line)):
         if not all(x in text for x in ("20 Nov 2026", "22 Nov 2026", "13 Nov 2026")):
             out.append(f"{rel}: asof line")
     return out
@@ -360,27 +360,27 @@ def test_page_prints_every_figure_with_a_date(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
     assert asof_mismatches(f) == []
-    assert "| 4-week T-bill | 4.11% | 22 Nov 2026 | $411 | +0.4% |" in f["next/index.md"]
-    assert "| STRC (Strategy) | 12.8% | 20 Nov 2026 | $1,282 | +9.1% |" in f["next/index.md"]
+    assert "| 4-week T-bill | 4.11% | 22 Nov 2026 | $411 | +0.4% |" in f["index.md"]
+    assert "| STRC (Strategy) | 12.8% | 20 Nov 2026 | $1,282 | +9.1% |" in f["index.md"]
 
 
 def test_asof_check_catches_a_dropped_date(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace("20 Nov 2026", "")
-    files["next/index.md"] = files["next/index.md"].replace("data for 22 Nov 2026", "data for 21 Nov 2026")
+    files["index.html"] = files["index.html"].replace("20 Nov 2026", "")
+    files["index.md"] = files["index.md"].replace("data for 22 Nov 2026", "data for 21 Nov 2026")
     assert len(asof_mismatches(files)) == 2
 
 
 def test_the_comparison_names_each_rate_in_order_with_its_source(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    html_ = f["next/index.html"]
+    html_ = f["index.html"]
     names_ = re.findall(r'<span class="cmp-nm">([^<]+)</span>', html_)
     assert names_ == ["STRC", "SATA", "SATS"] + [r[2] for r in RATE_ROWS]
     assert "national average 1.81%" in html_  # the CD average is the second line of the CD row, not its own row
-    assert "Broker cash" not in region(html_, "compare") and "| Broker cash" not in f["next/index.md"]
-    line = next(ln for ln in f["next/index.md"].splitlines() if "Rates:" in ln)
+    assert "Broker cash" not in region(html_, "compare") and "| Broker cash" not in f["index.md"]
+    line = next(ln for ln in f["index.md"].splitlines() if "Rates:" in ln)
     order = [line.index(x) for x in ("FDIC 16 Nov", "Bankrate 22 Nov", "Fidelity 20 Nov", "Treasury 22 Nov", "iShares 20 Nov")]
     assert order == sorted(order)
     assert 'href="https://example.com/rates/hys_top"' in html_
@@ -415,8 +415,8 @@ def test_a_stale_comparison_rate_says_as_of_its_own_date(tmp_path):
     r["yield_pct"].update(stale=True, as_of="2026-11-10")
     code, site = build(tmp_path, feed)
     f = outputs(site)
-    assert "as of 10 Nov 2026" in f["next/index.md"] and "| as of 10 Nov 2026 |" in f["next/index.md"]
-    assert '<span class="cmp-d cmp-as">as of 10 Nov 2026</span>' in f["next/index.html"]
+    assert "as of 10 Nov 2026" in f["index.md"] and "| as of 10 Nov 2026 |" in f["index.md"]
+    assert '<span class="cmp-d cmp-as">as of 10 Nov 2026</span>' in f["index.html"]
 
 
 def test_a_null_rate_prints_the_feeds_reason(tmp_path):
@@ -426,8 +426,8 @@ def test_a_null_rate_prints_the_feeds_reason(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "the FDIC page did not load" in f["next/index.html"]
-    assert "not available (the FDIC page did not load)" in f["next/index.md"]
+    assert "the FDIC page did not load" in f["index.html"]
+    assert "not available (the FDIC page did not load)" in f["index.md"]
 
 
 def test_null_check_catches_a_missing_reason(tmp_path):
@@ -436,8 +436,8 @@ def test_null_check_catches_a_missing_reason(tmp_path):
     r["yield_pct"] = node(None, reason=None)  # planted: no reason given
     code, site = build(tmp_path, feed)
     f = outputs(site)
-    assert "the feed gave no reason" in f["next/index.html"]  # said plainly, never blank
-    assert "not available (the feed gave no reason)" in f["next/index.md"]
+    assert "the feed gave no reason" in f["index.html"]  # said plainly, never blank
+    assert "not available (the feed gave no reason)" in f["index.md"]
 
 
 def test_a_null_stock_yield_drops_its_panel(tmp_path):
@@ -446,7 +446,7 @@ def test_a_null_stock_yield_drops_its_panel(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "SATS</h3>" not in f["next/index.html"]  # the panel drops it, as the page script does
+    assert "SATS</h3>" not in f["index.html"]  # the panel drops it, as the page script does
     assert "12.8%" in f["llms.txt"] and "15.3%" in f["llms.txt"]
 
 
@@ -456,7 +456,7 @@ def test_a_null_default_cash_rate_prints_its_reason_and_still_builds(tmp_path):
     r["yield_pct"] = node(None, reason="Bankrate did not answer")
     code, site = build(tmp_path, feed)
     assert code == 0
-    assert "Bankrate did not answer" in (site / "next/index.html").read_text()
+    assert "Bankrate did not answer" in (site / "index.html").read_text()
 
 
 def test_a_null_tbill_prints_the_reason_and_still_builds(tmp_path):
@@ -467,8 +467,8 @@ def test_a_null_tbill_prints_the_reason_and_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "treasury.gov did not answer" in f["next/index.html"]
-    assert "× a 4-week T-bill" not in f["next/index.md"] and "a 4-week T-bill pays" not in f["next/index.html"]
+    assert "treasury.gov did not answer" in f["index.html"]
+    assert "× a 4-week T-bill" not in f["index.md"] and "a 4-week T-bill pays" not in f["index.html"]
 
 
 def test_no_flag_labels_anywhere(tmp_path):
@@ -495,12 +495,12 @@ def inflation_mismatches(files: dict[str, str], feed: dict) -> list[str]:
     ys = [i["yield_pct"]["value"] for i in feed["instruments"]] + [r[3] for r in RATE_ROWS]
     want = [("+" if Decimal(str(y)) - inf >= 0 else "−") + one(abs(Decimal(str(y)) - inf)) for y in ys]
     out = []
-    got = [row[-1] for row in md_table_rows(files["next/index.md"])]
+    got = [row[-1] for row in md_table_rows(files["index.md"])]
     if got != want:
-        out.append(f"next/index.md: {got} != {want}")
-    got = re.findall(r'class="cmp-r" data-l="After inflation"><span class="num">([^<]+)<', files["next/index.html"])
+        out.append(f"index.md: {got} != {want}")
+    got = re.findall(r'class="cmp-r" data-l="After inflation"><span class="num">([^<]+)<', files["index.html"])
     if got != want:
-        out.append(f"next/index.html: {got} != {want}")
+        out.append(f"index.html: {got} != {want}")
     return out
 
 
@@ -508,7 +508,7 @@ def test_after_inflation_is_yield_minus_cpi(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
     assert inflation_mismatches(files, make_feed()) == []
-    note = text_of(region(files["next/index.html"], "compare"))
+    note = text_of(region(files["index.html"], "compare"))
     assert "3.7%" in note and "Sep 2026" in note
 
 
@@ -525,18 +525,18 @@ def test_null_inflation_drops_the_column_and_its_note(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "after inflation" not in f["next/index.md"].lower()
-    assert "after inflation" not in re.sub(r"<caption.*?</caption>", "", f["next/index.html"]).lower()
-    head = next(line for line in f["next/index.md"].splitlines() if line.startswith("| Where"))
+    assert "after inflation" not in f["index.md"].lower()
+    assert "after inflation" not in re.sub(r"<caption.*?</caption>", "", f["index.html"]).lower()
+    head = next(line for line in f["index.md"].splitlines() if line.startswith("| Where"))
     assert head.endswith("| On $10,000 a year |")
-    assert '<th scope="col">On $10,000, a year</th></tr>' in f["next/index.html"]
+    assert '<th scope="col">On $10,000, a year</th></tr>' in f["index.html"]
 
 
 def test_the_table_caption_does_not_name_a_dropped_column(tmp_path):
     feed = make_feed()
     feed["inflation_yoy_pct"] = {"value": None, "month": None, "reason": "bls.gov did not answer"}
     code, site = build(tmp_path, feed)
-    assert "after inflation" not in outputs(site)["next/index.html"].lower()
+    assert "after inflation" not in outputs(site)["index.html"].lower()
 
 
 # ---------- past holds by price paid ----------
@@ -552,17 +552,17 @@ def by_price_mismatches(files: dict[str, str], feed: dict) -> list[str]:
                      else f"{b['buys']} buys · {b['lost']} lost · worst {signed1(b['worst_pct'])}"
                      + ("" if not drops else " · all from one drop" if drops == 1 else f" · from {drops} drops"))
             want.append((i["ticker"], b["label"], "" if b["avg_pct"] is None else signed1(b["avg_pct"]), small))
-    html_ = files["next/index.html"]
+    html_ = files["index.html"]
     cells = re.findall(r'<td class="(?:up|flat)" data-l="(\w+)">(?:<span class="bp-n num">([^<]+)</span>)?<span class="bp-s">([^<]+)</span>', html_)
     got = sorted((t, n or "", small) for t, n, small in cells)
     exp = sorted((t, n, small) for t, _, n, small in want)
     if got != exp:
-        out.append(f"next/index.html: {got} != {exp}")
-    md = files["next/index.md"]
+        out.append(f"index.html: {got} != {exp}")
+    md = files["index.md"]
     for t, label, n, small in want:
         piece = (n + ": " if n else "") + small.replace(" · ", ", ")
         if piece not in md:
-            out.append(f"next/index.md: missing {t} {label} '{piece}'")
+            out.append(f"index.md: missing {t} {label} '{piece}'")
     return out
 
 
@@ -574,8 +574,8 @@ def test_by_price_figures_equal_the_feed(tmp_path):
 def test_by_price_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace("31 buys · 0 lost", "31 buys · 1 lost")
-    files["next/index.md"] = files["next/index.md"].replace("+8.7%", "+8.8%")
+    files["index.html"] = files["index.html"].replace("31 buys · 0 lost", "31 buys · 1 lost")
+    files["index.md"] = files["index.md"].replace("+8.7%", "+8.8%")
     found = by_price_mismatches(files, make_feed())
     assert any("index.html" in f for f in found) and any("index.md" in f for f in found)
 
@@ -583,15 +583,15 @@ def test_by_price_check_catches_a_planted_wrong_value(tmp_path):
 def test_small_bands_and_a_new_issue(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    block = text_of(region(f["next/index.html"], "below"))
+    block = text_of(region(f["index.html"], "below"))
     assert "4 buys, too few to score" in block
     assert "7 Nov 2026" in block and "7 Apr 2027" in block  # SATS fills in on its own later
     assert "SATS" in block and "15%" in block  # the fixed rate, said for SATS
     # the issuer claim names only the issues whose filings state it
     claim = re.search(r"([^.]*keep the price near \$100)", block).group(1)
     assert "STRC" in claim and "SATA" in claim and "SATS" not in claim
-    assert 'href="https://example.com/strc-filing"' in f["next/index.html"] and 'href="https://example.com/sata-filing"' in f["next/index.html"]
-    assert "7 Nov 2026" in f["next/index.md"] and "7 Apr 2027" in f["next/index.md"]
+    assert 'href="https://example.com/strc-filing"' in f["index.html"] and 'href="https://example.com/sata-filing"' in f["index.html"]
+    assert "7 Nov 2026" in f["index.md"] and "7 Apr 2027" in f["index.md"]
 
 
 def test_a_new_issue_fills_in_once_it_has_90_day_results(tmp_path):
@@ -600,7 +600,7 @@ def test_a_new_issue_fills_in_once_it_has_90_day_results(tmp_path):
         [band("under_90", "under $90", None, 90.0, 40, 1, 2.5, -1.2), band("90_to_95", "$90 to $95", 90.0, 95.0, 20, 0, 1.9, 0.4),
          band("95_to_100", "$95 to $100", 95.0, 100.0, 3), band("100_and_over", "$100 and over", 100.0, None, 0)])["90"]
     code, site = build(tmp_path, feed)
-    block = region(outputs(site)["next/index.html"], "below")
+    block = region(outputs(site)["index.html"], "below")
     assert "40 buys · 1 lost" in block and "7 Apr 2027" not in block
 
 
@@ -611,8 +611,8 @@ def test_a_feed_without_by_price_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "<!--feed:below--><!--/feed:below-->" in f["next/index.html"]
-    assert "## Bought under $100" not in f["next/index.md"]
+    assert "<!--feed:below--><!--/feed:below-->" in f["index.html"]
+    assert "## Bought under $100" not in f["index.md"]
 
 
 # ---------- backed by bitcoin and cash ----------
@@ -649,8 +649,8 @@ def test_crash_figures_equal_the_feed(tmp_path):
 def test_crash_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace("$21,671", "$21,617")
-    files["next/index.md"] = files["next/index.md"].replace("| SATS | $1.48", "| SATS | $1.84", 1)
+    files["index.html"] = files["index.html"].replace("$21,671", "$21,617")
+    files["index.md"] = files["index.md"].replace("| SATS | $1.48", "| SATS | $1.84", 1)
     found = crash_mismatches(files, make_feed())
     assert any("index.html SATA" in f for f in found) and any("index.md SATS" in f for f in found)
 
@@ -658,7 +658,7 @@ def test_crash_check_catches_a_planted_wrong_value(tmp_path):
 def test_crash_section_shows_all_three_by_one_rule_with_dates(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    block = region(f["next/index.html"], "backing")
+    block = region(f["index.html"], "backing")
     for t in ("STRC", "SATA", "SATS"):
         assert f'class="bk-tk">{t}<' in block
     text = html.unescape(block)
@@ -675,7 +675,7 @@ def test_crash_section_shows_all_three_by_one_rule_with_dates(tmp_path):
 
 def test_crash_question_answers_with_the_numbers(tmp_path):
     code, site = build(tmp_path)
-    ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', outputs(site)["next/index.html"], re.S).group(1))
+    ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', outputs(site)["index.html"], re.S).group(1))
     a = next(q["acceptedAnswer"]["text"] for q in ld["mainEntity"] if q["name"] == "What happens if bitcoin crashes?")
     for fig in ("79% (STRC)", "65% (SATA)", "38% (SATS)", "90%", "83%", "70%", "2.7 years", "1.5 years"):
         assert fig in a, fig
@@ -688,8 +688,8 @@ def test_a_feed_without_the_crash_test_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "<!--feed:backing--><!--/feed:backing-->" in f["next/index.html"]
-    assert "What happens if bitcoin crashes?" not in f["next/index.html"] and "## Backed by bitcoin and cash" not in f["next/index.md"]
+    assert "<!--feed:backing--><!--/feed:backing-->" in f["index.html"]
+    assert "What happens if bitcoin crashes?" not in f["index.html"] and "## Backed by bitcoin and cash" not in f["index.md"]
 
 
 # ---------- what can go wrong ----------
@@ -697,8 +697,8 @@ def test_a_feed_without_the_crash_test_still_builds(tmp_path):
 def test_risk_section_prints_each_figure_from_the_feed(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    risk = text_of(region(f["next/index.html"], "risk"))
-    md = text_of(f["next/index.md"]).replace("**", "")
+    risk = text_of(region(f["index.html"], "risk"))
+    md = text_of(f["index.md"]).replace("**", "")
     for piece in ("Largest fall from a high close", "STRC 25.5%", "SATS 11.5%", "7 Nov 2026", "variable", "fixed 15%", "77% to 85%", "51% below", "$126,080",
                   "7 Apr 2027", "Past results do not predict future results"):
         assert piece in risk, piece
@@ -724,15 +724,15 @@ def test_the_risk_sentences_appear_once_in_each_page_and_nowhere_else(tmp_path):
     assert risk_once_mismatches(files) == []
     assert risk_once_mismatches(real_outputs()) == []
     # it is the risk marker that holds them
-    assert "Past results do not predict future results" in region(files["next/index.html"], "risk")
+    assert "Past results do not predict future results" in region(files["index.html"], "risk")
 
 
 def test_risk_once_check_catches_a_planted_repeat(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.md"] += "\nPast results do not predict future results.\n"
+    files["index.md"] += "\nPast results do not predict future results.\n"
     files["llms.txt"] += "\nLargest fall from a high close.\n"
-    files["next/index.html"] = files["next/index.html"].replace("Bitcoin has fallen", "Bitcoin fell")
+    files["index.html"] = files["index.html"].replace("Bitcoin has fallen", "Bitcoin fell")
     found = risk_once_mismatches(files)
     assert any("index.md" in f and "Past results" in f for f in found)
     assert any("llms.txt" in f for f in found) and any("index.html" in f and "Bitcoin has fallen" in f for f in found)
@@ -743,7 +743,7 @@ def test_risk_once_check_catches_a_planted_repeat(tmp_path):
 def test_questions_match_their_search_data_and_repeat_no_section(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    html_ = f["next/index.html"]
+    html_ = f["index.html"]
     ld = json.loads(re.search(r'application/ld\+json">(.*?)</script>', html_, re.S).group(1))
     asked = [q["name"] for q in ld["mainEntity"]]
     shown = [html.unescape(q) for q in re.findall(r'<div class="qa"><h3>([^<]+)</h3>', html_)]
@@ -754,24 +754,24 @@ def test_questions_match_their_search_data_and_repeat_no_section(tmp_path):
         a = q["acceptedAnswer"]["text"]
         assert "Largest fall" not in a and "adjust the rate" not in a and "Past results do not predict" not in a
     for q in asked:
-        assert f"### {q}" in f["next/index.md"]
+        assert f"### {q}" in f["index.md"]
 
 
 def test_the_tax_and_ira_answers_quote_each_document_with_its_date_and_link(tmp_path):
     code, site = build(tmp_path)
-    md = outputs(site)["next/index.md"]
+    md = outputs(site)["index.md"]
     assert "(2 Feb 2026, https://example.com/strategy-8k)" in md and "(12 Nov 2026, https://example.com/strive-8k)" in md
     assert "(https://example.com/irs-basis)" in md and "(https://example.com/irs-ira)" in md and "(https://example.com/irs-hsa)" in md
-    assert 'href="https://example.com/strategy-8k"' in outputs(site)["next/index.html"]
+    assert 'href="https://example.com/strategy-8k"' in outputs(site)["index.html"]
 
 
 def test_daily_pay_is_said_only_when_every_stock_pays_daily(tmp_path):
     feed = make_feed()
     feed["instruments"][2]["schedule"] = "monthly"
     code, site = build(tmp_path, feed)
-    assert "with a dividend every business day" not in outputs(site)["next/index.html"]
+    assert "with a dividend every business day" not in outputs(site)["index.html"]
     code, site = build(tmp_path / "b")
-    assert "with a dividend every business day" in outputs(site)["next/index.html"]
+    assert "with a dividend every business day" in outputs(site)["index.html"]
 
 
 def test_a_new_stock_is_said_plainly(tmp_path):
@@ -806,15 +806,15 @@ def test_sharpe_figures_equal_the_feed(tmp_path):
     assert sharpe_mismatches(f, make_feed()) == []
     for rel in PAGE_FILES:
         assert f[rel].count("do not move with the stock") == 1, rel  # the assumption, stated once
-    assert "<!--feed:lifthead-->More return, same Sharpe<" in f["next/index.html"]
-    assert "## More return, same Sharpe" in f["next/index.md"]
+    assert "<!--feed:lifthead-->More return, same Sharpe<" in f["index.html"]
+    assert "## More return, same Sharpe" in f["index.md"]
 
 
 def test_sharpe_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace("1.06 to 1.09", "1.16 to 1.19")
-    files["next/index.md"] = files["next/index.md"].replace("5.6 points", "5.9 points")
+    files["index.html"] = files["index.html"].replace("1.06 to 1.09", "1.16 to 1.19")
+    files["index.md"] = files["index.md"].replace("5.6 points", "5.9 points")
     found = sharpe_mismatches(files, make_feed())
     assert any("index.html" in m and "1.06 to 1.09" in m for m in found) and any("index.md" in m and "5.6 points" in m for m in found)
 
@@ -827,8 +827,8 @@ def test_heading_follows_the_worked_example(tmp_path, levels, tail):
     for i in feed["instruments"][:2]:
         i["sharpe"]["example"]["sharpe_by_bot_swings"] = levels
     code, site = build(tmp_path, feed)
-    assert f"More return, {tail}<" in outputs(site)["next/index.html"]
-    assert "More return, same Sharpe<" not in outputs(site)["next/index.html"]
+    assert f"More return, {tail}<" in outputs(site)["index.html"]
+    assert "More return, same Sharpe<" not in outputs(site)["index.html"]
 
 
 def test_the_account_example_names_both_cash_homes(tmp_path):
@@ -837,7 +837,7 @@ def test_the_account_example_names_both_cash_homes(tmp_path):
     for rel in PAGE_FILES:
         for fig in ("$10,000", "60%", "4.40%", "22 Nov 2026", "15.2%"):
             assert fig in text_of(f[rel]), (rel, fig)
-    bars = region(f["next/index.html"], "lift")
+    bars = region(f["index.html"], "lift")
     assert "+$264" in bars and "+$912" in bars  # $6,000 idle at 4.40% and at 15.2%
 
 
@@ -848,9 +848,9 @@ def test_a_feed_without_sharpe_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    assert "points more return" not in f["next/index.html"] and "Sharpe" not in f["next/index.md"].replace("Idle cash at work", "")
-    assert "STRC 0.53" not in f["next/index.html"]
-    assert "<!--feed:lifthead-->Idle cash at work<" in f["next/index.html"]
+    assert "points more return" not in f["index.html"] and "Sharpe" not in f["index.md"].replace("Idle cash at work", "")
+    assert "STRC 0.53" not in f["index.html"]
+    assert "<!--feed:lifthead-->Idle cash at work<" in f["index.html"]
 
 
 # ---------- your situation, where to buy, the example reply ----------
@@ -858,7 +858,7 @@ def test_a_feed_without_sharpe_still_builds(tmp_path):
 def test_the_situation_block_prints_the_default_case(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    block = region(f["next/index.html"], "situation")
+    block = region(f["index.html"], "situation")
     for t in ("STRC", "SATA", "SATS"):
         assert f'<th scope="col">{t}<' in block
     divs = [usd2(div_usd(10000, y, 90)) for y in (12.821, 15.294, 17.491)]  # cents, so the rows add up
@@ -871,21 +871,21 @@ def test_the_situation_block_prints_the_default_case(tmp_path):
     shares = re.search(r"<th scope=\"row\">Whole shares</th>(.*?)</tr>", block).group(1)
     assert re.findall(r'<span class="st-n num">([^<]+)</span>', shares) == ["106", "117", "116"]  # 10000 / 93.60, 85.00, 85.76
     assert "7 Apr 2027" in html.unescape(block)
-    note = html.unescape(region(f["next/index.html"], "sitnote"))
+    note = html.unescape(region(f["index.html"], "sitnote"))
     assert "4.40%" in note and "22 Nov 2026" in note
-    assert "## Your situation" in f["next/index.md"] and "| Dividends over 3 months |" in f["next/index.md"]
+    assert "## Your situation" in f["index.md"] and "| Dividends over 3 months |" in f["index.md"]
 
 
 def test_the_buy_table_links_each_broker_and_says_when_there_is_no_link(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    block = region(f["next/index.html"], "buy")
+    block = region(f["index.html"], "buy")
     assert block.count('rel="noopener nofollow"') == 3  # one broker with links, three tickers
     assert 'href="https://example.com/alpha/STRC" rel="noopener nofollow" aria-label="STRC at Alpha Broker">STRC</a>' in block
     assert block.count("search the ticker in the app") == 1 and 'colspan="3"' in block
     assert block.index("Alpha Broker") < block.index("Beta Broker")
-    assert "https://example.com/alpha/SATS" in f["next/index.md"] and "| Beta Broker | search the ticker in the app |" in f["next/index.md"]
-    fine = text_of(region(f["next/index.html"], "buyfine"))
+    assert "https://example.com/alpha/SATS" in f["index.md"] and "| Beta Broker | search the ticker in the app |" in f["index.md"]
+    fine = text_of(region(f["index.html"], "buyfine"))
     assert "T+1" in fine and "FINRA" in fine and "22 Nov 2026" in fine
 
 
@@ -894,15 +894,15 @@ def test_the_example_reply_is_worked_from_the_feed(tmp_path):
     f = outputs(site)
     d = [usd0(div_usd(8000, y, 90)) for y in (12.821, 15.294, 17.491)]
     figs = [f"STRC {d[0]}", f"SATA {d[1]}", f"SATS {d[2]}", "$8,000", "4.40%", usd0(div_usd(8000, 4.40, 90))]
-    reply = html.unescape(region(f["next/index.html"], "chat"))
+    reply = html.unescape(region(f["index.html"], "chat"))
     for fig in figs:
-        assert fig in reply and fig in f["next/index.md"], fig
+        assert fig in reply and fig in f["index.md"], fig
     for fig in figs[:3]:
         assert fig in f["llms.txt"], fig
     assert "70%" in reply and "+3.2%" in reply and "−22.5%" in reply  # 69.5 and 3.17 round up
     assert "7 Apr 2027" in reply
     assert "Alpha Broker" in reply and "Beta Broker" in reply
-    assert "22 Nov 2026" in text_of(region(f["next/index.html"], "chattag"))
+    assert "22 Nov 2026" in text_of(region(f["index.html"], "chattag"))
 
 
 def test_a_feed_without_the_side_files_still_builds(tmp_path):
@@ -912,10 +912,10 @@ def test_a_feed_without_the_side_files_still_builds(tmp_path):
     code, site = build(tmp_path, feed)
     assert code == 0
     f = outputs(site)
-    html_ = f["next/index.html"]
+    html_ = f["index.html"]
     assert "<!--feed:situation--><!--/feed:situation-->" in html_ and "<!--feed:buy--><!--/feed:buy-->" in html_
-    assert "| 4-week T-bill | 4.11% |" in f["next/index.md"]  # the benchmarks the feed does carry
-    assert "How are the dividends taxed?" not in html_ and "## Your situation" not in f["next/index.md"]
+    assert "| 4-week T-bill | 4.11% |" in f["index.md"]  # the benchmarks the feed does carry
+    assert "How are the dividends taxed?" not in html_ and "## Your situation" not in f["index.md"]
 
 
 # ---------- the page template and the three outputs ----------
@@ -946,14 +946,14 @@ def empty_markers(html_: str) -> list[str]:
 @functools.lru_cache(maxsize=1)
 def _real() -> tuple[str, str, str, str]:
     feed = pages.load(SITE / "v1")
-    html_ = (SITE / "next" / "index.html").read_text()
+    html_ = (SITE / "index.html").read_text()
     out = pages.render(feed, html_)
-    return html_, out["next/index.html"], out["next/index.md"], out["llms.txt"]
+    return html_, out["index.html"], out["index.md"], out["llms.txt"]
 
 
 def real_outputs() -> dict[str, str]:
     _, h, md, ll = _real()
-    return {"next/index.html": h, "next/index.md": md, "llms.txt": ll}
+    return {"index.html": h, "index.md": md, "llms.txt": ll}
 
 
 def test_the_test_template_carries_exactly_the_page_markers():
@@ -982,7 +982,7 @@ def test_marker_checks_catch_planted_faults():
     # an output marker left empty is seen
     nofeed = make_feed()
     nofeed.pop("where_to_buy")
-    out = pages.render(loaded(nofeed), NEXT_HTML)["next/index.html"]
+    out = pages.render(loaded(nofeed), NEXT_HTML)["index.html"]
     assert empty_markers(out) == ["buy", "buyfine"]
 
 
@@ -1016,7 +1016,7 @@ def test_the_markdown_has_a_heading_for_every_h2_on_the_real_page():
 def test_the_markdown_has_a_heading_for_every_h2_on_the_test_page(tmp_path):
     code, site = build(tmp_path)
     f = outputs(site)
-    assert heading_mismatches(f["next/index.html"], f["next/index.md"]) == []
+    assert heading_mismatches(f["index.html"], f["index.md"]) == []
 
 
 def test_heading_check_catches_a_planted_gap():
@@ -1032,9 +1032,9 @@ def llms_mismatches(files: dict[str, str], feed: dict) -> list[str]:
           and i["yield_pct"]["value"] is not None]
     want = f"{hu(min(ys), 1)}% to {hu(max(ys), 1)}% a year at today's prices"
     out = [] if want in files["llms.txt"] else [f"llms.txt: no '{want}'"]
-    if f"{hu(min(ys))}–{hu(max(ys))}%" not in region(files["next/index.html"], "hlrange"):
+    if f"{hu(min(ys))}–{hu(max(ys))}%" not in region(files["index.html"], "hlrange"):
         out.append("headline range differs from the feed's")
-    panels = sorted(re.findall(r'class="p-yield num">([\d.]+%)<', files["next/index.html"]))
+    panels = sorted(re.findall(r'class="p-yield num">([\d.]+%)<', files["index.html"]))
     if panels != sorted(hu(y, 1) + "%" for y in ys):
         out.append("panels differ from the feed's")
     return out
@@ -1084,9 +1084,9 @@ def test_no_advice_words_in_any_output(tmp_path):
 def test_advice_word_check_catches_planted_words(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.md"] += "\nThe best fit. We recommend STRC.\n"
+    files["index.md"] += "\nThe best fit. We recommend STRC.\n"
     files["llms.txt"] += "\nDistributions are tax-free.\n"
-    files["next/index.html"] = files["next/index.html"].replace("Questions", "You should read this")
+    files["index.html"] = files["index.html"].replace("Questions", "You should read this")
     found = word_mismatches(files)
     assert any("index.md" in f for f in found) and any("llms.txt" in f for f in found) and any("index.html" in f for f in found)
 
@@ -1109,7 +1109,7 @@ def test_a_failure_writes_nothing_and_exits_1(tmp_path, fault):
     before = tree(site)
     assert pages.main(["--site", str(site)]) == 1
     assert tree(site) == before
-    assert not (site / "next" / "index.md").exists() and not (site / "llms.txt").exists()
+    assert not (site / "index.md").exists() and not (site / "llms.txt").exists()
 
 
 def test_write_nothing_check_catches_a_partial_write(tmp_path):
@@ -1138,4 +1138,4 @@ def test_a_dry_run_leaves_the_site_alone(tmp_path, capsys):
     before = tree(site)
     assert pages.main(["--site", str(site), "--dry-run"]) == 0
     assert tree(site) == before
-    assert "3 rendered" in capsys.readouterr().out
+    assert "4 rendered" in capsys.readouterr().out

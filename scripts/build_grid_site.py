@@ -1,11 +1,11 @@
-"""Build site/index.html from data/moves/*.csv + data/ticker.json. Every number on the page traces to a row with a source_url."""
+"""Build site/grid/index.html (the /grid/ page) from data/moves/*.csv + data/ticker.json. Every number on the page traces to a row with a source_url."""
 import csv, json, pathlib, datetime as dt, html, re
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MOVES = ROOT / "data" / "moves"
 TICKER = ROOT / "data" / "ticker.json"
 CREDIT_JSON = ROOT / "data" / "credit.json"  # scripts/fetch_credit.py
-TEMPLATE = ROOT / "site" / "template.html"
-OUT = ROOT / "site" / "index.html"
+TEMPLATE = ROOT / "site" / "grid" / "template.html"
+OUT = ROOT / "site" / "grid" / "index.html"  # the bitcoin purchase grid, served at /grid/
 COMPANIES = json.loads((MOVES / "companies.json").read_text())  # [{ticker,name,file,top}]
 CREDIT = {"STRK", "STRF", "STRD", "STRC", "SATA"}
 START = dt.date(2020, 1, 6)

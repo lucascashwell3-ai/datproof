@@ -161,14 +161,14 @@ def page_mismatches(rendered_html: str, feed: dict) -> list[str]:
 def test_the_page_default_case_shows_the_same_dollar_figures():
     import test_feed_pages as tp  # the small fixture feed and page template used by the page tests
     feed = tp.make_feed()
-    rendered = pages.render(tp.loaded(feed), tp.NEXT_HTML)["next/index.html"]
+    rendered = pages.render(tp.loaded(feed), tp.NEXT_HTML)["index.html"]
     assert page_mismatches(rendered, feed) == []
 
 
 def test_the_page_check_catches_a_changed_figure_and_a_swapped_order():
     import test_feed_pages as tp
     feed = tp.make_feed()
-    rendered = pages.render(tp.loaded(feed), tp.NEXT_HTML)["next/index.html"]
+    rendered = pages.render(tp.loaded(feed), tp.NEXT_HTML)["index.html"]
     first = re.search(r'<span class="st-n num">(\$[\d,.]+)</span>', rendered).group(1)
     wrong = rendered.replace(f'<span class="st-n num">{first}</span>', '<span class="st-n num">$1</span>', 1)
     assert page_mismatches(wrong, feed) != []

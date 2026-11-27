@@ -5,10 +5,14 @@ gets the yields, prices and odds.
     python -m datproof_feed.pages --dry-run    # renders and checks, writes to a temp folder
 
 Reads only the published /v1/ files. Writes:
-  site/next/index.html     every figure and sentence between the <!--feed:NAME--> markers. The page
-                           script only draws the charts and runs the "your situation" form.
-  site/next/index.md       the same page as plain Markdown, every section included
+  site/index.html          the home page: every figure and sentence between the <!--feed:NAME--> markers.
+                           The page script (site/next/app.js) only draws the charts and runs the
+                           "your situation" form.
+  site/index.md            the same page as plain Markdown, every section included
   site/llms.txt            the short guide for AI readers, with today's figures
+  site/sitemap.xml         the home page, its Markdown twin, llms.txt and the feed, dated to the feed
+
+The old address /next/ is a fixed page that sends readers to the home page; nothing here writes it.
 
 Everything is rendered and checked in memory first. If anything fails, no file is touched (the
 last good pages stay up) and the exit code is 1. A second run on the same feed changes nothing.
@@ -30,6 +34,7 @@ from decimal import ROUND_HALF_UP, Decimal
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 BASE = "https://lucascashwell3-ai.github.io/datproof"
+HOME = BASE + "/"  # the one canonical address of the page
 LEAD = ["STRC", "SATA", "SATS"]
 ODDS_TICKERS = ["STRC", "SATA"]
 SPANS = [(30, "1 month"), (90, "3 months"), (180, "6 months")]  # cash that can sit three months or more
@@ -37,7 +42,7 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", 
 MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August",
                "September", "October", "November", "December"]
 AMOUNT = 10_000
-CASH_SHARE = 0.6  # the example account on /next/
+CASH_SHARE = 0.6  # the example account on the home page
 MIN_RECORD = 60   # fewer daily closes than this: say only when the stock started trading
 SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
@@ -1291,7 +1296,7 @@ def next_md(feed: dict) -> str:
 
 {HERO_SUB}
 
-{md_stamp(feed)}. Page with charts: {BASE}/next/
+{md_stamp(feed)}. Page with charts: {HOME}
 
 ## Income every business day
 
@@ -1380,8 +1385,8 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 
 ## Page (today's figures written into the text, no script needed)
 
-- {BASE}/next/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
-- {BASE}/next/index.md : the same page as Markdown.
+- {HOME} : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
+- {BASE}/index.md : the same page as Markdown.
 
 ## Today
 
@@ -1401,6 +1406,17 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
 """
+
+
+# ---------- sitemap.xml ----------
+
+SITEMAP = ("", "index.md", "llms.txt", "v1/instruments.json")  # under HOME; /v1/ has no index page of its own
+
+
+def sitemap(feed: dict) -> str:
+    urls = "".join(f"  <url><loc>{HOME}{path}</loc><lastmod>{feed['date']}</lastmod></url>\n" for path in SITEMAP)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n")
 
 
 MARK = re.compile(r"(<!--feed:(\w+)-->)(.*?)(<!--/feed:\2-->)", re.S)
@@ -1450,7 +1466,7 @@ def render(feed: dict, next_html: str) -> dict[str, str]:
     left = sorted(set(m.group(2) for m in MARK.finditer(page)) - set(MARKERS))
     if left:
         raise PageError(f"markers on the page that nothing fills: {left}")
-    out = {"next/index.html": page, "next/index.md": next_md(feed), "llms.txt": llms_txt(feed)}
+    out = {"index.html": page, "index.md": next_md(feed), "llms.txt": llms_txt(feed), "sitemap.xml": sitemap(feed)}
     for path, text in out.items():
         m = BAD.search(text)
         if m:
@@ -1466,7 +1482,7 @@ def main(argv: list[str] | None = None) -> int:
     site = pathlib.Path(args.site)
     try:
         feed = load(site / "v1")
-        files = render(feed, (site / "next" / "index.html").read_text())
+        files = render(feed, (site / "index.html").read_text())
     except Exception as err:  # any failure leaves every page as it was
         print(f"pages not written ({type(err).__name__}: {err}); the last good pages stay up", file=sys.stderr)
         return 1

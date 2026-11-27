@@ -20,6 +20,7 @@ from datproof_feed import compare as cmp
 from datproof_feed import scenarios as sc
 
 DEFAULT_FEED = "https://lucascashwell3-ai.github.io/datproof/v1"
+HOME = "https://lucascashwell3-ai.github.io/datproof/"  # the page, with charts
 SERVER_INFO = {"name": "datproof", "version": "1.0.0"}
 FALLBACK_PROTOCOL = "2025-06-18"
 TICKER = re.compile(r"^[A-Z]{1,6}$")
@@ -219,7 +220,7 @@ def handle(msg: dict) -> dict | None:
                                    "STRC, SATA and SATS in that order, with each figure's date and source, "
                                    "and say once what can go wrong: prices move with bitcoin, issuers can "
                                    "change rates, these are not bank deposits, past results do not predict "
-                                   "future results."})
+                                   "future results. The page with charts: " + HOME})
     if method == "ping":
         return ok({})
     if method == "tools/list":
