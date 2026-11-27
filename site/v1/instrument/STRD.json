@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-26",
+  "date": "2026-11-27",
   "ticker": "STRD",
   "name": "Strategy Stride preferred",
   "issuer": "Strategy",
@@ -9,8 +9,8 @@
     "value": 62.11,
     "unit": "usd",
     "as_of": "2026-11-25",
-    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
-    "fetched_at": "2026-11-26T22:00:16Z",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
+    "fetched_at": "2026-11-27T19:39:16Z",
     "stale": false,
     "reason": null
   },
@@ -18,8 +18,8 @@
     "value": 97745.3,
     "unit": "shares",
     "as_of": "2026-11-25",
-    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
-    "fetched_at": "2026-11-26T22:00:16Z",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
+    "fetched_at": "2026-11-27T19:39:16Z",
     "stale": false,
     "reason": null
   },
@@ -27,9 +27,9 @@
   "stated_rate_pct": {
     "value": 10.0,
     "unit": "pct",
-    "as_of": "2026-11-25",
+    "as_of": "2026-11-27",
     "source": "https://api.strategy.com/btc/strdKpiData",
-    "fetched_at": "2026-11-26T22:00:17Z",
+    "fetched_at": "2026-11-27T19:39:16Z",
     "stale": false,
     "reason": null
   },
@@ -54,16 +54,12 @@
     "stale": false,
     "reason": null
   },
-  "trading_days": 252,
+  "trading_days": 251,
   "closes": {
-    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-25&todate=2026-11-26&limit=400",
-    "fetched_at": "2026-11-26T22:00:16Z",
-    "from": "2025-11-25",
+    "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
+    "fetched_at": "2026-11-27T19:39:16Z",
+    "from": "2025-11-26",
     "rows": [
-      [
-        "2025-11-25",
-        71.95
-      ],
       [
         "2025-11-26",
         74.81
@@ -1148,90 +1144,90 @@
   "hold_odds": {
     "7": {
       "days": 7,
-      "holds": 247,
-      "bought_from": "2025-11-25",
+      "holds": 246,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-11-18",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "tbill_pct": 4.19,
       "tbill_hold_pct": 0.08,
-      "beat_tbill": 122,
-      "beat_tbill_pct": 49.4,
+      "beat_tbill": 121,
+      "beat_tbill_pct": 49.2,
       "lost": 123,
-      "lost_pct": 49.8,
-      "median_pct": 0.0,
+      "lost_pct": 50.0,
+      "median_pct": -0.06,
       "worst_pct": -19.61,
       "worst_bought": "2026-06-18"
     },
     "30": {
       "days": 30,
-      "holds": 230,
-      "bought_from": "2025-11-25",
+      "holds": 229,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-10-26",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "tbill_pct": 4.19,
       "tbill_hold_pct": 0.344,
-      "beat_tbill": 99,
-      "beat_tbill_pct": 43.0,
+      "beat_tbill": 98,
+      "beat_tbill_pct": 42.8,
       "lost": 127,
-      "lost_pct": 55.2,
-      "median_pct": -0.92,
+      "lost_pct": 55.5,
+      "median_pct": -0.96,
       "worst_pct": -28.47,
       "worst_bought": "2026-05-26"
     },
     "90": {
       "days": 90,
-      "holds": 189,
-      "bought_from": "2025-11-25",
+      "holds": 188,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-08-27",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "tbill_pct": 4.19,
       "tbill_hold_pct": 1.033,
-      "beat_tbill": 96,
-      "beat_tbill_pct": 50.8,
+      "beat_tbill": 95,
+      "beat_tbill_pct": 50.5,
       "lost": 81,
-      "lost_pct": 42.9,
-      "median_pct": 1.23,
+      "lost_pct": 43.1,
+      "median_pct": 1.21,
       "worst_pct": -28.39,
       "worst_bought": "2026-03-27"
     },
     "180": {
       "days": 180,
-      "holds": 127,
-      "bought_from": "2025-11-25",
+      "holds": 126,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-05-29",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "tbill_pct": 4.19,
       "tbill_hold_pct": 2.066,
-      "beat_tbill": 26,
-      "beat_tbill_pct": 20.5,
+      "beat_tbill": 25,
+      "beat_tbill_pct": 19.8,
       "lost": 90,
-      "lost_pct": 70.9,
-      "median_pct": -3.2,
+      "lost_pct": 71.4,
+      "median_pct": -3.21,
       "worst_pct": -24.01,
       "worst_bought": "2025-12-30"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 1 past holds of 365 days fit in 252 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
     }
   },
   "by_buy_price": {
     "issuer_aims_price_near_100": false,
     "30": {
       "days": 30,
-      "holds": 230,
-      "bought_from": "2025-11-25",
+      "holds": 229,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-10-26",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "bands": [
         {
           "band": "under_90",
           "label": "under $90",
           "from_usd": null,
           "under_usd": 90.0,
-          "buys": 230,
+          "buys": 229,
           "lost": 127,
-          "avg_pct": 0.22,
+          "avg_pct": 0.17,
           "worst_pct": -28.47,
           "reason": null
         },
@@ -1277,19 +1273,19 @@
     },
     "90": {
       "days": 90,
-      "holds": 189,
-      "bought_from": "2025-11-25",
+      "holds": 188,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-08-27",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "bands": [
         {
           "band": "under_90",
           "label": "under $90",
           "from_usd": null,
           "under_usd": 90.0,
-          "buys": 189,
+          "buys": 188,
           "lost": 81,
-          "avg_pct": 1.79,
+          "avg_pct": 1.75,
           "worst_pct": -28.39,
           "reason": null
         },
@@ -1335,19 +1331,19 @@
     },
     "180": {
       "days": 180,
-      "holds": 127,
-      "bought_from": "2025-11-25",
+      "holds": 126,
+      "bought_from": "2025-11-26",
       "bought_to": "2026-05-29",
-      "closes_from": "2025-11-25",
+      "closes_from": "2025-11-26",
       "bands": [
         {
           "band": "under_90",
           "label": "under $90",
           "from_usd": null,
           "under_usd": 90.0,
-          "buys": 127,
+          "buys": 126,
           "lost": 90,
-          "avg_pct": -4.34,
+          "avg_pct": -4.45,
           "worst_pct": -24.01,
           "reason": null
         },
@@ -1393,13 +1389,13 @@
     }
   },
   "sharpe": {
-    "returns": 251,
-    "from": "2025-11-25",
+    "returns": 250,
+    "from": "2025-11-26",
     "to": "2026-11-25",
     "tbill_pct": 4.19,
-    "total_return_pct": -1.28,
-    "swings_pct": 31.17,
-    "sharpe": -0.02,
+    "total_return_pct": -5.06,
+    "swings_pct": 30.98,
+    "sharpe": -0.15,
     "example": {
       "bot_sharpe": 1.0,
       "cash_share": 0.6,
@@ -1411,16 +1407,16 @@
       "correlation": 0.0,
       "slice_of_account": 0.15,
       "sharpe_by_bot_swings": {
-        "10": 0.83,
-        "20": 0.93
+        "10": 0.78,
+        "20": 0.91
       }
     }
   },
   "backing": {
     "issuer": "Strategy",
     "rule": "backing = (bitcoin held x bitcoin price + cash) / (debt + every preferred ahead of it in line + the issue itself), at stated amounts. break_even_btc_usd = (claims - cash) / bitcoin held.",
-    "backing_x": 2.97,
-    "assets_usd": 57072977905,
+    "backing_x": 2.9,
+    "assets_usd": 55857628124,
     "claims_usd": 19236259500,
     "debt_usd": 6750000000,
     "ahead": [
@@ -1431,18 +1427,18 @@
     ],
     "ahead_usd": 11083837400,
     "own_usd": 1402422100,
-    "break_even_btc_usd": 16936,
-    "below_today_pct": 72.4,
+    "break_even_btc_usd": 16937,
+    "below_today_pct": 71.8,
     "below_record_pct": 86.6,
     "cash_years": 2.65,
     "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
     "inputs": {
       "btc_usd": {
-        "value": 61381.835,
+        "value": 59954.995,
         "unit": "usd",
         "as_of": "2026-11-27",
         "source": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
-        "fetched_at": "2026-11-27T04:12:27Z",
+        "fetched_at": "2026-11-27T19:38:50Z",
         "reason": null
       },
       "btc_record_usd": {
@@ -1450,7 +1446,7 @@
         "unit": "usd",
         "as_of": "2026-11-27",
         "source": "https://api.strategy.com/btc/bitcoinKpis",
-        "fetched_at": "2026-11-27T04:12:27Z",
+        "fetched_at": "2026-11-27T19:38:50Z",
         "reason": null
       },
       "btc_held": {
@@ -1458,15 +1454,15 @@
         "unit": "btc",
         "as_of": "2026-11-27",
         "source": "https://api.strategy.com/btc/bitcoinKpis",
-        "fetched_at": "2026-11-27T04:12:27Z",
+        "fetched_at": "2026-11-27T19:38:50Z",
         "reason": null
       },
       "cash_usd": {
-        "value": 4818314860,
+        "value": 4817641106,
         "unit": "usd",
         "as_of": "2026-11-27",
         "source": "https://api.strategy.com/btc/bitcoinKpis",
-        "fetched_at": "2026-11-27T04:12:27Z",
+        "fetched_at": "2026-11-27T19:38:50Z",
         "reason": null,
         "formula": "totalReserve - btcNav (the dashboard's dollars on hand)"
       }
