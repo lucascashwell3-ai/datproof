@@ -148,7 +148,7 @@
   },
   "tax_statements": {
     "Strategy": {
-      "quote": "Strategy Inc ... today announced that, for U.S. federal income tax purposes, 100% of distributions paid during calendar year 2025 on its preferred equity instruments were treated as a nontaxable return of capital (“ROC”) to the extent of a recipient shareholder’s tax basis in their applicable preferred",
+      "quote": "today announced that, for U.S. federal income tax purposes, 100% of distributions paid during calendar year 2025 on its preferred equity instruments were treated as a nontaxable return of capital (“ROC”) to the extent of a recipient shareholder’s tax basis in their applicable preferred",
       "quote_more": [
         "Strategy expects the distributions paid on its preferred equity instruments to be treated as ROC for the foreseeable future (i.e., ten years or more).",
         "Strategy’s expectations on E&P may change, and any such change could affect the U.S. federal income tax treatment of the distributions."
@@ -201,6 +201,19 @@
       "source_url": "https://www.irs.gov/publications/p969",
       "document": "IRS Publication 969 (2025)",
       "document_date": "2026-04-30 (page last reviewed or updated)",
+      "read_on": "2026-11-27"
+    }
+  },
+  "insurance": {
+    "FDIC": {
+      "quote": "One way we do this is by insuring deposits to at least $250,000 per depositor, per ownership category at each FDIC-insured bank.",
+      "limit_usd": 250000,
+      "source_url": "https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance",
+      "read_on": "2026-11-27"
+    },
+    "SIPC": {
+      "quote": "SIPC does not protect against the decline in value of your securities.",
+      "source_url": "https://www.sipc.org/for-investors/what-sipc-protects",
       "read_on": "2026-11-27"
     }
   }

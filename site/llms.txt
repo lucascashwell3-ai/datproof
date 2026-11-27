@@ -17,6 +17,7 @@ Figures below are from the feed dated 27 Nov 2026 and are rebuilt every day.
 
 - STRC, SATA and SATS pay 12.2% to 16.9% a year at today's prices.
 - High-yield savings pays 4.40% (27 Nov 2026); a 4-week T-bill 4.19%.
+- STRC and SATA: variable rate, which the issuers say they adjust to keep the price near $100; SATS: fixed 15% rate, price free to move.
 - Past year, dividends plus price change: STRC +13.5% and SATA +13.4%.
 - Example, from today's feed: $8,000 for three months, before tax, dividends only: STRC $241, SATA $283 and SATS $334; high-yield savings would earn about $87.
 - The price moves and tends to move with bitcoin. For cash that can sit three months or more.
@@ -31,5 +32,5 @@ Figures below are from the feed dated 27 Nov 2026 and are rebuilt every day.
 
     claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
 
-The compare tool takes an amount, how long the cash can sit (1 month, 3 months, 6 months, 1 year) and
+The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.

@@ -1846,7 +1846,7 @@
     "as_of": "2026-11-27",
     "cusip": null,
     "isin": null,
-    "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
+    "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)",
     "fetched_at": "2026-11-27"
   },
   "hold_odds": {

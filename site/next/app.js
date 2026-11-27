@@ -642,7 +642,7 @@
 
   function drawPaid() {
     var wrap = $("#paid-charts"), out = [];
-    ["STRC", "SATA"].forEach(function (t) {
+    LEAD.forEach(function (t) {
       var i = inst(t), c = closes[t];
       if (!i || !c || !c.rows || c.rows.length < 20) return;
       out.push({ i: i, rows: c.rows, divs: (c.dividends || []) });
@@ -792,7 +792,7 @@
   function getJSON(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); }
   function load(base) {
     return Promise.all([getJSON(base + "instruments.json"), getJSON(base + "scenarios.json")].concat(
-      ["STRC", "SATA"].map(function (t) { return getJSON(base + "instrument/" + t + ".json").catch(function () { return null; }); })
+      LEAD.map(function (t) { return getJSON(base + "instrument/" + t + ".json").catch(function () { return null; }); })
     )).then(function (d) {
       // A feed built before inflation, coverage and daily closes were added cannot draw this page.
       if (!("inflation_yoy_pct" in d[0]) || !d[2] || !d[2].closes) throw new Error("older feed format");
@@ -802,7 +802,7 @@
 
   function start(d) {
     feed = d[0]; scen = d[1];
-    [d[2], d[3]].forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
+    d.slice(2).forEach(function (x) { if (x && x.closes) closes[x.ticker] = { rows: x.closes.rows, dividends: x.dividends }; });
     // Every figure outside the charts and the estimator is written into the HTML by datproof_feed/pages.py.
     // The default case of "your situation" is written into the HTML; the form redraws it only when changed.
     renderHero(); drawEarn(true); drawPaid(); inkLift();

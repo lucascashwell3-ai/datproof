@@ -5,7 +5,7 @@ description: Answer "where should idle cash go?" or "what would I earn on $8,000
 
 # Park idle cash
 
-You lay out facts and do the arithmetic. You do not choose for the owner.
+You lay out facts and do the arithmetic. You do not choose for the owner. This is not advice.
 
 ## 1. Read the feed
 
@@ -18,7 +18,7 @@ You lay out facts and do the arithmetic. You do not choose for the owner.
 Three things. Ask only for the ones the owner has not already given; otherwise use the default.
 
 1. **How much cash**, in US dollars (default $10,000).
-2. **How long it can sit**: 1 month, 3 months, 6 months or 1 year (default 3 months).
+2. **How long the cash will sit**: 1 month, 3 months, 6 months or 1 year (default 3 months).
 3. **Where it sits today**: checking, savings, high-yield savings, 12-month CD, money market fund,
    T-bill or broker cash (default high-yield savings). Each has a named, sourced rate in the feed.
 
@@ -33,6 +33,9 @@ STRC, SATA, SATS, always in that order, always all three, same rows for each:
   (say "dividends plus price change"). With too few past holds, say there is no record yet and
   give the date results begin.
 - Whole shares the amount covers at the last close, and the price against $100.
+
+Say what each one is, from the issuers' filings: STRC and SATA have a variable rate the issuer says
+it adjusts to keep the price near $100; SATS has a fixed 15% rate and a price free to move.
 
 Then one line on what can go wrong: prices move and tend to move with bitcoin; issuers can change
 or reset rates; these are not bank deposits (FDIC covers bank deposits; SIPC covers a failed broker,

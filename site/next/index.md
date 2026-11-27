@@ -10,8 +10,6 @@ Prices at the 25 Nov 2026 close · data for 27 Nov 2026. Page with charts: https
 - SATA (Strive): pays 14.3% a year; 3.4× a 4-week T-bill; past year +13.4%, dividends plus price change; 120 dividends in a row, none missed; price $90.62.
 - SATS (Strive): pays 16.9% a year; 4.0× a 4-week T-bill; trading since 16 Oct 2026; 13 dividends in a row, none missed; price $88.50.
 
-Past year: 26 Nov 2025 to 25 Nov 2026 closes, with every dividend paid. A 4-week T-bill pays 4.19% a year today.
-
 | Where | Pays a year | Date | On $10,000 a year | After inflation |
 |---|---|---|---|---|
 | STRC (Strategy) | 12.2% | 25 Nov 2026 | $1,224 | +8.5% |
@@ -25,7 +23,7 @@ Past year: 26 Nov 2025 to 25 Nov 2026 closes, with every dividend paid. A 4-week
 | 4-week T-bill | 4.19% | 27 Nov 2026 | $419 | +0.5% |
 | Municipal bond fund | 3.81% | 25 Nov 2026 | $381 | +0.1% |
 
-Yield = the yearly dividend on $100 divided by today's price. Before tax. After inflation subtracts US CPI, 3.7% for the 12 months to September 2026. Rates: FDIC 16 Nov 2026 (https://www.fdic.gov/national-rates-and-rate-caps); Bankrate 27 Nov 2026 (https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/); Fidelity SPAXX 7-day yield 25 Nov 2026 (https://www.fidelity.com/investing/cash-management); US Treasury 27 Nov 2026 (https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611); iShares MUB 30-day SEC yield 25 Nov 2026 (https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub).
+Past year: 26 Nov 2025 to 25 Nov 2026 closes, with every dividend paid. A 4-week T-bill pays 4.19% a year today. Yield = the yearly dividend on $100 divided by today's price. Before tax. After inflation subtracts US CPI, 3.7% for the 12 months to September 2026. Rates: FDIC 16 Nov 2026 (https://www.fdic.gov/national-rates-and-rate-caps); Bankrate 27 Nov 2026 (https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/); Fidelity SPAXX 7-day yield 25 Nov 2026 (https://www.fidelity.com/investing/cash-management); US Treasury 27 Nov 2026 (https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611); iShares MUB 30-day SEC yield 25 Nov 2026 (https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub).
 
 ## Sell any trading day
 
@@ -52,20 +50,19 @@ Each day of the past year: buy, hold, collect the dividends, sell. Dividends plu
 
 | Stock | Held | Beat a T-bill | Lost money | Typical result | Worst |
 |---|---|---|---|---|---|
-| STRC | 1 week | 61% | 26% | +0.3% | −14.6% |
 | STRC | 1 month | 75% | 20% | +1.1% | −23.8% |
 | STRC | 3 months | 68% | 31% | +3.1% | −22.5% |
-| SATA | 1 week | 64% | 32% | +0.3% | −14.3% |
+| STRC | 6 months | 63% | 26% | +3.5% | −18.9% |
 | SATA | 1 month | 69% | 28% | +1.5% | −15.0% |
 | SATA | 3 months | 85% | 10% | +4.7% | −11.8% |
+| SATA | 6 months | 90% | 6% | +8.6% | −8.2% |
+| SATS | | no record yet; 3-month results begin around 7 Apr 2027 | | | |
 
 Closes from 26 Nov 2025 to 27 Nov 2026.
 
 ## About 6 points more return a year, about the same Sharpe ratio
 
-A $10,000 account, 60% idle, at today's rates, before tax: high-yield savings at 4.40% (27 Nov 2026) against the average yield of STRC, SATA and SATS, 14.5%.
-
-Past year, 26 Nov 2025 to 25 Nov 2026: a bot with a Sharpe ratio of 1.0, 60% in cash, putting all of that cash in: STRC, 0.93 to 1.06 and 5.6 points more return; SATA, 0.87 to 1.03 and 5.5 points more return. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47.
+A $10,000 account, 60% idle, at today's rates, before tax: high-yield savings at 4.40% (27 Nov 2026) against the average yield of STRC, SATA and SATS, 14.5%. Past year, 26 Nov 2025 to 25 Nov 2026: a bot with a Sharpe ratio of 1.0, 60% in cash, putting all of that cash in: STRC, 0.93 to 1.06 and 5.6 points more return; SATA, 0.87 to 1.03 and 5.5 points more return. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47.
 
 ## Backed by bitcoin and cash
 
@@ -82,15 +79,13 @@ Assets behind each $1 owed, counting everything ahead in line.
 | US banks | $1.11 | all FDIC-insured banks · 30 Sep 2026 (https://www.fdic.gov/quarterly-banking-profile/quarterly-banking-profile-q3-2026) |
 | JPMorgan Chase preferred | $1.07 | bank preferred stock · 30 Sep 2026 (https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json) |
 
-Municipal bonds have no such figure: they are backed by taxing power or project revenue, not by a pool of assets.
-
 | Issue | Bitcoin can fall, from today | From its record | Cash set aside |
 |---|---|---|---|
 | STRC | 79%, to $12,643 | 90% | 2.7 years (USD Reserve $3.73B, 22 Nov 2026) |
 | SATA | 64%, to $21,671 | 83% | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
 | SATS | 36%, to $38,124 | 70% | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
 
-The fall is to the bitcoin price where assets would equal what is owed, at stated amounts. Bitcoin $59,955 on 27 Nov 2026, record $126,080. Bitcoin and cash from each issuer's dashboard (Strategy 27 Nov 2026, Strive 13 Nov 2026); Strategy debt $6.75B from its 10-Q, 30 Sep 2026. Other rows from each filing's balance sheet, on the dates shown.
+Municipal bonds have no such figure: they are backed by taxing power or project revenue, not by a pool of assets. The fall is to the bitcoin price where assets would equal what is owed, at stated amounts. Bitcoin $59,955 on 27 Nov 2026, record $126,080. Bitcoin and cash from each issuer's dashboard (Strategy 27 Nov 2026, Strive 13 Nov 2026); Strategy debt $6.75B from its 10-Q, 30 Sep 2026. Other rows from each filing's balance sheet, on the dates shown.
 
 ## What can go wrong
 
@@ -99,7 +94,7 @@ The fall is to the bitcoin price where assets would equal what is owed, at state
 - **Issuers can change or reset rates.** STRC and SATA have variable rates the issuer resets and can lower. SATS has a fixed 15% rate; each dividend is still declared by the issuer's board.
 - **Bitcoin falls.** Bitcoin has fallen 77% to 85% from its record in each of its last three big falls; today it is 52% below its $126,080 record.
 - **SATS is new.** Trading since 16 Oct 2026; no 90-day record until about 7 Apr 2027.
-- **Not a bank deposit.** Bank deposits are FDIC-insured up to $250,000. These are stocks held at a broker: SIPC covers a failed broker, not a fall in price.
+- **Not a bank deposit.** Bank deposits are FDIC-insured to $250,000. These are stocks held at a broker: SIPC covers a failed broker, not a fall in price.
 - **Past results do not predict future results.**
 
 Insurance sources: https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance and https://www.sipc.org/for-investors/what-sipc-protects, read 27 Nov 2026.
@@ -138,7 +133,7 @@ A sale of a US-listed stock settles the next business day (T+1) (FINRA). Links c
 
 ### Where can idle cash earn more than a savings account?
 
-Top widely available high-yield savings pays 4.40% a year today, and a 4-week T-bill 4.19%. Digital credit, bitcoin-backed preferred stock (STRC, SATA and SATS), pays 12.2% to 16.9% a year at today's prices, with a dividend every business day, but its price moves and tends to move with bitcoin. It is for cash you can leave for three months or more.
+Top widely available high-yield savings pays 4.40% a year today, and a 4-week T-bill 4.19%. Digital credit, bitcoin-backed preferred stock (STRC, SATA and SATS), pays 12.2% to 16.9% a year at today's prices, with a dividend every business day, but its price moves. It is for cash you can leave for three months or more.
 
 ### How did past holds turn out?
 
@@ -168,7 +163,7 @@ Example. You ask: "I have $8,000 sitting idle for about three months. What are m
 
 > Past 3-month holds, dividends plus price change: STRC came out ahead 69% of the time (typical +3.1%, worst −22.5%); SATA came out ahead 90% of the time (typical +4.7%, worst −11.8%); SATS is too new; its results begin around 7 Apr 2027.
 
-> Prices move and tend to move with bitcoin, and issuers can change the rates.
+> Prices move, and issuers can change the rates.
 
 > Here is where you can buy them: Coinbase, Interactive Brokers, Kraken (US), Public, Robinhood, SoFi and Webull.
 

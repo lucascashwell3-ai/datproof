@@ -10,7 +10,7 @@
       "as_of": "2026-11-27",
       "cusip": null,
       "isin": null,
-      "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank"
+      "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)"
     },
     "SATA": {
       "security_name": "Strive, Inc. Variable Rate Series A Perpetual Preferred Stock",
@@ -20,7 +20,7 @@
       "as_of": "2026-11-27",
       "cusip": null,
       "isin": null,
-      "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank"
+      "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)"
     },
     "SATS": {
       "security_name": "Strive, Inc. 15% Series A Perpetual SATS Preferred Stock",
@@ -30,7 +30,7 @@
       "as_of": "2026-11-27",
       "cusip": null,
       "isin": null,
-      "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank"
+      "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)"
     },
     "STRF": {
       "security_name": "Strategy Inc 10.00% Series A Perpetual Strife Preferred Stock",

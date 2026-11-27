@@ -336,7 +336,7 @@ def test_compare_reads_closes_when_present_and_matches_the_table(days):
 @pytest.mark.parametrize("path", ["skills/park-idle-cash/SKILL.md", "site/llms.txt"])
 def test_agent_docs_carry_the_reading_guidance(path):
     text = (ROOT / path).read_text().lower()
-    for words in ("how long the cash will sit", "hold odds", "slice", "variable", "fixed", "not advice"):
+    for words in ("how long the cash will sit", "dividends plus price change", "variable", "fixed", "not advice"):
         assert words in text, (path, words)
     assert "strc" in text and "sata" in text and "sats" in text
 

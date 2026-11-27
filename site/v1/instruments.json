@@ -132,7 +132,7 @@
         "as_of": "2026-11-27",
         "cusip": null,
         "isin": null,
-        "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
+        "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)",
         "fetched_at": "2026-11-27"
       },
       "hold_odds": {
@@ -590,7 +590,7 @@
         "as_of": "2026-11-27",
         "cusip": null,
         "isin": null,
-        "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
+        "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)",
         "fetched_at": "2026-11-27"
       },
       "hold_odds": {
@@ -1055,7 +1055,7 @@
         "as_of": "2026-11-27",
         "cusip": null,
         "isin": null,
-        "id_reason": "not published: the filings read (certificates of designation filed with Form 8-A, prospectus supplements) leave the CUSIP and ISIN blank",
+        "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)",
         "fetched_at": "2026-11-27"
       },
       "hold_odds": {
@@ -3237,7 +3237,7 @@
   },
   "tax_statements": {
     "Strategy": {
-      "quote": "Strategy Inc ... today announced that, for U.S. federal income tax purposes, 100% of distributions paid during calendar year 2025 on its preferred equity instruments were treated as a nontaxable return of capital (“ROC”) to the extent of a recipient shareholder’s tax basis in their applicable preferred",
+      "quote": "today announced that, for U.S. federal income tax purposes, 100% of distributions paid during calendar year 2025 on its preferred equity instruments were treated as a nontaxable return of capital (“ROC”) to the extent of a recipient shareholder’s tax basis in their applicable preferred",
       "quote_more": [
         "Strategy expects the distributions paid on its preferred equity instruments to be treated as ROC for the foreseeable future (i.e., ten years or more).",
         "Strategy’s expectations on E&P may change, and any such change could affect the U.S. federal income tax treatment of the distributions."
@@ -3292,5 +3292,224 @@
       "document_date": "2026-04-30 (page last reviewed or updated)",
       "read_on": "2026-11-27"
     }
+  },
+  "insurance": {
+    "FDIC": {
+      "quote": "One way we do this is by insuring deposits to at least $250,000 per depositor, per ownership category at each FDIC-insured bank.",
+      "limit_usd": 250000,
+      "source_url": "https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance",
+      "read_on": "2026-11-27"
+    },
+    "SIPC": {
+      "quote": "SIPC does not protect against the decline in value of your securities.",
+      "source_url": "https://www.sipc.org/for-investors/what-sipc-protects",
+      "read_on": "2026-11-27"
+    }
+  },
+  "situation_default": {
+    "inputs": {
+      "amount_usd": 10000,
+      "hold": "3 months",
+      "days": 90,
+      "sits_in": "hys_top"
+    },
+    "cash_now": {
+      "id": "hys_top",
+      "label": "High-yield savings, top widely available",
+      "rate_pct": 4.4,
+      "as_of": "2026-11-27",
+      "source": "https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/",
+      "stale": false,
+      "reason": null
+    },
+    "columns": [
+      {
+        "ticker": "STRC",
+        "issuer": "Strategy",
+        "yield_pct": 12.24,
+        "yield_as_of": null,
+        "yield_source": null,
+        "dividends_usd": 301.81,
+        "dividends_basis": "dividends only, at today's yield, before tax",
+        "cash_now_usd": 108.49,
+        "difference_usd": 193.32,
+        "past_holds": {
+          "days": 90,
+          "holds": 188,
+          "ahead_pct": 69.1,
+          "median_pct": 3.14,
+          "worst_pct": -22.53,
+          "bought_from": "2025-11-26",
+          "bought_to": "2026-08-27",
+          "basis": "dividends plus price change"
+        },
+        "close_usd": 98.04,
+        "close_as_of": "2026-11-25",
+        "close_source": "https://api.nasdaq.com/api/quote/STRC/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
+        "whole_shares": 101,
+        "price_vs_100_usd": -1.96,
+        "where_to_buy": [
+          {
+            "broker": "Coinbase",
+            "url": "https://www.coinbase.com/stock/STRC",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Interactive Brokers",
+            "url": null,
+            "checked_on": null
+          },
+          {
+            "broker": "Kraken (US)",
+            "url": "https://kraken.com/stocks/STRC",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Public",
+            "url": "https://public.com/stocks/strc",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Robinhood",
+            "url": "https://robinhood.com/us/en/stocks/STRC",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "SoFi",
+            "url": "https://www.sofi.com/invest/stock/STRC/",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Webull",
+            "url": "https://www.webull.com/quote/nasdaq-strc",
+            "checked_on": "2026-11-27"
+          }
+        ]
+      },
+      {
+        "ticker": "SATA",
+        "issuer": "Strive",
+        "yield_pct": 14.346,
+        "yield_as_of": null,
+        "yield_source": null,
+        "dividends_usd": 353.74,
+        "dividends_basis": "dividends only, at today's yield, before tax",
+        "cash_now_usd": 108.49,
+        "difference_usd": 245.25,
+        "past_holds": {
+          "days": 90,
+          "holds": 188,
+          "ahead_pct": 90.4,
+          "median_pct": 4.69,
+          "worst_pct": -11.77,
+          "bought_from": "2025-11-26",
+          "bought_to": "2026-08-27",
+          "basis": "dividends plus price change"
+        },
+        "close_usd": 90.62,
+        "close_as_of": "2026-11-25",
+        "close_source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
+        "whole_shares": 110,
+        "price_vs_100_usd": -9.38,
+        "where_to_buy": [
+          {
+            "broker": "Coinbase",
+            "url": "https://www.coinbase.com/stock/SATA",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Interactive Brokers",
+            "url": null,
+            "checked_on": null
+          },
+          {
+            "broker": "Kraken (US)",
+            "url": "https://kraken.com/stocks/SATA",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Public",
+            "url": "https://public.com/stocks/sata",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Robinhood",
+            "url": "https://robinhood.com/us/en/stocks/SATA",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "SoFi",
+            "url": "https://www.sofi.com/invest/stock/SATA/",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Webull",
+            "url": "https://www.webull.com/quote/nasdaq-sata",
+            "checked_on": "2026-11-27"
+          }
+        ]
+      },
+      {
+        "ticker": "SATS",
+        "issuer": "Strive",
+        "yield_pct": 16.949,
+        "yield_as_of": null,
+        "yield_source": null,
+        "dividends_usd": 417.92,
+        "dividends_basis": "dividends only, at today's yield, before tax",
+        "cash_now_usd": 108.49,
+        "difference_usd": 309.43,
+        "past_holds": {
+          "days": 90,
+          "reason": "not enough history: 0 past holds of 90 days fit in 29 trading days of closes; 60 are needed",
+          "first_results_around": "2027-04-07",
+          "trading_since": null
+        },
+        "close_usd": 88.5,
+        "close_as_of": "2026-11-25",
+        "close_source": "https://api.nasdaq.com/api/quote/SATS/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
+        "whole_shares": 112,
+        "price_vs_100_usd": -11.5,
+        "where_to_buy": [
+          {
+            "broker": "Coinbase",
+            "url": "https://www.coinbase.com/stock/SATS",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Interactive Brokers",
+            "url": null,
+            "checked_on": null
+          },
+          {
+            "broker": "Kraken (US)",
+            "url": "https://kraken.com/stocks/SATS",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Public",
+            "url": "https://public.com/stocks/sats",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Robinhood",
+            "url": "https://robinhood.com/us/en/stocks/SATS",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "SoFi",
+            "url": "https://www.sofi.com/invest/stock/SATS/",
+            "checked_on": "2026-11-27"
+          },
+          {
+            "broker": "Webull",
+            "url": "https://www.webull.com/quote/nasdaq-sats",
+            "checked_on": "2026-11-27"
+          }
+        ]
+      }
+    ],
+    "date": "2026-11-27",
+    "note": "Dividends are at today's yield and leave out price change. Past holds are dividends plus price change. Prices move, issuers can change the rates, and past results do not predict future results. Facts and arithmetic only; not advice."
   }
 }

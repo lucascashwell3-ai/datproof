@@ -94,9 +94,10 @@ def side_files() -> dict:
     static = _read(DATA / "backing_static.json").get("comparison")
     if static:
         out["_backing_comparison"] = static
-    tax = _read(PROFILES_FILE).get("tax_statements")
-    if tax:
-        out["tax_statements"] = tax
+    prof = _read(PROFILES_FILE)
+    for key in ("tax_statements", "insurance"):
+        if prof.get(key):
+            out[key] = prof[key]
     return out
 
 
@@ -182,6 +183,9 @@ def publish(snap: dict, out, prev: dict | None) -> None:
             for i in snap.get("instruments", [])]
     lean = {**snap, "instruments": [{k: v for k, v in i.items() if k not in ("dividends", "closes")}
                                     for i in full]}
+    if lean.get("comparison_rates"):
+        from datproof_feed.compare import situation
+        lean["situation_default"] = situation(lean)  # the worked example the page writes in
     (out / "instruments.json").write_text(_dump(lean))
     for ins in full:
         (out / "instrument" / f"{ins['ticker']}.json").write_text(_dump({"date": snap["date"], **ins}))
