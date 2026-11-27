@@ -79,6 +79,11 @@ cp -r skills/park-idle-cash ~/.claude/skills/
 It never holds or moves money, places no orders, and is not advice: facts and arithmetic
 only.
 
+## Visitor count (off)
+
+Set `site/config.json` to `{"counter": {"provider": "goatcounter", "code": "<your site code>"}}` (or `"cloudflare"` with the 32-character token) and the next daily build adds that one cookie-free counter script to the home page.
+Leave `provider` empty and nothing is added; any other provider, or a code that is not a plain site code or token, stops the page build.
+
 ## Run it locally
 
 ```bash

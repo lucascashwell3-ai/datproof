@@ -47,7 +47,7 @@ MIN_RECORD = 60   # fewer daily closes than this: say only when the stock starte
 SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
            "lifthead", "lift", "backing", "risk", "situation", "sitnote", "buy", "buyfine", "faq", "chat", "chattag",
-           "sources", "about")
+           "sources", "about", "counter")
 BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
@@ -1345,6 +1345,8 @@ Example. You ask: "{CHAT_Q}"
 - For AI readers: {BASE}/llms.txt
 
 {ABOUT_MD[0]} {ABOUT_MD[1]}
+
+Something missing or wrong? Tell us: {FEEDBACK}
 """
 
 
@@ -1408,6 +1410,39 @@ where it sits now, and returns the same rows for STRC, SATA and SATS, plus broke
 """
 
 
+# ---------- visitor counter: off until site/config.json names one ----------
+
+# A cookie-free counter that records no personal data. site/config.json holds
+# {"counter": {"provider": "", "code": ""}}; with provider empty, nothing is added to the page.
+COUNTERS = {
+    "goatcounter": (re.compile(r"^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$"),
+                    '<script data-goatcounter="https://{code}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>'),
+    "cloudflare": (re.compile(r"^[0-9a-f]{32}$"),
+                   '<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon=\'{{"token": "{code}"}}\'></script>'),
+}
+
+
+def counter_tag(config: dict | None) -> str:
+    c = (config or {}).get("counter") or {}
+    provider, code = (c.get("provider") or "").strip(), (c.get("code") or "").strip()
+    if not provider:
+        return ""
+    if provider not in COUNTERS:
+        raise PageError(f"site/config.json: counter provider '{provider}' is not one of {sorted(COUNTERS)}")
+    pattern, tag = COUNTERS[provider]
+    if not pattern.match(code):
+        raise PageError(f"site/config.json: '{code}' is not a valid {provider} code")
+    return tag.format(code=code)
+
+
+def load_config(site: pathlib.Path) -> dict:
+    p = site / "config.json"
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
+
+
 # ---------- sitemap.xml ----------
 
 SITEMAP = ("", "index.md", "llms.txt", "v1/instruments.json")  # under HOME; /v1/ has no index page of its own
@@ -1444,7 +1479,7 @@ def inject(page: str, parts: dict[str, str]) -> str:
 BAD = re.compile(r"\bNone\b|\bnan\b|\bNaN\b|\bundefined\b|\binf%")
 
 
-def render(feed: dict, next_html: str) -> dict[str, str]:
+def render(feed: dict, next_html: str, config: dict | None = None) -> dict[str, str]:
     """Every output file as text, keyed by its path under site/. Raises PageError on any gap."""
     if feed.get("problems"):
         raise PageError(f"the feed reports problems: {feed['problems']}")
@@ -1460,7 +1495,7 @@ def render(feed: dict, next_html: str) -> dict[str, str]:
              "lift": lift_block(feed), "backing": backing_block(feed), "risk": risk_block(feed),
              "situation": situation_block(feed), "sitnote": e(situation_note(feed)), "buy": buy_block(feed),
              "buyfine": buy_fine_html(feed), "faq": faq_html(feed), "chat": chat_html(feed), "chattag": e(chat_tag(feed)),
-             "sources": sources_html(feed), "about": about_html()}
+             "sources": sources_html(feed), "about": about_html(), "counter": counter_tag(config)}
     assert set(parts) == set(MARKERS)
     page = inject(next_html, parts)
     left = sorted(set(m.group(2) for m in MARK.finditer(page)) - set(MARKERS))
@@ -1482,7 +1517,7 @@ def main(argv: list[str] | None = None) -> int:
     site = pathlib.Path(args.site)
     try:
         feed = load(site / "v1")
-        files = render(feed, (site / "index.html").read_text())
+        files = render(feed, (site / "index.html").read_text(), load_config(site))
     except Exception as err:  # any failure leaves every page as it was
         print(f"pages not written ({type(err).__name__}: {err}); the last good pages stay up", file=sys.stderr)
         return 1

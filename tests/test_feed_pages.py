@@ -29,7 +29,7 @@ def _mk(name: str) -> str:
 # Every marker the page fills, written out by hand (a test below checks this list against pages.MARKERS).
 TEMPLATE_MARKERS = ["faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
                     "lifthead", "lift", "backing", "risk", "situation", "sitnote", "buy", "buyfine", "faq", "chat",
-                    "chattag", "sources", "about"]
+                    "chattag", "sources", "about", "counter"]
 
 NEXT_HTML = f"""<!doctype html><html><head>{_mk("faqld")}</head><body>
 <h1>Earn <span id="hl-range">{_mk("hlrange")}</span> on your agent's idle cash</h1>
@@ -64,6 +64,7 @@ NEXT_HTML = f"""<!doctype html><html><head>{_mk("faqld")}</head><body>
 <p class="chat-tag" id="chat-tag">{_mk("chattag")}</p>
 <div id="sources-list">{_mk("sources")}</div>
 <ul class="about">{_mk("about")}</ul>
+{_mk("counter")}
 </body></html>
 """
 
@@ -940,7 +941,8 @@ def marker_mismatches(html_: str) -> list[str]:
 
 
 def empty_markers(html_: str) -> list[str]:
-    return [m.group(2) for m in pages.MARK.finditer(html_) if not m.group(3).strip()]
+    # "counter" is empty by design until site/config.json names a counter
+    return [m.group(2) for m in pages.MARK.finditer(html_) if not m.group(3).strip() and m.group(2) != "counter"]
 
 
 @functools.lru_cache(maxsize=1)

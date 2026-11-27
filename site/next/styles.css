@@ -508,6 +508,7 @@ h3 { font-family: var(--f-disp); }
 
 /* footer */
 .foot { margin-top: clamp(5rem, 10vw, 8rem); padding-top: 1.5rem; padding-bottom: 4.5rem; border-top: 1px solid var(--line); font-size: var(--t-xs); color: var(--ink-3); display: grid; gap: 1rem; }
+.tell { margin: 0; font-size: var(--t-sm); color: var(--ink-2); }
 .sources summary { cursor: pointer; color: var(--ink-2); font-weight: 600; width: max-content; }
 .sources ul { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.375rem; }
 .sources li { overflow-wrap: anywhere; }

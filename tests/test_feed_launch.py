@@ -73,3 +73,49 @@ def test_daily_job_commits_the_home_page_and_never_the_old_paths():
     for path in ("site/index.html", "site/index.md", "site/llms.txt", "site/sitemap.xml", "site/grid/index.html", "site/v1"):
         assert f" {path}" in add, path
     assert "site/next" not in add
+
+
+# ---------- visitor counter hook and feedback link ----------
+
+from datproof_feed import pages  # noqa: E402
+
+FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
+
+
+def test_counter_is_off_by_default_and_adds_nothing():
+    cfg = json.loads(read("site/config.json"))
+    assert cfg == {"counter": {"provider": "", "code": ""}}
+    assert pages.counter_tag(cfg) == "" and pages.counter_tag({}) == "" and pages.counter_tag(None) == ""
+    page = read("site/index.html")
+    assert "<!--feed:counter--><!--/feed:counter-->" in page
+    assert "goatcounter" not in page and "cloudflareinsights" not in page
+
+
+def test_counter_switches_on_with_one_value():
+    tag = pages.counter_tag({"counter": {"provider": "goatcounter", "code": "datproof"}})
+    assert tag == '<script data-goatcounter="https://datproof.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>'
+    tag = pages.counter_tag({"counter": {"provider": "cloudflare", "code": "0123456789abcdef0123456789abcdef"}})
+    assert 'data-cf-beacon=\'{"token": "0123456789abcdef0123456789abcdef"}\'' in tag
+    feed = pages.load(SITE / "v1")
+    out = pages.render(feed, read("site/index.html"), {"counter": {"provider": "goatcounter", "code": "datproof"}})
+    assert out["index.html"].count("gc.zgo.at/count.js") == 1
+    assert "gc.zgo.at" not in out["index.md"] and "gc.zgo.at" not in out["llms.txt"]
+
+
+def test_a_bad_counter_value_is_refused_not_printed():
+    import pytest
+    for bad in ({"provider": "googleanalytics", "code": "G-123"},
+                {"provider": "goatcounter", "code": 'x"><script>alert(1)</script>'},
+                {"provider": "cloudflare", "code": "not-a-token"}):
+        with pytest.raises(pages.PageError, match="config.json"):
+            pages.counter_tag({"counter": bad})
+
+
+def test_feedback_line_at_the_foot_with_a_template_and_no_contact_details():
+    page = read("site/index.html")
+    foot = page[page.index('<footer class="wrap foot">'):page.index("</footer>")]
+    assert f'Something missing or wrong? <a href="{FEEDBACK}" rel="noopener">Tell us</a>' in foot
+    assert f"Something missing or wrong? Tell us: {FEEDBACK}" in read("site/index.md")
+    tpl = read(".github/ISSUE_TEMPLATE/feedback.md")
+    assert "What were you trying to find out?" in tpl and "What was missing or wrong?" in tpl
+    assert "@" not in tpl and "mailto" not in tpl
