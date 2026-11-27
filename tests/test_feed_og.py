@@ -11,9 +11,10 @@ PIL = pytest.importorskip("PIL")
 from PIL import Image  # noqa: E402
 
 from datproof_feed import og, pages  # noqa: E402
+from tests import test_feed_pages as tp  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-FEED = pages.load(ROOT / "site" / "v1")
+FEED = tp.loaded(tp.make_feed())  # fixture feed: a live data gap never blocks the daily build
 HOME = "https://lucascashwell3-ai.github.io/datproof/"
 
 

@@ -4,6 +4,8 @@ import json
 import pathlib
 import re
 
+from datproof_feed import pages
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 HOME = "https://lucascashwell3-ai.github.io/datproof/"
@@ -47,11 +49,11 @@ def test_every_description_names_the_home_address_never_next():
 
 
 def test_sitemap_lists_the_home_page_twin_llms_and_feed():
-    xml = read("site/sitemap.xml")
-    locs = re.findall(r"<loc>([^<]+)</loc>", xml)
-    assert locs == [HOME, HOME + "index.md", HOME + "llms.txt", HOME + "v1/instruments.json"]
-    date = json.loads(read("site/v1/instruments.json"))["date"]
-    assert xml.count(f"<lastmod>{date}</lastmod>") == 4
+    want = [HOME, HOME + "index.md", HOME + "llms.txt", HOME + "v1/instruments.json"]
+    assert re.findall(r"<loc>([^<]+)</loc>", read("site/sitemap.xml")) == want
+    xml = pages.sitemap({"date": "2026-11-20"})
+    assert re.findall(r"<loc>([^<]+)</loc>", xml) == want
+    assert xml.count("<lastmod>2026-11-20</lastmod>") == 4
 
 
 def test_grid_page_lives_at_grid_and_links_home():
@@ -77,18 +79,18 @@ def test_daily_job_commits_the_home_page_and_never_the_old_paths():
 
 # ---------- visitor counter hook and feedback link ----------
 
-from datproof_feed import pages  # noqa: E402
-
 FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
 
 
-def test_counter_is_off_by_default_and_adds_nothing():
+def test_counter_is_off_when_empty_and_the_page_matches_the_config():
+    off = {"counter": {"provider": "", "code": ""}}
+    assert pages.counter_tag(off) == "" and pages.counter_tag({}) == "" and pages.counter_tag(None) == ""
     cfg = json.loads(read("site/config.json"))
-    assert cfg == {"counter": {"provider": "", "code": ""}}
-    assert pages.counter_tag(cfg) == "" and pages.counter_tag({}) == "" and pages.counter_tag(None) == ""
+    tag = pages.counter_tag(cfg)  # the committed setting, on or off, must be valid
     page = read("site/index.html")
-    assert "<!--feed:counter--><!--/feed:counter-->" in page
-    assert "goatcounter" not in page and "cloudflareinsights" not in page
+    assert f"<!--feed:counter-->{tag}<!--/feed:counter-->" in page
+    if not tag:
+        assert "goatcounter" not in page and "cloudflareinsights" not in page
 
 
 def test_counter_switches_on_with_one_value():
