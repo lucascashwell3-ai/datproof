@@ -62,7 +62,7 @@ Closes from 26 Nov 2025 to 27 Nov 2026.
 
 ## More return, same Sharpe
 
-$10,000 account, 60% idle, before tax: high-yield savings at 4.40%; dividends at the average yield today, 14.5%, price change left out. Over the past year, a bot with a Sharpe ratio of 1.0 that kept 60% in cash and put all of it in STRC would have scored 0.93 to 1.06 and added 5.6 points of return; in SATA, 0.87 to 1.03 and 5.5 points. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47.
+$10,000 account, 60% idle, before tax: high-yield savings at 4.40%; dividends at the average yield today, 14.5%, price change left out. Over the past year, a bot with a Sharpe ratio of 1.0 that kept 60% in cash and put all of it in STRC would have scored 0.93 to 1.06 and added 5.6 points of return; in SATA, 0.87 to 1.03 and 5.5 points. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47. Past prices, not a forecast.
 
 ## Backed by bitcoin and cash
 

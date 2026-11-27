@@ -329,7 +329,7 @@ a:focus-visible,summary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg
 </section>
 
 </div>
-<footer id="foot"></footer>
+<footer id="foot"><span id="foot-data"></span><br>It is free. It holds no money, places no orders and is not advice.</footer>
 <script src="coverage.js"></script>
 <script>/*__DATA__*/</script>
 <script>
@@ -520,6 +520,6 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.targe
 document.querySelectorAll('.act:not(.hero)').forEach(e=>io.observe(e));
 if(R)document.querySelectorAll('.act').forEach(e=>e.classList.add('on'));
 document.getElementById('share').onclick=e=>{navigator.clipboard.writeText(location.href).then(()=>e.target.textContent='copied ✓')};
-document.getElementById('foot').textContent=`data: SEC EDGAR and issuer disclosures · price: coinbase · block: blockstream · built ${D.generated} · not investment advice`;
+document.getElementById('foot-data').textContent=`data: SEC EDGAR and issuer disclosures · price: coinbase · block: blockstream · built ${D.generated} · not investment advice`;
 </script>
 </body></html>

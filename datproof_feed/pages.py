@@ -684,7 +684,7 @@ def sharpe_line(feed: dict, own: bool = True) -> str:
     s += (f" Assumes the bot's own swings of {fixed(min(sw))}% to {fixed(max(sw))}% a year do not move with the stock.")
     if own:
         s += " On their own: " + names([f"{r['ticker']} {fixed(r['sharpe'], 2)}" for r in sharpe_rows(feed)]) + "."
-    return s
+    return s + " Past prices, not a forecast."  # the line opens "Over the past year"; the page caps fine lines at 460
 
 
 def lift_block(feed: dict) -> str:
