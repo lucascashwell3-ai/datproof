@@ -237,13 +237,24 @@ jobs:
           [ "$bad" = 0 ] || exit 1
           echo "idle-cash feed and pages ok"
 
+  # Publish to GitHub Pages. The deploy step has failed a fraction of a second after a good upload
+  # ("no uploaded site found"), and a plain re-run then failed on two uploads with the same name. So:
+  # up to three tries, each one clearing the previous upload first, then a check that the live site
+  # really carries the date just built. Runs on main only; a branch or dry run skips this whole job.
   deploy:
     needs: build
     if: needs.build.outputs.dry_run != 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read   # check out main
+      pages: write     # publish
+      id-token: write  # prove to Pages that this run may publish
+      actions: write   # delete this run's earlier upload before a retry
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy3.outputs.page_url }}
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       # Re-checkout main (not the triggering SHA) — the build job may have just pushed a new
       # data + site commit, and this needs that commit's site/, not the older one that kicked
@@ -251,14 +262,80 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - uses: actions/upload-pages-artifact@v3
+      # The date the live site must show afterwards: the one in the files being published. A failed
+      # feed build keeps yesterday's files on purpose, so this is not always today's date.
+      - name: Date being published
+        id: built
+        run: |
+          d=$(python3 -c "import json;print(json.load(open('site/v1/status.json'))['date'])")
+          echo "date=$d" >> "$GITHUB_OUTPUT"
+          echo "publishing the site built for $d"
+
+      - name: Upload site (try 1)
+        uses: actions/upload-pages-artifact@v3
         with:
           path: site
-      - name: Deploy to GitHub Pages
-        id: deploy
+      - name: Deploy to GitHub Pages (try 1)
+        id: deploy1
+        continue-on-error: true
         uses: actions/deploy-pages@v4
         with:
           timeout: 1200000
+
+      - name: Clear upload before try 2
+        if: steps.deploy1.outcome == 'failure'
+        run: |
+          sleep 20
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+          done
+      - name: Upload site (try 2)
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages (try 2)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1200000
+
+      - name: Clear upload before try 3
+        if: steps.deploy2.outcome == 'failure'
+        run: |
+          sleep 60
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+          done
+      - name: Upload site (try 3)
+        if: steps.deploy2.outcome == 'failure'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages (try 3)
+        id: deploy3
+        if: steps.deploy2.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1200000
+
+      # Pages can take a minute to serve a new deploy, so look up to ten times, 30 seconds apart. The
+      # query string skips any cache. Fails the run if the live date never matches.
+      - name: Live site shows the date just built
+        run: |
+          want="${{ steps.built.outputs.date }}"
+          base="https://lucascashwell3-ai.github.io/datproof"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            status=$(curl -fsSL "$base/v1/status.json?run=${{ github.run_id }}-$i" | python3 -c "import json,sys;print(json.load(sys.stdin)['date'])" || echo none)
+            home=$(curl -fsSL "$base/?run=${{ github.run_id }}-$i" | grep -o '"dateModified": *"[0-9-]*"' | grep -o '[0-9-]\{10\}' || echo none)
+            echo "try $i: status.json $status, home page $home, want $want"
+            if [ "$status" = "$want" ] && [ "$home" = "$want" ]; then echo "live site is current"; exit 0; fi
+            sleep 30
+          done
+          echo "::error title=Site not current::live site shows status.json $status and home page $home, not $want"
+          exit 1
       - name: Say plainly that the site did not update
-        if: failure() && steps.deploy.outcome == 'failure'
-        run: echo "::error title=Site not updated::Data commit landed but the Pages deploy failed. Re-run this workflow."
+        if: failure()
+        run: echo "::error title=Site not updated::Data commit landed but the Pages deploy failed after three tries, or the live site never showed the new date. Re-run this workflow."
