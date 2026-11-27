@@ -143,7 +143,22 @@ def test_streak_quarterly_needs_a_wider_gap():
     pays = [D(2025, 3, 31), D(2025, 6, 30), D(2025, 9, 30)]
     divs = [(p, p, 2.5) for p in pays]
     assert s.streak(divs, TODAY)["gaps"]
-    assert s.streak(divs, TODAY, max_gap=100) == {"paid": 3, "in_a_row": 3, "gaps": [], "last_paid": "2025-09-30"}
+    assert s.streak(divs, TODAY, max_gap=100) == {"paid": 3, "in_a_row": 3, "gaps": [], "last_paid": "2025-09-30",
+                                                   "since": "2025-03-31", "schedules": ["quarterly"]}
+
+
+def test_streak_says_when_the_run_began_and_the_schedules_it_spans():
+    monthly = [D(2025, 8, 31), D(2025, 9, 30), D(2025, 10, 31)]
+    twice = [D(2025, 11, 15), D(2025, 11, 30)]
+    daily = [D(2025, 12, 1), D(2025, 12, 2), D(2025, 12, 3), D(2025, 12, 4), D(2025, 12, 5), D(2025, 12, 8)]
+    divs = [(p, p, 0.1) for p in monthly + twice + daily]
+    r = s.streak(divs, D(2025, 12, 9))
+    assert r["in_a_row"] == 11 and r["since"] == "2025-08-31"
+    assert r["schedules"] == ["monthly", "twice a month", "daily"]
+    # planted: a gap restarts the run, so the start date moves to after it
+    gapped = [(p, p, 0.1) for p in [D(2025, 6, 30), D(2025, 8, 31)] + daily]
+    r = s.streak(gapped, D(2025, 12, 9))
+    assert r["since"] == "2025-12-01" and r["schedules"] == ["daily"]
 
 
 # ---------- stated rates and benchmarks ----------

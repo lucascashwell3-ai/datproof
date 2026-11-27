@@ -247,9 +247,27 @@ def streak(divs: list[tuple[dt.date, dt.date, float]], day: dt.date, max_gap: in
         if g > max_gap or (daily_before and 4 < g < 25):
             gaps.append((pays[i - 1], pays[i]))
     last_gap = gaps[-1][1] if gaps else None
-    run = len([p for p in pays if last_gap is None or p >= last_gap])
-    return {"paid": len(pays), "in_a_row": run, "gaps": [f"{a} to {b}" for a, b in gaps],
-            "last_paid": pays[-1].isoformat() if pays else None}
+    in_run = [p for p in pays if last_gap is None or p >= last_gap]
+    seen: list[str] = []
+    for a, b in zip(in_run, in_run[1:]):
+        k = _spacing((b - a).days)
+        if k and (not seen or seen[-1] != k):
+            seen.append(k)
+    return {"paid": len(pays), "in_a_row": len(in_run), "gaps": [f"{a} to {b}" for a, b in gaps],
+            "last_paid": pays[-1].isoformat() if pays else None,
+            "since": in_run[0].isoformat() if in_run else None, "schedules": seen}
+
+
+# One definition of the run behind "N dividends in a row", for method.json and the page.
+PAYMENTS_SINCE_METHOD = ("payments.since: the first pay date of the current run of payments (in_a_row counts "
+                         "from it). payments.schedules: how the spacing between those payments changed over the "
+                         "run, oldest first: daily (up to 4 days apart), twice a month (10-20), monthly (25-35), "
+                         "quarterly (80-100). A run that began monthly and is now daily spans that change.")
+
+
+def _spacing(days: int) -> str | None:
+    return ("daily" if days <= 4 else "twice a month" if 10 <= days <= 20 else "monthly" if 25 <= days <= 35
+            else "quarterly" if 80 <= days <= 100 else None)
 
 
 def parse_stated_rate(kpi: list | dict) -> tuple[float, dt.date]:

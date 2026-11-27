@@ -319,6 +319,15 @@ def since(feed: dict, t: str) -> str | None:
     return cl[0][0] if cl else None
 
 
+def run_note(pay: dict) -> str:
+    """When the run behind "N dividends in a row" began, and the change of schedule it spans (feed's payments.since)."""
+    if not pay.get("since"):
+        return ""
+    sch = pay.get("schedules") or []
+    span = f" ({sch[0]} at first, now {sch[-1]})" if len(sch) > 1 else ""
+    return f" since {day(pay['since'])}{span}"
+
+
 def panels(feed: dict) -> str:
     tb = tbill(feed)
     out = ""
@@ -332,7 +341,7 @@ def panels(feed: dict) -> str:
         elif since(feed, i["ticker"]):
             facts.append(f"Trading since {day(since(feed, i['ticker']))}")
         if pay.get("in_a_row"):
-            facts.append(f'<b class="num">{fixed(pay["in_a_row"])}</b> dividends in a row'
+            facts.append(f'<b class="num">{fixed(pay["in_a_row"])}</b> dividends in a row' + run_note(pay)
                          + (", none missed" if not pay.get("gaps") else ""))
         if close is not None:
             facts.append(f'Price <b class="num">{usd(close, 2)}</b>')
@@ -1200,7 +1209,7 @@ def md_panels(feed: dict) -> str:
         bits.append(f"past year {signed(py['total_return_pct'])}, dividends plus price change" if py
                     else f"trading since {day(since(feed, i['ticker']))}" if since(feed, i["ticker"]) else "")
         if pay.get("in_a_row"):
-            bits.append(f"{fixed(pay['in_a_row'])} dividends in a row" + (", none missed" if not pay.get("gaps") else ""))
+            bits.append(f"{fixed(pay['in_a_row'])} dividends in a row" + run_note(pay) + (", none missed" if not pay.get("gaps") else ""))
         if val(i.get("close_usd")) is not None:
             bits.append(f"price {usd(val(i['close_usd']), 2)}")
         out += f"- {i['ticker']} ({i.get('issuer', '')}): " + "; ".join(b for b in bits if b) + ".\n"

@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import pathlib
 
-from datproof_feed import backing, scenarios
+from datproof_feed import backing, scenarios, sources
 from datproof_feed.compare import METHOD, _tbill_pct, buy_price_table, hold_odds_table, sharpe_table
 
 MAX_CHANGES = 90
@@ -68,6 +68,15 @@ def tidy(ins: dict, date: str, listings: dict) -> dict:
     lst = (listings.get("instruments") or {}).get(ins.get("ticker"))
     if lst:
         ins["listing"] = {**lst, "fetched_at": listings.get("read_on")}
+    pay = ins.get("payments") or {}
+    if pay.get("in_a_row") and "since" not in pay and ins.get("dividends"):
+        # a day file written before payments.since existed: the same count, from its own dividend list
+        import datetime as _dt
+        divs = [(_dt.date.fromisoformat(d["ex"]), _dt.date.fromisoformat(d["pay"]), d["usd"]) for d in ins["dividends"]]
+        gap = sources.QUARTERLY_MAX_GAP if ins.get("schedule") == "quarterly" else 35
+        again = sources.streak(divs, _dt.date.fromisoformat(date), gap)
+        if again["in_a_row"] == pay["in_a_row"]:
+            ins["payments"] = {**pay, "since": again["since"], "schedules": again["schedules"]}
     return ins
 
 
@@ -195,7 +204,8 @@ def publish(snap: dict, out, prev: dict | None) -> None:
     older = [c for c in older if c.get("date") != snap["date"]]
     (out / "changes.json").write_text(_dump((diff(prev, snap) + older)[:MAX_CHANGES]))
 
-    (out / "method.json").write_text(_dump({**METHOD, "scenarios": scenarios.METHOD}))
+    method = {**METHOD, "formulas": {**METHOD.get("formulas", {}), "payments_since": sources.PAYMENTS_SINCE_METHOD}}
+    (out / "method.json").write_text(_dump({**method, "scenarios": scenarios.METHOD}))
     (out / "scenarios.json").write_text(_dump(scenarios.build(snap)))
 
 
