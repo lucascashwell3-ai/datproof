@@ -7,6 +7,8 @@ days/<date>.json, hash it, publish the /v1/ files, stamp it.
 
 The first build of a day wins: an existing day file is kept, never rewritten. If sources
 disagree, or any number fails its check, only status.json is written and the exit code is 1.
+A close, stated rate or yield that moved more than its one-day limit keeps the day before's figure;
+the files are written with it, status.json lists it under "held", and the exit code is 1.
 """
 from __future__ import annotations
 
@@ -41,11 +43,13 @@ def main(argv: list[str] | None = None, fetch=None) -> int:
     day_file = days / f"{today.isoformat()}.json"
 
     snap = sources.gather(today, fetch=fetch or sources._get)
+    # An over-limit one-day move keeps the day before's figure (see sources.JUMP_LIMITS); the run goes red below.
+    sources.hold_jumps(snap, publish.previous_day(days, snap["date"]))
     errors = snapshot.validate(snap)
     status = {"date": snap["date"], "built_at": snap["built_at"], "sources": snap["sources"],
               "source_errors": snap.get("source_errors", {}), "problems": snap["problems"] + errors,
               "nulls": snapshot.nulls(snap), "stale": snapshot.stale(snap),
-              "snapshot_sha256": None, "stamp": None}
+              "held": [], "snapshot_sha256": None, "stamp": None}
 
     if status["problems"]:
         status["stamp"] = "skipped (day file not written)"
@@ -61,6 +65,7 @@ def main(argv: list[str] | None = None, fetch=None) -> int:
         day_file.write_text(_dump(snap))
         kept = False
     status["snapshot_sha256"] = snapshot.sha256_file(day_file)
+    status["held"] = sources.held_now(snap)  # from the file published, so a re-run on the same day stays red
     publish.publish(snap, out, publish.previous_day(days, snap["date"]))
     if args.dry_run:
         status["stamp"] = "skipped (dry run)"
@@ -72,6 +77,9 @@ def main(argv: list[str] | None = None, fetch=None) -> int:
     (out / "status.json").write_text(_dump(status))
     print(_dump(status), end="")
     print(f"day file: {day_file}" + (" (kept existing)" if kept else ""), file=sys.stderr)
+    if status["held"]:
+        print(f"held back (over the one-day limit, last good figure kept): {', '.join(status['held'])}", file=sys.stderr)
+        return 1
     return 0
 
 

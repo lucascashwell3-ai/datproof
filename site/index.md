@@ -174,3 +174,5 @@ Example from today's data, 27 Nov 2026.
 DATproof is an open-source data project; its code, data and method are public at https://github.com/lucascashwell3-ai/datproof, and questions or corrections go to https://github.com/lucascashwell3-ai/datproof/issues. It is free. It holds no money, places no orders and is not advice.
 
 Something missing or wrong? Tell us: https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md
+
+Security problem? Report it privately: https://github.com/lucascashwell3-ai/datproof/security/policy

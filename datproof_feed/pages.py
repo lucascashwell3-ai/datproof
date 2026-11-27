@@ -1363,6 +1363,8 @@ Example. You ask: "{CHAT_Q}"
 {ABOUT_MD[0]} {ABOUT_MD[1]}
 
 Something missing or wrong? Tell us: {FEEDBACK}
+
+Security problem? Report it privately: {SECURITY}
 """
 
 
@@ -1457,6 +1459,7 @@ def load_config(site: pathlib.Path) -> dict:
 
 
 FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
+SECURITY = "https://github.com/lucascashwell3-ai/datproof/security/policy"  # SECURITY.md: how to report privately
 
 
 # ---------- sitemap.xml ----------

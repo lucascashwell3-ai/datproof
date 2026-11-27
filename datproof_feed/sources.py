@@ -619,3 +619,66 @@ def _usdc(today: dt.date, get) -> dict:
     except Exception as e:  # noqa: BLE001
         b["yield_pct"] = missing(_err(e), LLAMA_CHART, _now())
     return b
+
+
+# ---------- one-day limits on the headline numbers ----------
+
+# A broken or poisoned source could put a false yield on the page; the range checks above only keep a
+# stated rate between 0% and 50%. So each instrument's close, stated rate and yield at price is also held
+# to a one-day limit, set from the past year's largest real one-day moves with about twice the margin:
+#   close_usd        25% of the day before. Largest real move in the past year: STRC 12.2% (29 Jun 2026,
+#                    $74.57 to $83.67); SATA 8.4% (5 Feb 2026); SATS 5.3% (23 Nov 2026).
+#   stated_rate_pct  1.5 points. The issuers moved their rates at most 0.5 point at a time: STRC 10.0%
+#                    (Sep 2025) to 11.5% (Mar 2026) in 0.25 steps, then 12.0%; SATA 12.25% to 13.0% in
+#                    0.25 steps; SATS is fixed at 15%.
+#   yield_pct        4 points. STRC's 12.2% close move at a yield near 13.5% moved it about 1.9 points;
+#                    the largest move in the daily files is 0.76 point.
+# Over the limit: the day before's figure is kept, with its own date, marked stale and "held", and the
+# run goes red (build.py exits 1). A real jump is accepted on the next build if the source gives the same
+# new level again (within the limit of the figure that was held back): two red days, never a false figure.
+JUMP_LIMITS = {"close_usd": ("pct", 25.0), "stated_rate_pct": ("points", 1.5), "yield_pct": ("points", 4.0)}
+
+
+def _move(field: str, old: float, new: float) -> tuple[float, bool]:
+    kind, limit = JUMP_LIMITS[field]
+    m = abs(new / old - 1) * 100 if kind == "pct" else abs(new - old)
+    return m, m > limit
+
+
+def hold_jumps(snap: dict, prev: dict | None) -> list[str]:
+    """Hold back any over-limit one-day move against the day before's file, in place. Returns what was held."""
+    if not prev:
+        return []
+    before = {i.get("ticker"): i for i in prev.get("instruments") or []}
+    held = []
+    for inst in snap.get("instruments") or []:
+        old_inst = before.get(inst.get("ticker"))
+        if not old_inst:
+            continue  # a new instrument: nothing to compare with
+        for field, (kind, limit) in JUMP_LIMITS.items():
+            cur, old = inst.get(field) or {}, old_inst.get(field) or {}
+            new_v, old_v = cur.get("value"), old.get("value")
+            if new_v is None or old_v is None or old_v == 0:
+                continue  # no figure today, or none to compare with
+            m, over = _move(field, old_v, new_v)
+            if not over:
+                continue
+            was = old.get("held") or {}
+            if was.get("rejected") is not None and not _move(field, was["rejected"], new_v)[1]:
+                cur["accepted_after_hold"] = {"held_since": was.get("since"), "previous": old_v}
+                continue  # the source said the same new level two builds running: a real move
+            unit = "%" if kind == "pct" else " points"
+            kept = {k: v for k, v in old.items() if k not in ("held", "accepted_after_hold")}
+            kept["stale"] = True
+            kept["held"] = {"rejected": new_v, "rejected_as_of": cur.get("as_of"), "since": was.get("since") or snap.get("date"),
+                            "move": round(m, 3), "limit": f"{limit:g}{unit} in one day"}
+            inst[field] = kept
+            msg = f"{inst['ticker']}.{field} held at {old_v} ({old.get('as_of') or 'derived'}): new {new_v} is a {m:.2f}{unit} one-day move, over {limit:g}{unit}"
+            held.append(msg)
+    return held
+
+
+def held_now(snap: dict) -> list[str]:
+    """Every figure in a snapshot that is being held back, as INSTRUMENT.field."""
+    return [f"{i.get('ticker')}.{f}" for i in snap.get("instruments") or [] for f in JUMP_LIMITS
+            if isinstance(i.get(f), dict) and i[f].get("held")]

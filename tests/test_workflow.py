@@ -82,3 +82,37 @@ def test_only_the_daily_workflow_can_publish():
     assert (ROOT / "archive" / "workflows" / "daily-brief.yml").exists()
     publishers = [p.name for p in WF.glob("*.y*ml") if "deploy-pages" in p.read_text()]
     assert publishers == ["grid.yml"], publishers
+
+
+def test_every_action_is_pinned_to_a_commit_with_its_version():
+    import re
+    for f in WF.glob("*.y*ml"):
+        for line in f.read_text().splitlines():
+            m = re.search(r"uses:\s*(\S+)(.*)", line)
+            if not m or m.group(1).startswith("./"):
+                continue
+            assert re.fullmatch(r"[\w.-]+/[\w./-]+@[0-9a-f]{40}", m.group(1)), f"{f.name}: {line.strip()}"
+            assert re.search(r"#\s*v\d", m.group(2)), f"{f.name}: no version comment: {line.strip()}"
+
+
+def test_each_job_asks_for_the_least_it_needs():
+    doc = grid()
+    assert doc["permissions"] == {"contents": "read"}
+    jobs = doc["jobs"]
+    assert jobs["build"]["permissions"] == {"contents": "write"}
+    assert jobs["feed-check"]["permissions"] == {}
+    assert jobs["deploy"]["permissions"] == {"contents": "read", "pages": "write", "id-token": "write", "actions": "write"}
+
+
+def test_planted_unpinned_action_is_caught(tmp_path):
+    import re
+    line = "      - uses: actions/checkout@v4"
+    m = re.search(r"uses:\s*(\S+)(.*)", line)
+    assert not re.fullmatch(r"[\w.-]+/[\w./-]+@[0-9a-f]{40}", m.group(1))
+
+
+def test_security_policy_is_linked_from_the_foot():
+    assert (ROOT / "SECURITY.md").exists()
+    assert len((ROOT / "SECURITY.md").read_text().strip().splitlines()) <= 8
+    foot = (ROOT / "site" / "index.html").read_text().split('<footer', 1)[1]
+    assert "/security/policy" in foot
