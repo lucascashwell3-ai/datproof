@@ -46,3 +46,6 @@ briefs/linkedin-post-*.md
 data/moves/.cache/
 briefs/
 .claude/
+
+# headline font fetched at build time (its licence bars a public repo)
+.cache/
