@@ -271,8 +271,8 @@
           "total_usd": -618.41,
           "total_pct": -6.184,
           "lowest": {
-            "value_usd": 8802.6,
-            "below_start_usd": 1197.4,
+            "value_usd": 8802.59,
+            "below_start_usd": 1197.41,
             "below_start_pct": 11.974,
             "date": "2026-11-20"
           },
@@ -847,6 +847,8 @@
               "beat_tbill_pct": 85.1,
               "lost": 18,
               "lost_pct": 9.6,
+              "ahead": 170,
+              "ahead_pct": 90.4,
               "median_pct": 4.69,
               "worst_pct": -11.77,
               "worst_bought": "2026-08-24"
@@ -869,8 +871,7 @@
             "next_pay_date": "2026-11-30",
             "flags": [
               "price_moves",
-              "issuer_sets_rate",
-              "stale"
+              "issuer_sets_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -898,6 +899,8 @@
               "beat_tbill_pct": 67.6,
               "lost": 58,
               "lost_pct": 30.9,
+              "ahead": 130,
+              "ahead_pct": 69.1,
               "median_pct": 3.14,
               "worst_pct": -22.53,
               "worst_bought": "2026-03-30"
@@ -948,6 +951,8 @@
               "beat_tbill_pct": 50.5,
               "lost": 81,
               "lost_pct": 43.1,
+              "ahead": 107,
+              "ahead_pct": 56.9,
               "median_pct": 1.21,
               "worst_pct": -28.39,
               "worst_bought": "2026-03-27"
@@ -969,7 +974,8 @@
             "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "fixed_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/STRD/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -997,6 +1003,8 @@
               "beat_tbill_pct": 50.5,
               "lost": 87,
               "lost_pct": 46.3,
+              "ahead": 101,
+              "ahead_pct": 53.7,
               "median_pct": 1.19,
               "worst_pct": -8.46,
               "worst_bought": "2026-03-30"
@@ -1018,7 +1026,8 @@
             "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "fixed_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/STRF/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1046,6 +1055,8 @@
               "beat_tbill_pct": 33.5,
               "lost": 121,
               "lost_pct": 64.4,
+              "ahead": 67,
+              "ahead_pct": 35.6,
               "median_pct": -5.59,
               "worst_pct": -25.82,
               "worst_bought": "2026-03-27"
@@ -1067,7 +1078,8 @@
             "next_pay_date": "2026-12-31",
             "flags": [
               "price_moves",
-              "issuer_sets_rate"
+              "issuer_sets_rate",
+              "fixed_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/STRK/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1103,6 +1115,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "short_history",
               "no_hold_odds"
             ],
@@ -1215,8 +1228,8 @@
             "total_usd": -618.41,
             "total_pct": -6.184,
             "lowest": {
-              "value_usd": 8802.6,
-              "below_start_usd": 1197.4,
+              "value_usd": 8802.59,
+              "below_start_usd": 1197.41,
               "below_start_pct": 11.974,
               "date": "2026-11-20"
             },
@@ -1400,6 +1413,8 @@
               "beat_tbill_pct": 89.7,
               "lost": 8,
               "lost_pct": 6.3,
+              "ahead": 118,
+              "ahead_pct": 93.7,
               "median_pct": 8.57,
               "worst_pct": -8.19,
               "worst_bought": "2026-05-26"
@@ -1422,8 +1437,7 @@
             "next_pay_date": "2026-11-30",
             "flags": [
               "price_moves",
-              "issuer_sets_rate",
-              "stale"
+              "issuer_sets_rate"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -1451,6 +1465,8 @@
               "beat_tbill_pct": 60.3,
               "lost": 36,
               "lost_pct": 28.6,
+              "ahead": 90,
+              "ahead_pct": 71.4,
               "median_pct": 4.62,
               "worst_pct": -13.65,
               "worst_bought": "2025-12-29"
@@ -1473,6 +1489,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "thin_trading"
             ],
             "as_of": "2026-11-25",
@@ -1501,6 +1518,8 @@
               "beat_tbill_pct": 62.7,
               "lost": 33,
               "lost_pct": 26.2,
+              "ahead": 93,
+              "ahead_pct": 73.8,
               "median_pct": 3.5,
               "worst_pct": -18.92,
               "worst_bought": "2025-12-30"
@@ -1551,6 +1570,8 @@
               "beat_tbill_pct": 19.8,
               "lost": 90,
               "lost_pct": 71.4,
+              "ahead": 36,
+              "ahead_pct": 28.6,
               "median_pct": -3.21,
               "worst_pct": -24.01,
               "worst_bought": "2025-12-30"
@@ -1573,6 +1594,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "thin_trading"
             ],
             "as_of": "2026-11-25",
@@ -1601,6 +1623,8 @@
               "beat_tbill_pct": 18.3,
               "lost": 101,
               "lost_pct": 80.2,
+              "ahead": 25,
+              "ahead_pct": 19.8,
               "median_pct": -7.44,
               "worst_pct": -29.21,
               "worst_bought": "2025-12-29"
@@ -1623,6 +1647,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "thin_trading"
             ],
             "as_of": "2026-11-25",
@@ -1659,6 +1684,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "short_history",
               "no_hold_odds"
             ],
@@ -1964,6 +1990,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "short_history",
               "no_hold_odds"
             ],
@@ -2000,6 +2027,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "no_hold_odds",
               "thin_trading"
             ],
@@ -2037,8 +2065,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
-              "no_hold_odds",
-              "stale"
+              "no_hold_odds"
             ],
             "as_of": "2026-11-25",
             "source": "https://api.nasdaq.com/api/quote/SATA/historical?assetclass=stocks&fromdate=2025-11-26&todate=2026-11-27&limit=400",
@@ -2073,6 +2100,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "no_hold_odds",
               "thin_trading"
             ],
@@ -2145,6 +2173,7 @@
             "flags": [
               "price_moves",
               "issuer_sets_rate",
+              "fixed_rate",
               "no_hold_odds",
               "thin_trading"
             ],

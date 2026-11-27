@@ -27,9 +27,9 @@ share sales and the digital credit instruments (STRC, SATA) that raise the cash.
 
 ## Where can idle cash sit?
 
-A free daily data feed for AI agents and the people who run them. It lists the Bitcoin
-treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside three benchmarks (the
-4-week Treasury bill, a government money market fund, USDC lending on Aave), each with its
+A free daily data feed for anyone with idle cash and the AI they ask. It lists the Bitcoin
+treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside what idle cash earns
+in savings, CDs, a money market fund, T-bills and a municipal bond fund, each with its
 yield, its worst past-year price fall, its payment record and risk flags. Every number names
 its source and date; a number that could not be fetched is empty, with the reason.
 
@@ -45,19 +45,22 @@ its source and date; a number that could not be fetched is empty, with the reaso
   result, and how many separate drops the buys came from, for every issue, with whether its issuer
   states it adjusts the rate to keep the price near $100.
 - **Sharpe**: `sharpe` in each instrument: past-year Sharpe ratio, total return and yearly swings from
-  daily total returns, plus a worked example of a bot moving a quarter of its idle cash in.
+  daily total returns, plus a worked example of a bot moving all of its idle cash in.
 - **Crash test**: `backing` in each Strategy and Strive preferred: (bitcoin held × bitcoin price + cash)
   ÷ (debt + every preferred ahead in line + the issue itself), the bitcoin price where that falls to
   1.0×, and years of the yearly bill covered by cash set aside. `python -m datproof_feed.backing`
   fetches the daily inputs into `data/backing.json`; filing figures live in `data/backing_static.json`.
-- **Compare** takes an amount in dollars, how many days, the biggest price fall you accept,
-  and what the account can hold (`preferred`, `tbill`, `money_market`, `usdc_lending`). It
-  returns each option's hold odds for exactly those days (how past holds of that length turned
-  out: share that beat a T-bill, share that lost money, middle and worst result), what it is
-  built for (rate type, whether the issuer aims to keep the price near $100, pay schedule, each
-  sourced to the issuer's filing in `data/instrument_profiles.json`), its yield and estimated
-  income (0 with the reason when no payment lands inside the days) next to its flags, a short
-  quotable summary, plus the benchmarks.
+- **Compare** (the plug-in's tool) takes an amount in dollars, how long the cash can sit (1 month,
+  3 months, 6 months or 1 year) and where it sits today (checking, savings, high-yield savings,
+  12-month CD, money market fund, T-bill or broker cash). It returns the same rows for STRC, SATA
+  and SATS in fixed order: dividends over that time, what the cash earns now at a named, sourced
+  rate, the difference, how past holds of that length turned out (or the date results begin),
+  whole shares at the last close and brokers' pages for each ticker. The page's "Your situation"
+  form does the same arithmetic. `compare.situation` holds it for both.
+- **Comparison rates and where to buy**: `python -m datproof_feed.rates` refreshes
+  `data/comparison_rates.json` (each rate dated and sourced, last good figure kept on a failure,
+  0-15% and no 2-point one-day move); `python -m datproof_feed.brokers` checks the broker links in
+  `data/where_to_buy.json` daily. Both are joined into `instruments.json` at publish time.
 - **Scenarios** show what $10,000 did over the past 30, 90, 180 and 365 days in each
   preferred stock (dividends paid, price change, lowest point and its date), beside the T-bill
   and money market fund at today's rate, plus three named situations. Past results do not

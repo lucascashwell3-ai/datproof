@@ -1,63 +1,72 @@
-# DATproof: earn more on your trading agent's idle cash
+# DATproof: earn 12–17% on your idle cash
 
-Cash your trading agent won't need for a few months can earn daily dividends from digital credit. DATproof gives your agent the live numbers and the odds.
+Cash you can leave for three months or more can earn a dividend every business day from digital credit, preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.
 
-Data for 27 Nov 2026 · prices at the 25 Nov 2026 close. Page with charts: https://lucascashwell3-ai.github.io/datproof/next/
+Prices at the 25 Nov 2026 close · data for 27 Nov 2026. Page with charts: https://lucascashwell3-ai.github.io/datproof/next/
 
 ## Income every business day
 
-| Where | Pays a year | Date | On $10,000 a year | Price | After inflation |
-|---|---|---|---|---|---|
-| STRC (Strategy · pays every business day) | 12.2% | 25 Nov 2026 | $1,224 | $98.04 (25 Nov 2026) | +8.5% |
-| SATA (Strive · pays every business day) | 14.3% | rate as of 13 Nov 2026 | $1,435 | $90.62 (25 Nov 2026) | +10.6% |
-| SATS (Strive · pays every business day) | 16.9% | 25 Nov 2026 | $1,695 | $88.50 (25 Nov 2026) | +13.2% |
-| 4-week T-bill (US Treasury) | 4.2% | 25 Nov 2026 | $419 | no share price | +0.5% |
-| Money market fund (Vanguard VMFXX) | 3.9% | 27 Nov 2026 | $395 | no share price | +0.2% |
-| USDC lending (Aave v3, Ethereum) | 3.1% | 27 Nov 2026 | $305 | no share price | −0.7% |
+- STRC (Strategy): pays 12.2% a year; 2.9× a 4-week T-bill; past year +13.5%, dividends plus price change; 37 dividends in a row, none missed; price $98.04.
+- SATA (Strive): pays 14.3% a year; 3.4× a 4-week T-bill; past year +13.4%, dividends plus price change; 120 dividends in a row, none missed; price $90.62.
+- SATS (Strive): pays 16.9% a year; 4.0× a 4-week T-bill; trading since 16 Oct 2026; 13 dividends in a row, none missed; price $88.50.
 
-Yield is the stated rate at the latest close. Income is simple interest, before tax and fees, and ignores price changes. After inflation is the yield minus US CPI inflation, 3.7% for the 12 months to September 2026.
+| Where | Pays a year | Date | On $10,000 a year | After inflation |
+|---|---|---|---|---|
+| STRC (Strategy) | 12.2% | 25 Nov 2026 | $1,224 | +8.5% |
+| SATA (Strive) | 14.3% | 13 Nov 2026 | $1,435 | +10.6% |
+| SATS (Strive) | 16.9% | 25 Nov 2026 | $1,695 | +13.2% |
+| Checking, national average | 0.07% | 16 Nov 2026 | $7 | −3.7% |
+| Savings, national average | 0.39% | 16 Nov 2026 | $39 | −3.4% |
+| High-yield savings, best rate | 4.40% | 27 Nov 2026 | $440 | +0.7% |
+| 12-month CD, best rate | 4.65% (national average 1.81%) | 27 Nov 2026 | $465 | +0.9% |
+| Money market fund | 3.61% | 25 Nov 2026 | $361 | −0.1% |
+| 4-week T-bill | 4.19% | 27 Nov 2026 | $419 | +0.5% |
+| Municipal bond fund | 3.81% | 25 Nov 2026 | $381 | +0.1% |
 
-## Under $100, more yield and room to climb
+Digital credit is dividends only, before tax, price change left out; yield = yearly dividend on $100 / today's price. Past year: 26 Nov 2025 to 25 Nov 2026. Inflation 3.7% (US CPI, Sep 2026). Rates: FDIC 16 Nov (https://www.fdic.gov/national-rates-and-rate-caps), Bankrate 27 Nov (https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/), Fidelity 25 Nov (https://www.fidelity.com/investing/cash-management), Treasury 27 Nov (https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611), iShares 25 Nov (https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub).
 
-Under $100 you earn more on what you pay, and the issuers of STRC and SATA say they adjust the rate to keep the price near $100 (STRC filing: https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm, SATA filing: https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm).
+## Liquid and steady
 
-- STRC: $98.04 at the 25 Nov 2026 close, $1.96 under $100; pays 12.2% at this price, stated rate 12.0%.
-- SATA: $90.62 at the 25 Nov 2026 close, $9.38 under $100; pays 14.3% at this price, stated rate 13.0% (rate as of 13 Nov 2026).
-- SATS: $88.50 at the 25 Nov 2026 close, $11.50 under $100; pays 16.9% at this price, fixed rate 15.0%.
+Sell at the market price, which moves every day and tends to move with bitcoin. Average trading value over the past 30 days: STRC $213M, SATA $37M and SATS $30M a day.
+
+Daily closes over the past year, with each dividend paid. Closed within $5 of $100 on 82% of days (STRC) and 74% of days (SATA). Trading value is 30-day average volume times the last close, to 25 Nov 2026.
+
+## Bought under $100
+
+Strategy and Strive say they adjust the rates of STRC and SATA to keep the price near $100 (STRC filing: https://www.sec.gov/Archives/edgar/data/1050446/000119312525165531/d852456d424b5.htm, SATA filing: https://www.sec.gov/Archives/edgar/data/1920406/000114036126002238/ny20063534x5_424b5.htm). SATS has a fixed 15% rate and a price free to move: more swing, and more room to rise from below $100.
 
 | Bought at | STRC | SATA | SATS |
 |---|---|---|---|
-| under $90 | +18.4%: 31 buys, 0 lost, worst +12.5% | +18.4%: 9 buys, 0 lost, worst +15.0% | Trading since 16 Oct 2026. First results around 6 Feb 2027. |
+| under $90 | +18.4%: 31 buys, 0 lost, worst +12.5%, all from one drop | +18.4%: 9 buys, 0 lost, worst +15.0%, from 2 drops | Trading since 16 Oct 2026. First 90-day results around 7 Apr 2027. |
 | $90 to $95 | +8.7%: 13 buys, 0 lost, worst +5.9% | +8.5%: 47 buys, 0 lost, worst +3.0% | not yet |
 | $95 to $100 | +0.2%: 112 buys, 38 lost, worst −22.5% | +3.0%: 114 buys, 12 lost, worst −11.5% | not yet |
 | $100 and over | −2.8%: 32 buys, 20 lost, worst −13.5% | −0.2%: 18 buys, 6 lost, worst −11.8% | not yet |
 
-90-day holds bought from 26 Nov 2025 to 27 Aug 2026, dividends included; the figure is the average result. Largest fall from a high close in the past year: STRC 25.5%, from $100.07 on 12 Jan 2026 to $74.57 on 26 Jun 2026; SATA 17.9%, from $100.53 on 16 Jan 2026 to $82.50 on 5 Feb 2026; SATS 11.5%, from $96.92 on 13 Nov 2026 to $85.76 on 20 Nov 2026 (trading since 16 Oct 2026). The under-$90 buys came from 1 separate drop for STRC and 2 separate drops for SATA.
+Average result of 90-day holds bought 26 Nov 2025 to 27 Aug 2026, dividends plus price change.
 
-## The odds for the time your cash has
+## How past holds turned out
+
+Each day of the past year: buy, hold, collect the dividends, sell. Dividends plus price change, against a 4-week T-bill held as long.
 
 | Stock | Held | Beat a T-bill | Lost money | Typical result | Worst |
 |---|---|---|---|---|---|
-| STRC | 1 week | 61% | 26% | +0.3% | −14.6% |
 | STRC | 1 month | 75% | 20% | +1.1% | −23.8% |
 | STRC | 3 months | 68% | 31% | +3.1% | −22.5% |
-| SATA | 1 week | 64% | 32% | +0.3% | −14.3% |
+| STRC | 6 months | 63% | 26% | +3.5% | −18.9% |
 | SATA | 1 month | 69% | 28% | +1.5% | −15.0% |
 | SATA | 3 months | 85% | 10% | +4.7% | −11.8% |
+| SATA | 6 months | 90% | 6% | +8.6% | −8.2% |
+| SATS | | no record yet; 3-month results begin around 7 Apr 2027 | | | |
 
-Every start day in the past year (closes from 26 Nov 2025 to 27 Nov 2026): buy, hold, collect the dividends, sell. Scored against a 4-week T-bill held for the same stretch (4.19% a year today).
+Closes from 26 Nov 2025 to 27 Nov 2026.
 
-SATS is too new to score.
+## More return, same Sharpe
 
-## Better risk-adjusted returns
-
-Yield on idle cash lifts the whole account's return without adding a single trade. A $10,000 account that sits 60% in cash earns about $871 a year on that $6,000 at today's average yield of STRC, SATA and SATS, before tax.
-
-Return per unit of swing, worked from the past year (26 Nov 2025 to 25 Nov 2026): a bot with a Sharpe ratio of 1.0 that sits 60% in cash and moves a quarter of that cash in would have had 1.05 to 1.08 with STRC and 1.05 to 1.07 with SATA. On their own: STRC 0.49 and SATA 0.47. Assumes the bot's trades swing 10% to 20% a year and do not move with the stock.
+$10,000 account, 60% idle, before tax: high-yield savings at 4.40%; dividends at the average yield today, 14.5%, price change left out. Over the past year, a bot with a Sharpe ratio of 1.0 that kept 60% in cash and put all of it in STRC would have scored 0.93 to 1.06 and added 5.6 points of return; in SATA, 0.87 to 1.03 and 5.5 points. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47.
 
 ## Backed by bitcoin and cash
 
-Assets behind each $1 owed: everything the issuer holds, divided by everything owed up to and including the issue.
+Assets behind each $1 owed, counting everything ahead in line.
 
 | Name | Assets behind each $1 owed | What and when |
 |---|---|---|
@@ -66,53 +75,100 @@ Assets behind each $1 owed: everything the issuer holds, divided by everything o
 | Ares Capital | $1.88 | business development company · 30 Sep 2026 (https://www.sec.gov/Archives/edgar/data/1287750/000162828026067383/arcc-20260930.htm) |
 | Blue Owl Capital | $1.84 | business development company · 30 Sep 2026 (https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm) |
 | SATS | $1.45 | Strive · $3.1B of bitcoin and cash |
-| AT&T | $1.38 | corporate bonds · 30 Sep 2026 (https://data.sec.gov/api/xbrl/companyfacts/CIK0000732717.json) |
-| Verizon | $1.35 | corporate bonds · 30 Sep 2026 (https://data.sec.gov/api/xbrl/companyfacts/CIK0000732712.json) |
 | US credit unions | $1.13 | federally insured credit unions · 30 Jun 2026 (https://ncua.gov/files/publications/analysis/quarterly-data-summary-2026-Q2.pdf) |
 | US banks | $1.11 | all FDIC-insured banks · 30 Sep 2026 (https://www.fdic.gov/quarterly-banking-profile/quarterly-banking-profile-q3-2026) |
 | JPMorgan Chase preferred | $1.07 | bank preferred stock · 30 Sep 2026 (https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json) |
 
-Municipal bonds have no such figure: they are backed by taxing power or project revenue, not by a pool of assets.
+| Issue | Bitcoin can fall, from today | From its record | Cash set aside |
+|---|---|---|---|
+| STRC | 79%, to $12,643 | 90% | 2.7 years (USD Reserve $3.73B, 22 Nov 2026) |
+| SATA | 64%, to $21,671 | 83% | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
+| SATS | 36%, to $38,124 | 70% | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
 
-| Issue | Bitcoin can fall from its record | Cash set aside |
-|---|---|---|
-| STRC | 90%, to $12,643 before assets equal what is owed | 2.7 years (USD Reserve $3.73B, 22 Nov 2026) |
-| SATA | 83%, to $21,671 before assets equal what is owed | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
-| SATS | 70%, to $38,124 before assets equal what is owed | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
+Municipal bonds have no such figure: they are backed by taxing power or project revenue, not by a pool of assets. Fall to where assets equal what is owed, at stated amounts. Bitcoin $59,955 (27 Nov 2026), record $126,080. Holdings from issuer dashboards, Strategy debt from its 10-Q (30 Sep 2026), other rows from filings as dated.
 
-Strategy holds 851,305 bitcoin worth $51.04B and $4.82B in cash; Strive holds 43,404 bitcoin worth $2.60B and $0.46B in cash. Bitcoin's last three falls from a record were 77% to 85%. Today it is 52% below its $126,080 record.
+## What can go wrong
 
-At stated amounts; the fall is to the bitcoin price where assets would equal what is owed. Bitcoin $59,955 on 27 Nov 2026. Bitcoin held and cash from each issuer's dashboard (Strategy 27 Nov 2026, Strive 13 Nov 2026; cash Strategy 27 Nov 2026, Strive 20 Nov 2026). Strategy debt $6.75B as of 30 Sep 2026 (10-Q); Strive has none. Comparison figures from each filing's balance sheet, on the dates shown.
+- **Prices fall.** Largest fall from a high close in the past year: STRC 25.5% (12 Jan 2026 to 26 Jun 2026); SATA 17.9% (16 Jan 2026 to 5 Feb 2026); SATS 11.5% (13 Nov 2026 to 20 Nov 2026), trading since 16 Oct 2026.
+- **Issuers can change or reset rates.** STRC and SATA have variable rates the issuer resets and can lower. SATS has a fixed 15% rate; each dividend is still declared by the issuer's board.
+- **Bitcoin falls.** Bitcoin has fallen 77% to 85% from its record in each of its last three big falls; today it is 52% below its $126,080 record.
+- **SATS is new.** Trading since 16 Oct 2026; no 90-day record until about 7 Apr 2027.
+- **Not a bank deposit.** Bank deposits are FDIC-insured to $250,000. These are stocks held at a broker: SIPC covers a failed broker, not a fall in price.
+- **Past results do not predict future results.**
+
+Insurance sources: https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance and https://www.sipc.org/for-investors/what-sipc-protects, read 27 Nov 2026.
+
+## Your situation
+
+Worked example: $10,000 that can sit for 3 months, now in high-yield savings. The page's form changes the amount, the time and where the cash sits now; the plug-in's compare tool takes the same three inputs.
+
+| | STRC | SATA | SATS |
+|---|---|---|---|
+| Dividends over 3 months | $301.81 (at 12.2% a year today) | $353.74 (at 14.3% a year today) | $417.92 (at 16.9% a year today) |
+| High-yield savings earns | $108.49 (at 4.40%) | $108.49 (at 4.40%) | $108.49 (at 4.40%) |
+| Difference | +$193.32 | +$245.25 | +$309.43 |
+| Past 3-month holds | 69% (came out ahead · typical +3.1% · worst −22.5%) | 90% (came out ahead · typical +4.7% · worst −11.8%) | No record yet; results begin around 7 Apr 2027. |
+| Whole shares | 101 (at $98.04, $1.96 under $100) | 110 (at $90.62, $9.38 under $100) | 112 (at $88.50, $11.50 under $100) |
+
+Dividends at today's yield, before tax, price change left out. Past holds are dividends plus price change. High-yield savings, top widely available: 4.40%, 27 Nov 2026. What can go wrong is above. Where to buy: see below.
+
+## Where to buy
+
+All three trade on Nasdaq under their tickers, so a US stock broker can place the order. DATproof holds no money and places no orders.
+
+| Broker | STRC | SATA | SATS |
+|---|---|---|---|
+| Coinbase | https://www.coinbase.com/stock/STRC | https://www.coinbase.com/stock/SATA | https://www.coinbase.com/stock/SATS |
+| Interactive Brokers | search the ticker in the app | | |
+| Kraken (US) | https://kraken.com/stocks/STRC | https://kraken.com/stocks/SATA | https://kraken.com/stocks/SATS |
+| Public | https://public.com/stocks/strc | https://public.com/stocks/sata | https://public.com/stocks/sats |
+| Robinhood | https://robinhood.com/us/en/stocks/STRC | https://robinhood.com/us/en/stocks/SATA | https://robinhood.com/us/en/stocks/SATS |
+| SoFi | https://www.sofi.com/invest/stock/STRC/ | https://www.sofi.com/invest/stock/SATA/ | https://www.sofi.com/invest/stock/SATS/ |
+| Webull | https://www.webull.com/quote/nasdaq-strc | https://www.webull.com/quote/nasdaq-sata | https://www.webull.com/quote/nasdaq-sats |
+
+A sale of a US-listed stock settles the next business day (T+1) (FINRA). Links checked 27 Nov 2026. Alphabetical; DATproof has no tie to any broker. Settlement source: https://www.finra.org/investors/insights/understanding-settlement-cycles
 
 ## Questions
 
-### Where should a trading bot keep its idle cash?
+### Where can idle cash earn more than a savings account?
 
-The usual places for idle cash, a T-bill or a money market fund, pay 3.9% to 4.2% a year today. Digital credit, bitcoin-backed preferred stock (STRC, SATA and SATS), pays 12.2% to 16.9% a year, with a dividend every business day.
+Top widely available high-yield savings pays 4.40% a year today, and a 4-week T-bill 4.19%. Digital credit, bitcoin-backed preferred stock (STRC, SATA and SATS), pays 12.2% to 16.9% a year at today's prices, with a dividend every business day, but its price moves. It is for cash you can leave for three months or more.
 
 ### How did past holds turn out?
 
-Of 3-month holds started each day over the past year, STRC lost money 31% of the time and beat a 4-week T-bill 68%; SATA lost money 10% of the time and beat a 4-week T-bill 85%.
+Of 3-month holds started each day over the past year, dividends plus price change: STRC beat a 4-week T-bill 68% of the time and lost money 31% of the time (typical +3.1%); SATA beat a 4-week T-bill 85% of the time and lost money 10% of the time (typical +4.7%).
 
 ### What happens if bitcoin crashes?
 
-Measured from bitcoin's record, assets would equal what is owed after a fall of STRC at 90% ($12,643), SATA at 83% ($21,671) and SATS at 70% ($38,124). Today there is $3.59 behind each $1 owed for STRC, $2.18 behind each $1 owed for SATA and $1.45 behind each $1 owed for SATS. Cash set aside covers 2.7 years of the yearly bill at Strategy and 1.5 years of the yearly bill at Strive.
+Bitcoin could fall 79% (STRC), 64% (SATA) and 36% (SATS) from today's price before assets equal what is owed; from its record, 90%, 83% and 70%. Cash set aside covers 2.7 years of dividends and interest at Strategy and 1.5 years of dividends and interest at Strive.
 
-### Will it raise my bot's Sharpe ratio?
+### How are the dividends taxed?
 
-Over the past year, a bot with a Sharpe ratio of 1.0 would have ended at 1.05 to 1.08 by moving a quarter of its idle cash into STRC, if its trades swing 10% to 20% a year and do not move with STRC. STRC's own Sharpe ratio was 0.49.
+Strategy reported that 100% of its 2025 distributions on its preferred stock, STRC included, were a nontaxable return of capital, expects the same for the foreseeable future, and says this can change (2 Feb 2026, https://www.sec.gov/Archives/edgar/data/1050446/000119312526033573/mstr-ex99_1.htm). Strive reports it has no accumulated earnings and profits and expects none, so distributions on SATA and SATS are treated generally as a tax-deferred recovery of capital up to your tax basis (12 Nov 2026, https://www.sec.gov/Archives/edgar/data/0001920406/000162828026073033/asst-20261111.htm). Per the IRS, a return of capital lowers your cost basis; tax comes later, as a capital gain when you sell or once the basis reaches zero (https://www.irs.gov/taxtopics/tc404). This matters in a regular taxable account. Check your own situation.
 
-### Which cash does it fit?
+### Can I hold these in an IRA or HSA?
 
-Cash your trading agent won't need for a few months. Money needed tomorrow at an exact dollar amount belongs in a T-bill or money market fund. SATS has a fixed rate and no stated aim to keep the price near $100, so its price is free to move.
+They are ordinary Nasdaq-listed stocks, so a broker that offers an IRA or HSA with stock trading can hold them. Inside a traditional IRA, earnings are generally not taxed until they are taken out (https://www.irs.gov/publications/p590a); in an HSA, earnings on the assets are not taxed in the account (https://www.irs.gov/publications/p969). Rules on what comes out differ by account. The same holds for all three.
 
 ## Connect your agent
 
-Running your agent on Robinhood or Alpaca? Add DATproof alongside your broker connection. Your agent reads DATproof; trades still go through your own broker, with your approval.
+One line of setup. Your agent reads DATproof; any order goes through your own broker, placed by you.
 
     claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+
+Example. You ask: "I have $8,000 sitting idle for about three months. What are my options?"
+
+> At today's yields, dividends over three months on $8,000, before tax: STRC $241, SATA $283 and SATS $334. High-yield savings at 4.40% would earn about $87.
+
+> Past 3-month holds, dividends plus price change: STRC came out ahead 69% of the time (typical +3.1%, worst −22.5%); SATA came out ahead 90% of the time (typical +4.7%, worst −11.8%); SATS is too new; its results begin around 7 Apr 2027.
+
+> Prices move, and issuers can change the rates.
+
+> Here is where you can buy them: Coinbase, Interactive Brokers, Kraken (US), Public, Robinhood, SoFi and Webull.
+
+Example from today's data, 27 Nov 2026.
 
 - JSON feed: https://lucascashwell3-ai.github.io/datproof/v1/instruments.json
 - For AI readers: https://lucascashwell3-ai.github.io/datproof/llms.txt
 
-Every number is sourced and dated. Prices move and issuers set the rates. This is data, not personal advice.
+DATproof is an open-source data project; its code, data and method are public at https://github.com/lucascashwell3-ai/datproof, and questions or corrections go to https://github.com/lucascashwell3-ai/datproof/issues. It is free. It holds no money, places no orders and is not advice.

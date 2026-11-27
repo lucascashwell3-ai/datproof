@@ -30,8 +30,9 @@
     "as_of": "2026-11-13",
     "source": "https://strive.com/treasury/api/dashboard/calculated?fromDate=2026-11-20&toDate=2026-11-28",
     "fetched_at": "2026-11-27T19:39:00Z",
-    "stale": true,
-    "reason": null
+    "stale": false,
+    "reason": null,
+    "rate_set_on": "2026-11-13"
   },
   "yield_pct": {
     "value": 14.346,
@@ -41,7 +42,7 @@
       "stated_rate_pct",
       "close_usd"
     ],
-    "stale": true,
+    "stale": false,
     "reason": null
   },
   "worst_drop_pct": {
@@ -1077,8 +1078,7 @@
   "cross_check": "ok",
   "flags": [
     "price_moves",
-    "issuer_sets_rate",
-    "stale"
+    "issuer_sets_rate"
   ],
   "profile": {
     "issuer": "Strive",
@@ -1826,6 +1826,29 @@
     }
   ],
   "dividends_source": "https://api.nasdaq.com/api/quote/SATA/dividends?assetclass=stocks",
+  "avg_value_30d_usd": {
+    "value": 37487056,
+    "unit": "usd",
+    "formula": "avg_volume_30d * close_usd",
+    "inputs": [
+      "avg_volume_30d",
+      "close_usd"
+    ],
+    "as_of": "2026-11-25",
+    "stale": false,
+    "reason": null
+  },
+  "listing": {
+    "security_name": "Strive, Inc. Variable Rate Series A Perpetual Preferred Stock",
+    "exchange_code": "NASDAQ-GM",
+    "exchange": "Nasdaq Global Market",
+    "source": "https://api.nasdaq.com/api/quote/SATA/info?assetclass=stocks",
+    "as_of": "2026-11-27",
+    "cusip": null,
+    "isin": null,
+    "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)",
+    "fetched_at": "2026-11-27"
+  },
   "hold_odds": {
     "7": {
       "days": 7,
@@ -1839,6 +1862,8 @@
       "beat_tbill_pct": 64.2,
       "lost": 78,
       "lost_pct": 31.7,
+      "ahead": 166,
+      "ahead_pct": 67.5,
       "median_pct": 0.34,
       "worst_pct": -14.29,
       "worst_bought": "2026-06-18"
@@ -1855,6 +1880,8 @@
       "beat_tbill_pct": 69.0,
       "lost": 63,
       "lost_pct": 27.5,
+      "ahead": 166,
+      "ahead_pct": 72.5,
       "median_pct": 1.47,
       "worst_pct": -14.96,
       "worst_bought": "2026-05-26"
@@ -1871,6 +1898,8 @@
       "beat_tbill_pct": 85.1,
       "lost": 18,
       "lost_pct": 9.6,
+      "ahead": 170,
+      "ahead_pct": 90.4,
       "median_pct": 4.69,
       "worst_pct": -11.77,
       "worst_bought": "2026-08-24"
@@ -1887,13 +1916,16 @@
       "beat_tbill_pct": 89.7,
       "lost": 8,
       "lost_pct": 6.3,
+      "ahead": 118,
+      "ahead_pct": 93.7,
       "median_pct": 8.57,
       "worst_pct": -8.19,
       "worst_bought": "2026-05-26"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+      "first_results_around": "2027-02-24"
     }
   },
   "by_buy_price": {
@@ -2084,17 +2116,18 @@
     "example": {
       "bot_sharpe": 1.0,
       "cash_share": 0.6,
-      "slice_of_cash": 0.25,
+      "slice_of_cash": 1.0,
       "bot_swings_pct": [
         10.0,
         20.0
       ],
       "correlation": 0.0,
-      "slice_of_account": 0.15,
+      "slice_of_account": 0.6,
       "sharpe_by_bot_swings": {
-        "10": 1.07,
-        "20": 1.05
-      }
+        "10": 0.87,
+        "20": 1.03
+      },
+      "extra_return_points": 5.52
     }
   },
   "backing": {
@@ -2111,6 +2144,7 @@
     "below_today_pct": 63.9,
     "below_record_pct": 82.8,
     "cash_years": 1.5,
+    "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
     "cash_years_basis": "Strive's own stated dividend reserve, in months / 12",
     "inputs": {
       "btc_usd": {

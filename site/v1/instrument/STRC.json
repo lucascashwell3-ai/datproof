@@ -1411,6 +1411,29 @@
     }
   ],
   "dividends_source": "https://api.nasdaq.com/api/quote/STRC/dividends?assetclass=stocks",
+  "avg_value_30d_usd": {
+    "value": 212794928,
+    "unit": "usd",
+    "formula": "avg_volume_30d * close_usd",
+    "inputs": [
+      "avg_volume_30d",
+      "close_usd"
+    ],
+    "as_of": "2026-11-25",
+    "stale": false,
+    "reason": null
+  },
+  "listing": {
+    "security_name": "Strategy Inc Variable Rate Series A Perpetual Stretch Preferred Stock",
+    "exchange_code": "NASDAQ-GS",
+    "exchange": "Nasdaq Global Select Market",
+    "source": "https://api.nasdaq.com/api/quote/STRC/info?assetclass=stocks",
+    "as_of": "2026-11-27",
+    "cusip": null,
+    "isin": null,
+    "id_reason": "not published: not printed in the filings read (STRC prospectus supplement of 24 Jul 2025; SATA and SATS certificates of designation filed with Form 8-A, which leave them blank; SATA prospectus supplement of 6 Nov 2026)",
+    "fetched_at": "2026-11-27"
+  },
   "hold_odds": {
     "7": {
       "days": 7,
@@ -1424,6 +1447,8 @@
       "beat_tbill_pct": 61.0,
       "lost": 64,
       "lost_pct": 26.0,
+      "ahead": 176,
+      "ahead_pct": 71.5,
       "median_pct": 0.25,
       "worst_pct": -14.56,
       "worst_bought": "2026-06-18"
@@ -1440,6 +1465,8 @@
       "beat_tbill_pct": 75.1,
       "lost": 46,
       "lost_pct": 20.1,
+      "ahead": 183,
+      "ahead_pct": 79.9,
       "median_pct": 1.05,
       "worst_pct": -23.84,
       "worst_bought": "2026-05-27"
@@ -1456,6 +1483,8 @@
       "beat_tbill_pct": 67.6,
       "lost": 58,
       "lost_pct": 30.9,
+      "ahead": 130,
+      "ahead_pct": 69.1,
       "median_pct": 3.14,
       "worst_pct": -22.53,
       "worst_bought": "2026-03-30"
@@ -1472,13 +1501,16 @@
       "beat_tbill_pct": 62.7,
       "lost": 33,
       "lost_pct": 26.2,
+      "ahead": 93,
+      "ahead_pct": 73.8,
       "median_pct": 3.5,
       "worst_pct": -18.92,
       "worst_bought": "2025-12-30"
     },
     "365": {
       "days": 365,
-      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed"
+      "reason": "not enough history: 0 past holds of 365 days fit in 251 trading days of closes; 60 are needed",
+      "first_results_around": "2027-02-24"
     }
   },
   "by_buy_price": {
@@ -1669,17 +1701,18 @@
     "example": {
       "bot_sharpe": 1.0,
       "cash_share": 0.6,
-      "slice_of_cash": 0.25,
+      "slice_of_cash": 1.0,
       "bot_swings_pct": [
         10.0,
         20.0
       ],
       "correlation": 0.0,
-      "slice_of_account": 0.15,
+      "slice_of_account": 0.6,
       "sharpe_by_bot_swings": {
-        "10": 1.08,
-        "20": 1.05
-      }
+        "10": 0.93,
+        "20": 1.06
+      },
+      "extra_return_points": 5.58
     }
   },
   "backing": {
@@ -1698,6 +1731,7 @@
     "below_today_pct": 78.9,
     "below_record_pct": 90.0,
     "cash_years": 2.65,
+    "cash_years_meaning": "cash set aside for dividends and interest, in years of the yearly bill; not the issuer's own years-covered figure, which counts bitcoin too",
     "cash_years_basis": "USD Reserve set aside for dividends and interest / Strategy's own yearly bill (all dividends plus interest)",
     "inputs": {
       "btc_usd": {

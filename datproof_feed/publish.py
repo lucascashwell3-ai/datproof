@@ -21,6 +21,100 @@ from datproof_feed import backing, scenarios
 from datproof_feed.compare import METHOD, _tbill_pct, buy_price_table, hold_odds_table, sharpe_table
 
 MAX_CHANGES = 90
+DATA = pathlib.Path(__file__).resolve().parents[1] / "data"
+LISTINGS_FILE = DATA / "instrument_listings.json"
+RATES_FILE = DATA / "comparison_rates.json"      # written daily by python -m datproof_feed.rates
+BROKERS_FILE = DATA / "where_to_buy.json"        # written daily by python -m datproof_feed.brokers
+PROFILES_FILE = DATA / "instrument_profiles.json"  # tax_statements: issuers' and the IRS's own words
+RATE_RESET_DAYS = 35  # a monthly-reset rate is only out of date once a reset has been missed
+STALE_DAYS = 4
+
+
+def _days(a: str, b: str) -> int:
+    import datetime as dt
+    return (dt.date.fromisoformat(str(b)[:10]) - dt.date.fromisoformat(str(a)[:10])).days
+
+
+def tidy(ins: dict, date: str, listings: dict) -> dict:
+    """Facts the day file states too bluntly, set right at publish time:
+    - a monthly-reset rate (variable rate, set by the issuer each month) is not out of date between resets;
+    - a fixed-rate issue is flagged fixed_rate, not issuer_sets_rate;
+    - the 30-day average trading value in dollars;
+    - where the issue is listed and its full security name."""
+    ins = {**ins}
+    prof = ins.get("profile") or {}
+    rate_type = (prof.get("rate_type") or {}).get("value")
+    rate = ins.get("stated_rate_pct")
+    if isinstance(rate, dict) and rate.get("as_of") and rate_type == "variable" and ins.get("issuer") == "Strive":
+        rate = {**rate, "rate_set_on": rate["as_of"], "stale": _days(rate["as_of"], date) > RATE_RESET_DAYS}
+        ins["stated_rate_pct"] = rate
+        y = ins.get("yield_pct")
+        if isinstance(y, dict):
+            close = ins.get("close_usd") or {}
+            ins["yield_pct"] = {**y, "stale": bool(rate["stale"] or close.get("stale"))}
+    flags = list(ins.get("flags") or [])
+    if rate_type == "fixed":
+        flags = ["fixed_rate" if f == "issuer_sets_rate" else f for f in flags]
+    if "stale" in flags and not any(isinstance(v, dict) and v.get("stale") for v in ins.values()):
+        flags.remove("stale")
+    ins["flags"] = flags
+    vol, close = ins.get("avg_volume_30d"), ins.get("close_usd")
+    if isinstance(vol, dict) and isinstance(close, dict):
+        v = vol.get("value") * close.get("value") if vol.get("value") is not None and close.get("value") is not None else None
+        ins["avg_value_30d_usd"] = {"value": round(v) if v is not None else None, "unit": "usd",
+                                    "formula": "avg_volume_30d * close_usd", "inputs": ["avg_volume_30d", "close_usd"],
+                                    "as_of": vol.get("as_of"), "stale": bool(vol.get("stale")),
+                                    "reason": None if v is not None else "volume or close not available"}
+    lst = (listings.get("instruments") or {}).get(ins.get("ticker"))
+    if lst:
+        ins["listing"] = {**lst, "fetched_at": listings.get("read_on")}
+    return ins
+
+
+def _read(path: pathlib.Path) -> dict:
+    try:
+        return json.loads(path.read_text())
+    except Exception:  # noqa: BLE001 - side files are extra; their absence must not stop the feed
+        return {}
+
+
+def side_files() -> dict:
+    """The dated side files joined into instruments.json: comparison rates, where to buy, tax statements.
+    Each keeps its own dates; a missing file leaves its key out."""
+    from datproof_feed import brokers
+    out = {}
+    rates = _read(RATES_FILE)
+    if rates.get("rates"):
+        out["comparison_rates"] = {"fetched_at": rates.get("fetched_at"), "rates": rates["rates"],
+                                   "failed_checks": rates.get("failed_checks") or []}
+    buy = _read(BROKERS_FILE)
+    if buy.get("brokers"):
+        out["where_to_buy"] = {"checked_on": buy.get("checked_on"), "tickers": buy.get("tickers"),
+                               "settlement": buy.get("settlement"), "brokers": brokers.shown(buy)}
+    static = _read(DATA / "backing_static.json").get("comparison")
+    if static:
+        out["_backing_comparison"] = static
+    prof = _read(PROFILES_FILE)
+    for key in ("tax_statements", "insurance"):
+        if prof.get(key):
+            out[key] = prof[key]
+    return out
+
+
+def _coverage_meanings(snap: dict) -> dict:
+    cov = snap.get("coverage")
+    if not isinstance(cov, dict):
+        return snap
+    issuers = []
+    for c in cov.get("issuers") or []:
+        c = {**c}
+        y = c.get("years_of_dividends_covered")
+        if isinstance(y, dict):
+            c["years_of_dividends_covered"] = {**y, "meaning": (
+                "the issuer's own figure: years of dividends its bitcoin and cash together would pay at today's "
+                "bitcoin price. Not the same as backing.cash_years, which counts only cash set aside.")}
+        issuers.append(c)
+    return {**snap, "coverage": {**cov, "issuers": issuers}}
 
 
 def _dump(obj) -> str:
@@ -72,12 +166,26 @@ def publish(snap: dict, out, prev: dict | None) -> None:
 
     tbill = _tbill_pct(snap)
     crash = backing.table(snap.get("backing"))
+    try:
+        listings = json.loads(LISTINGS_FILE.read_text())
+    except Exception:  # noqa: BLE001 - listings are extra; their absence must not stop the feed
+        listings = {}
+    snap = _coverage_meanings({**snap, "instruments": [tidy(i, snap["date"], listings) for i in snap.get("instruments", [])]})
+    side = side_files()
+    cmp_rows = side.pop("_backing_comparison", None)
+    if cmp_rows and isinstance(snap.get("backing"), dict) and isinstance(snap["backing"].get("static"), dict):
+        # the comparison rows are reference figures, not day data: the current file wins
+        snap = {**snap, "backing": {**snap["backing"], "static": {**snap["backing"]["static"], "comparison": cmp_rows}}}
+    snap = {**snap, **side}
     full = [{**i, "hold_odds": hold_odds_table(i, tbill), "by_buy_price": buy_price_table(i),
              "sharpe": sharpe_table(i, tbill),
              **({"backing": crash[i["ticker"]]} if i["ticker"] in crash else {})}
             for i in snap.get("instruments", [])]
     lean = {**snap, "instruments": [{k: v for k, v in i.items() if k not in ("dividends", "closes")}
                                     for i in full]}
+    if lean.get("comparison_rates"):
+        from datproof_feed.compare import situation
+        lean["situation_default"] = situation(lean)  # the worked example the page writes in
     (out / "instruments.json").write_text(_dump(lean))
     for ins in full:
         (out / "instrument" / f"{ins['ticker']}.json").write_text(_dump({"date": snap["date"], **ins}))

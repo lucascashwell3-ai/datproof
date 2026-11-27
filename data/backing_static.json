@@ -89,28 +89,6 @@
         "source": "https://www.sec.gov/Archives/edgar/data/1655888/000165588826000069/obdc-20260930.htm"
       },
       {
-        "name": "AT&T",
-        "ticker": "T",
-        "kind": "corporate bonds",
-        "value": 1.38,
-        "as_of": "2026-09-30",
-        "assets_usd": 445900000000.0,
-        "owed_usd": 323100000000.0,
-        "basis": "total assets / (total assets - equity including noncontrolling interest), 10-Q",
-        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000732717.json"
-      },
-      {
-        "name": "Verizon",
-        "ticker": "VZ",
-        "kind": "corporate bonds",
-        "value": 1.35,
-        "as_of": "2026-09-30",
-        "assets_usd": 415500000000.0,
-        "owed_usd": 308200000000.0,
-        "basis": "total assets / total liabilities, 10-Q",
-        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000732712.json"
-      },
-      {
         "name": "US credit unions",
         "kind": "federally insured credit unions",
         "value": 1.13,
