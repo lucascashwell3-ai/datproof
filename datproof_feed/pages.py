@@ -135,6 +135,10 @@ def lead(feed: dict) -> list[dict]:
 
 
 def tbill(feed: dict) -> float | None:
+    """The 4-week T-bill: the comparison rate when the feed has one, else the day file's benchmark."""
+    for r in ((feed.get("comparison_rates") or {}).get("rates") or []):
+        if r.get("id") == "tbill_4w" and val(r.get("yield_pct")) is not None:
+            return val(r["yield_pct"])
     return val((bench(feed, "tbill_4w") or {}).get("yield_pct"))
 
 
@@ -319,9 +323,7 @@ def panels_note(feed: dict) -> str:
     yrs = [past_year(i) for i in lead(feed) if past_year(i)]
     if not yrs:
         return ""
-    tb = tbill(feed)
-    return (f"Past year: {day(yrs[0]['from'])} to {day(yrs[0]['to'])} closes, with every dividend paid."
-            + (f" A 4-week T-bill pays {pct(tb, 2)} a year today." if tb is not None else ""))
+    return f"Past year: {day(yrs[0]['from'])} to {day(yrs[0]['to'])}."
 
 
 def rows(feed: dict) -> list[dict]:
@@ -369,20 +371,18 @@ def rate_sources(feed: dict) -> list[tuple[str, str, str | None]]:
 
 
 def compare_fine(feed: dict, html_links: bool) -> str:
-    s = (panels_note(feed) + " " if panels_note(feed) else "") + "Yield = the yearly dividend on $100 divided by today's price. Before tax."
+    s = ("Digital credit is dividends only, before tax, price change left out; yield = yearly dividend on $100 / today's price. "
+         + (panels_note(feed) + " " if panels_note(feed) else ""))
     inf = inflation(feed)
     if inf:
-        s += (f" After inflation subtracts US CPI, {pct(inf['value'])} for the 12 months to "
-              f"{MONTHS_LONG[int(inf['month'][5:7]) - 1]} {inf['month'][:4]}.")
+        s += f"Inflation {pct(inf['value'])} (US CPI, {MONTHS[int(inf['month'][5:7]) - 1]} {inf['month'][:4]}). "
     src = rate_sources(feed)
     if src:
+        short = [(lbl.split(" ")[0] if lbl != "US Treasury" else "Treasury", u, d) for lbl, u, d in src]
         if html_links:
-            s = e(s) + " Rates: " + "; ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a> {e(day(d))}' for lbl, u, d in src) + "."
-        else:
-            s += " Rates: " + "; ".join(f"{lbl} {day(d)} ({u})" for lbl, u, d in src) + "."
-    elif html_links:
-        s = e(s)
-    return s
+            return e(s) + "Rates: " + ", ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a> {e(day(d)[:-5])}' for lbl, u, d in short) + "."
+        return s + "Rates: " + ", ".join(f"{lbl} {day(d)[:-5]} ({u})" for lbl, u, d in short) + "."
+    return e(s.strip()) if html_links else s.strip()
 
 
 def compare_block(feed: dict) -> str:
@@ -626,16 +626,15 @@ def lift_bars(feed: dict) -> str:
         out += (f'<div class="lf-row{" dc" if dc else ""}"><p class="lf-name">{e(nm[0].upper() + nm[1:])}</p>'
                 f'<div class="lf-bar"><span class="lf-seg trade" style="width:{tw}%"><span>Trading {usd(trade)}</span></span>'
                 f'<span class="lf-seg cash" style="width:{cw}%"><span>Idle cash {usd(cash)}</span></span></div>'
-                f'<p class="lf-n num">+{usd(cash * y / 100)}<small>a year</small></p></div>')
+                f'<p class="lf-n num">+{usd(cash * y / 100)}<small>{"a year in dividends" if dc else "a year in interest"}</small></p></div>')
     return out
 
 
 def lift_line(feed: dict) -> str:
     label, r, d = comparison_name(feed)
     dc = lead(feed)
-    s = (f"A {usd(AMOUNT)} account, {rnd(CASH_SHARE * 100)}% idle, at today's rates, before tax: {label} at "
-         f"{pct(r, 2)} ({day(d)}) against the average yield of {names([i['ticker'] for i in dc])}, {pct(avg_yield(feed))}.")
-    return s
+    return (f"{usd(AMOUNT)} account, {rnd(CASH_SHARE * 100)}% idle, before tax: {label} {pct(r, 2)} against dividends at the "
+            f"average yield of {names([i['ticker'] for i in dc])}, {pct(avg_yield(feed))}, price change left out.")
 
 
 def sharpe_line(feed: dict) -> str:
@@ -644,13 +643,12 @@ def sharpe_line(feed: dict) -> str:
         return ""
     ex = rs[0]["ex"]
     sw = ex.get("bot_swings_pct") or [10, 20]
-    worked = [f"{r['ticker']}, {fixed(r['lo'], 2)} to {fixed(r['hi'], 2)} and {fixed(r['extra'], 1)} points more return"
+    worked = [f"{r['ticker']} {fixed(r['lo'], 2)}–{fixed(r['hi'], 2)}, +{fixed(r['extra'], 1)} points"
               for r in rs if r["extra"] is not None]
     own = [f"{r['ticker']} {fixed(r['sharpe'], 2)}" for r in rs]
-    return (f"Past year, {day(rs[0]['from'])} to {day(rs[0]['to'])}: a bot with a Sharpe ratio of "
-            f"{fixed(ex.get('bot_sharpe', 1.0), 1)}, {rnd(ex.get('cash_share', 0.6) * 100)}% in cash, putting all of that cash in: "
-            f"{'; '.join(worked)}. Assumes the bot's own swings of {fixed(min(sw))}% to {fixed(max(sw))}% a year do not "
-            f"move with the stock. On their own: {names(own)}.")
+    return (f"Past year, a Sharpe-{fixed(ex.get('bot_sharpe', 1.0), 1)} bot {rnd(ex.get('cash_share', 0.6) * 100)}% in cash, "
+            f"all of it in: {'; '.join(worked)} (own: {names(own)}). Assumes its swings of {fixed(min(sw))}–{fixed(max(sw))}% "
+            "a year do not move with the stock.")
 
 
 def lift_block(feed: dict) -> str:
@@ -730,13 +728,12 @@ def crash_rule(feed: dict, rows: list[dict]) -> str:
     debt = (st.get("strategy") or {}).get("debt_usd") or {}
     iss = list(dict.fromkeys(r["issuer"] for r in rows))
     held = [f"{i} {day((ins.get(f'{i.lower()}_btc_held') or {}).get('as_of'))}" for i in iss]
-    s = "The fall is to the bitcoin price where assets would equal what is owed, at stated amounts."
+    s = "Fall to where assets equal what is owed, at stated amounts."
     if price:
-        s += f" Bitcoin {usd(price)} on {day(pd)}" + (f", record {usd(record)}." if record else ".")
+        s += f" Bitcoin {usd(price)} ({day(pd)})" + (f", record {usd(record)}." if record else ".")
     if held:
-        s += " Bitcoin and cash from each issuer's dashboard (" + ", ".join(held) + ")"
-        s += (f"; Strategy debt {billions(debt['value'], 2)} from its 10-Q, {day(debt.get('as_of'))}." if debt.get("value") else ".")
-    s += " Other rows from each filing's balance sheet, on the dates shown."
+        s += " Holdings from issuer dashboards" + (f", Strategy debt from its 10-Q ({day(debt.get('as_of'))})" if debt.get("value") else "")
+        s += ", other rows from filings as dated."
     return s
 
 
@@ -869,11 +866,11 @@ def sit_rows(s: dict) -> list[tuple[str, list[str], list[str]]]:
     """(row label, big figures, small lines) per row, one figure per column."""
     cols, cn = s["columns"], s["cash_now"]
     hold = s["inputs"]["hold"]
-    rws = [(f"Dividends over {hold}", [usd(c["dividends_usd"]) if c["dividends_usd"] is not None else "not available" for c in cols],
+    rws = [(f"Dividends over {hold}", [usd(c["dividends_usd"], 2) if c["dividends_usd"] is not None else "not available" for c in cols],
             [f"at {pct(c['yield_pct'])} a year today" if c["yield_pct"] is not None else "" for c in cols]),
-           (f"{cn['label'].split(',')[0]} earns", [usd(c["cash_now_usd"]) if c["cash_now_usd"] is not None else "not available" for c in cols],
+           (f"{cn['label'].split(',')[0]} earns", [usd(c["cash_now_usd"], 2) if c["cash_now_usd"] is not None else "not available" for c in cols],
             [f"at {pct(cn['rate_pct'], 2)}" if cn["rate_pct"] is not None else (cn.get("reason") or "") for c in cols]),
-           ("Difference", [("+" if c["difference_usd"] >= 0 else "−") + usd(abs(c["difference_usd"])) if c["difference_usd"] is not None else "not available" for c in cols],
+           ("Difference", [("+" if c["difference_usd"] >= 0 else "−") + usd(abs(c["difference_usd"]), 2) if c["difference_usd"] is not None else "not available" for c in cols],
             ["" for c in cols])]
     pc = [past_cell(c["past_holds"]) for c in cols]
     rws.append((f"Past {HOLD_ADJ.get(hold, hold)} holds", [a for a, _ in pc], [b for _, b in pc]))

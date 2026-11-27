@@ -131,8 +131,8 @@ def test_bad_inputs_raise_value_error(feed, kw, msg):
 
 # ---------- the page writes the same figures ----------
 
-def usd0(x) -> str:
-    return "$" + f"{Decimal(str(x)).quantize(Decimal(1), rounding=ROUND_HALF_UP):,}"
+def usd2(x) -> str:
+    return "$" + f"{Decimal(str(x)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP):,}"
 
 
 def page_mismatches(rendered_html: str, feed: dict) -> list[str]:
@@ -146,9 +146,9 @@ def page_mismatches(rendered_html: str, feed: dict) -> list[str]:
     cols = s["columns"]
     cash = s["cash_now"]["label"].split(",")[0]
     want = {
-        "Dividends over 3 months": [usd0(c["dividends_usd"]) for c in cols],
-        f"{cash} earns": [usd0(c["cash_now_usd"]) for c in cols],
-        "Difference": [("+" if c["difference_usd"] >= 0 else "−") + usd0(abs(c["difference_usd"])) for c in cols],
+        "Dividends over 3 months": [usd2(c["dividends_usd"]) for c in cols],
+        f"{cash} earns": [usd2(c["cash_now_usd"]) for c in cols],
+        "Difference": [("+" if c["difference_usd"] >= 0 else "−") + usd2(abs(c["difference_usd"])) for c in cols],
         "Whole shares": [f"{c['whole_shares']:,}" for c in cols],
     }
     out = [f"{label}: {row(label)} != {w}" for label, w in want.items() if row(label) != w]
@@ -169,7 +169,7 @@ def test_the_page_check_catches_a_changed_figure_and_a_swapped_order():
     import test_feed_pages as tp
     feed = tp.make_feed()
     rendered = pages.render(tp.loaded(feed), tp.NEXT_HTML)["next/index.html"]
-    first = re.search(r'<span class="st-n num">(\$[\d,]+)</span>', rendered).group(1)
+    first = re.search(r'<span class="st-n num">(\$[\d,.]+)</span>', rendered).group(1)
     wrong = rendered.replace(f'<span class="st-n num">{first}</span>', '<span class="st-n num">$1</span>', 1)
     assert page_mismatches(wrong, feed) != []
     start = rendered.index("<!--feed:situation-->")

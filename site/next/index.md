@@ -23,7 +23,7 @@ Prices at the 25 Nov 2026 close · data for 27 Nov 2026. Page with charts: https
 | 4-week T-bill | 4.19% | 27 Nov 2026 | $419 | +0.5% |
 | Municipal bond fund | 3.81% | 25 Nov 2026 | $381 | +0.1% |
 
-Past year: 26 Nov 2025 to 25 Nov 2026 closes, with every dividend paid. A 4-week T-bill pays 4.19% a year today. Yield = the yearly dividend on $100 divided by today's price. Before tax. After inflation subtracts US CPI, 3.7% for the 12 months to September 2026. Rates: FDIC 16 Nov 2026 (https://www.fdic.gov/national-rates-and-rate-caps); Bankrate 27 Nov 2026 (https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/); Fidelity SPAXX 7-day yield 25 Nov 2026 (https://www.fidelity.com/investing/cash-management); US Treasury 27 Nov 2026 (https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611); iShares MUB 30-day SEC yield 25 Nov 2026 (https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub).
+Digital credit is dividends only, before tax, price change left out; yield = yearly dividend on $100 / today's price. Past year: 26 Nov 2025 to 25 Nov 2026. Inflation 3.7% (US CPI, Sep 2026). Rates: FDIC 16 Nov (https://www.fdic.gov/national-rates-and-rate-caps), Bankrate 27 Nov (https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/), Fidelity 25 Nov (https://www.fidelity.com/investing/cash-management), Treasury 27 Nov (https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611), iShares 25 Nov (https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub).
 
 ## Sell any trading day
 
@@ -62,7 +62,7 @@ Closes from 26 Nov 2025 to 27 Nov 2026.
 
 ## About 6 points more return a year, about the same Sharpe ratio
 
-A $10,000 account, 60% idle, at today's rates, before tax: high-yield savings at 4.40% (27 Nov 2026) against the average yield of STRC, SATA and SATS, 14.5%. Past year, 26 Nov 2025 to 25 Nov 2026: a bot with a Sharpe ratio of 1.0, 60% in cash, putting all of that cash in: STRC, 0.93 to 1.06 and 5.6 points more return; SATA, 0.87 to 1.03 and 5.5 points more return. Assumes the bot's own swings of 10% to 20% a year do not move with the stock. On their own: STRC 0.49 and SATA 0.47.
+$10,000 account, 60% idle, before tax: high-yield savings 4.40% against dividends at the average yield of STRC, SATA and SATS, 14.5%, price change left out. Past year, a Sharpe-1.0 bot 60% in cash, all of it in: STRC 0.93–1.06, +5.6 points; SATA 0.87–1.03, +5.5 points (own: STRC 0.49 and SATA 0.47). Assumes its swings of 10–20% a year do not move with the stock.
 
 ## Backed by bitcoin and cash
 
@@ -85,7 +85,7 @@ Assets behind each $1 owed, counting everything ahead in line.
 | SATA | 64%, to $21,671 | 83% | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
 | SATS | 36%, to $38,124 | 70% | 1.5 years (Strive's stated 18 months, 20 Nov 2026) |
 
-Municipal bonds have no such figure: they are backed by taxing power or project revenue, not by a pool of assets. The fall is to the bitcoin price where assets would equal what is owed, at stated amounts. Bitcoin $59,955 on 27 Nov 2026, record $126,080. Bitcoin and cash from each issuer's dashboard (Strategy 27 Nov 2026, Strive 13 Nov 2026); Strategy debt $6.75B from its 10-Q, 30 Sep 2026. Other rows from each filing's balance sheet, on the dates shown.
+Municipal bonds have no such figure: they are backed by taxing power or project revenue, not by a pool of assets. Fall to where assets equal what is owed, at stated amounts. Bitcoin $59,955 (27 Nov 2026), record $126,080. Holdings from issuer dashboards, Strategy debt from its 10-Q (30 Sep 2026), other rows from filings as dated.
 
 ## What can go wrong
 
@@ -105,9 +105,9 @@ Worked example: $10,000 that can sit for 3 months, now in high-yield savings. Th
 
 | | STRC | SATA | SATS |
 |---|---|---|---|
-| Dividends over 3 months | $302 (at 12.2% a year today) | $354 (at 14.3% a year today) | $418 (at 16.9% a year today) |
-| High-yield savings earns | $108 (at 4.40%) | $108 (at 4.40%) | $108 (at 4.40%) |
-| Difference | +$193 | +$245 | +$309 |
+| Dividends over 3 months | $301.81 (at 12.2% a year today) | $353.74 (at 14.3% a year today) | $417.92 (at 16.9% a year today) |
+| High-yield savings earns | $108.49 (at 4.40%) | $108.49 (at 4.40%) | $108.49 (at 4.40%) |
+| Difference | +$193.32 | +$245.25 | +$309.43 |
 | Past 3-month holds | 69% (came out ahead · typical +3.1% · worst −22.5%) | 90% (came out ahead · typical +4.7% · worst −11.8%) | No record yet; results begin around 7 Apr 2027. |
 | Whole shares | 101 (at $98.04, $1.96 under $100) | 110 (at $90.62, $9.38 under $100) | 112 (at $88.50, $11.50 under $100) |
 

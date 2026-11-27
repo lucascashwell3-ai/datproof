@@ -31,3 +31,26 @@ def test_the_layer_check_catches_a_planted_second_line():
     planted = PAGE.replace('<h2 id="h-risk">What can go wrong</h2>',
                            '<h2 id="h-risk">What can go wrong</h2><p class="fine">one</p><p class="fine">two</p>')
     assert any(s.startswith("risk:") for s in too_many(planted))
+
+
+MAX_SOURCE_LINE = 380  # characters: a short line, not a paragraph
+
+
+def long_lines(page: str) -> list[str]:
+    import html as h
+    out = []
+    for m in re.finditer(r'<p class="fine[^"]*"[^>]*>(.*?)</p>', page, re.S):
+        text = h.unescape(re.sub(r"<[^>]+>", "", m.group(1)))
+        if len(text) > MAX_SOURCE_LINE:
+            out.append(text[:60])
+    return out
+
+
+def test_source_lines_are_short():
+    assert long_lines(PAGE) == []
+
+
+def test_the_length_check_catches_a_planted_paragraph():
+    planted = PAGE.replace('<h2 id="h-risk">What can go wrong</h2>',
+                           '<h2 id="h-risk">What can go wrong</h2><p class="fine">' + "word " * 100 + "</p>")
+    assert long_lines(planted)

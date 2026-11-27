@@ -667,7 +667,8 @@
       function X(iso) { return ml + (Date.parse(iso) - t0) / (t1 - t0) * (W - ml - mr); }
       function Y(p) { return mt + (hi - p) / (hi - lo) * ph; }
       var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
-      svg.appendChild(el("rect", { x: ml, y: Y(105), width: W - ml - mr, height: Y(95) - Y(105), class: "c-band" }));
+      // The $95 to $105 band only for issues whose issuer states it aims to keep the price near $100.
+      if ((o.i.by_buy_price || {}).issuer_aims_price_near_100) svg.appendChild(el("rect", { x: ml, y: Y(105), width: W - ml - mr, height: Y(95) - Y(105), class: "c-band" }));
       for (var p = lo; p <= hi; p += 10) {
         if (p === 100) continue;
         svg.appendChild(el("line", { x1: ml, x2: W - mr, y1: Y(p), y2: Y(p), class: "c-grid" }));
@@ -713,7 +714,7 @@
   var HOLDS = { "1 month": 30, "3 months": 90, "6 months": 180, "1 year": 365 };
   var HOLD_ADJ = { "1 month": "1-month", "3 months": "3-month", "6 months": "6-month", "1 year": "1-year" };
   function sgn(x) { return (x >= 0 ? "+" : "\u2212") + f1(Math.abs(x)) + "%"; }
-  function money2(x) { return (x >= 0 ? "+" : "\u2212") + usd(Math.abs(x)); }
+  function money2(x) { return (x >= 0 ? "+" : "\u2212") + usd(Math.abs(x), 2); }
   function rateNode(id) { return ((feed.comparison_rates || {}).rates || []).filter(function (x) { return x.id === id; })[0]; }
   function renderSit() {
     var amount = parseNum($("#in-amount").value), hold = $("#in-hold").value, sits = $("#in-sits").value;
@@ -729,8 +730,8 @@
     function row(lbl, f) { return '<tr><th scope="row">' + esc(lbl) + "</th>" + cols.map(function (i) { var c = f(i); return cell(i.ticker, c[0], c[1]); }).join("") + "</tr>"; }
     function div(i) { var y = v(i.yield_pct); return y === null ? null : Math.round(amount * y / 100 * days / 365 * 100) / 100; }
     var body =
-      row("Dividends over " + hold, function (i) { var d = div(i); return d === null ? ["not available", ""] : [usd(d), "at " + f1(v(i.yield_pct)) + "% a year today"]; }) +
-      row(label + " earns", function () { return cash === null ? ["not available", rn.yield_pct && rn.yield_pct.reason || ""] : [usd(cash), "at " + n(rate, 2) + "%"]; }) +
+      row("Dividends over " + hold, function (i) { var d = div(i); return d === null ? ["not available", ""] : [usd(d, 2), "at " + f1(v(i.yield_pct)) + "% a year today"]; }) +
+      row(label + " earns", function () { return cash === null ? ["not available", rn.yield_pct && rn.yield_pct.reason || ""] : [usd(cash, 2), "at " + n(rate, 2) + "%"]; }) +
       row("Difference", function (i) { var d = div(i); return d === null || cash === null ? ["not available", ""] : [money2(Math.round((d - cash) * 100) / 100), ""]; }) +
       row("Past " + HOLD_ADJ[hold] + " holds", function (i) {
         var o = (i.hold_odds || {})[String(days)] || {};

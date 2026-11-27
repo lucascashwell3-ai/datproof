@@ -293,6 +293,10 @@ def usd0(x) -> str:
     return "$" + hu(x, 0)
 
 
+def usd2(x) -> str:
+    return "$" + hu(x, 2)
+
+
 # ---------- every printed figure equals the feed's ----------
 
 def expected_figures(feed: dict) -> list[str]:
@@ -376,8 +380,9 @@ def test_the_comparison_names_each_rate_in_order_with_its_source(tmp_path):
     assert names_ == ["STRC", "SATA", "SATS"] + [r[2] for r in RATE_ROWS]
     assert "national average 1.81%" in html_  # the CD average is the second line of the CD row, not its own row
     assert "Broker cash" not in region(html_, "compare") and "| Broker cash" not in f["next/index.md"]
-    for src in ("FDIC", "Bankrate", "Fidelity SPAXX 7-day yield", "US Treasury", "iShares MUB 30-day SEC yield"):
-        assert src in f["next/index.md"], src
+    line = next(ln for ln in f["next/index.md"].splitlines() if "Rates:" in ln)
+    order = [line.index(x) for x in ("FDIC 16 Nov", "Bankrate 22 Nov", "Fidelity 20 Nov", "Treasury 22 Nov", "iShares 20 Nov")]
+    assert order == sorted(order)
     assert 'href="https://example.com/rates/hys_top"' in html_
 
 
@@ -504,7 +509,7 @@ def test_after_inflation_is_yield_minus_cpi(tmp_path):
     files = outputs(site)
     assert inflation_mismatches(files, make_feed()) == []
     note = text_of(region(files["next/index.html"], "compare"))
-    assert "3.7%" in note and "September 2026" in note
+    assert "3.7%" in note and "Sep 2026" in note
 
 
 def test_inflation_check_catches_a_wrong_subtraction(tmp_path, monkeypatch):
@@ -662,7 +667,7 @@ def test_crash_section_shows_all_three_by_one_rule_with_dates(tmp_path):
     assert names_in_order == ["STRC", "SATA", "Ares Capital", "Blue Owl Capital", "SATS", "US banks"]  # ranked
     assert "Municipal bonds have no such figure" in text
     assert "$57.1B of bitcoin and cash" in text  # the dollar value beside the per-$1 figure
-    for fig in ("$61,425", "26 Nov 2026", "$126,080", "$6.75B", "30 Sep 2026", "$3.73B", "18 months", "20 Nov 2026"):
+    for fig in ("$61,425", "26 Nov 2026", "$126,080", "10-Q", "30 Sep 2026", "$3.73B", "18 months", "20 Nov 2026"):
         assert fig in text, fig
     # the bitcoin-falls sentence lives in What can go wrong, not here
     assert "Bitcoin has fallen" not in text
@@ -787,7 +792,7 @@ def sharpe_mismatches(files: dict[str, str], feed: dict) -> list[str]:
     for i in feed["instruments"][:2]:
         s = i["sharpe"]
         ex = s["example"]["sharpe_by_bot_swings"]
-        want = [f"{i['ticker']}, {min(ex.values()):.2f} to {max(ex.values()):.2f} and {hu(s['example']['extra_return_points'], 1)} points more return",
+        want = [f"{i['ticker']} {min(ex.values()):.2f}–{max(ex.values()):.2f}, +{hu(s['example']['extra_return_points'], 1)} points",
                 f"{i['ticker']} {s['sharpe']:.2f}"]
         for rel in PAGE_FILES:
             for w in want:
@@ -809,10 +814,10 @@ def test_sharpe_figures_equal_the_feed(tmp_path):
 def test_sharpe_check_catches_a_planted_wrong_value(tmp_path):
     code, site = build(tmp_path)
     files = outputs(site)
-    files["next/index.html"] = files["next/index.html"].replace("1.06 to 1.09", "1.16 to 1.19")
-    files["next/index.md"] = files["next/index.md"].replace("5.6 points", "5.9 points")
+    files["next/index.html"] = files["next/index.html"].replace("1.06–1.09", "1.16–1.19")
+    files["next/index.md"] = files["next/index.md"].replace("+5.6 points", "+5.9 points")
     found = sharpe_mismatches(files, make_feed())
-    assert any("index.html" in m and "1.06 to 1.09" in m for m in found) and any("index.md" in m and "5.6 points" in m for m in found)
+    assert any("index.html" in m and "1.06–1.09" in m for m in found) and any("index.md" in m and "+5.6 points" in m for m in found)
 
 
 @pytest.mark.parametrize("levels,tail", [({"10": 1.5, "20": 1.3}, "a higher Sharpe ratio"),
@@ -857,11 +862,13 @@ def test_the_situation_block_prints_the_default_case(tmp_path):
     block = region(f["next/index.html"], "situation")
     for t in ("STRC", "SATA", "SATS"):
         assert f'<th scope="col">{t}<' in block
-    divs = [usd0(div_usd(10000, y, 90)) for y in (12.821, 15.294, 17.491)]
+    divs = [usd2(div_usd(10000, y, 90)) for y in (12.821, 15.294, 17.491)]  # cents, so the rows add up
     cells = re.search(r"<th scope=\"row\">Dividends over 3 months</th>(.*?)</tr>", block).group(1)
     assert re.findall(r'<span class="st-n num">([^<]+)</span>', cells) == divs
     cash = re.search(r"<th scope=\"row\">High-yield savings earns</th>(.*?)</tr>", block).group(1)
-    assert re.findall(r'<span class="st-n num">([^<]+)</span>', cash) == [usd0(div_usd(10000, 4.40, 90))] * 3
+    assert re.findall(r'<span class="st-n num">([^<]+)</span>', cash) == [usd2(div_usd(10000, 4.40, 90))] * 3
+    diff = re.search(r"<th scope=\"row\">Difference</th>(.*?)</tr>", block).group(1)
+    assert re.findall(r'<span class="st-n num">([^<]+)</span>', diff) == ["+" + usd2(d - div_usd(10000, 4.40, 90)) for d in map(lambda y: div_usd(10000, y, 90), (12.821, 15.294, 17.491))]
     shares = re.search(r"<th scope=\"row\">Whole shares</th>(.*?)</tr>", block).group(1)
     assert re.findall(r'<span class="st-n num">([^<]+)</span>', shares) == ["106", "117", "116"]  # 10000 / 93.60, 85.00, 85.76
     assert "7 Apr 2027" in html.unescape(block)
