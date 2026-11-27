@@ -114,8 +114,9 @@ python3 -m http.server 8471 --directory site
 
 - `archive/2026-07-rating-agency/` — DATproof's first concept (A–F evidence grades),
   retired 2026-07-30 and kept for the record.
-- `.github/workflows/daily-brief.yml` — legacy manual-dispatch fallback from that concept;
-  the cron was removed 2026-08-22.
+- `archive/workflows/daily-brief.yml` — that concept's workflow, moved out of `.github/workflows/`
+  so it can no longer run: one manual run rebuilt the retired pages over `site/index.html` and
+  published them. Its scripts (`scripts/build_site.py`, `scripts/build_landing.py`, `datproof/`) stay.
 - Tests live in `tests/`.
 - **Moving the install pin.** The install command names one fixed commit (`SERVER_PIN` in `datproof_feed/pages.py`).
   1. Merge the tool server change to `main` first; the pin must point at a commit on `main`.

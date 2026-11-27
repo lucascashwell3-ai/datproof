@@ -74,3 +74,11 @@ def test_published_folder_carries_no_screenshots():
     assert not (ROOT / "site" / "screens").exists(), "screenshots belong in docs/screens, not the published site"
     big = [p for p in (ROOT / "site").rglob("*") if p.is_file() and p.stat().st_size > 1_500_000]
     assert not big, f"files over 1.5 MB in the published folder: {big}"
+
+
+def test_only_the_daily_workflow_can_publish():
+    """The earlier product's workflow rebuilt site/index.html and deployed it; it lives in archive/ now."""
+    assert not (WF / "daily-brief.yml").exists()
+    assert (ROOT / "archive" / "workflows" / "daily-brief.yml").exists()
+    publishers = [p.name for p in WF.glob("*.y*ml") if "deploy-pages" in p.read_text()]
+    assert publishers == ["grid.yml"], publishers
