@@ -9,8 +9,8 @@ past holds turned out, a bitcoin crash test and what can go wrong. Every number 
 source and date. It informs and does arithmetic; it never picks one, holds no money and places
 no orders. Not advice.
 
-- **Page:** https://lucascashwell3-ai.github.io/datproof/ (Markdown copy at `index.md`, a guide for AI readers at `llms.txt`)
-- **Feed:** https://lucascashwell3-ai.github.io/datproof/v1/instruments.json
+- **Page:** https://datproof.com/ (Markdown copy at `index.md`, a guide for AI readers at `llms.txt`)
+- **Feed:** https://datproof.com/v1/instruments.json
 - **Plug-in for your AI agent, one command:**
 
 ```bash
@@ -24,12 +24,12 @@ in savings, CDs, a money market fund, T-bills and a municipal bond fund, each wi
 yield, its worst past-year price fall, its payment record and risk flags. Every number names
 its source and date; a number that could not be fetched is empty, with the reason.
 
-- **Files** (rebuilt each day): `https://lucascashwell3-ai.github.io/datproof/v1/` +
+- **Files** (rebuilt each day): `https://datproof.com/v1/` +
   `instruments.json`, `instrument/<TICKER>.json`, `changes.json`, `scenarios.json`,
   `method.json` (every formula and flag in plain words), `status.json`, and the dated
   `days/<date>.json`.
 - **Page** (rewritten each day from the files, figures as plain text so readers that run no
-  script still get them): the home page, `https://lucascashwell3-ai.github.io/datproof/`, with a Markdown copy at `index.md`.
+  script still get them): the home page, `https://datproof.com/`, with a Markdown copy at `index.md`.
   `python -m datproof_feed.pages` rebuilds it.
 - **By price paid**: `by_buy_price` in each instrument splits the 30, 90 and 180-day holds by the
   close paid (under $90, $90 to $95, $95 to $100, $100 and over): buys, losses, average and worst
@@ -88,7 +88,7 @@ only.
 
 Every disclosed bitcoin purchase by Strategy, Strive and Metaplanet since 2020 on one activity
 grid, each square linked to the filing behind it, with the funding beside the buys. Served at
-https://lucascashwell3-ai.github.io/datproof/grid/ and rebuilt by the same daily job.
+https://datproof.com/grid/ and rebuilt by the same daily job.
 
 - **The data** — `data/moves/*.csv`: one row per disclosed move (BTC buy or ATM sale) for
   Strategy, Strive, and Metaplanet, each with date, amounts, and its `source_url`. What

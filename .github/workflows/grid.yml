@@ -155,7 +155,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ site/index.html site/index.md site/llms.txt site/sitemap.xml site/og.png site/v1
+          git add data/ site/index.html site/index.md site/llms.txt site/sitemap.xml site/robots.txt site/og.png site/v1
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else
@@ -318,7 +318,7 @@ jobs:
         run: |
           want_status="${{ steps.built.outputs.status }}"
           want_home="${{ steps.built.outputs.home }}"
-          base="https://lucascashwell3-ai.github.io/datproof"
+          base="https://datproof.com"
           for i in 1 2 3 4 5 6 7 8 9 10; do
             status=$(curl -fsSL "$base/v1/status.json?run=${{ github.run_id }}-$i" | python3 -c "import json,sys;print(json.load(sys.stdin)['date'])" || echo none)
             home=$(curl -fsSL "$base/?run=${{ github.run_id }}-$i" | grep -o '"dateModified": *"[0-9-]*"' | grep -o '[0-9-]\{10\}' || echo none)

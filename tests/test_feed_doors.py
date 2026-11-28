@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
 MD = (ROOT / "site" / "index.md").read_text(encoding="utf-8")
-HOME = "https://lucascashwell3-ai.github.io/datproof/"
+HOME = "https://datproof.com/"
 
 
 def hero() -> str:

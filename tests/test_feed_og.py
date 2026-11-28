@@ -15,7 +15,7 @@ from tests import test_feed_pages as tp  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FEED = tp.loaded(tp.make_feed())  # fixture feed: a live data gap never blocks the daily build
-HOME = "https://lucascashwell3-ai.github.io/datproof/"
+HOME = "https://datproof.com/"
 
 
 def fonts():

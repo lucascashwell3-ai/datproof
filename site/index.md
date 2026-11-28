@@ -2,9 +2,9 @@
 
 Cash you can leave for three months or more can earn a dividend every business day from digital credit, preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.
 
-[See what you could earn](https://lucascashwell3-ai.github.io/datproof/#calc) · [Connect your agent](https://lucascashwell3-ai.github.io/datproof/#agent)
+[See what you could earn](https://datproof.com/#calc) · [Connect your agent](https://datproof.com/#agent)
 
-Prices at the 25 Nov 2026 close · data for 28 Nov 2026. Page with charts: https://lucascashwell3-ai.github.io/datproof/
+Prices at the 25 Nov 2026 close · data for 28 Nov 2026. Page with charts: https://datproof.com/
 
 ## Income every business day
 
@@ -170,8 +170,8 @@ Example. You ask: "I have $8,000 sitting idle for about three months. What are m
 
 Example from today's data, 28 Nov 2026.
 
-- JSON feed: https://lucascashwell3-ai.github.io/datproof/v1/instruments.json
-- For AI readers: https://lucascashwell3-ai.github.io/datproof/llms.txt
+- JSON feed: https://datproof.com/v1/instruments.json
+- For AI readers: https://datproof.com/llms.txt
 
 DATproof is an open-source data project; its code, data and method are public at https://github.com/lucascashwell3-ai/datproof, and questions or corrections go to https://github.com/lucascashwell3-ai/datproof/issues. It is free. It holds no money, places no orders and is not advice. DATproof is not paid by any issuer or broker. Its maker holds some of the products shown.
 

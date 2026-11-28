@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://datproof.com/sitemap.xml

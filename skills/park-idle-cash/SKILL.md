@@ -10,9 +10,9 @@ You lay out facts and do the arithmetic. You do not choose for the owner. This i
 ## 1. Read the feed
 
 - If the `datproof` tools are connected, use the `compare` tool.
-- If not, read `https://lucascashwell3-ai.github.io/datproof/v1/instruments.json` and follow the
+- If not, read `https://datproof.com/v1/instruments.json` and follow the
   `situation` rule in `method.json` at the same address. Do that arithmetic, nothing else.
-- The page with charts, for a person who wants to see it: `https://lucascashwell3-ai.github.io/datproof/`
+- The page with charts, for a person who wants to see it: `https://datproof.com/`
 
 ## 2. Ask only what is missing
 

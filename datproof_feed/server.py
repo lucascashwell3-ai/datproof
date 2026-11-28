@@ -19,8 +19,8 @@ import urllib.request
 from datproof_feed import compare as cmp
 from datproof_feed import scenarios as sc
 
-DEFAULT_FEED = "https://lucascashwell3-ai.github.io/datproof/v1"
-HOME = "https://lucascashwell3-ai.github.io/datproof/"  # the page, with charts
+DEFAULT_FEED = "https://datproof.com/v1"
+HOME = "https://datproof.com/"  # the page, with charts
 SERVER_INFO = {"name": "datproof", "version": "1.0.0"}
 FALLBACK_PROTOCOL = "2025-06-18"
 TICKER = re.compile(r"^[A-Z]{1,6}$")
