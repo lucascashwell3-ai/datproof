@@ -1,17 +1,9 @@
 {
   "date": "2026-11-28",
   "sources": {
-    "mstr": "ok",
-    "asst": "ok",
-    "metaplanet": "failed",
-    "ticker": "ok",
     "credit": "ok"
   },
-  "latest_filing": {
-    "mstr": "2026-11-23",
-    "asst": "2026-11-16",
-    "metaplanet": "2026-07-02"
-  },
-  "degraded": true,
-  "stale_days": 5
+  "latest_filing": {},
+  "degraded": false,
+  "stale_days": null
 }
