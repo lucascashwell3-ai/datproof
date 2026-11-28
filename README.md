@@ -14,7 +14,7 @@ no orders. Not advice.
 - **Plug-in for your AI agent, one command:**
 
 ```bash
-claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@17f9c63c65d6e69023084cf0f8403b5c98f5d8f7 datproof-mcp
+claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8 datproof-mcp
 ```
 
 ## The feed and the page
@@ -61,7 +61,7 @@ its source and date; a number that could not be fetched is empty, with the reaso
 
 ```bash
 # 1. Run the tool server for any MCP client (or, from a clone: python3 -m datproof_feed.server)
-uvx --from git+https://github.com/lucascashwell3-ai/datproof@17f9c63c65d6e69023084cf0f8403b5c98f5d8f7 datproof-mcp
+uvx --from git+https://github.com/lucascashwell3-ai/datproof@57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8 datproof-mcp
 
 # 2. Optional: add the Claude Code skill that walks through the questions
 cp -r skills/park-idle-cash ~/.claude/skills/
