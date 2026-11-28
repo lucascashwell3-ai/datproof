@@ -829,18 +829,15 @@
     });
   }
 
-  // "See what you could earn": scroll to "Your situation", then put the cursor in its first box. Focusing while
-  // the smooth scroll runs would stop it halfway, so the focus waits for the scroll to end. Without script the
-  // plain link still lands on the section.
+  // "See what you could earn": put the cursor in the first box of "Your situation", then scroll there. The focus
+  // goes first because focusing during a smooth scroll stops it halfway. Without script the plain link still
+  // lands on the section.
   var door = $("#door-calc");
   if (door) door.addEventListener("click", function (ev) {
     var sec = $("#calc"), box = $("#in-amount");
     if (!sec || !box) return;
     ev.preventDefault();
-    var done = false;
-    function settle() { if (done) return; done = true; window.removeEventListener("scrollend", settle); box.focus({ preventScroll: true }); }
-    window.addEventListener("scrollend", settle);
-    setTimeout(settle, 1200);  // browsers without scrollend, or no scroll needed
+    box.focus({ preventScroll: true });
     try { history.pushState(null, "", "#calc"); } catch (e) { /* file:// or sandboxed frame */ }
     sec.scrollIntoView({ block: "start" });
   });
