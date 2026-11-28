@@ -37,5 +37,5 @@ where it sits now, and returns the same rows for STRC, SATA and SATS, plus broke
 
 ## About
 
-- https://datproof.com/privacy/ : what a visit sends, and to whom.
-- https://datproof.com/terms/ : terms of use. Not advice.
+- https://datproof.com/privacy/ : what a visit sends, and to whom. Markdown: https://datproof.com/privacy/index.md
+- https://datproof.com/terms/ : terms of use. Not advice. Markdown: https://datproof.com/terms/index.md

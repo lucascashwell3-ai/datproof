@@ -179,4 +179,5 @@ Something missing or wrong? Tell us: https://github.com/lucascashwell3-ai/datpro
 
 Security problem? Report it privately: https://github.com/lucascashwell3-ai/datproof/security/policy
 
-Privacy: https://datproof.com/privacy/ · Terms: https://datproof.com/terms/
+- Privacy: https://datproof.com/privacy/ (Markdown: https://datproof.com/privacy/index.md)
+- Terms: https://datproof.com/terms/ (Markdown: https://datproof.com/terms/index.md)

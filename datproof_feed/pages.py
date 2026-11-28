@@ -1391,7 +1391,8 @@ Something missing or wrong? Tell us: {FEEDBACK}
 
 Security problem? Report it privately: {SECURITY}
 
-Privacy: {BASE}/privacy/ · Terms: {BASE}/terms/
+- Privacy: {BASE}/privacy/ (Markdown: {BASE}/privacy/index.md)
+- Terms: {BASE}/terms/ (Markdown: {BASE}/terms/index.md)
 """
 
 
@@ -1455,8 +1456,8 @@ where it sits now, and returns the same rows for STRC, SATA and SATS, plus broke
 
 ## About
 
-- {BASE}/privacy/ : what a visit sends, and to whom.
-- {BASE}/terms/ : terms of use. Not advice.
+- {BASE}/privacy/ : what a visit sends, and to whom. Markdown: {BASE}/privacy/index.md
+- {BASE}/terms/ : terms of use. Not advice. Markdown: {BASE}/terms/index.md
 """
 
 
@@ -1480,18 +1481,18 @@ PRIVACY = ("privacy", "Privacy", "What a visit to DATproof sends, and to whom.",
              [f"DATproof, an open-source project. Its code is public on [GitHub]({REPO}). Questions go to its "
               f"[issues page]({ISSUES}); security problems go through its [security policy]({SECURITY})."]),
             ("What DATproof collects",
-             ["One thing: a visit count on the home page. No other page has the counter.",
+             ["Only a visit count on the home page; no other page has the counter.",
               ["The counter is GoatCounter. Your browser sends it the page address, the page that sent you, the page "
                "title and your screen width. Like any server, it also sees your IP address and browser.",
                "GoatCounter says it stores no IP addresses, no full browser details and no tracking ID, and keeps "
                "only totals: visits per page, the sites that sent them, browsers, systems, countries, languages "
                "and screen widths."]]),
             ("What DATproof does not collect",
-             [["No accounts, no sign-up and no forms that send anything.",
+             [["There are no accounts, no sign-up and no forms that send anything.",
                "The “Your situation” calculator works out its numbers in your browser. What you type there "
                "is sent nowhere.",
-               "No cookies. The pages store nothing in your browser.",
-               "No ad trackers. DATproof does not sell or share data."]]),
+               "The site sets no cookies and stores nothing in your browser.",
+               "There are no ad trackers, and DATproof does not sell or share data."]]),
             ("Outside services a visit touches",
              [["[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) "
                "hosts the site. GitHub logs each visitor’s IP address for security. Its "

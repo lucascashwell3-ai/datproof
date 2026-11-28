@@ -37,10 +37,10 @@ def problems(files: dict[str, str]) -> list[str]:
         for twin in ("", "index.md"):
             if f"<loc>{HOME}{p}/{twin}</loc>" not in files["sitemap.xml"]:
                 out.append(f"sitemap lacks {p}/{twin}")
-        if f"{HOME}{p}/" not in files["llms.txt"]:
-            out.append(f"llms.txt lacks {p}/")
-        if f"{HOME}{p}/" not in files["index.md"]:
-            out.append(f"index.md lacks {p}/")
+        for twin in ("", "index.md"):
+            for rel in ("llms.txt", "index.md"):
+                if not re.search(rf"{re.escape(HOME + p + '/' + twin)}(\s|\)|$)", files[rel]):
+                    out.append(f"{rel} lacks {p}/{twin}")
     for rel in (f"{p}/index.html" for p in LEGAL):
         if rel in files and COUNTER.search(files[rel]):
             out.append(f"{rel} carries a counter script")
@@ -157,6 +157,11 @@ def test_planted_missing_not_advice():
 def test_planted_missing_disclosure():
     assert f"terms/index.md lacks: {pages.DISCLOSURE}" in planted(
         lambda f: f.update({"terms/index.md": f["terms/index.md"].replace(pages.DISCLOSURE, "")}))
+
+
+def test_planted_missing_twin_in_llms():
+    assert "llms.txt lacks privacy/index.md" in planted(
+        lambda f: f.update({"llms.txt": f["llms.txt"].replace(f"{HOME}privacy/index.md", "")}))
 
 
 def test_planted_overclaim():
