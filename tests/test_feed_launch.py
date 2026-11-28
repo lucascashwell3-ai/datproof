@@ -105,6 +105,27 @@ def test_counter_switches_on_with_one_value():
     assert "gc.zgo.at" not in out["index.md"] and "gc.zgo.at" not in out["llms.txt"]
 
 
+def test_the_live_counter_is_one_cookie_free_script_and_leaves_when_emptied():
+    cfg = json.loads(read("site/config.json"))
+    assert cfg["counter"] == {"provider": "goatcounter", "code": "lucascashwell"}
+    want = ('<script data-goatcounter="https://lucascashwell.goatcounter.com/count" async '
+            'src="https://gc.zgo.at/count.js"></script>')
+    page = read("site/index.html")
+    assert page.count("<script data-goatcounter=") == 1 and page.count(want) == 1
+    for rel in ("site/index.md", "site/llms.txt", "site/grid/index.html", "site/next/index.html"):
+        if (ROOT / rel).exists():
+            assert "goatcounter" not in read(rel) and "gc.zgo.at" not in read(rel), rel
+    assert "cookie" not in pages.counter_tag(cfg).lower()
+    assert "document.cookie" not in page and "document.cookie" not in read("site/next/app.js")
+    # built once with the counter, then rebuilt with the provider emptied: the script is gone
+    feed = pages.load(SITE / "v1")
+    on = pages.render(feed, page, cfg)["index.html"]
+    assert on.count(want) == 1
+    off = pages.render(feed, on, {"counter": {"provider": "", "code": ""}})["index.html"]
+    assert "goatcounter" not in off and "gc.zgo.at" not in off
+    assert "<!--feed:counter--><!--/feed:counter-->" in off
+
+
 def test_a_bad_counter_value_is_refused_not_printed():
     import pytest
     for bad in ({"provider": "googleanalytics", "code": "G-123"},
