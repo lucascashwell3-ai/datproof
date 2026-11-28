@@ -639,6 +639,26 @@
   // ---------- 2. the three ----------
   // ---------- 3. liquid and steady ----------
   function nearShare(rows) { return rows.filter(function (r) { return Math.abs(r[1] - 100) <= 5; }).length / rows.length; }
+  // Gridlines every $10. The $95 to $105 band, the dashed $100 line and its "$100" label only for issues whose
+  // issuer states it aims to keep the price near $100; elsewhere $100 is an ordinary gridline like its neighbours.
+  function priceGuides(aims, lo, hi, x1, x2, Y) {
+    var out = [];
+    if (aims) out.push(["rect", { x: x1, y: Y(105), width: x2 - x1, height: Y(95) - Y(105), class: "c-band" }]);
+    for (var p = lo; p <= hi; p += 10) {
+      if (aims && p === 100) continue;
+      out.push(["line", { x1: x1, x2: x2, y1: Y(p), y2: Y(p), class: "c-grid" }]);
+      out.push(["text", { x: x1 - 8, y: Y(p) + 4, "text-anchor": "end", class: "c-tick" }, "$" + p]);
+    }
+    if (aims) {
+      out.push(["line", { x1: x1, x2: x2, y1: Y(100), y2: Y(100), class: "c-par" }]);
+      out.push(["text", { x: x1 - 8, y: Y(100) + 4, "text-anchor": "end", class: "c-par-t" }, "$100"]);
+    }
+    return out;
+  }
+  function paidLabel(ticker, aims, share, lastClose) {
+    return ticker + " closing price over the past year, each dividend paid marked below. " +
+      (aims ? "Within $5 of $100 on " + share + "% of days. " : "") + lastClose + " at the last close.";
+  }
 
   function drawPaid() {
     var wrap = $("#paid-charts"), out = [];
@@ -667,15 +687,8 @@
       function X(iso) { return ml + (Date.parse(iso) - t0) / (t1 - t0) * (W - ml - mr); }
       function Y(p) { return mt + (hi - p) / (hi - lo) * ph; }
       var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
-      // The $95 to $105 band only for issues whose issuer states it aims to keep the price near $100.
-      if ((o.i.by_buy_price || {}).issuer_aims_price_near_100) svg.appendChild(el("rect", { x: ml, y: Y(105), width: W - ml - mr, height: Y(95) - Y(105), class: "c-band" }));
-      for (var p = lo; p <= hi; p += 10) {
-        if (p === 100) continue;
-        svg.appendChild(el("line", { x1: ml, x2: W - mr, y1: Y(p), y2: Y(p), class: "c-grid" }));
-        svg.appendChild(el("text", { x: ml - 8, y: Y(p) + 4, "text-anchor": "end", class: "c-tick" }, "$" + p));
-      }
-      svg.appendChild(el("line", { x1: ml, x2: W - mr, y1: Y(100), y2: Y(100), class: "c-par" }));
-      svg.appendChild(el("text", { x: ml - 8, y: Y(100) + 4, "text-anchor": "end", class: "c-par-t" }, "$100"));
+      var aims = !!(o.i.by_buy_price || {}).issuer_aims_price_near_100;
+      priceGuides(aims, lo, hi, ml, W - mr, Y).forEach(function (m) { svg.appendChild(el(m[0], m[1], m[2])); });
       var dpath = rows.map(function (r, j) { return (j ? "L" : "M") + X(r[0]).toFixed(1) + " " + Y(r[1]).toFixed(1); }).join("");
       svg.appendChild(el("path", { d: dpath, class: "c-line" }));
       var last = rows[rows.length - 1];
@@ -699,7 +712,7 @@
       box.innerHTML = ""; if (keep) box.appendChild(keep); box.appendChild(svg);
       if (DZ.ok && dithered()) DZ.area(box, W, H, rows.map(function (r) { return [X(r[0]), Y(r[1])]; }), mt + ph); else DZ.clear(box);
       var share = Math.round(nearShare(rows) * 100);
-      box.setAttribute("aria-label", o.i.ticker + " closing price over the past year, each dividend paid marked below. Within $5 of $100 on " + share + "% of days. " + usd(last[1], 2) + " at the last close.");
+      box.setAttribute("aria-label", paidLabel(o.i.ticker, aims, share, usd(last[1], 2)));
     });
   }
 
