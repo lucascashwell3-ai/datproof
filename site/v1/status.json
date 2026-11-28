@@ -1,6 +1,6 @@
 {
   "date": "2026-11-28",
-  "built_at": "2026-11-28T02:59:46Z",
+  "built_at": "2026-11-28T03:17:05Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -21,5 +21,5 @@
   ],
   "held": [],
   "snapshot_sha256": "9ded80067e9b764e5320deb2d9ed3e38533bd7c2e04f79a57b2e7ef18afe13e3",
-  "stamp": "stamped; 6 earlier stamp(s) confirmed in bitcoin"
+  "stamp": "skipped (day file already existed)"
 }
