@@ -17,6 +17,9 @@ no orders. Not advice.
 claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@bdab0e3250013783a6c5d9372dfe5ba0fb70ac80 datproof-mcp
 ```
 
+- **Or use it without installing:** the hosted copy at `https://mcp.datproof.com/mcp` (streamable HTTP).
+  No key and no sign-in; the same seven read-only tools as the installed plug-in.
+
 ## The feed and the page
 
 The feed lists the bitcoin treasury preferred stocks (STRC, SATA, SATS, STRF, STRK, STRD) beside what idle cash earns

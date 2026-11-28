@@ -32,6 +32,9 @@ Figures below are from the feed dated 28 Nov 2026 and are rebuilt every day.
 
     claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@bdab0e3250013783a6c5d9372dfe5ba0fb70ac80 datproof-mcp
 
+Or use it without installing: the hosted copy at https://mcp.datproof.com/mcp (streamable HTTP, no sign-in, no key) is the same
+server with the same tools.
+
 Seven read-only tools: compare, instrument, instruments, changes, scenarios, method and check.
 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and

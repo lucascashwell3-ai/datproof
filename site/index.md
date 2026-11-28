@@ -154,7 +154,7 @@ They are ordinary Nasdaq-listed stocks, so a broker that offers an IRA or HSA wi
 
 ## Connect your agent
 
-One line of setup. Your agent reads DATproof; any order goes through your own broker, placed by you.
+One line of setup, or none: the hosted copy is at https://mcp.datproof.com/mcp (streamable HTTP, no sign-in). Your agent reads DATproof; any order goes through your own broker, placed by you.
 
     claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@bdab0e3250013783a6c5d9372dfe5ba0fb70ac80 datproof-mcp
 
