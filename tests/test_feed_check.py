@@ -31,6 +31,7 @@ FEED = {
         "avg_value_30d_usd": {"value": 98_000_000, "unit": "usd", "inputs": ["avg_volume_30d", "close_usd"],
                               "as_of": "2026-11-26", "stale": False},
         "payments": {"paid": 30, "in_a_row": 30, "gaps": [], "last_paid": "2026-11-26"},
+        "schedule": "every business day",
         "dividends_source": SRC + "dividends",
         "backing": {"issuer": "Strategy", "backing_x": 3.5, "ahead": ["STRF"],
                     "inputs": {"btc_usd": dated(60000, "btc_usd"), "btc_held": dated(800000, "btc")}},
@@ -160,6 +161,42 @@ def test_a_missed_dividend_fails():
     row = by_id(run(f, limits={"dividends_current": True}))["dividends"]
     assert row["result"] == "fail" and row["fact"]["value"] == 1
     assert row["fact"]["missed"] == ["2026-10-01 to 2026-11-15"]
+
+
+def test_an_overdue_last_payment_fails_with_its_reason():
+    f = edited(lambda i, _: i["payments"].update(last_paid="2026-11-20"))  # 7 days before the feed date
+    row = by_id(run(f, limits={"dividends_current": True}))["dividends"]
+    assert row["result"] == "fail" and row["fact"]["value"] == 0  # no gap yet: the pause has not ended
+    assert row["fact"]["overdue"] is True and row["fact"]["days_since_last_paid"] == 7
+    assert "2026-11-20" in row["fact"]["reason"] and "4 days" in row["fact"]["reason"]
+
+
+def test_a_quarterly_payer_within_its_rhythm_passes():
+    f = edited(lambda i, _: (i.update(schedule="quarterly"), i["payments"].update(last_paid="2026-09-30")))
+    row = by_id(run(f, limits={"dividends_current": True}))["dividends"]
+    assert row["result"] == "pass" and row["fact"]["allowed_days"] == 100
+
+
+@pytest.mark.parametrize("change", [
+    lambda i, _: i.pop("schedule"),                              # no pay schedule to judge the rhythm by
+    lambda i, _: i.update(schedule="every few weeks"),           # a schedule the rule does not know
+    lambda i, f: f.update(date="not a date"),                     # no feed date to measure the pause to
+])
+def test_dividends_it_cannot_time_never_pass(change):
+    row = by_id(run(edited(change), limits={"dividends_current": True}))["dividends"]
+    assert row["result"] == "cannot tell" and row["why"] and row["fact"]["overdue"] is None
+
+
+def test_allowed_pauses_match_the_feeds_gap_rule():
+    from datproof_feed import sources
+    assert server.ALLOWED_PAUSE_DAYS["quarterly"] == sources.QUARTERLY_MAX_GAP
+    assert inspect.signature(sources.streak).parameters["max_gap"].default == server.ALLOWED_PAUSE_DAYS["monthly"]
+    d = dt.date
+    divs = [(d(2026, 11, n), d(2026, 11, n), 1.0) for n in (2, 3, 4, 5)] + [(d(2026, 11, 10), d(2026, 11, 10), 1.0)]
+    assert sources.streak(divs, d(2026, 11, 30))["gaps"] == ["2026-11-05 to 2026-11-10"]  # 5 days: a gap
+    divs[-1] = (d(2026, 11, 9), d(2026, 11, 9), 1.0)
+    assert sources.streak(divs, d(2026, 11, 30))["gaps"] == []  # 4 days: allowed, as in ALLOWED_PAUSE_DAYS
+    assert server.ALLOWED_PAUSE_DAYS["every business day"] == 4
 
 
 def test_dividends_current_false_is_not_a_limit():

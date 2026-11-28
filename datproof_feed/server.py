@@ -387,6 +387,35 @@ def _backing_parts(ins: dict, feed: dict) -> list:
     return parts
 
 
+# The longest pause between payments each pay schedule allows: the feed's own rule for a gap (sources.streak:
+# over 4 days once an issue pays daily, over 100 days for quarterly payers, over 35 days otherwise).
+ALLOWED_PAUSE_DAYS = {"every business day": 4, "twice a month": 35, "monthly": 35, "quarterly": 100}
+
+
+def _rhythm(ins: dict, pay: dict, feed_date) -> dict:
+    """Whether the last payment is on time for the issue's own pay schedule, on the feed's date: overdue is
+    True, False, or None when the schedule or a date is unknown; reason says why when it is not False."""
+    sched = ins.get("schedule")
+    out = {"schedule": sched, "allowed_days": ALLOWED_PAUSE_DAYS.get(sched), "days_since_last_paid": None,
+           "overdue": None}
+    try:
+        last = dt.date.fromisoformat(str(pay.get("last_paid"))[:10])
+        day = dt.date.fromisoformat(str(feed_date)[:10])
+    except ValueError:
+        out["reason"] = "the feed gives no date for the last payment, or no feed date"
+        return out
+    out["days_since_last_paid"] = (day - last).days
+    if out["allowed_days"] is None:
+        out["reason"] = (f"the feed shows no pay schedule for this issue ({sched!r}), so it cannot tell whether "
+                         f"the last payment, on {last.isoformat()}, is on time")
+        return out
+    out["overdue"] = out["days_since_last_paid"] > out["allowed_days"]
+    if out["overdue"]:
+        out["reason"] = (f"last paid {last.isoformat()}, {out['days_since_last_paid']} days before the feed date; "
+                         f"its schedule ({sched}) allows up to {out['allowed_days']} days between payments")
+    return out
+
+
 def _fmt(x) -> str:
     if isinstance(x, float) and x.is_integer():
         x = int(x)
@@ -412,6 +441,7 @@ def check_answer(args: dict, feed: dict, today: dt.date) -> dict:
     pay = ins.get("payments") or {}
     divs_known = pay.get("paid") is not None and pay.get("last_paid") and not ins.get("dividends_reason")
     div_part = {"as_of": feed.get("date"), "source": ins.get("dividends_source")}
+    rhythm = _rhythm(ins, pay, feed.get("date")) if divs_known else {}
     age = None
     try:
         age = business_days_between(dt.date.fromisoformat(str(feed.get("date"))[:10]), today)
@@ -448,9 +478,10 @@ def check_answer(args: dict, feed: dict, today: dt.date) -> dict:
          f"Are the feed's figures {_fmt(max_age)} business days old or less?", "How old is the feed?",
          age, "business days", [feed_part], lambda v, lim: v <= lim),
         ("dividends", "dividends_current",
-         f"Does the feed show no missed dividend for {t}?", f"How many missed dividends does the feed show for {t}?",
+         f"Is {t}'s dividend current: no missed payment in the feed, and the last one on time for its schedule?",
+         f"How many missed dividends does the feed show for {t}, and is the last one on time?",
          len(pay.get("gaps") or []) if divs_known else None, "missed payments", [div_part],
-         lambda v, lim: v == 0),
+         lambda v, lim: v == 0 and rhythm.get("overdue") is False),
     ]
     checks = []
     for cid, key, q_lim, q_none, value, unit, parts, passes in rows:
@@ -460,10 +491,14 @@ def check_answer(args: dict, feed: dict, today: dt.date) -> dict:
         if cid == "dividends" and not divs_known:
             why = "the feed could not read this issue's dividends" + (f" ({ins['dividends_reason']})"
                                                                       if ins.get("dividends_reason") else "")
+            fact["reason"] = why
         row = {"id": cid, "question": q_none if lim is None else q_lim, "limit": lim, "fact": fact}
         if cid == "dividends" and divs_known:
             fact["missed"] = list(pay.get("gaps") or [])
             fact["last_paid"] = pay.get("last_paid")
+            fact.update({k: v for k, v in rhythm.items()})
+            if rhythm.get("overdue") is None:
+                why = why or rhythm.get("reason")  # an unknown schedule or date is never a pass
         if lim is None:
             row["result"] = "no limit set"
         elif why is not None:
