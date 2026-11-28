@@ -1,11 +1,11 @@
-"""Every section of /next/: one heading, at most one line under it, the content, at most one source line."""
+"""Every section of the home page: one heading, at most one line under it, the content, at most one source line."""
 from __future__ import annotations
 
 import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PAGE = (ROOT / "site" / "next" / "index.html").read_text()
+PAGE = (ROOT / "site" / "index.html").read_text()
 
 
 def layers(page: str) -> dict[str, tuple[int, int, int]]:
@@ -74,12 +74,12 @@ def test_the_headline_is_for_anyone_with_idle_cash():
     import json
     from datproof_feed import pages
     feed = json.loads((ROOT / "site" / "v1" / "instruments.json").read_text())
-    md = (ROOT / "site" / "next" / "index.md").read_text()
+    md = (ROOT / "site" / "index.md").read_text()
     assert headline_problems(PAGE, md, pages.hl_range(feed)) == []
     assert pages.HEADLINE == "Earn {range} on your idle cash."
 
 
 def test_the_headline_check_catches_the_old_wording():
     planted = PAGE.replace("on your idle cash.</h1>", "on your agent's idle cash.</h1>")
-    md = (ROOT / "site" / "next" / "index.md").read_text()
+    md = (ROOT / "site" / "index.md").read_text()
     assert headline_problems(planted, md, "12–17%")

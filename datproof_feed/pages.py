@@ -5,10 +5,14 @@ gets the yields, prices and odds.
     python -m datproof_feed.pages --dry-run    # renders and checks, writes to a temp folder
 
 Reads only the published /v1/ files. Writes:
-  site/next/index.html     every figure and sentence between the <!--feed:NAME--> markers. The page
-                           script only draws the charts and runs the "your situation" form.
-  site/next/index.md       the same page as plain Markdown, every section included
+  site/index.html          the home page: every figure and sentence between the <!--feed:NAME--> markers.
+                           The page script (site/next/app.js) only draws the charts and runs the
+                           "your situation" form.
+  site/index.md            the same page as plain Markdown, every section included
   site/llms.txt            the short guide for AI readers, with today's figures
+  site/sitemap.xml         the home page, its Markdown twin, llms.txt and the feed, dated to the feed
+
+The old address /next/ is a fixed page that sends readers to the home page; nothing here writes it.
 
 Everything is rendered and checked in memory first. If anything fails, no file is touched (the
 last good pages stay up) and the exit code is 1. A second run on the same feed changes nothing.
@@ -30,6 +34,7 @@ from decimal import ROUND_HALF_UP, Decimal
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 BASE = "https://lucascashwell3-ai.github.io/datproof"
+HOME = BASE + "/"  # the one canonical address of the page
 LEAD = ["STRC", "SATA", "SATS"]
 ODDS_TICKERS = ["STRC", "SATA"]
 SPANS = [(30, "1 month"), (90, "3 months"), (180, "6 months")]  # cash that can sit three months or more
@@ -37,12 +42,17 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", 
 MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August",
                "September", "October", "November", "December"]
 AMOUNT = 10_000
-CASH_SHARE = 0.6  # the example account on /next/
+CASH_SHARE = 0.6  # the example account on the home page
 MIN_RECORD = 60   # fewer daily closes than this: say only when the stock started trading
-SETUP = "claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp"
+# The tool server people install, fixed to one commit so a stranger's machine runs code that was read,
+# not whatever the default branch holds that day. This is the one place the pin lives; every copy of the
+# install command (README, site/index.html, index.md, llms.txt) must match it (tests/test_install_pin.py).
+SERVER_PIN = "17f9c63c65d6e69023084cf0f8403b5c98f5d8f7"
+INSTALL_FROM = "git+https://github.com/lucascashwell3-ai/datproof@" + SERVER_PIN
+SETUP = "claude mcp add datproof -- uvx --from " + INSTALL_FROM + " datproof-mcp"
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
            "lifthead", "lift", "backing", "risk", "situation", "sitnote", "buy", "buyfine", "faq", "chat", "chattag",
-           "sources", "about")
+           "sources", "about", "counter")
 BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
@@ -92,6 +102,15 @@ def e(s) -> str:
     return html.escape(str(s), quote=True)
 
 
+def url(u) -> str:
+    """A link address from the feed, escaped for an href. Only web addresses: a `javascript:` or `data:`
+    address in a source or broker field stops the page build (yesterday's pages stay up) instead of
+    becoming a link that runs code."""
+    if not isinstance(u, str) or not re.match(r"https?://[^\s\"'<>]+$", u):
+        raise PageError(f"not a web address: {u!r}"[:200])
+    return e(u)
+
+
 def host(url: str) -> str:
     m = re.match(r"https?://([^/]+)", url or "")
     return re.sub(r"^www\.", "", m.group(1)) if m else (url or "")
@@ -105,6 +124,8 @@ def names(items: list[str]) -> str:
 
 def load(v1: pathlib.Path) -> dict:
     feed = json.loads((v1 / "instruments.json").read_text())
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(feed.get("date"))):
+        raise PageError(f"feed date is not a date: {feed.get('date')!r}"[:200])
     feed["_closes"] = {}
     for t in LEAD:
         p = v1 / "instrument" / f"{t}.json"
@@ -298,6 +319,15 @@ def since(feed: dict, t: str) -> str | None:
     return cl[0][0] if cl else None
 
 
+def run_note(pay: dict) -> str:
+    """When the run behind "N dividends in a row" began, and the change of schedule it spans (feed's payments.since)."""
+    if not pay.get("since"):
+        return ""
+    sch = pay.get("schedules") or []
+    span = f" ({sch[0]} at first, now {sch[-1]})" if len(sch) > 1 else ""
+    return f" since {day(pay['since'])}{span}"
+
+
 def panels(feed: dict) -> str:
     tb = tbill(feed)
     out = ""
@@ -311,7 +341,7 @@ def panels(feed: dict) -> str:
         elif since(feed, i["ticker"]):
             facts.append(f"Trading since {day(since(feed, i['ticker']))}")
         if pay.get("in_a_row"):
-            facts.append(f'<b class="num">{fixed(pay["in_a_row"])}</b> dividends in a row'
+            facts.append(f'<b class="num">{fixed(pay["in_a_row"])}</b> dividends in a row' + run_note(pay)
                          + (", none missed" if not pay.get("gaps") else ""))
         if close is not None:
             facts.append(f'Price <b class="num">{usd(close, 2)}</b>')
@@ -381,7 +411,7 @@ def compare_fine(feed: dict, html_links: bool) -> str:
     if src:
         short = [(lbl.split(" ")[0] if lbl != "US Treasury" else "Treasury", u, d) for lbl, u, d in src]
         if html_links:
-            return e(s) + "Rates: " + ", ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a> {e(day(d)[:-5])}' for lbl, u, d in short) + "."
+            return e(s) + "Rates: " + ", ".join(f'<a href="{url(u)}" rel="noopener">{e(lbl)}</a> {e(day(d)[:-5])}' for lbl, u, d in short) + "."
         return s + "Rates: " + ", ".join(f"{lbl} {day(d)[:-5]} ({u})" for lbl, u, d in short) + "."
     return e(s.strip()) if html_links else s.strip()
 
@@ -502,7 +532,7 @@ def buy_lede(cols: list[dict], html_links: bool) -> str:
     parts = []
     if aim:
         srcs = aims_sources(aim)
-        link = ((" (" + ", ".join(f'<a href="{e(u)}" rel="noopener">{e(lbl)}</a>' for lbl, u in srcs) + ")") if html_links
+        link = ((" (" + ", ".join(f'<a href="{url(u)}" rel="noopener">{e(lbl)}</a>' for lbl, u in srcs) + ")") if html_links
                 else (" (" + ", ".join(f"{lbl}: {u}" for lbl, u in srcs) + ")")) if srcs else ""
         issuers = names(list(dict.fromkeys(i.get("issuer", "") for i in aim)))
         parts.append(f"{issuers} say they adjust the rates of {names([i['ticker'] for i in aim])} to keep the price near $100{link}.")
@@ -637,6 +667,11 @@ def lift_line(feed: dict) -> str:
             f"average yield today, {pct(avg_yield(feed))}, price change left out.")
 
 
+# The line opens "Over the past year", so the short form says the rest; the page caps fine lines at 460 characters
+# and allows one per section.
+FORECAST = "Past prices, not a forecast."
+
+
 def sharpe_line(feed: dict, own: bool = True) -> str:
     rs = sharpe_rows(feed)
     if not rs:
@@ -654,7 +689,7 @@ def sharpe_line(feed: dict, own: bool = True) -> str:
     s += (f" Assumes the bot's own swings of {fixed(min(sw))}% to {fixed(max(sw))}% a year do not move with the stock.")
     if own:
         s += " On their own: " + names([f"{r['ticker']} {fixed(r['sharpe'], 2)}" for r in sharpe_rows(feed)]) + "."
-    return s
+    return s + " " + FORECAST
 
 
 def lift_block(feed: dict) -> str:
@@ -751,7 +786,7 @@ def backing_block(feed: dict) -> str:
     top = max(r["value"] for r in rk) or 1
     li = ""
     for r in rk:
-        nm = (f'<a href="{e(r["href"])}" rel="noopener">{e(r["name"])}</a>' if r["href"] else e(r["name"]))
+        nm = (f'<a href="{url(r["href"])}" rel="noopener">{e(r["name"])}</a>' if r["href"] else e(r["name"]))
         li += (f'<li class="{"dc" if r["dc"] else "cm"}"><span class="rk-nm">{nm}<span class="rk-d">{e(r["sub"])}</span></span>'
                f'<span class="rk-bar" aria-hidden="true"><i style="width:{fixed(r["value"] / top * 100, 1)}%"></i></span>'
                f'<span class="rk-v num">${fixed(r["value"], 2)}</span></li>')
@@ -827,8 +862,8 @@ def risk_items(feed: dict) -> list[tuple[str, str]]:
 def risk_block(feed: dict) -> str:
     li = "".join(f'<li><b>{e(a)}</b>' + (f" {e(b)}" if b else "") + "</li>" for a, b in risk_items(feed))
     ins = insurance(feed)
-    fine = (f'<p class="fine">Insurance: <a href="{e(ins["FDIC"]["source_url"])}" rel="noopener">FDIC</a>, '
-            f'<a href="{e(ins["SIPC"]["source_url"])}" rel="noopener">SIPC</a>, read {day(ins["FDIC"].get("read_on"))}.</p>') if ins else ""
+    fine = (f'<p class="fine">Insurance: <a href="{url(ins["FDIC"]["source_url"])}" rel="noopener">FDIC</a>, '
+            f'<a href="{url(ins["SIPC"]["source_url"])}" rel="noopener">SIPC</a>, read {day(ins["FDIC"].get("read_on"))}.</p>') if ins else ""
     return f'<ul class="risk-l">{li}</ul>{fine}'
 
 
@@ -925,7 +960,7 @@ def buy_block(feed: dict) -> str:
         for t in tickers:
             c = (b.get("tickers") or {}).get(t) or {}
             if c.get("url"):
-                cells += f'<td><a href="{e(c["url"])}" rel="noopener nofollow" aria-label="{e(t)} at {e(b["name"])}">{e(t)}</a></td>'
+                cells += f'<td><a href="{url(c["url"])}" rel="noopener nofollow" aria-label="{e(t)} at {e(b["name"])}">{e(t)}</a></td>'
             elif c:
                 cells += '<td><span class="wb-n">no page link</span></td>'
             else:
@@ -951,7 +986,7 @@ def buy_fine_html(feed: dict) -> str:
     fact = (st.get("fact") or "").rstrip(".")
     s = e(fact)
     if fact:
-        s += (f' (<a href="{e(st["source"])}" rel="noopener">FINRA</a>).' if st.get("source") else ".")
+        s += (f' (<a href="{url(st["source"])}" rel="noopener">FINRA</a>).' if st.get("source") else ".")
     if doc.get("checked_on"):
         s += f" Links checked {day(doc['checked_on'])}. Alphabetical; DATproof has no tie to any broker."
     return s.strip()
@@ -1050,7 +1085,7 @@ def linkify(text: str) -> str:
     """Escape, then turn '(date, https://…)' citations into short links."""
     def sub(m):
         d, u = m.group(1), m.group(2)
-        return f'(<a href="{u}" rel="noopener">{e(d or host(u))}</a>)'
+        return f'(<a href="{url(u)}" rel="noopener">{e(d or host(u))}</a>)'
     out, pos = "", 0
     for m in LINK.finditer(text):
         out += e(text[pos:m.start()]) + sub(m)
@@ -1065,7 +1100,7 @@ def faq_html(feed: dict) -> str:
 def faq_ld(feed: dict) -> str:
     ld = json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "dateModified": feed["date"],
                      "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
-                                    for q, a in faq(feed)]}, ensure_ascii=False).replace("</", "<\\/")
+                                    for q, a in faq(feed)]}, ensure_ascii=False).replace("<", "\\u003c")  # no </script> or <!-- can end the block
     return f'<script type="application/ld+json">{ld}</script>'
 
 
@@ -1148,7 +1183,7 @@ def sources_of(feed: dict) -> list[tuple[str, str, str | None]]:
 
 
 def sources_html(feed: dict) -> str:
-    li = "".join(f'<li>{e(lbl)}: <a href="{e(u)}" rel="noopener">{e(host(u))}</a>{", " + day(d) if d else ""}</li>'
+    li = "".join(f'<li>{e(lbl)}: <a href="{url(u)}" rel="noopener">{e(host(u))}</a>{", " + day(d) if d else ""}</li>'
                  for lbl, u, d in sources_of(feed))
     return f'<ul>{li}<li>Method for every number: <a href="../v1/method.json">method.json</a></li></ul>'
 
@@ -1179,7 +1214,7 @@ def md_panels(feed: dict) -> str:
         bits.append(f"past year {signed(py['total_return_pct'])}, dividends plus price change" if py
                     else f"trading since {day(since(feed, i['ticker']))}" if since(feed, i["ticker"]) else "")
         if pay.get("in_a_row"):
-            bits.append(f"{fixed(pay['in_a_row'])} dividends in a row" + (", none missed" if not pay.get("gaps") else ""))
+            bits.append(f"{fixed(pay['in_a_row'])} dividends in a row" + run_note(pay) + (", none missed" if not pay.get("gaps") else ""))
         if val(i.get("close_usd")) is not None:
             bits.append(f"price {usd(val(i['close_usd']), 2)}")
         out += f"- {i['ticker']} ({i.get('issuer', '')}): " + "; ".join(b for b in bits if b) + ".\n"
@@ -1291,7 +1326,7 @@ def next_md(feed: dict) -> str:
 
 {HERO_SUB}
 
-{md_stamp(feed)}. Page with charts: {BASE}/next/
+{md_stamp(feed)}. Page with charts: {HOME}
 
 ## Income every business day
 
@@ -1340,6 +1375,10 @@ Example. You ask: "{CHAT_Q}"
 - For AI readers: {BASE}/llms.txt
 
 {ABOUT_MD[0]} {ABOUT_MD[1]}
+
+Something missing or wrong? Tell us: {FEEDBACK}
+
+Security problem? Report it privately: {SECURITY}
 """
 
 
@@ -1380,8 +1419,8 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 
 ## Page (today's figures written into the text, no script needed)
 
-- {BASE}/next/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
-- {BASE}/next/index.md : the same page as Markdown.
+- {HOME} : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
+- {BASE}/index.md : the same page as Markdown.
 
 ## Today
 
@@ -1401,6 +1440,51 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
 """
+
+
+# ---------- visitor counter: off until site/config.json names one ----------
+
+# A cookie-free counter that records no personal data. site/config.json holds
+# {"counter": {"provider": "", "code": ""}}; with provider empty, nothing is added to the page.
+COUNTERS = {
+    "goatcounter": (re.compile(r"^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$"),
+                    '<script data-goatcounter="https://{code}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>'),
+    "cloudflare": (re.compile(r"^[0-9a-f]{32}$"),
+                   '<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon=\'{{"token": "{code}"}}\'></script>'),
+}
+
+
+def counter_tag(config: dict | None) -> str:
+    c = (config or {}).get("counter") or {}
+    provider, code = (c.get("provider") or "").strip(), (c.get("code") or "").strip()
+    if not provider:
+        return ""
+    if provider not in COUNTERS:
+        raise PageError(f"site/config.json: counter provider '{provider}' is not one of {sorted(COUNTERS)}")
+    pattern, tag = COUNTERS[provider]
+    if not pattern.match(code):
+        raise PageError(f"site/config.json: '{code}' is not a valid {provider} code")
+    return tag.format(code=code)
+
+
+def load_config(site: pathlib.Path) -> dict:
+    p = site / "config.json"
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
+SECURITY = "https://github.com/lucascashwell3-ai/datproof/security/policy"  # SECURITY.md: how to report privately
+
+
+# ---------- sitemap.xml ----------
+
+SITEMAP = ("", "index.md", "llms.txt", "v1/instruments.json")  # under HOME; /v1/ has no index page of its own
+
+
+def sitemap(feed: dict) -> str:
+    urls = "".join(f"  <url><loc>{HOME}{path}</loc><lastmod>{feed['date']}</lastmod></url>\n" for path in SITEMAP)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n")
 
 
 MARK = re.compile(r"(<!--feed:(\w+)-->)(.*?)(<!--/feed:\2-->)", re.S)
@@ -1428,7 +1512,7 @@ def inject(page: str, parts: dict[str, str]) -> str:
 BAD = re.compile(r"\bNone\b|\bnan\b|\bNaN\b|\bundefined\b|\binf%")
 
 
-def render(feed: dict, next_html: str) -> dict[str, str]:
+def render(feed: dict, next_html: str, config: dict | None = None) -> dict[str, str]:
     """Every output file as text, keyed by its path under site/. Raises PageError on any gap."""
     if feed.get("problems"):
         raise PageError(f"the feed reports problems: {feed['problems']}")
@@ -1444,13 +1528,13 @@ def render(feed: dict, next_html: str) -> dict[str, str]:
              "lift": lift_block(feed), "backing": backing_block(feed), "risk": risk_block(feed),
              "situation": situation_block(feed), "sitnote": e(situation_note(feed)), "buy": buy_block(feed),
              "buyfine": buy_fine_html(feed), "faq": faq_html(feed), "chat": chat_html(feed), "chattag": e(chat_tag(feed)),
-             "sources": sources_html(feed), "about": about_html()}
+             "sources": sources_html(feed), "about": about_html(), "counter": counter_tag(config)}
     assert set(parts) == set(MARKERS)
     page = inject(next_html, parts)
     left = sorted(set(m.group(2) for m in MARK.finditer(page)) - set(MARKERS))
     if left:
         raise PageError(f"markers on the page that nothing fills: {left}")
-    out = {"next/index.html": page, "next/index.md": next_md(feed), "llms.txt": llms_txt(feed)}
+    out = {"index.html": page, "index.md": next_md(feed), "llms.txt": llms_txt(feed), "sitemap.xml": sitemap(feed)}
     for path, text in out.items():
         m = BAD.search(text)
         if m:
@@ -1466,7 +1550,7 @@ def main(argv: list[str] | None = None) -> int:
     site = pathlib.Path(args.site)
     try:
         feed = load(site / "v1")
-        files = render(feed, (site / "next" / "index.html").read_text())
+        files = render(feed, (site / "index.html").read_text(), load_config(site))
     except Exception as err:  # any failure leaves every page as it was
         print(f"pages not written ({type(err).__name__}: {err}); the last good pages stay up", file=sys.stderr)
         return 1

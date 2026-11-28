@@ -21,7 +21,16 @@
         "source": "https://www.sec.gov/Archives/edgar/data/0001050446/000119312526423400/mstr-20261015.htm",
         "date": "2026-10-15",
         "quote": "declared daily cash dividends on STRC for each calendar day ... Each daily dividend is payable on the business day immediately following its Record Date",
-        "condition": "The filing makes the daily schedule subject to the Daily Dividend Amendments being approved by stockholders at a special meeting."
+        "condition": "The filing made the daily schedule subject to stockholders approving the Daily Dividend Amendments at a special meeting. They approved them on 28 Oct 2026, and the change took effect for STRC on 1 Nov 2026.",
+        "condition_settled": {
+          "result": "approved",
+          "meeting_date": "2026-10-28",
+          "effective": "2026-11-01",
+          "source": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526437776/mstr-20261028.htm",
+          "date": "2026-10-29",
+          "quote": "On October 28, 2026, the Company held the Special Meeting. The Company’s stockholders approved and adopted an amended and restated certificate of designations for each of the Company’s STRF Stock, STRC Stock, STRK Stock and STRD Stock, to permit daily dividends (“Proposal 1”).",
+          "read_on": "2026-11-27"
+        }
       },
       "built_for": "A variable rate the issuer says it adjusts to keep the price at or close to $100, paid every business day: built for income with a price meant to stay near $100."
     },

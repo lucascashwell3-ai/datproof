@@ -10,8 +10,8 @@ Figures below are from the feed dated 27 Nov 2026 and are rebuilt every day.
 
 ## Page (today's figures written into the text, no script needed)
 
-- https://lucascashwell3-ai.github.io/datproof/next/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
-- https://lucascashwell3-ai.github.io/datproof/next/index.md : the same page as Markdown.
+- https://lucascashwell3-ai.github.io/datproof/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
+- https://lucascashwell3-ai.github.io/datproof/index.md : the same page as Markdown.
 
 ## Today
 
@@ -30,7 +30,7 @@ Figures below are from the feed dated 27 Nov 2026 and are rebuilt every day.
 
 ## Plug-in (MCP server)
 
-    claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof datproof-mcp
+    claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@17f9c63c65d6e69023084cf0f8403b5c98f5d8f7 datproof-mcp
 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.

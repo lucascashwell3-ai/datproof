@@ -17,10 +17,9 @@ on:
         type: boolean
         default: false
 
+# Each job asks for only what it needs (below); anything not listed is off.
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: grid
@@ -29,6 +28,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # push the day's data + site commit to main
     # No `environment:` here — that block gates the whole job on the environment's own branch
     # rules before a single step runs, which would block every non-main dry run outright
     # regardless of the DRY_RUN checks below. Only the deploy job (main-only) needs it.
@@ -36,11 +37,12 @@ jobs:
       dry_run: ${{ steps.dry-run.outputs.dry_run }}
       feed_code: ${{ steps.feed.outputs.feed_code }}
       pages_code: ${{ steps.pages.outputs.pages_code }}
+      og_code: ${{ steps.og.outputs.og_code }}
       backing_code: ${{ steps.backing.outputs.backing_code }}
       rates_code: ${{ steps.rates.outputs.rates_code }}
       brokers_code: ${{ steps.brokers.outputs.brokers_code }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       # A branch run must never push to main — only a scheduled/push run on main, or an explicit
       # dry_run=false dispatch on main, is a real run. Everything else pulls, builds, and checks
@@ -55,10 +57,10 @@ jobs:
             echo "DRY_RUN=false" >> "$GITHUB_ENV"
             echo "dry_run=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.11"
-      - run: pip install httpx requests beautifulsoup4 lxml pypdf pytest "opentimestamps-client==0.8.0"
+      - run: pip install httpx requests beautifulsoup4 lxml pypdf pytest pillow "opentimestamps-client==0.8.0"
 
       # Each puller is idempotent and keeps last-good data on failure. A failed pull must not
       # blank the site, so failures here are logged, not fatal — but the exit code is kept so
@@ -129,10 +131,11 @@ jobs:
           python -m pytest tests/test_feed_*.py -q && python -m datproof_feed.build $flag || code=$?
           [ "$code" = 0 ] || echo "::warning::idle-cash feed failed (exit $code); last published /v1/ files stay up"
           echo "feed_code=$code" >> "$GITHUB_OUTPUT"
-      # Today's figures written into /next/ as plain text, from the /v1/ files, so a
-      # reader that runs no script still gets them. Same rule as the feed: a failure leaves
-      # yesterday's pages up and the feed-check job turns the run red. A dry run writes to a temp folder.
-      - name: Plain-text page (/next/ figures + index.md)
+      # Today's figures written into the home page (site/index.html) as plain text, from the /v1/
+      # files, so a reader that runs no script still gets them; also index.md, llms.txt, sitemap.xml.
+      # /next/ is a fixed page that sends readers home; nothing here writes it.
+      # Same rule as the feed: a failure leaves yesterday's pages up and the feed-check job turns the run red. A dry run writes to a temp folder.
+      - name: Plain-text home page (figures + index.md + llms.txt + sitemap)
         id: pages
         run: |
           flag=""
@@ -141,7 +144,20 @@ jobs:
           python -m datproof_feed.pages $flag || code=$?
           [ "$code" = 0 ] || echo "::warning::pages not rebuilt (exit $code); yesterday's pages stay up"
           echo "pages_code=$code" >> "$GITHUB_OUTPUT"
-      - name: Build site
+      # The picture shown when the home page is shared (site/og.png), drawn from the same /v1/ files.
+      # The headline face is fetched from Fontshare for this run (its licence bars committing it).
+      # A failure keeps yesterday's picture and the feed-check job turns the run red.
+      - name: Link picture (og.png)
+        id: og
+        run: |
+          flag=""
+          [ "$DRY_RUN" = "true" ] && flag="--dry-run"
+          code=0
+          python -m datproof_feed.og --fetch-fonts $flag || code=$?
+          [ "$code" = 0 ] || echo "::warning::link picture not rebuilt (exit $code); yesterday's picture stays up"
+          echo "og_code=$code" >> "$GITHUB_OUTPUT"
+      # The bitcoin purchase grid, served at /grid/ (site/grid/index.html). Never the home page.
+      - name: Build grid page (/grid/)
         run: python scripts/build_grid_site.py
       - name: Source status + freshness
         run: |
@@ -159,7 +175,7 @@ jobs:
         run: |
           git config user.name "datproof-bot"
           git config user.email "actions@github.com"
-          git add data/ data/run-status.json site/index.html site/v1 site/next/index.html site/next/index.md site/llms.txt
+          git add data/ data/run-status.json site/index.html site/index.md site/llms.txt site/sitemap.xml site/og.png site/grid/index.html site/v1
           if git diff --cached --quiet; then
             echo "no data changes — nothing to push"
           else
@@ -185,11 +201,13 @@ jobs:
   feed-check:
     needs: build
     runs-on: ubuntu-latest
+    permissions: {}  # reads only the build job's outputs
     steps:
       - name: Idle-cash feed result
         run: |
           code="${{ needs.build.outputs.feed_code }}"
           pages="${{ needs.build.outputs.pages_code }}"
+          og="${{ needs.build.outputs.og_code }}"
           crash="${{ needs.build.outputs.backing_code }}"
           rates="${{ needs.build.outputs.rates_code }}"
           brokers="${{ needs.build.outputs.brokers_code }}"
@@ -200,6 +218,10 @@ jobs:
           fi
           if [ "$pages" != "0" ]; then
             echo "::error title=Plain-text pages failed::pages step exit code ${pages:-missing}; yesterday's pages stay up"
+            bad=1
+          fi
+          if [ "$og" != "0" ]; then
+            echo "::error title=Link picture failed::og step exit code ${og:-missing}; yesterday's picture stays up"
             bad=1
           fi
           if [ "$crash" != "0" ]; then
@@ -217,28 +239,115 @@ jobs:
           [ "$bad" = 0 ] || exit 1
           echo "idle-cash feed and pages ok"
 
+  # Publish to GitHub Pages. The deploy step has failed a fraction of a second after a good upload
+  # ("no uploaded site found"), and a plain re-run then failed on two uploads with the same name. So:
+  # up to three tries, each one clearing the previous upload first, then a check that the live site
+  # really carries the date just built. Runs on main only; a branch or dry run skips this whole job.
   deploy:
     needs: build
     if: needs.build.outputs.dry_run != 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read   # check out main
+      pages: write     # publish
+      id-token: write  # prove to Pages that this run may publish
+      actions: write   # delete this run's earlier upload before a retry
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy3.outputs.page_url }}
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       # Re-checkout main (not the triggering SHA) — the build job may have just pushed a new
       # data + site commit, and this needs that commit's site/, not the older one that kicked
       # off the run.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: main
-      - uses: actions/upload-pages-artifact@v3
+      # The dates the live site must show afterwards: the ones in the files being published. A failed
+      # feed or page build keeps yesterday's files on purpose, and status.json can be newer than the
+      # home page, so each live file is compared with its own checked-out copy, not with today's date.
+      - name: Dates being published
+        id: built
+        run: |
+          status=$(python3 -c "import json;print(json.load(open('site/v1/status.json'))['date'])")
+          home=$(grep -o '"dateModified": *"[0-9-]*"' site/index.html | grep -o '[0-9-]\{10\}')
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "home=$home" >> "$GITHUB_OUTPUT"
+          echo "publishing status.json dated $status and the home page dated $home"
+
+      # A manual re-run of a failed deploy starts clean: no upload left over from the earlier attempt.
+      - name: Clear any earlier upload
+        run: |
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+          done
+      - name: Upload site (try 1)
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: site
-      - name: Deploy to GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages (try 1)
+        id: deploy1
+        continue-on-error: true
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
         with:
           timeout: 1200000
+
+      - name: Clear upload before try 2
+        if: steps.deploy1.outcome == 'failure'
+        run: |
+          sleep 20
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+          done
+      - name: Upload site (try 2)
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: site
+      - name: Deploy to GitHub Pages (try 2)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+        with:
+          timeout: 1200000
+
+      - name: Clear upload before try 3
+        if: steps.deploy2.outcome == 'failure'
+        run: |
+          sleep 60
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+          done
+      - name: Upload site (try 3)
+        if: steps.deploy2.outcome == 'failure'
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: site
+      - name: Deploy to GitHub Pages (try 3)
+        id: deploy3
+        if: steps.deploy2.outcome == 'failure'
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+        with:
+          timeout: 1200000
+
+      # Pages can take a minute to serve a new deploy, so look up to ten times, 30 seconds apart. The
+      # query string skips any cache. Fails the run if the live date never matches.
+      - name: Live site shows the date just built
+        run: |
+          want_status="${{ steps.built.outputs.status }}"
+          want_home="${{ steps.built.outputs.home }}"
+          base="https://lucascashwell3-ai.github.io/datproof"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            status=$(curl -fsSL "$base/v1/status.json?run=${{ github.run_id }}-$i" | python3 -c "import json,sys;print(json.load(sys.stdin)['date'])" || echo none)
+            home=$(curl -fsSL "$base/?run=${{ github.run_id }}-$i" | grep -o '"dateModified": *"[0-9-]*"' | grep -o '[0-9-]\{10\}' || echo none)
+            echo "try $i: status.json $status (want $want_status), home page $home (want $want_home)"
+            if [ "$status" = "$want_status" ] && [ "$home" = "$want_home" ]; then echo "live site is current"; exit 0; fi
+            sleep 30
+          done
+          echo "::error title=Site not current::live site shows status.json $status and home page $home, not $want_status and $want_home"
+          exit 1
       - name: Say plainly that the site did not update
-        if: failure() && steps.deploy.outcome == 'failure'
-        run: echo "::error title=Site not updated::Data commit landed but the Pages deploy failed. Re-run this workflow."
+        if: failure()
+        run: echo "::error title=Site not updated::Data commit landed but the Pages deploy failed after three tries, or the live site never showed the new date. Re-run this workflow."
