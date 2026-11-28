@@ -48,6 +48,16 @@ its source and date; a number that could not be fetched is empty, with the reaso
   rate, the difference, how past holds of that length turned out (or the date results begin),
   whole shares at the last close and brokers' pages for each ticker. The page's "Your situation"
   form does the same arithmetic. `compare.situation` holds it for both.
+- **Check** (the plug-in's tool for the step before buying) takes one ticker, an optional amount and
+  the owner's own limits: lowest yield at today's price, highest price, lowest backing, biggest
+  past-year fall, largest share of an average day's trading, oldest feed in business days, and no
+  missed dividend. For each it returns the fact with its date and source and a result: pass, fail,
+  no limit set, or cannot tell (the fact is missing, undated or older than allowed). `limits_met`
+  is true only when every limit sent passed. With an amount, it adds the last close, the whole shares
+  that amount buys and the cash left. It compares facts with the owner's limits; it is not a
+  recommendation and places no order.
+- **Plug-in tools** (seven, all read-only): `compare`, `instrument`, `instruments`, `changes`,
+  `scenarios`, `method`, `check`.
 - **Comparison rates and where to buy**: `python -m datproof_feed.rates` refreshes
   `data/comparison_rates.json` (each rate dated and sourced, last good figure kept on a failure,
   0-15% and no 2-point one-day move); `python -m datproof_feed.brokers` checks the broker links in

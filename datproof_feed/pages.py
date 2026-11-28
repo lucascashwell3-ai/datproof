@@ -1451,8 +1451,16 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 
     {SETUP}
 
+Seven read-only tools: compare, instrument, instruments, changes, scenarios, method and check.
+
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
+
+The check tool takes one ticker, an optional amount and the owner's own limits (lowest yield, highest
+price, lowest backing, biggest past-year fall, largest share of a day's trading, oldest feed, no missed
+dividend). It returns each fact with its date and source, and for each limit: pass, fail, no limit set,
+or cannot tell when the fact is missing, undated or too old. It compares facts with limits the owner
+set; it is not advice and places no order.
 
 ## About
 
