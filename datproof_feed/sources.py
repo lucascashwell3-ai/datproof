@@ -564,7 +564,7 @@ def _stated_rate(sym: str, today: dt.date, get, d1: str) -> dict:
         except Exception as e:  # noqa: BLE001
             return missing(_err(e), url, _now())
     if sym == "SATA":
-        from scripts.fetch_credit import parse_sata
+        from datproof_feed.strive_sata import parse_sata
         d0 = (today - dt.timedelta(days=7)).isoformat()
         d14 = (today - dt.timedelta(days=14)).isoformat()
         d_next = (today + dt.timedelta(days=1)).isoformat()

@@ -72,9 +72,10 @@ def test_grid_page_lives_at_grid_and_links_home():
 def test_daily_job_commits_the_home_page_and_never_the_old_paths():
     wf = read(".github/workflows/grid.yml")
     add = next(line for line in wf.splitlines() if line.strip().startswith("git add "))
-    for path in ("site/index.html", "site/index.md", "site/llms.txt", "site/sitemap.xml", "site/grid/index.html", "site/v1"):
+    for path in ("site/index.html", "site/index.md", "site/llms.txt", "site/sitemap.xml", "site/v1"):
         assert f" {path}" in add, path
     assert "site/next" not in add
+    assert "site/grid" not in add  # /grid/ is frozen: published as last built, never rebuilt
 
 
 # ---------- visitor counter hook and feedback link ----------
