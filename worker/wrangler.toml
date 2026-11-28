@@ -1,0 +1,13 @@
+# Cloudflare Python Worker running the same MCP server (datproof_feed.web.respond) at /mcp.
+# Local run, no account needed:  npx wrangler dev   (from this folder)
+name = "datproof-mcp"
+main = "src/entry.py"
+compatibility_date = "2026-11-01"
+# python_workers: required for Python. disable_python_external_sdk: use the runtime's built-in `workers` module,
+# so no Python package manager is needed.
+compatibility_flags = ["python_workers", "disable_python_external_sdk"]
+
+# The package is copied in at build time from ../datproof_feed (git ignores the copy): one implementation.
+[build]
+command = "rm -rf src/datproof_feed && mkdir -p src/datproof_feed && cp ../datproof_feed/__init__.py ../datproof_feed/server.py ../datproof_feed/web.py ../datproof_feed/compare.py ../datproof_feed/scenarios.py src/datproof_feed/"
+watch_dir = "../datproof_feed"
