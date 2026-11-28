@@ -49,11 +49,13 @@ def test_every_description_names_the_home_address_never_next():
 
 
 def test_sitemap_lists_the_home_page_twin_llms_and_feed():
-    want = [HOME, HOME + "index.md", HOME + "llms.txt", HOME + "v1/instruments.json"]
+    legal = [HOME + p + t for p in ("privacy/", "terms/") for t in ("", "index.md")]
+    want = [HOME, HOME + "index.md", HOME + "llms.txt", HOME + "v1/instruments.json"] + legal
     assert re.findall(r"<loc>([^<]+)</loc>", read("site/sitemap.xml")) == want
     xml = pages.sitemap({"date": "2026-11-20"})
     assert re.findall(r"<loc>([^<]+)</loc>", xml) == want
-    assert xml.count("<lastmod>2026-11-20</lastmod>") == 4
+    assert xml.count("<lastmod>2026-11-20</lastmod>") == 4  # the privacy and terms pages carry their own date
+    assert xml.count(f"<lastmod>{pages.LEGAL_UPDATED}</lastmod>") == 4
 
 
 def test_grid_page_lives_at_grid_and_links_home():
