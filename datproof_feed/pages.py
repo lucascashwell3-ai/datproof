@@ -10,7 +10,9 @@ Reads only the published /v1/ files. Writes:
                            "your situation" form.
   site/index.md            the same page as plain Markdown, every section included
   site/llms.txt            the short guide for AI readers, with today's figures
-  site/sitemap.xml         the home page, its Markdown twin, llms.txt and the feed, dated to the feed
+  site/sitemap.xml         the home page, its Markdown twin, llms.txt and the feed, dated to the feed;
+                           the privacy and terms pages, dated to their own last change
+  site/privacy/, site/terms/   the privacy and terms pages and their Markdown twins (fixed words, below)
 
 The old address /next/ is a fixed page that sends readers to the home page; nothing here writes it.
 
@@ -1388,6 +1390,9 @@ Example. You ask: "{CHAT_Q}"
 Something missing or wrong? Tell us: {FEEDBACK}
 
 Security problem? Report it privately: {SECURITY}
+
+- Privacy: {BASE}/privacy/ (Markdown: {BASE}/privacy/index.md)
+- Terms: {BASE}/terms/ (Markdown: {BASE}/terms/index.md)
 """
 
 
@@ -1448,7 +1453,192 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
+
+## About
+
+- {BASE}/privacy/ : what a visit sends, and to whom. Markdown: {BASE}/privacy/index.md
+- {BASE}/terms/ : terms of use. Not advice. Markdown: {BASE}/terms/index.md
 """
+
+
+# ---------- privacy and terms: fixed pages, written here so the daily job keeps them ----------
+
+FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
+SECURITY = "https://github.com/lucascashwell3-ai/datproof/security/policy"  # SECURITY.md: how to report privately
+# Change a page's words, then change this date. Never the feed date: the pages only change when their words do.
+LEGAL_UPDATED = "2026-11-28"
+REPO = "https://github.com/lucascashwell3-ai/datproof"
+ISSUES = REPO + "/issues"
+LICENSE_URL = REPO + "/blob/main/LICENSE"
+NOT_ADVICE = ABOUT[1]  # "It is free. It holds no money, places no orders and is not advice."
+
+# Each page: (path, title, description, opening line, sections). A section is (heading, blocks); a block is a
+# paragraph (str) or a list (list[str]). Links are written [label](address) and become <a> in the HTML.
+PRIVACY = ("privacy", "Privacy", "What a visit to DATproof sends, and to whom.",
+           "DATproof is a free, open-source data project. This page says what happens to your data when you "
+           "visit datproof.com or use the DATproof plug-in.",
+           [("Who runs it",
+             [f"DATproof, an open-source project. Its code is public on [GitHub]({REPO}). Questions go to its "
+              f"[issues page]({ISSUES}); security problems go through its [security policy]({SECURITY})."]),
+            ("What DATproof collects",
+             ["Only a visit count on the home page; no other page has the counter.",
+              ["The counter is GoatCounter. Your browser sends it the page address, the page that sent you, the page "
+               "title and your screen width. Like any server, it also sees your IP address and browser.",
+               "GoatCounter says it stores no IP addresses, no full browser details and no tracking ID, and keeps "
+               "only totals: visits per page, the sites that sent them, browsers, systems, countries, languages "
+               "and screen widths."]]),
+            ("What DATproof does not collect",
+             [["There are no accounts, no sign-up and no forms that send anything.",
+               "The “Your situation” calculator works out its numbers in your browser. What you type there "
+               "is sent nowhere.",
+               "The site sets no cookies and stores nothing in your browser.",
+               "There are no ad trackers, and DATproof does not sell or share data."]]),
+            ("Outside services a visit touches",
+             [["[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) "
+               "hosts the site. GitHub logs each visitor’s IP address for security. Its "
+               "[privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement) "
+               "says what it keeps.",
+               "Google Fonts and [Fontshare](https://www.fontshare.com/) serve the typefaces. Your browser sends them "
+               "your IP address, browser details and the page address. Google says it sets no cookies for this and "
+               "does not use it for ads ([Google Fonts privacy](https://fonts.google.com/faq#privacy)).",
+               "GoatCounter counts home page visits ([GoatCounter privacy](https://www.goatcounter.com/privacy))."]]),
+            ("The plug-in",
+             ["The DATproof plug-in installs and runs on your own computer. It only downloads the public feed files "
+              "from datproof.com (GitHub sees those requests as it sees a visit) and never sends the amounts or "
+              "questions you give it. There is no hosted version."]),
+            ("Changes to this page",
+             [f"When this page changes, the date at the top changes. Every past version is public in "
+              f"[the file’s history]({REPO}/commits/main/site/privacy/index.md)."]),
+            ])
+
+TERMS = ("terms", "Terms", "Terms of use for DATproof: information and arithmetic, not advice.",
+         "These terms cover datproof.com, its data feed and its plug-in.",
+         [("What DATproof is",
+           ["Information and arithmetic from public sources on where idle cash can sit: three preferred stocks "
+            "(STRC, SATA and SATS) beside savings, CDs, money market funds and T-bills. " + NOT_ADVICE]),
+          ("Not advice",
+           ["DATproof is not investment, tax or legal advice. It is not an offer or a recommendation to buy or sell "
+            "anything. Using it creates no adviser or client relationship."]),
+          ("Figures can be wrong",
+           ["Figures come from the sources named beside them. They can be wrong or late. Each one carries its source "
+            "link and the date it is true for, so you can check it."]),
+          ("Past results", ["Past results do not predict future results."]),
+          ("No warranty",
+           ["DATproof is provided as is, with no warranty of any kind. To the extent the law allows, its maker is not "
+            "liable for any loss from using it."]),
+          ("Links",
+           ["Links to brokers and other sites are there for convenience. They are not endorsements, and no one pays "
+            "for them."]),
+          ("Disclosure", [DISCLOSURE]),
+          ("The code", [f"The code is open source under the [MIT licence]({LICENSE_URL})."]),
+          ("Changes to these terms",
+           [f"These terms can change. The date at the top shows the last change, and every past version is public in "
+            f"[the file’s history]({REPO}/commits/main/site/terms/index.md)."]),
+          ])
+
+LEGAL = (PRIVACY, TERMS)
+MD_LINK = re.compile(r"\[([^\]]+)\]\(([^)\s]+)\)")
+
+
+def inline_html(text: str) -> str:
+    out, at = [], 0
+    for m in MD_LINK.finditer(text):
+        out.append(e(text[at:m.start()]))
+        out.append(f'<a href="{url(m.group(2))}" rel="noopener">{e(m.group(1))}</a>')
+        at = m.end()
+    return "".join(out) + e(text[at:])
+
+
+def blocks_html(blocks) -> str:
+    return "".join(f"<ul>{''.join(f'<li>{inline_html(x)}</li>' for x in b)}</ul>" if isinstance(b, list)
+                   else f"<p>{inline_html(b)}</p>" for b in blocks)
+
+
+def blocks_md(blocks) -> str:
+    return "\n\n".join("\n".join(f"- {x}" for x in b) if isinstance(b, list) else b for b in blocks)
+
+
+def legal_links(here: str = "", prefix: str = "../") -> str:
+    """The two links at the foot of every page: Privacy · Terms."""
+    return " · ".join(f'<a href="{prefix}{p}/"' + (' aria-current="page"' if p == here else "") + f">{t}</a>"
+                      for p, t, *_ in LEGAL)
+
+
+LEGAL_CSS = """.legal { padding-top: clamp(2.5rem, 8vh, 5rem); }
+.legal h1 { font-family: var(--f-disp); font-size: var(--t-xl); font-weight: var(--d-wt); line-height: var(--h2-lh); letter-spacing: var(--h2-trk); text-wrap: balance; }
+.legal .upd { margin-top: 0.75rem; font-size: var(--t-sm); color: var(--ink-3); }
+.legal .lede { margin-top: 1.75rem; max-width: 60ch; font-size: var(--t-md); color: var(--ink); text-wrap: pretty; }
+.legal h2 { margin-top: 2.75rem; font-size: var(--t-md); font-weight: 600; letter-spacing: 0; }
+.legal p, .legal ul { max-width: 65ch; color: var(--ink-2); text-wrap: pretty; }
+.legal h2 + p, .legal h2 + ul { margin-top: 0.5rem; }
+.legal p + p, .legal p + ul, .legal ul + p { margin-top: 0.75rem; }
+.legal ul { margin-bottom: 0; padding-left: 1.125rem; display: grid; gap: 0.625rem; }
+.legal li::marker { color: var(--ink-3); }
+.legal a { overflow-wrap: anywhere; }"""
+
+
+def legal_html(page: tuple, home_html: str) -> str:
+    path, title, desc, opening, sections = page
+    m = re.search(r"<html[^>]*>", home_html)
+    html_tag = m.group(0) if m else '<html lang="en">'
+    v = re.search(r'next/styles\.css(\?v=\w+)', home_html)
+    body = "".join(f'<h2>{e(h)}</h2>{blocks_html(b)}' for h, b in sections)
+    return f"""<!doctype html>
+{html_tag}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{e(title)} · DATproof</title>
+<meta name="description" content="{e(desc)}">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="{HOME}{path}/">
+<link rel="alternate" type="text/markdown" href="index.md">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&display=swap">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=gambetta@300,301,400&display=swap">
+<link rel="stylesheet" href="../next/styles.css{v.group(1) if v else ''}">
+<style>
+{LEGAL_CSS}
+</style>
+</head>
+<body>
+<header class="wrap bar">
+  <a class="mark" href="../">DATproof</a>
+</header>
+
+<main class="wrap legal">
+  <h1>{e(title)}</h1>
+  <p class="upd">Last updated: <time datetime="{LEGAL_UPDATED}">{day(LEGAL_UPDATED)}</time></p>
+  <p class="lede">{inline_html(opening)}</p>
+  {body}
+</main>
+
+<footer class="wrap foot">
+  <p class="tell">Something missing or wrong? <a href="{FEEDBACK}" rel="noopener">Tell us</a> · <a href="{SECURITY}" rel="noopener">Report a security problem</a></p>
+  <ul class="about">{about_html()}</ul>
+  <p class="legal-links">{legal_links(path)}</p>
+</footer>
+</body>
+</html>
+"""
+
+
+def legal_md(page: tuple) -> str:
+    path, title, _, opening, sections = page
+    body = "\n\n".join(f"## {h}\n\n{blocks_md(b)}" for h, b in sections)
+    return (f"# DATproof: {title.lower()}\n\nLast updated: {day(LEGAL_UPDATED)}. Page: {HOME}{path}/\n\n"
+            f"{opening}\n\n{body}\n")
+
+
+def legal_files(home_html: str) -> dict[str, str]:
+    out = {}
+    for page in LEGAL:
+        out[f"{page[0]}/index.html"] = legal_html(page, home_html)
+        out[f"{page[0]}/index.md"] = legal_md(page)
+    return out
 
 
 # ---------- visitor counter: off until site/config.json names one ----------
@@ -1481,9 +1671,6 @@ def load_config(site: pathlib.Path) -> dict:
     return json.loads(p.read_text()) if p.exists() else {}
 
 
-FEEDBACK = "https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md"
-SECURITY = "https://github.com/lucascashwell3-ai/datproof/security/policy"  # SECURITY.md: how to report privately
-
 
 # ---------- sitemap.xml ----------
 
@@ -1491,7 +1678,9 @@ SITEMAP = ("", "index.md", "llms.txt", "v1/instruments.json")  # under HOME; /v1
 
 
 def sitemap(feed: dict) -> str:
-    urls = "".join(f"  <url><loc>{HOME}{path}</loc><lastmod>{feed['date']}</lastmod></url>\n" for path in SITEMAP)
+    dated = [(path, feed["date"]) for path in SITEMAP]
+    dated += [(f"{page[0]}/{twin}", LEGAL_UPDATED) for page in LEGAL for twin in ("", "index.md")]  # fixed pages keep their own date
+    urls = "".join(f"  <url><loc>{HOME}{path}</loc><lastmod>{d}</lastmod></url>\n" for path, d in dated)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n")
 
@@ -1543,7 +1732,8 @@ def render(feed: dict, next_html: str, config: dict | None = None) -> dict[str, 
     left = sorted(set(m.group(2) for m in MARK.finditer(page)) - set(MARKERS))
     if left:
         raise PageError(f"markers on the page that nothing fills: {left}")
-    out = {"index.html": page, "index.md": next_md(feed), "llms.txt": llms_txt(feed), "sitemap.xml": sitemap(feed)}
+    out = {"index.html": page, "index.md": next_md(feed), "llms.txt": llms_txt(feed), "sitemap.xml": sitemap(feed),
+           **legal_files(next_html)}
     for path, text in out.items():
         m = BAD.search(text)
         if m:

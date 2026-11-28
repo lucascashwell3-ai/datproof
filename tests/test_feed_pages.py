@@ -1140,4 +1140,4 @@ def test_a_dry_run_leaves_the_site_alone(tmp_path, capsys):
     before = tree(site)
     assert pages.main(["--site", str(site), "--dry-run"]) == 0
     assert tree(site) == before
-    assert "4 rendered" in capsys.readouterr().out
+    assert "8 rendered" in capsys.readouterr().out

@@ -34,3 +34,8 @@ Figures below are from the feed dated 28 Nov 2026 and are rebuilt every day.
 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
+
+## About
+
+- https://datproof.com/privacy/ : what a visit sends, and to whom. Markdown: https://datproof.com/privacy/index.md
+- https://datproof.com/terms/ : terms of use. Not advice. Markdown: https://datproof.com/terms/index.md

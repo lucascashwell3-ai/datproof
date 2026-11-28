@@ -178,3 +178,6 @@ DATproof is an open-source data project; its code, data and method are public at
 Something missing or wrong? Tell us: https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md
 
 Security problem? Report it privately: https://github.com/lucascashwell3-ai/datproof/security/policy
+
+- Privacy: https://datproof.com/privacy/ (Markdown: https://datproof.com/privacy/index.md)
+- Terms: https://datproof.com/terms/ (Markdown: https://datproof.com/terms/index.md)
