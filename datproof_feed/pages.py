@@ -33,7 +33,7 @@ from decimal import ROUND_HALF_UP, Decimal
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
-BASE = "https://lucascashwell3-ai.github.io/datproof"
+BASE = "https://datproof.com"
 HOME = BASE + "/"  # the one canonical address of the page
 LEAD = ["STRC", "SATA", "SATS"]
 ODDS_TICKERS = ["STRC", "SATA"]

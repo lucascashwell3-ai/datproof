@@ -10,8 +10,8 @@ Figures below are from the feed dated 28 Nov 2026 and are rebuilt every day.
 
 ## Page (today's figures written into the text, no script needed)
 
-- https://lucascashwell3-ai.github.io/datproof/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
-- https://lucascashwell3-ai.github.io/datproof/index.md : the same page as Markdown.
+- https://datproof.com/ : yields beside savings, CDs, a money market fund and T-bills; past results; a bitcoin crash test; what can go wrong; a "your situation" worked example; where to buy; questions.
+- https://datproof.com/index.md : the same page as Markdown.
 
 ## Today
 
@@ -24,9 +24,9 @@ Figures below are from the feed dated 28 Nov 2026 and are rebuilt every day.
 
 ## Data
 
-- https://lucascashwell3-ai.github.io/datproof/v1/instruments.json : every instrument, comparison rate and broker link, with sources and dates.
-- https://lucascashwell3-ai.github.io/datproof/v1/method.json : every formula in plain words.
-- https://lucascashwell3-ai.github.io/datproof/v1/scenarios.json : what a sum of cash did over past windows.
+- https://datproof.com/v1/instruments.json : every instrument, comparison rate and broker link, with sources and dates.
+- https://datproof.com/v1/method.json : every formula in plain words.
+- https://datproof.com/v1/scenarios.json : what a sum of cash did over past windows.
 
 ## Plug-in (MCP server)
 

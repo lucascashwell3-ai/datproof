@@ -8,7 +8,7 @@ from datproof_feed import pages
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
-HOME = "https://lucascashwell3-ai.github.io/datproof/"
+HOME = "https://datproof.com/"
 
 
 def read(rel: str) -> str:
