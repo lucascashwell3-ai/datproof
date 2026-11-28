@@ -49,7 +49,7 @@ MIN_RECORD = 60   # fewer daily closes than this: say only when the stock starte
 # The tool server people install, fixed to one commit so a stranger's machine runs code that was read,
 # not whatever the default branch holds that day. This is the one place the pin lives; every copy of the
 # install command (README, site/index.html, index.md, llms.txt) must match it (tests/test_install_pin.py).
-SERVER_PIN = "57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8"
+SERVER_PIN = "bdab0e3250013783a6c5d9372dfe5ba0fb70ac80"
 INSTALL_FROM = "git+https://github.com/lucascashwell3-ai/datproof@" + SERVER_PIN
 SETUP = "claude mcp add datproof -- uvx --from " + INSTALL_FROM + " datproof-mcp"
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",

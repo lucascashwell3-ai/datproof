@@ -30,7 +30,7 @@ Figures below are from the feed dated 28 Nov 2026 and are rebuilt every day.
 
 ## Plug-in (MCP server)
 
-    claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8 datproof-mcp
+    claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@bdab0e3250013783a6c5d9372dfe5ba0fb70ac80 datproof-mcp
 
 Seven read-only tools: compare, instrument, instruments, changes, scenarios, method and check.
 
