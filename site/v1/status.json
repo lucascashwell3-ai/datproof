@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-27",
-  "built_at": "2026-11-27T22:34:26Z",
+  "date": "2026-11-28",
+  "built_at": "2026-11-28T02:59:46Z",
   "sources": {
     "nasdaq": "ok",
     "strategy": "ok",
@@ -19,6 +19,7 @@
     "coverage.issuers[1].btc_held",
     "coverage.issuers[1].dividend_reserve_months"
   ],
-  "snapshot_sha256": "2747b12003ea73b6549823e73b45f2793cc8e00a5fbfd569c8c9f57a219b2814",
-  "stamp": "skipped (day file already existed)"
+  "held": [],
+  "snapshot_sha256": "9ded80067e9b764e5320deb2d9ed3e38533bd7c2e04f79a57b2e7ef18afe13e3",
+  "stamp": "stamped; 6 earlier stamp(s) confirmed in bitcoin"
 }
