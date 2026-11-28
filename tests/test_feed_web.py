@@ -29,6 +29,12 @@ MESSAGES = [
     {"jsonrpc": "2.0", "id": 9, "method": "tools/call", "params": {"name": "nope", "arguments": {}}},
     {"jsonrpc": "2.0", "id": 10, "method": "tools/call", "params": {"name": "compare", "arguments": {"amount_usd": -5}}},
     {"jsonrpc": "2.0", "id": 11, "method": "nope"},
+    {"jsonrpc": "2.0", "id": 12, "method": "tools/call", "params": {"name": "check", "arguments": {
+     "ticker": "STRC", "amount_usd": 8000, "limits": {"min_yield_pct": 10, "max_price_usd": 100,
+     "min_backing_ratio": 2, "max_share_of_daily_trading_pct": 1, "dividends_current": True}}}},
+    {"jsonrpc": "2.0", "id": 13, "method": "tools/call", "params": {"name": "check", "arguments": {"ticker": "SATS"}}},
+    {"jsonrpc": "2.0", "id": 14, "method": "tools/call", "params": {"name": "check", "arguments": {
+     "ticker": "STRC", "limits": {"max_share_of_daily_trading_pct": 1}}}},
 ]
 
 
@@ -75,9 +81,11 @@ def web_replies(addr):
 
 def test_web_and_pipe_give_equal_replies(feed_dir, url):
     pipe = talk(feed_dir, *MESSAGES)
-    assert [r["id"] for r in pipe] == list(range(1, 12))  # no reply to the notification
+    assert [r["id"] for r in pipe] == list(range(1, 15))  # no reply to the notification
     assert web_replies(url) == pipe
     assert pipe[8]["result"]["isError"] is True and pipe[9]["result"]["isError"] is True
+    assert pipe[11]["result"]["isError"] is False and pipe[12]["result"]["isError"] is False
+    assert pipe[13]["result"]["isError"] is True
     assert pipe[10]["error"]["code"] == -32601
 
 
