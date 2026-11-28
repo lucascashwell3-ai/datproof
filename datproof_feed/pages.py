@@ -49,7 +49,7 @@ MIN_RECORD = 60   # fewer daily closes than this: say only when the stock starte
 # The tool server people install, fixed to one commit so a stranger's machine runs code that was read,
 # not whatever the default branch holds that day. This is the one place the pin lives; every copy of the
 # install command (README, site/index.html, index.md, llms.txt) must match it (tests/test_install_pin.py).
-SERVER_PIN = "57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8"
+SERVER_PIN = "bdab0e3250013783a6c5d9372dfe5ba0fb70ac80"
 INSTALL_FROM = "git+https://github.com/lucascashwell3-ai/datproof@" + SERVER_PIN
 SETUP = "claude mcp add datproof -- uvx --from " + INSTALL_FROM + " datproof-mcp"
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
@@ -1451,8 +1451,19 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 
     {SETUP}
 
+Seven read-only tools: compare, instrument, instruments, changes, scenarios, method and check.
+
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
+
+The check tool takes one ticker, an optional amount and the owner's own limits (lowest yield, highest
+price, lowest backing, biggest past-year fall, largest share of a day's trading, the oldest any figure
+may be, a current dividend). It returns each fact with its date and source, and for each limit: pass,
+fail, no limit set, or cannot tell when the fact is missing, undated or too old. The age limit applies
+to every figure behind a check: any figure older than it reads cannot tell, and figures from company
+filings (debt, for instance) can be weeks old. A current dividend fails on a missed payment or when the
+last payment is overdue for the issue's own pay schedule, and reads cannot tell when the schedule or a
+date is unknown. It compares facts with limits the owner set; it is not advice and places no order.
 
 ## About
 

@@ -43,7 +43,7 @@ def test_initialize_list_and_call_compare_over_stdio(feed_dir):
     assert replies[0]["result"]["protocolVersion"] == "2025-03-26"
     assert replies[0]["result"]["serverInfo"]["name"] == "datproof"
     names = [t["name"] for t in replies[1]["result"]["tools"]]
-    assert names == ["compare", "instrument", "instruments", "changes", "scenarios", "method"]
+    assert names == ["compare", "instrument", "instruments", "changes", "scenarios", "method", "check"]
     res = replies[2]["result"]
     assert res["isError"] is False
     published = json.loads((feed_dir / "instruments.json").read_text())

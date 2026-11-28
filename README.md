@@ -14,7 +14,7 @@ no orders. Not advice.
 - **Plug-in for your AI agent, one command:**
 
 ```bash
-claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8 datproof-mcp
+claude mcp add datproof -- uvx --from git+https://github.com/lucascashwell3-ai/datproof@bdab0e3250013783a6c5d9372dfe5ba0fb70ac80 datproof-mcp
 ```
 
 ## The feed and the page
@@ -48,6 +48,20 @@ its source and date; a number that could not be fetched is empty, with the reaso
   rate, the difference, how past holds of that length turned out (or the date results begin),
   whole shares at the last close and brokers' pages for each ticker. The page's "Your situation"
   form does the same arithmetic. `compare.situation` holds it for both.
+- **Check** (the plug-in's tool for the step before buying) takes one ticker, an optional amount and
+  the owner's own limits: lowest yield at today's price, highest price, lowest backing, biggest
+  past-year fall, largest share of an average day's trading, the oldest any figure may be in
+  business days, and a current dividend. For each it returns the fact with its date and source and a
+  result: pass, fail, no limit set, or cannot tell (the fact is missing, undated or older than
+  allowed). The age limit applies to every figure behind a check, not only the feed's date: any
+  figure older than it reads cannot tell, and figures from company filings (debt, for instance) can
+  be weeks old. A current dividend fails on a missed payment or when the last payment is overdue for
+  the issue's own pay schedule, and reads cannot tell when the schedule or a date is unknown. `limits_met`
+  is true only when every limit sent passed. With an amount, it adds the last close, the whole shares
+  that amount buys and the cash left. It compares facts with the owner's limits; it is not a
+  recommendation and places no order.
+- **Plug-in tools** (seven, all read-only): `compare`, `instrument`, `instruments`, `changes`,
+  `scenarios`, `method`, `check`.
 - **Comparison rates and where to buy**: `python -m datproof_feed.rates` refreshes
   `data/comparison_rates.json` (each rate dated and sourced, last good figure kept on a failure,
   0-15% and no 2-point one-day move); `python -m datproof_feed.brokers` checks the broker links in
@@ -61,7 +75,7 @@ its source and date; a number that could not be fetched is empty, with the reaso
 
 ```bash
 # 1. Run the tool server for any MCP client (or, from a clone: python3 -m datproof_feed.server)
-uvx --from git+https://github.com/lucascashwell3-ai/datproof@57d06d3e2eea13eb3b61c3a2ee8e6f028429c8c8 datproof-mcp
+uvx --from git+https://github.com/lucascashwell3-ai/datproof@bdab0e3250013783a6c5d9372dfe5ba0fb70ac80 datproof-mcp
 
 # 2. Optional: add the Claude Code skill that walks through the questions
 cp -r skills/park-idle-cash ~/.claude/skills/

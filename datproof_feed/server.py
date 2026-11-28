@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 import os
 import pathlib
 import re
@@ -103,6 +104,49 @@ TOOLS = [
     _tool("method", "Method and sources",
           "Returns every formula, flag and source the feed uses, in plain words.",
           {"type": "object", "properties": {}}),
+    _tool("check", "Check before buying",
+          "Returns the facts a set of the owner's own limits ask about, for one preferred stock in the feed: "
+          "yield at today's price, last close, assets behind each $1 owed, biggest past-year price fall, a "
+          "planned amount as a share of an average day's trading, the feed's age in business days, and missed "
+          "dividends. Each comes with its value, date and source, and a result: pass or fail against the limit "
+          "the owner sent; no limit set; or cannot tell, when the fact is missing, undated or older than "
+          "allowed. limits_met is true only when every limit sent passed. With an amount, also the last close, "
+          "the whole shares that amount buys at it and the cash left over. Compares facts with the owner's "
+          "limits; not a recommendation; places no order.",
+          {"type": "object", "properties": {
+              "ticker": {"type": "string", "description": "one instrument in the feed, e.g. STRC"},
+              "amount_usd": {"type": "number", "exclusiveMinimum": 0,
+                             "description": "optional: the size of the planned buy, in US dollars"},
+              "limits": {"type": "object", "additionalProperties": False,
+                         "description": "optional: the owner's own limits; a limit not sent is not judged",
+                         "properties": {
+                             "min_yield_pct": {"type": "number", "minimum": 0,
+                                               "description": "lowest yield at today's price accepted, in percent"},
+                             "max_price_usd": {"type": "number", "minimum": 0,
+                                               "description": "highest price per share accepted, in US dollars"},
+                             "min_backing_ratio": {"type": "number", "minimum": 0,
+                                                   "description": "lowest assets behind each $1 owed (debt, every "
+                                                                  "preferred ahead in line and the issue itself)"},
+                             "max_drop_pct": {"type": "number", "minimum": 0,
+                                              "description": "biggest past-year price fall accepted, in percent "
+                                                             "(the same figure compare uses)"},
+                             "max_share_of_daily_trading_pct": {"type": "number", "minimum": 0,
+                                                                "description": "largest share of an average day's "
+                                                                               "trading value (30 days) the planned "
+                                                                               "buy may be, in percent; needs amount_usd"},
+                             "max_age_business_days": {"type": "integer", "minimum": 0,
+                                                       "description": "how many business days old any figure "
+                                                                      "may be: the feed itself fails when older, "
+                                                                      "and any figure behind a check that is older "
+                                                                      "reads cannot tell. Figures from company "
+                                                                      "filings (debt, for instance) can be weeks "
+                                                                      "old"},
+                             "dividends_current": {"type": "boolean",
+                                                   "description": "true: fails if the feed shows a missed payment "
+                                                                  "or the last payment is overdue for the issue's "
+                                                                  "own pay schedule; cannot tell when the schedule "
+                                                                  "or a date is unknown"}}}},
+           "required": ["ticker"]}),
 ]
 
 TOOL_NAMES = frozenset(t["name"] for t in TOOLS)
@@ -170,7 +214,7 @@ COUNTS: Counter = Counter()  # (UTC day, tool name) -> calls, while the count is
 def count_call(tool) -> None:
     """Count one call: the UTC day and the tool's name, nothing else. Off unless DATPROOF_COUNT=1.
     It takes only the name, so arguments (a cash amount among them) cannot reach it; a name that is not one
-    of the six tools is counted as 'unknown', since the caller writes it. Each count is also one stderr line
+    of the tools is counted as 'unknown', since the caller writes it. Each count is also one stderr line
     (never stdout, which carries the stdio protocol) for a host's logs."""
     if os.environ.get(COUNT_ENV) != "1":
         return
@@ -237,6 +281,265 @@ def situation_answer(args: dict) -> dict:
     return out
 
 
+# ---------- check: facts against the owner's own limits ----------
+
+CHECK_NOTE = "These results compare the feed's facts with limits the owner set; they are not a recommendation."
+NUMBER_LIMITS = ("min_yield_pct", "max_price_usd", "min_backing_ratio", "max_drop_pct",
+                 "max_share_of_daily_trading_pct")
+LIMIT_KEYS = NUMBER_LIMITS + ("max_age_business_days", "dividends_current")
+
+
+def _number(x) -> bool:
+    """A real, finite number (JSON text can carry NaN and Infinity; neither is a limit or an amount)."""
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
+
+
+def _check_inputs(args: dict, feed: dict):
+    """The ticker's feed record, the amount and the limits sent, or a ToolError in plain words."""
+    t = str(args.get("ticker", "")).strip().upper()
+    if not TICKER.match(t):
+        raise ToolError("ticker must be 1-6 letters, e.g. STRC")
+    ins = next((i for i in feed.get("instruments", []) if i.get("ticker") == t), None)
+    if ins is None:
+        known = [i.get("ticker") for i in feed.get("instruments", [])]
+        raise ToolError(f"{t} is not in the feed; it holds {', '.join(map(str, known))}")
+    amount = args.get("amount_usd")
+    if amount is not None and (not _number(amount) or amount <= 0):
+        raise ToolError("amount_usd must be a number above 0")
+    raw = args.get("limits") or {}
+    if not isinstance(raw, dict):
+        raise ToolError("limits must be an object, e.g. {\"min_yield_pct\": 10}")
+    unknown = sorted(set(raw) - set(LIMIT_KEYS))
+    if unknown:
+        raise ToolError(f"unknown limit {', '.join(unknown)}; known limits: {', '.join(LIMIT_KEYS)}")
+    limits = {}
+    for k in NUMBER_LIMITS:
+        v = raw.get(k)
+        if v is None:
+            continue
+        if not _number(v) or v < 0:
+            raise ToolError(f"{k} must be a number, 0 or more")
+        limits[k] = v
+    age = raw.get("max_age_business_days")
+    if age is not None:
+        if isinstance(age, bool) or not isinstance(age, int) or age < 0:
+            raise ToolError("max_age_business_days must be a whole number, 0 or more")
+        limits["max_age_business_days"] = age
+    div = raw.get("dividends_current")
+    if div is not None and not isinstance(div, bool):
+        raise ToolError("dividends_current must be true or false")
+    if div:
+        limits["dividends_current"] = True
+    if "max_share_of_daily_trading_pct" in limits and amount is None:
+        raise ToolError("max_share_of_daily_trading_pct needs amount_usd, the size of the planned buy")
+    return ins, amount, limits
+
+
+def _dated(value, unit: str, parts: list, today: dt.date, max_age):
+    """A fact with the oldest date and every source of the feed figures behind it, plus the reason it cannot
+    be judged (None when it can). A figure that is missing, carries a reason, is marked stale by the feed,
+    has no date or source, or is older than max_age business days cannot be judged."""
+    dates, sources, why = [], [], None
+    for p in parts:
+        if not isinstance(p, dict):
+            why = why or "a figure behind it is not in the feed"
+            continue
+        if p.get("stale"):
+            why = why or "the feed marks a figure behind it as stale"
+        try:
+            dates.append(dt.date.fromisoformat(str(p.get("as_of"))[:10]))
+        except ValueError:
+            why = why or "a figure behind it has no date"
+        if p.get("source"):
+            if p["source"] not in sources:
+                sources.append(p["source"])
+        else:
+            why = why or "a figure behind it has no source"
+    if value is None:
+        why = "the feed has no figure for this" + (f" ({parts[0].get('reason')})" if parts and isinstance(parts[0], dict)
+                                                   and parts[0].get("reason") else "")
+    as_of = min(dates).isoformat() if dates and len(dates) == len(parts) else None
+    if why is None and not parts:
+        why = "the feed gives no date or source for this"
+    if why is None and max_age is not None and business_days_between(min(dates), today) > max_age:
+        why = f"dated {as_of}, more than {max_age} business days old"
+    fact = {"value": value, "unit": unit, "as_of": as_of,
+            "source": sources[0] if len(sources) == 1 else (sources or None)}
+    return fact, why
+
+
+def _inputs(ins: dict, figure: dict) -> list:
+    """The dated feed figures a worked-out figure names as its inputs. The figure's own stale mark or reason
+    travels with them, so a worked-out figure the feed marks stale cannot be judged either."""
+    if not isinstance(figure, dict):
+        return []
+    parts = [ins.get(k) for k in (figure.get("inputs") or [])]
+    if parts and (figure.get("stale") or figure.get("reason")):
+        parts = [{**p, "stale": True} if isinstance(p, dict) else p for p in parts]
+    return parts
+
+
+def _backing_parts(ins: dict, feed: dict) -> list:
+    """Every dated figure behind the backing ratio: the issuer's bitcoin, its price and cash, the amount
+    outstanding of the issue and of each issue ahead of it, and the issuer's debt (a daily figure, or the
+    filing figure in backing.static)."""
+    b = ins.get("backing") or {}
+    parts = [v for v in (b.get("inputs") or {}).values()]
+    wide = (feed.get("backing") or {}).get("inputs") or {}
+    for t in [ins.get("ticker"), *(b.get("ahead") or [])]:
+        parts.append(wide.get(f"{t}_outstanding_usd"))
+    issuer = str(b.get("issuer", "")).lower()
+    static = ((feed.get("backing") or {}).get("static") or {}).get(issuer) or {}
+    parts.append(wide.get(f"{issuer}_debt_usd") or static.get("debt_usd"))
+    return parts
+
+
+# The longest pause between payments each pay schedule allows: the feed's own rule for a gap (sources.streak:
+# over 4 days once an issue pays daily, over 100 days for quarterly payers, over 35 days otherwise).
+ALLOWED_PAUSE_DAYS = {"every business day": 4, "twice a month": 35, "monthly": 35, "quarterly": 100}
+
+
+def _rhythm(ins: dict, pay: dict, feed_date) -> dict:
+    """Whether the last payment is on time for the issue's own pay schedule, on the feed's date: overdue is
+    True, False, or None when the schedule or a date is unknown; reason says why when it is not False."""
+    sched = ins.get("schedule")
+    out = {"schedule": sched, "allowed_days": ALLOWED_PAUSE_DAYS.get(sched), "days_since_last_paid": None,
+           "overdue": None}
+    try:
+        last = dt.date.fromisoformat(str(pay.get("last_paid"))[:10])
+        day = dt.date.fromisoformat(str(feed_date)[:10])
+    except ValueError:
+        out["reason"] = "the feed gives no date for the last payment, or no feed date"
+        return out
+    out["days_since_last_paid"] = (day - last).days
+    if out["allowed_days"] is None:
+        out["reason"] = (f"the feed shows no pay schedule for this issue ({sched!r}), so it cannot tell whether "
+                         f"the last payment, on {last.isoformat()}, is on time")
+        return out
+    out["overdue"] = out["days_since_last_paid"] > out["allowed_days"]
+    if out["overdue"]:
+        out["reason"] = (f"last paid {last.isoformat()}, {out['days_since_last_paid']} days before the feed date; "
+                         f"its schedule ({sched}) allows up to {out['allowed_days']} days between payments")
+    return out
+
+
+def _fmt(x) -> str:
+    if isinstance(x, float) and x.is_integer():
+        x = int(x)
+    return f"{x:,}" if isinstance(x, int) else str(x)
+
+
+def check_answer(args: dict, feed: dict, today: dt.date) -> dict:
+    ins, amount, limits = _check_inputs(args, feed)
+    max_age = limits.get("max_age_business_days")
+    t = ins["ticker"]
+    feed_part = {"as_of": feed.get("date"), "source": f"DATproof feed instruments.json, built {feed.get('built_at')}"}
+
+    y, close, drop, val = (ins.get(k) or {} for k in ("yield_pct", "close_usd", "worst_drop_pct", "avg_value_30d_usd"))
+    back = ins.get("backing") or {}
+    # The average trading value carries its own date; its sources are those of its inputs.
+    val_parts = []
+    if val:
+        srcs = [p.get("source") for p in _inputs(ins, val) if isinstance(p, dict) and p.get("source")]
+        val_parts = [{**val, "source": s} for s in srcs] or [val]
+    share = None
+    if amount is not None and _number(val.get("value")) and val["value"] > 0:
+        share = amount / val["value"] * 100
+    pay = ins.get("payments") or {}
+    divs_known = pay.get("paid") is not None and pay.get("last_paid") and not ins.get("dividends_reason")
+    div_part = {"as_of": feed.get("date"), "source": ins.get("dividends_source")}
+    rhythm = _rhythm(ins, pay, feed.get("date")) if divs_known else {}
+    age = None
+    try:
+        age = business_days_between(dt.date.fromisoformat(str(feed.get("date"))[:10]), today)
+    except ValueError:
+        pass
+
+    # id, limit key, question with a limit / without, value, unit, parts, passes(value, limit)
+    L = limits.get
+    rows = [
+        ("yield", "min_yield_pct",
+         f"Is {t}'s yield at today's price at least {_fmt(L('min_yield_pct'))}%?", f"What is {t}'s yield at today's price?",
+         y.get("value"), "pct", _inputs(ins, y), lambda v, lim: v >= lim),
+        ("price", "max_price_usd",
+         f"Is {t}'s last close at or below ${_fmt(L('max_price_usd'))}?", f"What was {t}'s last close?",
+         close.get("value"), "usd", [close] if close else [], lambda v, lim: v <= lim),
+        ("backing", "min_backing_ratio",
+         f"Are there at least ${_fmt(L('min_backing_ratio'))} of assets behind each $1 owed, counting {t} and "
+         "everything ahead of it in line?", f"How many dollars of assets stand behind each $1 owed, counting {t} "
+         "and everything ahead of it in line?",
+         back.get("backing_x"), "x", _backing_parts(ins, feed) if back.get("backing_x") is not None else [back],
+         lambda v, lim: v >= lim),
+        ("past_year_drop", "max_drop_pct",
+         f"Was {t}'s biggest price fall over the past year {_fmt(L('max_drop_pct'))}% or less?",
+         f"What was {t}'s biggest price fall over the past year?",
+         drop.get("value"), "pct", _inputs(ins, drop), lambda v, lim: v <= lim),
+        ("share_of_daily_trading", "max_share_of_daily_trading_pct",
+         f"Is ${_fmt(amount)} at most {_fmt(L('max_share_of_daily_trading_pct'))}% of {t}'s average day of "
+         "trading (30 days)?",
+         (f"What share of {t}'s average day of trading (30 days) is ${_fmt(amount)}?" if amount is not None
+          else f"What is {t}'s average day of trading (30 days), in dollars?"),
+         (None if share is None else round(share, 4)) if amount is not None else val.get("value"),
+         "pct" if amount is not None else "usd", val_parts, lambda v, lim: share <= lim),
+        ("feed_age", "max_age_business_days",
+         f"Are the feed's figures {_fmt(max_age)} business days old or less?", "How old is the feed?",
+         age, "business days", [feed_part], lambda v, lim: v <= lim),
+        ("dividends", "dividends_current",
+         f"Is {t}'s dividend current: no missed payment in the feed, and the last one on time for its schedule?",
+         f"How many missed dividends does the feed show for {t}, and is the last one on time?",
+         len(pay.get("gaps") or []) if divs_known else None, "missed payments", [div_part],
+         lambda v, lim: v == 0 and rhythm.get("overdue") is False),
+    ]
+    checks = []
+    for cid, key, q_lim, q_none, value, unit, parts, passes in rows:
+        lim = limits.get(key)
+        # The feed age is the age itself, so max_age does not make it "cannot tell".
+        fact, why = _dated(value, unit, parts, today, None if cid == "feed_age" else max_age)
+        if cid == "dividends" and not divs_known:
+            why = "the feed could not read this issue's dividends" + (f" ({ins['dividends_reason']})"
+                                                                      if ins.get("dividends_reason") else "")
+            fact["reason"] = why
+        row = {"id": cid, "question": q_none if lim is None else q_lim, "limit": lim, "fact": fact}
+        if cid == "dividends" and divs_known:
+            fact["missed"] = list(pay.get("gaps") or [])
+            fact["last_paid"] = pay.get("last_paid")
+            fact.update({k: v for k, v in rhythm.items()})
+            if rhythm.get("overdue") is None:
+                why = why or rhythm.get("reason")  # an unknown schedule or date is never a pass
+        if lim is None:
+            row["result"] = "no limit set"
+        elif why is not None:
+            row["result"], row["why"] = "cannot tell", why
+        else:
+            row["result"] = "pass" if passes(value, lim) else "fail"
+        checks.append(row)
+
+    set_rows = [c["result"] for c in checks if c["limit"] is not None]
+    if "fail" in set_rows:
+        met = False
+    elif "cannot tell" in set_rows or not set_rows:
+        met = None
+    else:
+        met = True
+    out = {"ticker": t, "inputs": {"amount_usd": amount, "limits": limits}, "checks": checks,
+           "limits_met": met,
+           "limits_met_means": "true only when every limit you set passed; false when any failed; null when any "
+                               "could not be told or none was set. It covers the limits you set and nothing else.",
+           "note": CHECK_NOTE}
+    if amount is not None:
+        cv = close.get("value")
+        fact, why = _dated(cv, "usd", [close] if close else [], today, max_age)
+        order = {"last_close": fact}
+        if why is None and _number(cv) and cv > 0:
+            n = int(amount // cv)
+            order.update(whole_shares=n, cash_left_usd=round(amount - n * cv, 2),
+                         rule="whole_shares = floor(amount / last close); cash_left = amount - whole_shares x last close")
+        else:
+            order.update(whole_shares=None, cash_left_usd=None, why=why)
+        out["facts_for_the_order"] = order
+    return out
+
+
 def call_tool(name: str, args: dict):
     count_call(name)
     price_gate(name)
@@ -258,6 +561,8 @@ def call_tool(name: str, args: dict):
         return {"date": data.get("date"), "note": data.get("note"), "situation": hit[0]}
     if name in ("instruments", "changes", "method"):
         return load(f"{name}.json")
+    if name == "check":
+        return check_answer(args, load("instruments.json"), _today())
     raise ToolError(f"unknown tool {name!r}")
 
 
