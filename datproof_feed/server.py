@@ -26,53 +26,75 @@ FALLBACK_PROTOCOL = "2025-06-18"
 TICKER = re.compile(r"^[A-Z]{1,6}$")
 MAX_AGE_BUSINESS_DAYS = 2  # older than this and every answer says so
 
+# Every tool only reads DATproof's own published feed: nothing is written, moved or ordered.
+# title: MCP spec 2025-11-25 (Tool.title); Claude connector review criteria ("every tool must include a title").
+# readOnlyHint: MCP spec ToolAnnotations; Claude review criteria and submission checklist; OpenAI plug-in
+#   guidelines 6.3. destructiveHint and openWorldHint as explicit booleans: OpenAI plug-in guidelines 6.3.
+# openWorldHint is False: the tools read one fixed feed, a closed domain (the spec's example of a closed tool
+#   is a memory tool; of an open one, web search).
+READ_ONLY = {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}
+
+# Said in every tool reply (see handle()), not in the descriptions.
+NOTICE = ("Fixed order: STRC, SATA, SATS; no ranking. Facts and arithmetic only; not advice; "
+          "DATproof never places an order.")
+
+WHAT = ("STRC, SATA and SATS: preferred stocks that pay a dividend, issued by companies that hold bitcoin "
+        "(financial information, not a crypto product)")
+
+
+def _tool(name: str, title: str, description: str, schema: dict) -> dict:
+    return {"name": name, "title": title, "description": description, "inputSchema": schema,
+            "annotations": {"title": title, **READ_ONLY}}
+
+
 TOOLS = [
-    {"name": "compare",
-     "description": "What idle cash would earn: for a sum of US-dollar cash, how long it can sit (1 month, "
-                    "3 months, 6 months or 1 year) and where it sits today (checking, savings, high-yield "
-                    "savings, 12-month CD, money market fund, T-bill or broker cash), returns the same rows for "
-                    "STRC, SATA and SATS, bitcoin-backed preferred stocks that pay a dividend every business "
-                    "day: dividends over that time at today's yield, what the cash earns where it sits now (a "
-                    "named, sourced rate), the difference, how past holds of that length turned out (dividends "
-                    "plus price change: share that came out ahead, typical, worst; or the date results begin), "
-                    "whole shares at the last close, the price against $100, and links to brokers' own pages "
-                    "for each ticker. Fixed order, no ranking. Use it for questions like 'where should idle "
-                    "cash go?' or 'what would I earn on $8,000 for three months?'. Every figure carries its "
-                    "date and source. Facts and arithmetic only; not advice; it never places an order.",
-     "inputSchema": {"type": "object", "properties": {
-         "amount_usd": {"type": "number", "exclusiveMinimum": 0, "description": "cash, in US dollars (default 10000)"},
-         "hold": {"type": "string", "enum": list(cmp.HOLDS),
-                  "description": "how long the cash can sit (default 3 months)"},
-         "days": {"type": "integer", "minimum": 1,
-                  "description": "alternative to hold: days the cash can sit, rounded to the nearest of 30, 90, 180, 365"},
-         "sits_in": {"type": "string", "enum": list(cmp.SITS_IN),
-                     "description": "where the cash sits today: " + ", ".join(f"{k} = {v}" for k, v in cmp.SITS_IN.items())
-                                    + " (default hys_top)"},
-         "max_drop_pct": {"type": "number", "minimum": 0,
-                          "description": "optional: biggest past-year price fall the owner accepts, in percent; "
-                                         "each row then says whether its past-year fall was within it"}},
-         "required": []}},
-    {"name": "instrument",
-     "description": "Everything the feed knows about one preferred stock today, including its dividends.",
-     "inputSchema": {"type": "object", "properties": {
-         "ticker": {"type": "string", "description": "e.g. STRC"}}, "required": ["ticker"]}},
-    {"name": "instruments",
-     "description": "Today's full snapshot: every preferred stock and benchmark, with sources and dates.",
-     "inputSchema": {"type": "object", "properties": {}}},
-    {"name": "changes",
-     "description": "What changed day to day (rates, pay schedules, missed payments, sources), newest first.",
-     "inputSchema": {"type": "object", "properties": {}}},
-    {"name": "scenarios",
-     "description": "What a sum of cash did over the past 30, 90, 180 and 365 days in each preferred stock "
-                    "(dividends paid, price change, lowest point), beside a T-bill and money market fund at "
-                    "today's rate, plus three named situations. Past results do not predict future results. "
-                    "Facts and arithmetic only; not advice.",
-     "inputSchema": {"type": "object", "properties": {
-         "situation": {"type": "string", "enum": [x["id"] for x in sc.SITUATIONS],
-                       "description": "return only this situation (default: the whole document)"}}}},
-    {"name": "method",
-     "description": "Every formula, flag and source in plain words.",
-     "inputSchema": {"type": "object", "properties": {}}},
+    _tool("compare", "Compare idle cash",
+          "Returns what a sum of US-dollar cash would earn over 1 month, 3 months, 6 months or 1 year in each "
+          "of " + WHAT + ", beside what it earns where it sits today (checking, savings, high-yield savings, "
+          "12-month CD, money market fund, T-bill or broker cash; a named, sourced rate). Same rows for each "
+          "ticker, in a fixed order: dividends over that time at today's yield, the difference, how past holds "
+          "of that length turned out (dividends plus price change: share that came out ahead, typical, worst; "
+          "or the date results begin), whole shares at the last close, the price against $100, and links to "
+          "brokers' own pages. Every figure carries its date and source. Not ranked; not advice; places no "
+          "order.",
+          {"type": "object", "properties": {
+              "amount_usd": {"type": "number", "exclusiveMinimum": 0, "description": "cash, in US dollars (default 10000)"},
+              "hold": {"type": "string", "enum": list(cmp.HOLDS),
+                       "description": "how long the cash can sit (default 3 months)"},
+              "days": {"type": "integer", "minimum": 1,
+                       "description": "alternative to hold: days the cash can sit, rounded to the nearest of 30, 90, 180, 365"},
+              "sits_in": {"type": "string", "enum": list(cmp.SITS_IN),
+                          "description": "where the cash sits today: " + ", ".join(f"{k} = {v}" for k, v in cmp.SITS_IN.items())
+                                         + " (default hys_top)"},
+              "max_drop_pct": {"type": "number", "minimum": 0,
+                               "description": "optional: biggest past-year price fall the owner accepts, in percent; "
+                                              "each row then says whether its past-year fall was within it"}},
+           "required": []}),
+    _tool("instrument", "One preferred stock",
+          "Returns everything the feed holds today on one preferred stock it tracks (for example STRC, SATA or "
+          "SATS: preferred stocks that pay a dividend, issued by companies that hold bitcoin): price, yield, "
+          "dividends paid, pay schedule, issuer, sources and dates.",
+          {"type": "object", "properties": {
+              "ticker": {"type": "string", "description": "e.g. STRC"}}, "required": ["ticker"]}),
+    _tool("instruments", "Today's snapshot",
+          "Returns today's full snapshot: every preferred stock the feed tracks (" + WHAT + ", and the other "
+          "preferred stocks of the same issuers), the cash benchmarks and the cash rates compared against, "
+          "with sources and dates.",
+          {"type": "object", "properties": {}}),
+    _tool("changes", "Day-to-day changes",
+          "Returns what changed in the feed from day to day (rates, pay schedules, missed payments, sources), "
+          "newest first.",
+          {"type": "object", "properties": {}}),
+    _tool("scenarios", "Past results for a sum",
+          "Returns what a sum of cash did over the past 30, 90, 180 and 365 days in each of " + WHAT + " "
+          "(dividends paid, price change, lowest point), beside a T-bill and a money market fund at today's "
+          "rate, plus three named situations. Past results only; they do not predict future results.",
+          {"type": "object", "properties": {
+              "situation": {"type": "string", "enum": [x["id"] for x in sc.SITUATIONS],
+                            "description": "return only this situation (default: the whole document)"}}}),
+    _tool("method", "Method and sources",
+          "Returns every formula, flag and source the feed uses, in plain words.",
+          {"type": "object", "properties": {}}),
 ]
 
 
@@ -233,7 +255,8 @@ def handle(msg: dict) -> dict | None:
                 data = {**data, **stamp}
             line = (f"Feed date: {stamp.get('feed_date')}." + (f" Warning: {stamp['feed_warning']}" if stamp.get("feed_warning") else ""))
             return ok({"content": [{"type": "text", "text": json.dumps(data, ensure_ascii=False)},
-                                   {"type": "text", "text": line}], "isError": False})
+                                   {"type": "text", "text": line},
+                                   {"type": "text", "text": NOTICE}], "isError": False})
         except ToolError as e:
             return ok({"content": [{"type": "text", "text": str(e)}], "isError": True})
     return {"jsonrpc": "2.0", "id": mid, "error": {"code": -32601, "message": f"method not found: {method}"}}
