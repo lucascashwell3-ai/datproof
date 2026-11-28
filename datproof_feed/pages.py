@@ -56,6 +56,9 @@ MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc
 BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
+# The two actions under the opening paragraph; the HTML page has the same two as buttons (site/index.html).
+DOORS = (("See what you could earn", "calc"), ("Connect your agent", "agent"))
+DOORS_MD = " · ".join(f"[{label}]({HOME}#{anchor})" for label, anchor in DOORS)
 HEADLINE = "Earn {range} on your idle cash."  # the page's h1, with the range filled from the feed
 HERO_SUB = ("Cash you can leave for three months or more can earn a dividend every business day from digital credit, "
             "preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.")
@@ -1325,6 +1328,8 @@ def next_md(feed: dict) -> str:
     return f"""# DATproof: {HEADLINE.format(range=hl_range(feed)).rstrip(".").replace("Earn", "earn", 1)}
 
 {HERO_SUB}
+
+{DOORS_MD}
 
 {md_stamp(feed)}. Page with charts: {HOME}
 

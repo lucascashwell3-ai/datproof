@@ -2,6 +2,8 @@
 
 Cash you can leave for three months or more can earn a dividend every business day from digital credit, preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.
 
+[See what you could earn](https://lucascashwell3-ai.github.io/datproof/#calc) · [Connect your agent](https://lucascashwell3-ai.github.io/datproof/#agent)
+
 Prices at the 25 Nov 2026 close · data for 28 Nov 2026. Page with charts: https://lucascashwell3-ai.github.io/datproof/
 
 ## Income every business day
