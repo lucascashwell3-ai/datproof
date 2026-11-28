@@ -52,6 +52,13 @@ MIN_RECORD = 60   # fewer daily closes than this: say only when the stock starte
 SERVER_PIN = "bdab0e3250013783a6c5d9372dfe5ba0fb70ac80"
 INSTALL_FROM = "git+https://github.com/lucascashwell3-ai/datproof@" + SERVER_PIN
 SETUP = "claude mcp add datproof -- uvx --from " + INSTALL_FROM + " datproof-mcp"
+# The hosted copy of the same server: one address, named in README, site/index.html, index.md, llms.txt and the
+# privacy page (tests/test_hosted_address.py). worker/wrangler.toml serves it on the same host.
+HOSTED_MCP = "https://mcp.datproof.com/mcp"
+HOSTED_HOST = HOSTED_MCP.split("/")[2]
+HOSTED_WAY = "streamable HTTP, no sign-in"
+AGENT_SUB = (f"One line of setup, or none: the hosted copy is at {HOSTED_MCP} ({HOSTED_WAY}). "
+             "Your agent reads DATproof; any order goes through your own broker, placed by you.")
 MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc", "below", "odds", "oddsnote",
            "lifthead", "lift", "backing", "risk", "situation", "sitnote", "buy", "buyfine", "faq", "chat", "chattag",
            "sources", "about", "counter")
@@ -1372,7 +1379,7 @@ Each day of the past year: buy, hold, collect the dividends, sell. Dividends plu
 
 ## Connect your agent
 
-One line of setup. Your agent reads DATproof; any order goes through your own broker, placed by you.
+{AGENT_SUB}
 
     {SETUP}
 
@@ -1451,6 +1458,9 @@ Figures below are from the feed dated {day(feed['date'])} and are rebuilt every 
 
     {SETUP}
 
+Or use it without installing: the hosted copy at {HOSTED_MCP} ({HOSTED_WAY}, no key) is the same
+server with the same tools.
+
 Seven read-only tools: compare, instrument, instruments, changes, scenarios, method and check.
 
 The compare tool takes an amount, how long the cash will sit (1 month, 3 months, 6 months, 1 year) and
@@ -1479,6 +1489,9 @@ SECURITY = "https://github.com/lucascashwell3-ai/datproof/security/policy"  # SE
 # Change a page's words, then change this date. Never the feed date: the pages only change when their words do.
 LEGAL_UPDATED = "2026-11-28"
 REPO = "https://github.com/lucascashwell3-ai/datproof"
+CF_PRIVACY = "https://www.cloudflare.com/privacypolicy/"
+CF_METRICS = "https://developers.cloudflare.com/workers/observability/metrics-and-analytics/"
+CF_LOGS = "https://developers.cloudflare.com/workers/observability/logs/workers-logs/"
 ISSUES = REPO + "/issues"
 LICENSE_URL = REPO + "/blob/main/LICENSE"
 NOT_ADVICE = ABOUT[1]  # "It is free. It holds no money, places no orders and is not advice."
@@ -1492,7 +1505,7 @@ PRIVACY = ("privacy", "Privacy", "What a visit to DATproof sends, and to whom.",
              [f"DATproof, an open-source project. Its code is public on [GitHub]({REPO}). Questions go to its "
               f"[issues page]({ISSUES}); security problems go through its [security policy]({SECURITY})."]),
             ("What DATproof collects",
-             ["Only a visit count on the home page; no other page has the counter.",
+             ["On the site, only a visit count on the home page; no other page has the counter.",
               ["The counter is GoatCounter. Your browser sends it the page address, the page that sent you, the page "
                "title and your screen width. Like any server, it also sees your IP address and browser.",
                "GoatCounter says it stores no IP addresses, no full browser details and no tracking ID, and keeps "
@@ -1504,7 +1517,7 @@ PRIVACY = ("privacy", "Privacy", "What a visit to DATproof sends, and to whom.",
                "is sent nowhere.",
                "The site sets no cookies and stores nothing in your browser.",
                "There are no ad trackers, and DATproof does not sell or share data."]]),
-            ("Outside services a visit touches",
+            ("Outside services that take part",
              [["[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) "
                "hosts the site. GitHub logs each visitor’s IP address for security. Its "
                "[privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement) "
@@ -1512,11 +1525,19 @@ PRIVACY = ("privacy", "Privacy", "What a visit to DATproof sends, and to whom.",
                "Google Fonts and [Fontshare](https://www.fontshare.com/) serve the typefaces. Your browser sends them "
                "your IP address, browser details and the page address. Google says it sets no cookies for this and "
                "does not use it for ads ([Google Fonts privacy](https://fonts.google.com/faq#privacy)).",
-               "GoatCounter counts home page visits ([GoatCounter privacy](https://www.goatcounter.com/privacy))."]]),
+               "GoatCounter counts home page visits ([GoatCounter privacy](https://www.goatcounter.com/privacy)).",
+               "Cloudflare runs the hosted plug-in (below)."]]),
             ("The plug-in",
-             ["The DATproof plug-in installs and runs on your own computer. It only downloads the public feed files "
-              "from datproof.com (GitHub sees those requests as it sees a visit) and never sends the amounts or "
-              "questions you give it. There is no hosted version."]),
+             [["Installed on your computer, it only downloads the public feed from datproof.com (GitHub sees this as "
+               "it sees a visit) and sends nothing you type.",
+               f"The hosted copy at {HOSTED_HOST} gets what your AI app sends: the tool’s name and what you asked "
+               "(a ticker, an amount, your limits). It reads the public feed and replies. DATproof keeps no logs, "
+               "database, accounts, cookies or call count.",
+               "Cloudflare runs the hosted copy and sees the address that connects, often your AI app’s server, "
+               f"not your device. Its [privacy policy]({CF_PRIVACY}) says what it processes may include IP addresses "
+               "and traffic routing data. It keeps totals (requests, errors, processing time), viewable for three "
+               f"months ([Workers metrics]({CF_METRICS})). Its request logs ([Workers Logs]({CF_LOGS})) "
+               "are off."]]),
             ("Changes to this page",
              [f"When this page changes, the date at the top changes. Every past version is public in "
               f"[the file’s history]({REPO}/commits/main/site/privacy/index.md)."]),

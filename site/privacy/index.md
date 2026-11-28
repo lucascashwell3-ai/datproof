@@ -10,7 +10,7 @@ DATproof, an open-source project. Its code is public on [GitHub](https://github.
 
 ## What DATproof collects
 
-Only a visit count on the home page; no other page has the counter.
+On the site, only a visit count on the home page; no other page has the counter.
 
 - The counter is GoatCounter. Your browser sends it the page address, the page that sent you, the page title and your screen width. Like any server, it also sees your IP address and browser.
 - GoatCounter says it stores no IP addresses, no full browser details and no tracking ID, and keeps only totals: visits per page, the sites that sent them, browsers, systems, countries, languages and screen widths.
@@ -22,15 +22,18 @@ Only a visit count on the home page; no other page has the counter.
 - The site sets no cookies and stores nothing in your browser.
 - There are no ad trackers, and DATproof does not sell or share data.
 
-## Outside services a visit touches
+## Outside services that take part
 
 - [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) hosts the site. GitHub logs each visitor’s IP address for security. Its [privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement) says what it keeps.
 - Google Fonts and [Fontshare](https://www.fontshare.com/) serve the typefaces. Your browser sends them your IP address, browser details and the page address. Google says it sets no cookies for this and does not use it for ads ([Google Fonts privacy](https://fonts.google.com/faq#privacy)).
 - GoatCounter counts home page visits ([GoatCounter privacy](https://www.goatcounter.com/privacy)).
+- Cloudflare runs the hosted plug-in (below).
 
 ## The plug-in
 
-The DATproof plug-in installs and runs on your own computer. It only downloads the public feed files from datproof.com (GitHub sees those requests as it sees a visit) and never sends the amounts or questions you give it. There is no hosted version.
+- Installed on your computer, it only downloads the public feed from datproof.com (GitHub sees this as it sees a visit) and sends nothing you type.
+- The hosted copy at mcp.datproof.com gets what your AI app sends: the tool’s name and what you asked (a ticker, an amount, your limits). It reads the public feed and replies. DATproof keeps no logs, database, accounts, cookies or call count.
+- Cloudflare runs the hosted copy and sees the address that connects, often your AI app’s server, not your device. Its [privacy policy](https://www.cloudflare.com/privacypolicy/) says what it processes may include IP addresses and traffic routing data. It keeps totals (requests, errors, processing time), viewable for three months ([Workers metrics](https://developers.cloudflare.com/workers/observability/metrics-and-analytics/)). Its request logs ([Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)) are off.
 
 ## Changes to this page
 
