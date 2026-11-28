@@ -173,7 +173,7 @@ Example from today's data, 28 Nov 2026.
 - JSON feed: https://lucascashwell3-ai.github.io/datproof/v1/instruments.json
 - For AI readers: https://lucascashwell3-ai.github.io/datproof/llms.txt
 
-DATproof is an open-source data project; its code, data and method are public at https://github.com/lucascashwell3-ai/datproof, and questions or corrections go to https://github.com/lucascashwell3-ai/datproof/issues. It is free. It holds no money, places no orders and is not advice.
+DATproof is an open-source data project; its code, data and method are public at https://github.com/lucascashwell3-ai/datproof, and questions or corrections go to https://github.com/lucascashwell3-ai/datproof/issues. It is free. It holds no money, places no orders and is not advice. DATproof is not paid by any issuer or broker. Its maker holds some of the products shown.
 
 Something missing or wrong? Tell us: https://github.com/lucascashwell3-ai/datproof/issues/new?template=feedback.md
 

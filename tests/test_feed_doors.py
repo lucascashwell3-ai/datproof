@@ -40,3 +40,27 @@ def test_twin_carries_the_same_two_links_near_the_top():
     assert f"[See what you could earn]({HOME}#calc)" in head
     assert f"[Connect your agent]({HOME}#agent)" in head
     assert head.index("See what you could earn") < head.index("Connect your agent](")
+
+
+# ---------- the foot: one disclosure line beside "free, holds no money, places no orders, not advice" ----------
+
+DISCLOSURE = "DATproof is not paid by any issuer or broker. Its maker holds some of the products shown."
+
+
+def test_disclosure_once_in_the_foot_beside_the_statement():
+    foot = HTML[HTML.index('<footer class="wrap foot">'):HTML.index("</footer>")]
+    about = re.search(r'<ul class="about">(.*?)</ul>', foot, re.S).group(1)
+    items = re.findall(r"<li>(.*?)</li>", about, re.S)
+    i = items.index("It is free. It holds no money, places no orders and is not advice.")
+    assert items[i + 1] == DISCLOSURE
+    assert HTML.count(DISCLOSURE) == 1
+
+
+def test_disclosure_in_the_twin_once():
+    assert MD.count(DISCLOSURE) == 1
+    assert "It is free. It holds no money, places no orders and is not advice. " + DISCLOSURE in MD
+
+
+def test_disclosure_comes_from_the_page_source():
+    from datproof_feed import pages
+    assert pages.DISCLOSURE == DISCLOSURE and DISCLOSURE in pages.ABOUT and DISCLOSURE in pages.ABOUT_MD
