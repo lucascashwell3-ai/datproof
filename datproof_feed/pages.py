@@ -1457,10 +1457,13 @@ The compare tool takes an amount, how long the cash will sit (1 month, 3 months,
 where it sits now, and returns the same rows for STRC, SATA and SATS, plus brokers' pages for each.
 
 The check tool takes one ticker, an optional amount and the owner's own limits (lowest yield, highest
-price, lowest backing, biggest past-year fall, largest share of a day's trading, oldest feed, no missed
-dividend). It returns each fact with its date and source, and for each limit: pass, fail, no limit set,
-or cannot tell when the fact is missing, undated or too old. It compares facts with limits the owner
-set; it is not advice and places no order.
+price, lowest backing, biggest past-year fall, largest share of a day's trading, the oldest any figure
+may be, a current dividend). It returns each fact with its date and source, and for each limit: pass,
+fail, no limit set, or cannot tell when the fact is missing, undated or too old. The age limit applies
+to every figure behind a check: any figure older than it reads cannot tell, and figures from company
+filings (debt, for instance) can be weeks old. A current dividend fails on a missed payment or when the
+last payment is overdue for the issue's own pay schedule, and reads cannot tell when the schedule or a
+date is unknown. It compares facts with limits the owner set; it is not advice and places no order.
 
 ## About
 

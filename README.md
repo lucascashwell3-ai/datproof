@@ -50,9 +50,13 @@ its source and date; a number that could not be fetched is empty, with the reaso
   form does the same arithmetic. `compare.situation` holds it for both.
 - **Check** (the plug-in's tool for the step before buying) takes one ticker, an optional amount and
   the owner's own limits: lowest yield at today's price, highest price, lowest backing, biggest
-  past-year fall, largest share of an average day's trading, oldest feed in business days, and no
-  missed dividend. For each it returns the fact with its date and source and a result: pass, fail,
-  no limit set, or cannot tell (the fact is missing, undated or older than allowed). `limits_met`
+  past-year fall, largest share of an average day's trading, the oldest any figure may be in
+  business days, and a current dividend. For each it returns the fact with its date and source and a
+  result: pass, fail, no limit set, or cannot tell (the fact is missing, undated or older than
+  allowed). The age limit applies to every figure behind a check, not only the feed's date: any
+  figure older than it reads cannot tell, and figures from company filings (debt, for instance) can
+  be weeks old. A current dividend fails on a missed payment or when the last payment is overdue for
+  the issue's own pay schedule, and reads cannot tell when the schedule or a date is unknown. `limits_met`
   is true only when every limit sent passed. With an amount, it adds the last close, the whole shares
   that amount buys and the cash left. It compares facts with the owner's limits; it is not a
   recommendation and places no order.

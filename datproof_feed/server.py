@@ -135,10 +135,17 @@ TOOLS = [
                                                                                "trading value (30 days) the planned "
                                                                                "buy may be, in percent; needs amount_usd"},
                              "max_age_business_days": {"type": "integer", "minimum": 0,
-                                                       "description": "how many business days old the feed's "
-                                                                      "figures may be"},
+                                                       "description": "how many business days old any figure "
+                                                                      "may be: the feed itself fails when older, "
+                                                                      "and any figure behind a check that is older "
+                                                                      "reads cannot tell. Figures from company "
+                                                                      "filings (debt, for instance) can be weeks "
+                                                                      "old"},
                              "dividends_current": {"type": "boolean",
-                                                   "description": "true: fails if the feed shows a missed dividend"}}}},
+                                                   "description": "true: fails if the feed shows a missed payment "
+                                                                  "or the last payment is overdue for the issue's "
+                                                                  "own pay schedule; cannot tell when the schedule "
+                                                                  "or a date is unknown"}}}},
            "required": ["ticker"]}),
 ]
 
