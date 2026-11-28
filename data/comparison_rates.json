@@ -1,6 +1,6 @@
 {
   "date": "2026-11-28",
-  "fetched_at": "2026-11-28T04:05:11Z",
+  "fetched_at": "2026-11-28T04:59:52Z",
   "note": "Comparison rates for idle cash, each from its own public page with its own date. A rate that could not be refreshed keeps its last good value and date and is marked stale.",
   "rates": [
     {
@@ -11,7 +11,7 @@
         "unit": "pct",
         "as_of": "2026-11-16",
         "source": "https://www.fdic.gov/national-rates-and-rate-caps",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -24,7 +24,7 @@
         "unit": "pct",
         "as_of": "2026-11-16",
         "source": "https://www.fdic.gov/national-rates-and-rate-caps",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -37,7 +37,7 @@
         "unit": "pct",
         "as_of": "2026-11-28",
         "source": "https://www.bankrate.com/banking/savings/best-high-yield-interests-savings-accounts/",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -50,7 +50,7 @@
         "unit": "pct",
         "as_of": "2026-11-28",
         "source": "https://www.bankrate.com/banking/cds/best-1-year-cd-rates/",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -63,7 +63,7 @@
         "unit": "pct",
         "as_of": "2026-11-16",
         "source": "https://www.fdic.gov/national-rates-and-rate-caps",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -76,7 +76,7 @@
         "unit": "pct",
         "as_of": "2026-11-25",
         "source": "https://www.fidelity.com/investing/cash-management",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -89,7 +89,7 @@
         "unit": "pct",
         "as_of": "2026-11-27",
         "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_bill_rates&field_tdr_date_value_month=202611",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -102,7 +102,7 @@
         "unit": "pct",
         "as_of": "2026-11-25",
         "source": "https://www.ishares.com/us/products/239766/ishares-national-muni-bond-etf-mub",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
@@ -116,7 +116,7 @@
         "unit": "pct",
         "as_of": "2026-09-17",
         "source": "https://robinhood.com/us/en/support/articles/cash-program-interest-rate/",
-        "fetched_at": "2026-11-28T04:05:11Z",
+        "fetched_at": "2026-11-28T04:59:52Z",
         "stale": false,
         "reason": null
       }
