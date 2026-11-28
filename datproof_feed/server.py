@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 import os
 import pathlib
 import re
@@ -282,7 +283,8 @@ LIMIT_KEYS = NUMBER_LIMITS + ("max_age_business_days", "dividends_current")
 
 
 def _number(x) -> bool:
-    return isinstance(x, (int, float)) and not isinstance(x, bool)
+    """A real, finite number (JSON text can carry NaN and Infinity; neither is a limit or an amount)."""
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
 
 
 def _check_inputs(args: dict, feed: dict):
@@ -360,21 +362,28 @@ def _dated(value, unit: str, parts: list, today: dt.date, max_age):
 
 
 def _inputs(ins: dict, figure: dict) -> list:
-    """The dated feed figures a worked-out figure names as its inputs."""
-    return [ins.get(k) for k in (figure.get("inputs") or [])] if isinstance(figure, dict) else []
+    """The dated feed figures a worked-out figure names as its inputs. The figure's own stale mark or reason
+    travels with them, so a worked-out figure the feed marks stale cannot be judged either."""
+    if not isinstance(figure, dict):
+        return []
+    parts = [ins.get(k) for k in (figure.get("inputs") or [])]
+    if parts and (figure.get("stale") or figure.get("reason")):
+        parts = [{**p, "stale": True} if isinstance(p, dict) else p for p in parts]
+    return parts
 
 
 def _backing_parts(ins: dict, feed: dict) -> list:
     """Every dated figure behind the backing ratio: the issuer's bitcoin, its price and cash, the amount
-    outstanding of the issue and of each issue ahead of it, and the issuer's debt where the feed lists it."""
+    outstanding of the issue and of each issue ahead of it, and the issuer's debt (a daily figure, or the
+    filing figure in backing.static)."""
     b = ins.get("backing") or {}
     parts = [v for v in (b.get("inputs") or {}).values()]
     wide = (feed.get("backing") or {}).get("inputs") or {}
     for t in [ins.get("ticker"), *(b.get("ahead") or [])]:
         parts.append(wide.get(f"{t}_outstanding_usd"))
-    debt = wide.get(f"{str(b.get('issuer', '')).lower()}_debt_usd")
-    if debt is not None:
-        parts.append(debt)
+    issuer = str(b.get("issuer", "")).lower()
+    static = ((feed.get("backing") or {}).get("static") or {}).get(issuer) or {}
+    parts.append(wide.get(f"{issuer}_debt_usd") or static.get("debt_usd"))
     return parts
 
 

@@ -35,7 +35,8 @@ FEED = {
         "backing": {"issuer": "Strategy", "backing_x": 3.5, "ahead": ["STRF"],
                     "inputs": {"btc_usd": dated(60000, "btc_usd"), "btc_held": dated(800000, "btc")}},
     }],
-    "backing": {"inputs": {"STRC_outstanding_usd": dated(1, "strc_out"), "STRF_outstanding_usd": dated(1, "strf_out")}},
+    "backing": {"inputs": {"STRC_outstanding_usd": dated(1, "strc_out"), "STRF_outstanding_usd": dated(1, "strf_out")},
+                "static": {"strategy": {"debt_usd": dated(6_750_000_000, "debt", "2026-11-24")}}},
 }
 
 ALL = {"min_yield_pct": 10, "max_price_usd": 100, "min_backing_ratio": 2, "max_drop_pct": 25,
@@ -67,7 +68,9 @@ def test_every_limit_passes_in_the_fixed_order():
     c = by_id(out)
     assert c["yield"]["fact"] == {"value": 12.24, "unit": "pct", "as_of": "2026-11-26",
                                   "source": [SRC + "pct", SRC + "usd"]}  # date and sources follow its inputs
-    assert c["backing"]["fact"]["source"] == [SRC + "btc_usd", SRC + "btc", SRC + "strc_out", SRC + "strf_out"]
+    assert c["backing"]["fact"]["source"] == [SRC + "btc_usd", SRC + "btc", SRC + "strc_out", SRC + "strf_out",
+                                              SRC + "debt"]
+    assert c["backing"]["fact"]["as_of"] == "2026-11-24"  # the filing debt is the oldest figure behind it
     assert c["share_of_daily_trading"]["fact"]["value"] == round(8000 / 98_000_000 * 100, 4)
     assert c["feed_age"]["fact"]["value"] == 1
     assert c["yield"]["question"] == "Is STRC's yield at today's price at least 10%?"
@@ -115,12 +118,18 @@ def test_limits_met_order_fail_beats_cannot_tell():
     lambda i, f: i["stated_rate_pct"].update(source=None),                 # an input with no source
     lambda i, f: i["stated_rate_pct"].update(stale=True),                  # the feed marks it stale
     lambda i, f: i["yield_pct"].update(inputs=[]),                         # no date or source at all
+    lambda i, f: i["yield_pct"].update(stale=True),                        # the worked-out figure is stale
 ])
 def test_a_yield_it_cannot_verify_never_passes(change):
     out = run(edited(change), limits={"min_yield_pct": 0})
     row = by_id(out)["yield"]
     assert row["result"] == "cannot tell" and row["why"]
     assert out["limits_met"] is None
+
+
+def test_undated_debt_means_backing_cannot_be_told():
+    f = edited(lambda i, f: f["backing"]["static"]["strategy"]["debt_usd"].pop("as_of"))
+    assert by_id(run(f, limits={"min_backing_ratio": 1}))["backing"]["result"] == "cannot tell"
 
 
 def test_an_old_fact_cannot_be_told_under_max_age():
@@ -185,6 +194,8 @@ def test_no_shares_from_a_close_it_cannot_verify():
     ({"ticker": "STRC", "limits": {"dividends_current": "yes"}}, "true or false"),
     ({"ticker": "STRC", "limits": {"max_share_of_daily_trading_pct": 1}}, "needs amount_usd"),
     ({"ticker": "STRC", "limits": [10]}, "object"),
+    ({"ticker": "STRC", "amount_usd": float("inf")}, "amount_usd"),
+    ({"ticker": "STRC", "limits": {"min_yield_pct": float("nan")}}, "number"),
 ])
 def test_bad_inputs_are_plain_tool_errors(args, words):
     with pytest.raises(server.ToolError, match=words):
