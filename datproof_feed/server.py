@@ -2,6 +2,8 @@
 
     python3 -m datproof_feed.server
 
+The same handle() is served over the web by datproof_feed.web (MCP streamable HTTP).
+
 Reads the published /v1/ files from DATPROOF_FEED: a web address or a local folder
 (default: the public feed). Standard library only; no account, no key.
 Facts and arithmetic only. It never holds, moves or trades money.
@@ -13,6 +15,7 @@ import json
 import os
 import pathlib
 import re
+from collections import Counter
 import sys
 import urllib.request
 
@@ -22,7 +25,12 @@ from datproof_feed import scenarios as sc
 DEFAULT_FEED = "https://lucascashwell3-ai.github.io/datproof/v1"
 HOME = "https://lucascashwell3-ai.github.io/datproof/"  # the page, with charts
 SERVER_INFO = {"name": "datproof", "version": "1.0.0"}
-FALLBACK_PROTOCOL = "2025-06-18"
+# MCP versions this server speaks (all with the initialize handshake). initialize echoes the client's version
+# when it is one of these, else offers the newest.
+SUPPORTED_PROTOCOLS = ("2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25")
+LATEST_PROTOCOL = SUPPORTED_PROTOCOLS[-1]
+FETCH_TIMEOUT = 20  # seconds, per feed file
+COUNT_ENV = "DATPROOF_COUNT"  # "1" switches the call count on; off by default
 TICKER = re.compile(r"^[A-Z]{1,6}$")
 MAX_AGE_BUSINESS_DAYS = 2  # older than this and every answer says so
 
@@ -97,9 +105,22 @@ TOOLS = [
           {"type": "object", "properties": {}}),
 ]
 
+TOOL_NAMES = frozenset(t["name"] for t in TOOLS)
+
 
 class ToolError(Exception):
     pass
+
+
+def urllib_get(url: str, timeout: float) -> bytes:
+    req = urllib.request.Request(url, headers={"User-Agent": "datproof-feed"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
+
+
+# The one way a feed file is fetched from the web: url, timeout -> bytes, raising on failure. A host whose
+# runtime has no urllib (e.g. a Cloudflare Python Worker) swaps this out.
+fetch_bytes = urllib_get
 
 
 def load(name: str):
@@ -107,9 +128,7 @@ def load(name: str):
     base = os.environ.get("DATPROOF_FEED", DEFAULT_FEED).rstrip("/")
     try:
         if base.startswith(("http://", "https://")):
-            req = urllib.request.Request(f"{base}/{name}", headers={"User-Agent": "datproof-feed"})
-            with urllib.request.urlopen(req, timeout=20) as r:
-                return json.loads(r.read().decode("utf-8"))
+            return json.loads(fetch_bytes(f"{base}/{name}", FETCH_TIMEOUT).decode("utf-8"))
         return json.loads((pathlib.Path(base) / name).read_text(encoding="utf-8"))
     except Exception as e:  # noqa: BLE001 - reported to the caller as a tool error
         raise ToolError(f"could not read {name} from the feed: {e}") from e
@@ -143,6 +162,22 @@ def feed_stamp() -> dict:
         out["feed_warning"] = (f"this feed is from {date.isoformat()}, {age} business days old; prices, yields and odds "
                                "may have moved since. Say so when quoting them.")
     return out
+
+
+COUNTS: Counter = Counter()  # (UTC day, tool name) -> calls, while the count is on
+
+
+def count_call(tool) -> None:
+    """Count one call: the UTC day and the tool's name, nothing else. Off unless DATPROOF_COUNT=1.
+    It takes only the name, so arguments (a cash amount among them) cannot reach it; a name that is not one
+    of the six tools is counted as 'unknown', since the caller writes it. Each count is also one stderr line
+    (never stdout, which carries the stdio protocol) for a host's logs."""
+    if os.environ.get(COUNT_ENV) != "1":
+        return
+    name = tool if tool in TOOL_NAMES else "unknown"
+    day = _today().isoformat()
+    COUNTS[(day, name)] += 1
+    print(f"datproof-count {day} {name}", file=sys.stderr, flush=True)
 
 
 def price_gate(tool: str) -> None:
@@ -203,6 +238,7 @@ def situation_answer(args: dict) -> dict:
 
 
 def call_tool(name: str, args: dict):
+    count_call(name)
     price_gate(name)
     if name == "compare":
         return situation_answer(args)
@@ -235,7 +271,8 @@ def handle(msg: dict) -> dict | None:
         return {"jsonrpc": "2.0", "id": mid, "result": result}
 
     if method == "initialize":
-        return ok({"protocolVersion": params.get("protocolVersion") or FALLBACK_PROTOCOL,
+        asked = params.get("protocolVersion")
+        return ok({"protocolVersion": asked if asked in SUPPORTED_PROTOCOLS else LATEST_PROTOCOL,
                    "capabilities": {"tools": {"listChanged": False}}, "serverInfo": SERVER_INFO,
                    "instructions": "Facts and arithmetic on where idle cash can sit. Not advice: it never "
                                    "chooses for anyone and never produces an order. Show the same rows for "
@@ -262,17 +299,23 @@ def handle(msg: dict) -> dict | None:
     return {"jsonrpc": "2.0", "id": mid, "error": {"code": -32601, "message": f"method not found: {method}"}}
 
 
+def reply_to_text(text: str) -> dict | None:
+    """One message as text in, one reply out (None for notifications). Shared by stdio and the web."""
+    try:
+        msg = json.loads(text)
+    except json.JSONDecodeError:
+        return {"jsonrpc": "2.0", "id": None, "error": {"code": -32700, "message": "parse error"}}
+    if not isinstance(msg, dict):
+        return {"jsonrpc": "2.0", "id": None, "error": {"code": -32600, "message": "invalid request"}}
+    return handle(msg)
+
+
 def main() -> None:
     for line in sys.stdin:
         line = line.strip()
         if not line:
             continue
-        try:
-            msg = json.loads(line)
-            reply = handle(msg) if isinstance(msg, dict) else \
-                {"jsonrpc": "2.0", "id": None, "error": {"code": -32600, "message": "invalid request"}}
-        except json.JSONDecodeError:
-            reply = {"jsonrpc": "2.0", "id": None, "error": {"code": -32700, "message": "parse error"}}
+        reply = reply_to_text(line)
         if reply is not None:
             sys.stdout.write(json.dumps(reply, ensure_ascii=False) + "\n")
             sys.stdout.flush()

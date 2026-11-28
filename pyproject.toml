@@ -15,6 +15,7 @@ build = ["httpx", "requests", "beautifulsoup4"]
 
 [project.scripts]
 datproof-mcp = "datproof_feed.server:main"
+datproof-mcp-http = "datproof_feed.web:main"
 
 [tool.setuptools]
 packages = ["datproof_feed"]
