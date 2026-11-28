@@ -829,6 +829,19 @@
     });
   }
 
+  // "See what you could earn": put the cursor in the first box of "Your situation", then scroll there. The focus
+  // goes first because focusing during a smooth scroll stops it halfway. Without script the plain link still
+  // lands on the section.
+  var door = $("#door-calc");
+  if (door) door.addEventListener("click", function (ev) {
+    var sec = $("#calc"), box = $("#in-amount");
+    if (!sec || !box) return;
+    ev.preventDefault();
+    box.focus({ preventScroll: true });
+    try { history.pushState(null, "", "#calc"); } catch (e) { /* file:// or sandboxed frame */ }
+    sec.scrollIntoView({ block: "start" });
+  });
+
   initTabs(); drawHeroDither(); drawEdgeDither();
   load("v1/").catch(function () { return load("next/v1-sample/"); }).then(start).catch(function (e) {
     $("#earn-foot").innerHTML = '<span class="err">The charts did not load (' + esc(e.message) + "). The figures on this page are written in; the JSON files have the rest.</span>";

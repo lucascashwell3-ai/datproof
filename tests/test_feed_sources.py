@@ -169,10 +169,14 @@ def test_parse_stated_rate_from_strategy():
         assert r == rate and as_of == TODAY
 
 
-def test_sata_rate_reuses_the_credit_pull():
-    from scripts.fetch_credit import parse_sata
-    out = parse_sata(load("strive_calc.json"), load("strive_agg.json"), load("strive_base.json"), TODAY)
+def test_sata_rate_matches_the_credit_pull():
+    """The feed's own copy (datproof_feed/strive_sata.py) and the credit pull's parser agree."""
+    from datproof_feed.strive_sata import parse_sata
+    from scripts.fetch_credit import parse_sata as credit_parse_sata
+    args = (load("strive_calc.json"), load("strive_agg.json"), load("strive_base.json"), TODAY)
+    out = parse_sata(*args)
     assert out["rate_pct"] == 13.0
+    assert out == credit_parse_sata(*args)
 
 
 def test_parse_sats_rate_from_the_sec_filing():

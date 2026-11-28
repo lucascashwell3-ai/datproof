@@ -56,6 +56,9 @@ MARKERS = ("faqld", "hlrange", "asof", "panels", "compare", "liquid", "liquidsrc
 BUY_DAYS = 90  # the by_buy_price holding time shown on the page
 BENCH = [("tbill_4w", "4-week T-bill", "US Treasury"), ("mmf_vmfxx", "Money market fund", "Vanguard VMFXX"),
          ("usdc_aave_v3", "USDC lending", "Aave v3, Ethereum")]
+# The two actions under the opening paragraph; the HTML page has the same two as buttons (site/index.html).
+DOORS = (("See what you could earn", "calc"), ("Connect your agent", "agent"))
+DOORS_MD = " · ".join(f"[{label}]({HOME}#{anchor})" for label, anchor in DOORS)
 HEADLINE = "Earn {range} on your idle cash."  # the page's h1, with the range filled from the feed
 HERO_SUB = ("Cash you can leave for three months or more can earn a dividend every business day from digital credit, "
             "preferred stock issued by companies that hold bitcoin. DATproof shows the numbers, the record and the risks.")
@@ -1146,14 +1149,18 @@ def chat_tag(feed: dict) -> str:
 
 # ---------- footer ----------
 
+DISCLOSURE = "DATproof is not paid by any issuer or broker. Its maker holds some of the products shown."
+
 ABOUT = [("DATproof is an open-source data project; its code, data and method are public on "
           '<a href="https://github.com/lucascashwell3-ai/datproof" rel="noopener">GitHub</a>, and questions or corrections go to its '
           '<a href="https://github.com/lucascashwell3-ai/datproof/issues" rel="noopener">issues page</a>.'),
-         "It is free. It holds no money, places no orders and is not advice."]
+         "It is free. It holds no money, places no orders and is not advice.",
+         DISCLOSURE]
 ABOUT_MD = ["DATproof is an open-source data project; its code, data and method are public at "
             "https://github.com/lucascashwell3-ai/datproof, and questions or corrections go to "
             "https://github.com/lucascashwell3-ai/datproof/issues.",
-            "It is free. It holds no money, places no orders and is not advice."]
+            "It is free. It holds no money, places no orders and is not advice.",
+            DISCLOSURE]
 
 
 def about_html() -> str:
@@ -1326,6 +1333,8 @@ def next_md(feed: dict) -> str:
 
 {HERO_SUB}
 
+{DOORS_MD}
+
 {md_stamp(feed)}. Page with charts: {HOME}
 
 ## Income every business day
@@ -1374,7 +1383,7 @@ Example. You ask: "{CHAT_Q}"
 - JSON feed: {BASE}/v1/instruments.json
 - For AI readers: {BASE}/llms.txt
 
-{ABOUT_MD[0]} {ABOUT_MD[1]}
+{ABOUT_MD[0]} {ABOUT_MD[1]} {ABOUT_MD[2]}
 
 Something missing or wrong? Tell us: {FEEDBACK}
 
